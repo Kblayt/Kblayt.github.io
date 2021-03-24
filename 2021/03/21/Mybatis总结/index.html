@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://example.com/2021/03/21/Mybatis%E6%80%BB%E7%BB%93/%E8%87%AA%E5%AE%9A%E4%B9%89mybatis%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
 <meta property="og:image" content="http://example.com/2021/03/21/Mybatis%E6%80%BB%E7%BB%93/%E8%BF%9E%E6%8E%A5%E6%B1%A0Pooled%E7%9A%84%E8%BF%87%E7%A8%8B.png">
 <meta property="article:published_time" content="2021-03-21T15:42:41.000Z">
-<meta property="article:modified_time" content="2021-03-22T08:52:30.669Z">
+<meta property="article:modified_time" content="2021-03-24T06:23:50.189Z">
 <meta property="article:author" content="Kblayt">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2021/03/21/Mybatis%E6%80%BB%E7%BB%93/01%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84.png">
@@ -208,7 +208,20 @@
 <h5 id="3、连接池分别为POOLED和UNPOOLED的运作过程"><a href="#3、连接池分别为POOLED和UNPOOLED的运作过程" class="headerlink" title="3、连接池分别为POOLED和UNPOOLED的运作过程"></a>3、连接池分别为POOLED和UNPOOLED的运作过程</h5><p><strong>POOLED</strong>：</p>
 <img src="/2021/03/21/Mybatis%E6%80%BB%E7%BB%93/%E8%BF%9E%E6%8E%A5%E6%B1%A0Pooled%E7%9A%84%E8%BF%87%E7%A8%8B.png" class="" title="连接池Pooled的过程">
 <p><strong>UNPOOLED</strong>：<br>运行一次建立一次链接，用完自行断开，不会在连接池调用。</p>
-
+<h5 id="4、mybatis中的事务"><a href="#4、mybatis中的事务" class="headerlink" title="4、mybatis中的事务"></a>4、mybatis中的事务</h5><p>什么是事务？<br>事务的四大特性ACID：原子性、一致性、隔离性、持久性<br>四种隔离级别：<br>（读取未提交、读取已提交、可重复读、可串行化）<br>不考虑隔离性会产生的问题：脏读、丢失修改、幻读、不可重复读等。</p>
+<h5 id="5-mybatis中的多表查询"><a href="#5-mybatis中的多表查询" class="headerlink" title="5.mybatis中的多表查询"></a>5.mybatis中的多表查询</h5><pre><code>一对多、多对一、一对一、多对多
+</code></pre>
+<p>mybatis中的多表查询：<br>一对多<br>示例：用户和账户<br>一个用户可以有多个账户<br>一个账户只能属于一个用户（多个账户也可以属于同一个用户）<br>步骤：<br>1、建立两张表：用户表，账户表<br>让用户表和账户表之间具备一对多的关系：需要使用外键在账户表中添加<br>2、建立两个实体类：用户实体类和账户实体类<br>让用户和账户的实体类能体现出来一对多的关系<br>3、建立两个配置文件<br>用户的配置文件<br>账户的配置文件<br>4、实现配置：<br>当我们查询用户时，可以同时得到用户下所包含的账户信息<br>当我们查询账户时，可以同时得到账户的所属用户信息  </p>
+<p>多对多<br>示例：用户和角色<br>一个用户可以有多个角色<br>一个角色可以赋予多个用户<br>步骤：<br>1、建立两张表：用户表，角色表<br>让用户表和角色表具有多对多的关系。需要使用中间表，中间表中包含各自的主键，在中间表中是外键。<br>2、建立两个实体类：用户实体类和角色实体类<br>让用户和角色的实体类能体现出来多对多的关系<br>各自包含对方一个集合引用<br>3、建立两个配置文件<br>用户的配置文件<br>角色的配置文件<br>4、实现配置：<br>当我们查询用户时。可以同时得到用户所包含的角色信息<br>当我们查询角色是，可以同时得到角色的所赋予的用户信息  </p>
+<hr>
+<h3 id="七、Mybatis中的延迟加载和缓存"><a href="#七、Mybatis中的延迟加载和缓存" class="headerlink" title="七、Mybatis中的延迟加载和缓存"></a>七、Mybatis中的延迟加载和缓存</h3><h5 id="1、Mybatis中的延迟加载"><a href="#1、Mybatis中的延迟加载" class="headerlink" title="1、Mybatis中的延迟加载"></a>1、Mybatis中的延迟加载</h5><p><code>&lt;settings&gt;</code><br>    <code>&lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;</code><br>    <code>&lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;/&gt;</code><br><code>&lt;/settings&gt;</code><br>问题：在一对多中，当我们有一个用户，他有10个账户。<br>在查询用户的时候，要不要把关联的账户查出来？什么时候查？<br>再查询账户的时候，要不要把关联的用户查出来？什么时候查？  </p>
+<p>在查询用户时，用户下的账户信息应该时，什么时候用，什么时候查询的。<br>在查询账户时，账户的所属用户信息应该是随着账户查询时一起查询出来。  </p>
+<p><strong>什么时延迟加载？</strong><br>在真正使用数据时才发起查询，不用的时候不查询。也叫按需加载或懒加载。<br>**什么是立即加载 **<br>不管用不用，只要一调用方法，马上发起查询。  </p>
+<p>在对应的四中表关系中：一对多，多对一，一对一，多对多<br>一对多，多对多：通常情况加我们都是采用延迟加载<br>多对一，一对一：通常情况下我们都是采用立即加载  </p>
+<h5 id="2、Mybatis中的缓存"><a href="#2、Mybatis中的缓存" class="headerlink" title="2、Mybatis中的缓存"></a>2、Mybatis中的缓存</h5><p><strong>什么是缓存？</strong><br>存在于内存中的临时数据。<br><strong>为什么使用缓存？</strong><br>减少和数据库的交互次数，提高执行效率。<br><strong>什么样的数据能够使用缓存，什么样的数据不能使用？</strong><br>适用于缓存：<br>经常查询并且不经常改变的。<br>数据的正确与否对最终结果影响不大的。<br>不适用于缓存：<br>经常改变的数据<br>数据的正确与否队最终结果影响很大的<br>例如：商品的库存，银行的汇率，股市的牌价<br><strong>Mybatis中的一级缓存和二级缓存</strong><br>一级缓存：<br>它指的是Mybatis中SqlSession对象的缓存。<br>当我们执行查询后，查询的结果会同时存入到SqlSession为我们提供一块区域中。<br>该区域的结构是一个Map。当我们再次查询同样的数据，Mybatis会先去sqlsession中查询是否有，有的话直接拿出来用。<br>当SqlSession对象消失时，mybatis的一级缓存也就消失了。  </p>
+<p>二级缓存：<br>它指的是Mybatis中SqlSessionFactory对象的缓存。有同一个SqlSessionFactory对象创建的SqlSession共享其缓存。<br>二级缓存的使用步骤：<br>第一步：让Mybatis框架支持二级缓存（在SqlMapConfig.xml中配置）<br>第二步：让当前的映射文件支持二级缓存（在IUserDao.xml中配置）<br>第三步：让当前的操作支持二级缓存（在select标签中配置）  </p>
+<hr>
+<h3 id="八、Mybatis中的注解开发"><a href="#八、Mybatis中的注解开发" class="headerlink" title="八、Mybatis中的注解开发"></a>八、Mybatis中的注解开发</h3>
       
 
       
