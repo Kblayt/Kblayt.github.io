@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2021/03/21/Java%E5%9F%BA%E7%A1%80%E4%B8%8EJava%E9%AB%98%E7%BA%A7%E5%B7%A9%E5%9B%BA/%E5%8F%8D%E5%B0%84%E6%A6%82%E8%BF%B0.png">
 <meta property="article:published_time" content="2021-03-21T15:42:35.000Z">
-<meta property="article:modified_time" content="2021-03-24T14:46:51.003Z">
+<meta property="article:modified_time" content="2021-03-25T05:36:57.503Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -186,7 +186,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h2><hr>
-<h2 id="Java高级"><a href="#Java高级" class="headerlink" title="Java高级"></a>Java高级</h2><h4 id="类加载器（了解）"><a href="#类加载器（了解）" class="headerlink" title="类加载器（了解）"></a>类加载器（了解）</h4><p>Bootstrap class loader:它是虚拟机的内置类加载器，通常表示为null，并且没有父null<br>Platform class loader:平台类加载器可以看到所有平台类，平台类包括由平台类加载器或其祖先定义的Java SE平台API,其实现类和JDK特定的运行时类<br>System class loader:它也被称为应用程序类加载器，与平台类加载器不同。系统类加载器通常用于定义应用程序类路径，模块路径和JDK特定工具上的类<br><strong>类加载器的继承关系</strong>：System的父类加载器为Platform，二Platform的父类加载器为Bootstrap</p>
+<h2 id="Java高级"><a href="#Java高级" class="headerlink" title="Java高级"></a>Java高级</h2><h4 id="类加载器（了解）"><a href="#类加载器（了解）" class="headerlink" title="类加载器（了解）"></a>类加载器（了解）</h4><p>Bootstrap class loader:它是虚拟机的内置类加载器，通常表示为null，并且没有父null<br>Platform class loader:平台类加载器可以看到所有平台类，平台类包括由平台类加载器或其祖先定义的Java SE平台API,其实现类和JDK特定的运行时类<br>System class loader:它也被称为应用程序类加载器，与平台类加载器不同。系统类加载器通常用于定义应用程序类路径，模块路径和JDK特定工具上的类<br><strong>类加载器的继承关系</strong>：System的父类加载器为Platform，而Platform的父类加载器为Bootstrap</p>
 <span id="more"></span>
 
 <p>ClassLoader中的两个方法<br>static ClassLoader getSystemClassLoader()：返回用于委派的系统类加载器<br>ClassLoader getParent()：返回父类加载器进行委派</p>
@@ -194,9 +194,26 @@
 <img src="/2021/03/21/Java%E5%9F%BA%E7%A1%80%E4%B8%8EJava%E9%AB%98%E7%BA%A7%E5%B7%A9%E5%9B%BA/%E5%8F%8D%E5%B0%84%E6%A6%82%E8%BF%B0.png" class="" title="反射概述">
 
 <p>获取Class类的对象<br>我们想要通过反射去使用一个类，首先我们要获取到该类的字节码文件对象，也就是类型为Class类型的对象，这里学习三种方式获取Class类型的对象：<br>①使用类的class属性来获取该类对应的Class对象。（测试）<br>②使用对象的getClass()方法，返回该对象所属类对应的Class对象（该方法时Object类中的方法，所有的Java对象都可以调用该方法）<br>③使用Class类中的静态方法forName(String className)，该方法需要传入字符串参数，该字符串参数的值是某个类的全路径，也就是完整包名的路径（灵活性最高）  </p>
-<p>Class类中用于获取构造方法的方法<br>Constructor<?>[ ]getConstructors()：返回所有公共构造方法对象的数组  
-Constructor<?>[ ]getDeclaredConstructors()：返回所有构造方法对象的数组<br>Constructor<T>getConstructor(Class<?>...parameterTypes)：返回单个公共构造方法对象  
-Constructor<T>getDeclaredConstructor(Class<?>…parameterTypes)：返回单个构造方法对象  </p>
+<p><strong>反射获构造方法、获取成员变量、获取成员方法</strong><br>    Class类中用于获取构造方法的方法<br>    Constructor<?>[ ]getConstructors()：返回所有公共构造方法对象的数组  
+    Constructor<?>[ ]getDeclaredConstructors()：返回所有构造方法对象的数组<br>    Constructor<T>getConstructor(Class<?>...parameterTypes)：返回单个公共构造方法对象  
+    Constructor<T>getDeclaredConstructor(Class<?>…parameterTypes)：返回单个构造方法对象  </p>
+<pre><code>Class类中用于获取成员变量的方法  
+Field[ ] getFields():返回所有公共成员变量对象的数组  
+Field[ ] getDeclaredFields():返回所有成员变量对象的数组  
+Field getField(String name):返回单个公共成员变量对象  
+Field getDeclaredField(String name):返回单个成员变量对象  
+
+Class类中用于获取成员方法的方法
+Method[ ] getMethods():返回所有公共成员方法对象的数组，包括继承的  
+Method[ ] getDeclaredMethods():返回所有成员方法对象的数组，不包括继承的  
+Method getMethod(String name,Class&lt;?&gt;...parameterTypes):返回单个公共成员方法对象  
+Method getDeclaredMethod(Sring name,Class&lt;?&gt;...parameterTypes):返回单个成员方法对象  
+Method类中用于调用成员方法的方法  
+Object invoke(Object obj,Object...args):调用obj对象的成员方法，参数是args，返回值是Object类型  
+
+暴力反射访问private类型方法：
+public void setAccessible(boolean flag)：值为true，取消访问检查  
+</code></pre>
 
       
 
