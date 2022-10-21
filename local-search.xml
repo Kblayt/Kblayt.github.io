@@ -4,6 +4,110 @@
   
   
   <entry>
+    <title>红黑树(RBT)</title>
+    <link href="/2022/10/21/%E7%BA%A2%E9%BB%91%E6%A0%91-RBT/"/>
+    <url>/2022/10/21/%E7%BA%A2%E9%BB%91%E6%A0%91-RBT/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Java反射与XML&amp;JSON</title>
+    <link href="/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/"/>
+    <url>/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/</url>
+    
+    <content type="html"><![CDATA[<h1 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h1><h2 id="类的加载概述和分类"><a href="#类的加载概述和分类" class="headerlink" title="类的加载概述和分类"></a>类的加载概述和分类</h2><h4 id="1-类加载的概述"><a href="#1-类加载的概述" class="headerlink" title="1.类加载的概述"></a>1.类加载的概述</h4><p>当程序要使用某个类时，如果该类还未被加载到内存中，则系统会通过加载，链接，初始化三步来实现对这个类进行初始化。</p><p>加载</p><p>就是指class文件读入内存，并且为之创建一个Class对象。任何类被使用时系统都会建立一个class对象。</p><p>链接</p><p>验证 是否有正确的内部结构，并和其它类协调一致。</p><p>准备 负责为类的静态成员分配内村，并设置默认初始化值。</p><p>解析 酱类的二进制数据中的符号引用替换为直接引用</p><p>初始化</p><p>默认初始化、显式初始化、构造方法初始化等等。</p><h4 id="2-加载时机"><a href="#2-加载时机" class="headerlink" title="2.加载时机"></a>2.加载时机</h4><p>创建类的实例（Person p &#x3D; new Person()）</p><p>访问类的静态变量，或者为静态变量赋值（p.静态变量 或者 p.静态变量 &#x3D; 0；）</p><p>调用类的静态方法</p><p>使用反射方式来强制创建某个类或接口对应的java.long.Class对象</p><p>初始化某个类的子类</p><p>直接使用java.exe命令来运行某个主类</p><h4 id="3-类加载器的概述"><a href="#3-类加载器的概述" class="headerlink" title="3.类加载器的概述"></a>3.类加载器的概述</h4><p>负责将.class文件加载到内存中，并为之生成对应的Class对象，虽然我们不需要关心类加载机制，但是了解这个机制我们就能更好地理解程序的运行。</p><h4 id="4-类加载器的分类"><a href="#4-类加载器的分类" class="headerlink" title="4.类加载器的分类"></a>4.类加载器的分类</h4><p>Bootstrap ClassLoader 根类加载器</p><p>Extension ClassLoader 扩展类加载器</p><p>System ClassLoader 系统类加载器</p><h4 id="5-类加载器的作用"><a href="#5-类加载器的作用" class="headerlink" title="5.类加载器的作用"></a>5.类加载器的作用</h4><p>Bootstrap ClassLoader 根类加载器</p><p>也被称为引导类加载器，负责Java核心类的加载</p><p>比如System，String等。在JDK中JRE的lib目录下rt.jar文件中</p><p>Extension ClassLoader扩展类加载器</p><p>负责JRE的扩展目录中jar的加载</p><p>在JDK中JRE的lib目录下ext目录</p><p>System ClassLoader 系统类加载器</p><p>负责在JVM启动时加载来自java命令的class文件，以及classpath环境变量所指定的jar包和类路径</p><h2 id="反射概述"><a href="#反射概述" class="headerlink" title="反射概述"></a>反射概述</h2><p>Java反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；</p><p>对于任意一个对象，都能够调用它的任意一个方法和属性；</p><p>这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。</p><p>要想解剖一个类，就必须要获取到该类的字节码文件对象</p><p>而解剖使用的就是Class类中的方法，所以要先获取到每一个字节码文件对应的Class类型对象。</p><h4 id="三种方式"><a href="#三种方式" class="headerlink" title="三种方式"></a>三种方式</h4><p>1.Object类的getClass()方法，判断两个对象是否时同一个字节码文件</p><p>2.静态属性class，锁对象</p><p>3.Class类中静态方法forName(),读取配置文件</p><p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png"></p><p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE7903b6f0673f48b511e7f09f5aa7aab0.png"></p><h4 id="通过反射获取带参构造方法并使用"><a href="#通过反射获取带参构造方法并使用" class="headerlink" title="通过反射获取带参构造方法并使用"></a>通过反射获取带参构造方法并使用</h4><p>Constructor</p><p>Class类的newInstance()方法是使用该无参的构造函数创建对象，如果一个类没有无参的构造函数，就不能这样创建了，可以调用Class类的getConstructor（String.class,int.class）方法获取一个指定的构造函数然后再调用Constructor类的newInstance(“张三”，20)方法创建对象</p><h4 id="通过反射获取成员变量并使用"><a href="#通过反射获取成员变量并使用" class="headerlink" title="通过反射获取成员变量并使用"></a>通过反射获取成员变量并使用</h4><p>Field</p><p>Class.getField(String)方法可以获取类中的指定字段(可见的)，如果时私有的可以用getDeclaedField(“name”)方法获取，通过set(obj，”李四”)方法可以设置指定对象上该字段的值，如果是私有的需要先调用setAccessible(true)设置访问权限，用获取的指定的字段调用get(obj)可以获取指定对象中该字段的值</p><h4 id="通过反射获取方法并使用"><a href="#通过反射获取方法并使用" class="headerlink" title="通过反射获取方法并使用"></a>通过反射获取方法并使用</h4><p>Method</p><p>Class.getMethod(String，Class…)和Class.getDeclareMethod(String,Class…)方法可以获取类中的指定方法，调用invoke(object，object…)可以调用该法ing发，Class.getMethod(”eat“)invoke(obj)Class.getMethod(“eat”，int.class)invoke(obj,10)</p><h1 id="XML-amp-JSON"><a href="#XML-amp-JSON" class="headerlink" title="XML&amp;JSON"></a>XML&amp;JSON</h1><h2 id="XML（EXtensible-Markup-Language）"><a href="#XML（EXtensible-Markup-Language）" class="headerlink" title="XML（EXtensible Markup Language）"></a>XML（EXtensible Markup Language）</h2><p>可扩展标记语言</p><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>与操作系统、编程语言的开发平台无关</p><p>实现不同系统之间的数据交换</p><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><p>数据交互</p><p>配置应用程序和网站</p><p>Ajax基石</p><h4 id="XML文档内容由一系列标签元素组成"><a href="#XML文档内容由一系列标签元素组成" class="headerlink" title="XML文档内容由一系列标签元素组成"></a>XML文档内容由一系列标签元素组成</h4><p>&lt;元素名 属性名&#x3D;”属性值“&gt;元素内容&lt;&#x2F;元素名&gt;</p><![CDATA[内容......]]><p>xml命名空间的作用</p><h4 id="解析XML技术"><a href="#解析XML技术" class="headerlink" title="解析XML技术"></a>解析XML技术</h4><p>DOM</p><p>基于XML文档树结构的解析</p><p>适用于多次访问的XML文档</p><p>特点：速度快，比较消耗资源</p><p>SAX</p><p>基于事件的解析</p><p>适用于大数据量的XML文档</p><p>特点：占用资源少，内存消耗小</p><p>DOM4J（主流）</p><p>非常优秀的Java XML API</p><p>性能优异、功能强大</p><p>开放源代码</p><p>DOM解析XML文件步骤</p><h2 id="JSON-JavaScript-Object-Notation"><a href="#JSON-JavaScript-Object-Notation" class="headerlink" title="JSON(JavaScript Object Notation)"></a>JSON(JavaScript Object Notation)</h2><p>轻量级的文本数据交换格式</p><p>具有自我描述性</p><p>比XML传输速度快</p><p>阿里开源JSON解析框架</p><p>FastJSON</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java</category>
+      
+      <category>①Java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>反射</tag>
+      
+      <tag>XML</tag>
+      
+      <tag>JSON</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>多线程和网络编程</title>
+    <link href="/2022/10/21/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/"/>
+    <url>/2022/10/21/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</url>
+    
+    <content type="html"><![CDATA[<h1 id="多线程（Thread）"><a href="#多线程（Thread）" class="headerlink" title="多线程（Thread）"></a>多线程（Thread）</h1><h2 id="1-什么是线程、主线程和其他子线程"><a href="#1-什么是线程、主线程和其他子线程" class="headerlink" title="1.什么是线程、主线程和其他子线程"></a>1.什么是线程、主线程和其他子线程</h2><p>线程是程序执行的一条路径，一个进程中可以包含多条线程</p><p>多线程并发执行可以提高程序的效率，可以同时完成多项工作</p><p>main()方法即为主线程入口</p><h2 id="2-多线程并行和并发的区别"><a href="#2-多线程并行和并发的区别" class="headerlink" title="2.多线程并行和并发的区别"></a>2.多线程并行和并发的区别</h2><p>并行是指两个任务同时进行，就是甲任务进行的同时，乙任务也在进行。（需多核CPU）</p><p>并发是指两个任务都请求运行，而处理器只能接受一个任务，就把这两个任务安排轮流进行，由于时间间隔较短，使人感觉两个任务都在运行。</p><h2 id="3-Java程序运行原理和JVM的启动是多线程的吗？"><a href="#3-Java程序运行原理和JVM的启动是多线程的吗？" class="headerlink" title="3.Java程序运行原理和JVM的启动是多线程的吗？"></a>3.Java程序运行原理和JVM的启动是多线程的吗？</h2><p>A：Jva程序运行原理</p><p>Java命令会启动java虚拟机，启动JVM，等于启动了一个应用程序，也就是启动了一个进程。该进程会自动启动一个”主线程“，然后主线程去调用某个类的main方法。</p><p>B：JVM的启动是多线程的吗</p><p>JVM启动至少启动了垃圾回收线程和主线程，所以是多线程的。</p><h2 id="4-多线程程序实现的方式"><a href="#4-多线程程序实现的方式" class="headerlink" title="4.多线程程序实现的方式"></a>4.多线程程序实现的方式</h2><p>①继承Thread(无返回值)</p><p>定义类继承Thread</p><p>重写run()方法</p><p>把新线程要做的事写在run()方法中</p><p>创建线程对象</p><p>开启新线程，内部会自动执行run()方法</p><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadTest</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>        MyThread mt = <span class="hljs-keyword">new</span> <span class="hljs-built_in">MyThread</span>();                   <span class="hljs-comment">//4.创建Thread类的子类对象</span><br>        mt.<span class="hljs-built_in">start</span>();                                     <span class="hljs-comment">//5.开启线程</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span> ; i &lt; <span class="hljs-number">1000</span>; i++)&#123;<br>            System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;bbbbbbb&quot;</span>);<br>        &#125;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyThread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Thread</span></span>&#123;               <span class="hljs-comment">//1.继承Thread</span><br>    public void run()&#123;                              <span class="hljs-comment">//2.重写run方法</span><br>        <span class="hljs-keyword">for</span> (int i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">1000</span>; i++)&#123;                 <span class="hljs-comment">//3.将要执行的代码写在run方法中</span><br>            <span class="hljs-type">System</span>.out.println(<span class="hljs-string">&quot;aaaaaaaa&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>②实现Runnable接口(无返回值)</p><p>定义实现Runnable接口</p><p>实现run()方法</p><p>把新线程要做的事写在run()方法中</p><p>创建自定义的Runnable的子类对象</p><p>创建Thread对象，传入Runnable</p><p>调用start()开启新线程，内部会自动调用Runnable的run()方法</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadTest</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">MyRunnable</span> <span class="hljs-variable">mr</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyRunnable</span>();            <span class="hljs-comment">//4.创建Runnable的子类对象</span><br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">t</span>  <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(mr);                  <span class="hljs-comment">//5.将子类对象当作参数传递给Thread的构造函数</span><br>        t.start();                                   <span class="hljs-comment">//6.开启线程</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span> ; i &lt; <span class="hljs-number">1000</span>; i++)&#123;<br>            System.out.println(<span class="hljs-string">&quot;bbbbbbb&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-symbol">MyRunnable</span> <span class="hljs-symbol">implements</span> <span class="hljs-symbol">Runnable</span>&#123;        <span class="hljs-comment">//1.定义一个类实现Runnable</span><br>    @Override<br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> run() &#123;                             <span class="hljs-comment">//2.重写run方法</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">1000</span>; i++)&#123;                 <span class="hljs-comment">//3.将要执行的代码写在run方法中</span><br>            System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;aaaaaaaa&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>③Callable方式(有返回值)</p><h2 id="5-两种方式的区别"><a href="#5-两种方式的区别" class="headerlink" title="5.两种方式的区别"></a>5.两种方式的区别</h2><p>查看源码的区别：</p><p>①继承Thread：由于子类重写了Thread类的run()，当调用start()时，直接找子类的run()方法</p><p>②实现Runnable：构造函数中传入了Runnable的引用，成员变量记住了它，start()调用run()方法时内部判断成员变量Runnable的引用是否为空，不为空编译时看的时Runnable的run()，运行时执行的是子类的run()方法。</p><p>继承Thread</p><p>好处是：可以直接使用Thread类中的方法，代码简单</p><p>弊端是：如果已经有了父类，就不能用这种方法</p><p>实现Runnable接口</p><p>好处是：即使自己定义的线程类有了父类也没关系，因为有了父类也可以实现接口，而且接口是可以多实现的</p><p>弊端是：不能直接使用Thread中的方法需要先获取到线程对象后，才能得到Thread的方法，代码复杂</p><h2 id="6-匿名内部类实现线程的两种方式"><a href="#6-匿名内部类实现线程的两种方式" class="headerlink" title="6.匿名内部类实现线程的两种方式"></a>6.匿名内部类实现线程的两种方式</h2><p>①继承(extends)Thread类</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo4</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        <span class="hljs-keyword">new</span> Thread()&#123;                                       <span class="hljs-comment">//1.继承Thread类</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>()</span> &#123;                             <span class="hljs-comment">//2.重写run方法</span><br>                <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) &#123;            <span class="hljs-comment">//3.将执行的代码写入run方法中</span><br>                    System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;aaaaaaaaaaaaa&quot;</span>);<br>                &#125;<br>            &#125;<br>        &#125;.start();                                          <span class="hljs-comment">//4.开启线程</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>②实现(implement)Runnable接口（可实现数据共享）</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo4</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable()&#123;                          <span class="hljs-comment">//1.将Runnable的子类对象传递给Thread的构造方法</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>()</span>&#123;                              <span class="hljs-comment">//2.重写run方法</span><br>                <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) &#123;            <span class="hljs-comment">//3.将执行的代码写入run方法中</span><br>                    System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;bbbbbbbbbb&quot;</span>);       <br>                &#125;<br>            &#125;<br>        &#125;).start();                                         <span class="hljs-comment">//4.开启线程</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure><p>③(有返回值)</p><h2 id="7-线程的getName-、setName-、currentThread-方法"><a href="#7-线程的getName-、setName-、currentThread-方法" class="headerlink" title="7.线程的getName()、setName()、currentThread()方法"></a>7.线程的getName()、setName()、currentThread()方法</h2><p>currentThread()方法用于Runnable中，使之可以顺利的执行getName()、setName()方法。</p><h2 id="8-休眠线程"><a href="#8-休眠线程" class="headerlink" title="8.休眠线程"></a>8.休眠线程</h2><p>Thread.sleep(毫秒,纳秒)，控制当前线程休眠若干毫秒1s&#x3D;1000毫秒&#x3D;1000<em>1000</em>1000纳秒</p><h2 id="9-守护线程"><a href="#9-守护线程" class="headerlink" title="9.守护线程"></a>9.守护线程</h2><h2 id="10-线程的状态转换-五个状态"><a href="#10-线程的状态转换-五个状态" class="headerlink" title="10.线程的状态转换(五个状态)"></a>10.线程的状态转换(五个状态)</h2><h2 id="11-线程调度"><a href="#11-线程调度" class="headerlink" title="11.线程调度"></a>11.线程调度</h2><p>void setPriority(int newPriority)</p><p>static void sleep(long millis)</p><p>void join()强制</p><p>static void yield()”礼让“</p><p>void interrupt()</p><h2 id="12-锁synchronized"><a href="#12-锁synchronized" class="headerlink" title="12.锁synchronized"></a>12.锁synchronized</h2><p>①public synchronized void 方法名(){</p><p>}</p><p>②同步代码块</p><p>synchronized（this）{</p><p>&#x2F;&#x2F;所控制的变量或代码块</p><p>}</p><h1 id="网络编程（socket）-传输层）（TCP-x2F-IP）"><a href="#网络编程（socket）-传输层）（TCP-x2F-IP）" class="headerlink" title="网络编程（socket）(传输层）（TCP&#x2F;IP）"></a>网络编程（socket）(传输层）（TCP&#x2F;IP）</h1><h2 id="1-基础原理（7层模型）"><a href="#1-基础原理（7层模型）" class="headerlink" title="1.基础原理（7层模型）"></a>1.基础原理（7层模型）</h2><h2 id="2-什么是Socket"><a href="#2-什么是Socket" class="headerlink" title="2.什么是Socket"></a>2.什么是Socket</h2><p>流式套接字（SOCK_STREAM）</p><p>面向链接、可靠的数据传输服务，基于TCP协议</p><p>数据报式套接字（SOCK_DGRAM）</p><p>无连接服务(UDP)</p><p>原始套接字（SOCK_RAW）</p><p>操作下层</p><p>传输层的API</p><h2 id="3-java-net包"><a href="#3-java-net包" class="headerlink" title="3.java.net包"></a>3.java.net包</h2><p>Socket</p><p>ServerSocket</p><p>DatagramPacket</p><p>DatagramSocket</p><p>InetAddress</p><p>…</p><h2 id="4-基于TCP协议的socket网络编程一般可以分为以下几个步骤"><a href="#4-基于TCP协议的socket网络编程一般可以分为以下几个步骤" class="headerlink" title="4.基于TCP协议的socket网络编程一般可以分为以下几个步骤"></a>4.基于TCP协议的socket网络编程一般可以分为以下几个步骤</h2><p>&lt;C&#x2F;S&gt;模式</p><p>①创建Client端和Server端两个Socket对象，对于Client端时Socket对象、对于Server端是ServerSocket对象</p><p>②在Client端和Server端之间建立连接</p><p>③在输入和输出之间借助数据流来传递信息</p><p>④关闭所有数据流和Socket</p><h2 id="5-socket中实现对象的传输"><a href="#5-socket中实现对象的传输" class="headerlink" title="5.socket中实现对象的传输"></a>5.socket中实现对象的传输</h2><p>借助于序列化和反序列化就能实现</p><p><img src="/2022/10/21/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/WEBRESOURCE97f71c4a1f3001729950f4a437554737.png"></p><h2 id="6-多线程处理多请求"><a href="#6-多线程处理多请求" class="headerlink" title="6.多线程处理多请求"></a>6.多线程处理多请求</h2><p>借助多线程，实现多客户端与服务器网络通信</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java</category>
+      
+      <category>①Java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>多线程</tag>
+      
+      <tag>网络编程</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Java实现10种排序</title>
+    <link href="/2022/10/21/Java%E6%8E%92%E5%BA%8F/"/>
+    <url>/2022/10/21/Java%E6%8E%92%E5%BA%8F/</url>
+    
+    <content type="html"><![CDATA[<p>#Java实现10种排序算法<br>参考：<a href="https://blog.csdn.net/weixin_44531966/article/details/116464294">https://blog.csdn.net/weixin_44531966/article/details/116464294</a></p><p>#Java排序实现<br>参考：<a href="https://blog.csdn.net/whp1473/article/details/79678974">https://blog.csdn.net/whp1473/article/details/79678974</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java</category>
+      
+      <category>①Java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>排序算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java重写(Override)与重载(Overload)</title>
     <link href="/2022/10/21/Java%E9%87%8D%E5%86%99-Override-%E4%B8%8E%E9%87%8D%E8%BD%BD-Overload/"/>
     <url>/2022/10/21/Java%E9%87%8D%E5%86%99-Override-%E4%B8%8E%E9%87%8D%E8%BD%BD-Overload/</url>
