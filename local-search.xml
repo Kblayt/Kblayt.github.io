@@ -13,14 +13,18 @@
     
     <categories>
       
-      <category>-Java -Jvm</category>
+      <category>Java</category>
+      
+      <category>Jvm</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>-Java -Python</tag>
+      <tag>Java</tag>
+      
+      <tag>Python</tag>
       
     </tags>
     
