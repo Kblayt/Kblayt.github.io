@@ -45,8 +45,20 @@
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026091351137.png">
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026095722397.png">
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026170923648.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026171211997.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027085226369.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027092433116.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135600774.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135813905.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135944213.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135957779.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140013820.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140030356.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140540693.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027141430630.png">
 <meta property="article:published_time" content="2022-10-26T07:11:15.000Z">
-<meta property="article:modified_time" content="2022-10-26T07:12:50.398Z">
+<meta property="article:modified_time" content="2022-10-27T06:30:59.155Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
@@ -242,7 +254,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          7k 字
         
       </span>
     
@@ -253,7 +265,7 @@
         
         
         
-          27 分钟
+          59 分钟
         
       </span>
     
@@ -459,7 +471,145 @@
 </li>
 </ul>
 <h3 id="1-5-6、StringTable位置"><a href="#1-5-6、StringTable位置" class="headerlink" title="1.5.6、StringTable位置"></a>1.5.6、StringTable位置</h3><p><img src="/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png" srcset="/img/loading.gif" lazyload alt="WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb"></p>
-<h1 id="2、垃圾回收"><a href="#2、垃圾回收" class="headerlink" title="2、垃圾回收"></a>2、垃圾回收</h1><h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1>
+<h3 id="1-5-7、StringTable垃圾回收"><a href="#1-5-7、StringTable垃圾回收" class="headerlink" title="1.5.7、StringTable垃圾回收"></a>1.5.7、StringTable垃圾回收</h3><h3 id="1-5-8、性能调优"><a href="#1-5-8、性能调优" class="headerlink" title="1.5.8、性能调优"></a>1.5.8、性能调优</h3><ul>
+<li>调整 -XX:StringTableSize&#x3D;桶个数</li>
+<li>考虑将字符串对象是否入池</li>
+</ul>
+<h2 id="1-6、直接内存（操作系统的内存）"><a href="#1-6、直接内存（操作系统的内存）" class="headerlink" title="1.6、直接内存（操作系统的内存）"></a>1.6、直接内存（操作系统的内存）</h2><h3 id="1-6-1、Direct-Memory"><a href="#1-6-1、Direct-Memory" class="headerlink" title="1.6.1、Direct Memory"></a>1.6.1、Direct Memory</h3><ul>
+<li>常见于NIO操作时，用于数据缓冲区</li>
+<li>分配回收成本较高，但读写性能高</li>
+<li>不受JVM内存回收管理</li>
+</ul>
+<p>传统IO流文件读写过程：</p>
+<p><img src="/2022/10/26/JVM/image-20221026170923648.png" srcset="/img/loading.gif" lazyload alt="image-20221026170923648"></p>
+<p>NIO文件读写过程</p>
+<p><img src="/2022/10/26/JVM/image-20221026171211997.png" srcset="/img/loading.gif" lazyload alt="image-20221026171211997"></p>
+<h2 id="1-6-2、分配和回收原理"><a href="#1-6-2、分配和回收原理" class="headerlink" title="1.6.2、分配和回收原理"></a>1.6.2、分配和回收原理</h2><ul>
+<li>使用了Unsafe对象 完成直接内存的分配回收，并且回收需要主动调用freeMemory方法</li>
+<li>ByteBuffer的实现类内部，使用了Cleaner（虚引用）来检测ByteBuffer对象，一旦ByteBuffer对象被垃圾回收，那么就会由ReferenceHandler线程通过Cleaner的clean方法调用freeMemory来释放直接内存</li>
+</ul>
+<p>-XX:+DisableExplicitGC （禁用显示的垃圾回收）也就是代码中的System.gc()</p>
+<h1 id="2、垃圾回收"><a href="#2、垃圾回收" class="headerlink" title="2、垃圾回收"></a>2、垃圾回收</h1><h2 id="2-1、如何判断对象可以回收？"><a href="#2-1、如何判断对象可以回收？" class="headerlink" title="2.1、如何判断对象可以回收？"></a>2.1、如何判断对象可以回收？</h2><h3 id="2-1-1、引用计数法"><a href="#2-1-1、引用计数法" class="headerlink" title="2.1.1、引用计数法"></a>2.1.1、引用计数法</h3><p><strong>概念：</strong>只要一个对象被其他变量所引用，那我就让这个对象的计数加一，如果它被引用了两次那就让它的计数变成二，如果某个变量不再引用它了那么就让它的计数减一，当这个对象的引用计数变为零的时候那就意味着没有人引用它了，那么它就会被垃圾回收。</p>
+<p><strong>问题：</strong>循环引用</p>
+<p><img src="/2022/10/26/JVM/image-20221027085226369.png" srcset="/img/loading.gif" lazyload alt="image-20221027085226369"></p>
+<p>此时A、B的引用计数都为1，但没有对象使用他们了，又由于他们的引用计数都不唯一导致它们不能被垃圾回收。（早期python在垃圾回收时就采用了引用技术的算法。）</p>
+<h3 id="2-1-2、可达性分析法"><a href="#2-1-2、可达性分析法" class="headerlink" title="2.1.2、可达性分析法"></a>2.1.2、可达性分析法</h3><p><strong>概念：</strong>首先会确定一系列根对象，根对象就是那些肯定不能当成垃圾被回收的对象。在垃圾回收之前首先会对堆中的所有对象进行一边扫描，看看哪些对象会被根对象直接或间接的引用，如果是这个对象就不能被回收，反之可以被回收。</p>
+<ul>
+<li>Java虚拟机中的垃圾回收器采用可达性分析算法来探索所有存活的对象</li>
+<li>扫描堆中的对象，看是否能够沿着GC Root对象为起点的引用链找到该对象，找不到，表示可以回收</li>
+<li>哪些对象可以作为GC Root？（System Class、Native Stack、Thread、Busy Monitor）</li>
+</ul>
+<p>使用过eclipse提供的Memory Analyzer(MAT)来帮助分析。</p>
+<p>为了配合MAT的使用先运行起来再通过jmap快照抓取下来再用MAT进行分析。</p>
+<h3 id="2-1-3、四种引用"><a href="#2-1-3、四种引用" class="headerlink" title="2.1.3、四种引用"></a>2.1.3、四种引用</h3><p><img src="/2022/10/26/JVM/image-20221027092433116.png" srcset="/img/loading.gif" lazyload alt="image-20221027092433116"></p>
+<h4 id="2-1-3-1、强引用"><a href="#2-1-3-1、强引用" class="headerlink" title="2.1.3.1、强引用"></a>2.1.3.1、强引用</h4><ul>
+<li><p>定义：沿着某个GC Root的引用链能够找到的对象就属于强引用。</p>
+</li>
+<li><p>回收条件：只有当所有强引用都断开时该对象才能被垃圾回收。</p>
+</li>
+</ul>
+<h4 id="2-1-3-2、软引用"><a href="#2-1-3-2、软引用" class="headerlink" title="2.1.3.2、软引用"></a>2.1.3.2、软引用</h4><ul>
+<li><p>仅有软引用引用过该对象时，在垃圾回收后，内存仍不足时会再次触发垃圾回收，回收引用对象</p>
+</li>
+<li><p>可以配合引用队列来释放软引用自身</p>
+</li>
+</ul>
+<h4 id="2-1-3-3、弱引用"><a href="#2-1-3-3、弱引用" class="headerlink" title="2.1.3.3、弱引用"></a>2.1.3.3、弱引用</h4><ul>
+<li>仅有弱引用引用该对象时，在垃圾回收时，无论内存是否充足，都会回收弱引用对象</li>
+<li>可以配合引用队列来释放弱引用自身</li>
+</ul>
+<h4 id="2-1-3-4、虚引用"><a href="#2-1-3-4、虚引用" class="headerlink" title="2.1.3.4、虚引用"></a>2.1.3.4、虚引用</h4><ul>
+<li>必须配合引用该队列使用，主要配合ByteBuffer使用，被引用对象回收时，会将虚引用入队，由Reference Handler线程调用虚拟引用相关方法释放直接内存</li>
+</ul>
+<h4 id="2-1-3-5、终结器引用"><a href="#2-1-3-5、终结器引用" class="headerlink" title="2.1.3.5、终结器引用"></a>2.1.3.5、终结器引用</h4><ul>
+<li>必须配合引用该队列使用，无需手动编码，但其内部配合引用队列使用，在垃圾回收时，终结器引用入队(被引用对象暂时没看被回收)，再由Finalizer线程通过终结器引用找到被引用对象并调用它的finalize方法，第二次GC时才能回收被引用对象。</li>
+</ul>
+<p><strong>软引用实例：</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 演示软引用, 配合引用队列</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo2_4</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final <span class="hljs-built_in">int</span> _4MB = <span class="hljs-number">4</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        List&lt;SoftReference&lt;<span class="hljs-built_in">byte</span>[]&gt;&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br><br>        <span class="hljs-comment">// 引用队列</span><br>        ReferenceQueue&lt;<span class="hljs-built_in">byte</span>[]&gt; queue = <span class="hljs-keyword">new</span> ReferenceQueue&lt;&gt;();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-comment">// 关联了引用队列， 当软引用所关联的 byte[]被回收时，软引用自己会加入到 queue 中去</span><br>            SoftReference&lt;<span class="hljs-built_in">byte</span>[]&gt; <span class="hljs-keyword">ref</span> = <span class="hljs-keyword">new</span> SoftReference&lt;&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">byte</span>[_4MB], queue);<br>            System.<span class="hljs-keyword">out</span>.println(<span class="hljs-keyword">ref</span>.<span class="hljs-keyword">get</span>());<br>            list.<span class="hljs-keyword">add</span>(<span class="hljs-keyword">ref</span>);<br>            System.<span class="hljs-keyword">out</span>.println(list.size());<br>        &#125;<br><br>        <span class="hljs-comment">// 从队列中获取无用的 软引用对象，并移除</span><br>        Reference&lt;? extends <span class="hljs-built_in">byte</span>[]&gt; poll = queue.poll();<br>        <span class="hljs-keyword">while</span>( poll != <span class="hljs-literal">null</span>) &#123;<br>            list.<span class="hljs-keyword">remove</span>(poll);<br>            poll = queue.poll();<br>        &#125;<br><br>        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;===========================&quot;</span>);<br>        <span class="hljs-keyword">for</span> (SoftReference&lt;<span class="hljs-built_in">byte</span>[]&gt; reference : list) &#123;<br>            System.<span class="hljs-keyword">out</span>.println(reference.<span class="hljs-keyword">get</span>());<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>弱引用实例</strong>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 演示弱引用</span><br><span class="hljs-comment"> * -Xmx20m -XX:+PrintGCDetails -verbose:gc</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo2_5</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final <span class="hljs-built_in">int</span> _4MB = <span class="hljs-number">4</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        <span class="hljs-comment">//  list --&gt; WeakReference --&gt; byte[]</span><br>        List&lt;WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt;&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt; <span class="hljs-keyword">ref</span> = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">byte</span>[_4MB]);<br>            list.<span class="hljs-keyword">add</span>(<span class="hljs-keyword">ref</span>);<br>            <span class="hljs-keyword">for</span> (WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt; w : list) &#123;<br>                System.<span class="hljs-keyword">out</span>.print(w.<span class="hljs-keyword">get</span>()+<span class="hljs-string">&quot; &quot;</span>);<br>            &#125;<br>            System.<span class="hljs-keyword">out</span>.println();<br><br>        &#125;<br>        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;循环结束：&quot;</span> + list.size());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-1-4、垃圾回收算法"><a href="#2-1-4、垃圾回收算法" class="headerlink" title="2.1.4、垃圾回收算法"></a>2.1.4、垃圾回收算法</h3><h4 id="2-1-4-1、标记清除"><a href="#2-1-4-1、标记清除" class="headerlink" title="2.1.4.1、标记清除"></a>2.1.4.1、标记清除</h4><p>定义：Mark Sweep</p>
+<p><img src="/2022/10/26/JVM/image-20221027135600774.png" srcset="/img/loading.gif" lazyload alt="image-20221027135600774"></p>
+<p>优点：速度快</p>
+<p>缺点：容易产生内存碎片</p>
+<h4 id="2-1-4-2、标记整理"><a href="#2-1-4-2、标记整理" class="headerlink" title="2.1.4.2、标记整理"></a>2.1.4.2、标记整理</h4><p>定义：Mark Compact</p>
+<p><img src="/2022/10/26/JVM/image-20221027135813905.png" srcset="/img/loading.gif" lazyload alt="image-20221027135813905"></p>
+<p>优点：不会产生内存碎片</p>
+<p>缺点：效率比较低</p>
+<h4 id="2-1-4-3、复制"><a href="#2-1-4-3、复制" class="headerlink" title="2.1.4.3、复制"></a>2.1.4.3、复制</h4><p>定义：Copy</p>
+<p><img src="/2022/10/26/JVM/image-20221027135944213.png" srcset="/img/loading.gif" lazyload alt="image-20221027135944213"></p>
+<p><img src="/2022/10/26/JVM/image-20221027135957779.png" srcset="/img/loading.gif" lazyload alt="image-20221027135957779"></p>
+<p><img src="/2022/10/26/JVM/image-20221027140013820.png" srcset="/img/loading.gif" lazyload alt="image-20221027140013820"> </p>
+<p><img src="/2022/10/26/JVM/image-20221027140030356.png" srcset="/img/loading.gif" lazyload alt="image-20221027140030356"></p>
+<p>优点：不会产生内存碎片</p>
+<p>缺点：会占用双倍的内存空间</p>
+<h2 id="2-2、分代垃圾回收"><a href="#2-2、分代垃圾回收" class="headerlink" title="2.2、分代垃圾回收"></a>2.2、分代垃圾回收</h2><p><strong>老年代：</strong>Java中长时间使用（长时间存活）的对象存储在老年代当中，老年代的垃圾回收很久才发生一次</p>
+<p><strong>新生代</strong>：Java中用完了就可以丢弃的（朝生幕死）对象存储在新生代当中，新生代的垃圾回收(Minor GC)发生的比较频繁</p>
+<p><img src="/2022/10/26/JVM/image-20221027140540693.png" srcset="/img/loading.gif" lazyload alt="image-20221027140540693"></p>
+<p><strong>分代垃圾回收的执行顺序：</strong></p>
+<p><img src="/2022/10/26/JVM/image-20221027141430630.png" srcset="/img/loading.gif" lazyload alt="image-20221027141430630"></p>
+<ul>
+<li><p>对象首先分配在伊甸园区域</p>
+</li>
+<li><p>当新生代空间不足时，触发minor GC，伊甸园和from存活的对象使用copy算法复制到to中，存活的对象年龄加一并且交换from和to</p>
+</li>
+<li><p>minor GC会引发stop the world，暂停其它用户的线程，等垃圾回收结束，用户线程才恢复运行</p>
+</li>
+<li><p>当对象寿命超过阈值时，会晋升至老年代，最大寿命是15（4bit）</p>
+</li>
+<li><p>当老年代空间不足，会尝试先出发minor GC，如果之后仍空间不足，那么会触发full GC(STW的时间更长)。</p>
+</li>
+<li><p>如果full GC之后空间仍不足，则会触发OOM(Out Of Memory)异常</p>
+<p><strong>相关VM参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>含义</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>堆初始大小</td>
+<td>-Xms</td>
+</tr>
+<tr>
+<td>堆最大大小</td>
+<td>-Xmx或-XX:MaxHeapSize&#x3D;size</td>
+</tr>
+<tr>
+<td>新生代大小</td>
+<td>-Xmn或（-XX:NewSize&#x3D;size + -XX:MaxNewSize&#x3D;size）</td>
+</tr>
+<tr>
+<td>幸存区比例（动态）</td>
+<td>-XX:InitialSurvivorRatio&#x3D;ratio和-XX:+UseAdaptiveSizePolicy</td>
+</tr>
+<tr>
+<td>幸存区比例</td>
+<td>-XX:SurvivorRatio&#x3D;ratio</td>
+</tr>
+<tr>
+<td>晋升阈值</td>
+<td>-XX:MaxTenuringThreshold&#x3D;threshold</td>
+</tr>
+<tr>
+<td>晋升详情</td>
+<td>-XX:+PrintTenuringDistribution</td>
+</tr>
+<tr>
+<td>GC详情</td>
+<td>-XX:+PrintGCDetails -verbose:gc</td>
+</tr>
+<tr>
+<td>Full GC 前 Minor GC</td>
+<td>-XX:+ScavengeBeforeFullGC</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h2 id="2-3、垃圾回收器"><a href="#2-3、垃圾回收器" class="headerlink" title="2.3、垃圾回收器"></a>2.3、垃圾回收器</h2><h2 id="2-4、垃圾回收调优"><a href="#2-4、垃圾回收调优" class="headerlink" title="2.4、垃圾回收调优"></a>2.4、垃圾回收调优</h2><h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1>
                 
               </div>
             
