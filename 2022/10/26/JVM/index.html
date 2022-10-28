@@ -13,7 +13,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
     <meta name="description" content="什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态 比较： JVM，JRE，JDK  学习JVM有什么用面试 理解底层的实现原理 中高级程序员必备技能   1、JVM内存结构 2、GC垃圾回收 3、Java Class（类的字节码结构、">
@@ -57,9 +57,21 @@
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140030356.png">
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140540693.png">
 <meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027141430630.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027200556584.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027201022728.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027202342818.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028090805853.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094245001.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094253567.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094305004.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094850389.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095006258.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095213153.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095242383.png">
+<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095308744.png">
 <meta property="article:published_time" content="2022-10-26T07:11:15.000Z">
-<meta property="article:modified_time" content="2022-10-27T07:21:49.161Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:modified_time" content="2022-10-28T10:44:22.095Z">
+<meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
@@ -254,7 +266,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7k 字
+          12k 字
         
       </span>
     
@@ -265,7 +277,7 @@
         
         
         
-          59 分钟
+          98 分钟
         
       </span>
     
@@ -508,20 +520,20 @@
 <li><p>回收条件：只有当所有强引用都断开时该对象才能被垃圾回收。</p>
 </li>
 </ul>
-<h4 id="2-1-3-2、软引用"><a href="#2-1-3-2、软引用" class="headerlink" title="2.1.3.2、软引用"></a>2.1.3.2、软引用</h4><ul>
+<h4 id="2-1-3-2、软引用-SoftReference"><a href="#2-1-3-2、软引用-SoftReference" class="headerlink" title="2.1.3.2、软引用(SoftReference)"></a>2.1.3.2、软引用(SoftReference)</h4><ul>
 <li><p>仅有软引用引用过该对象时，在垃圾回收后，内存仍不足时会再次触发垃圾回收，回收引用对象</p>
 </li>
 <li><p>可以配合引用队列来释放软引用自身</p>
 </li>
 </ul>
-<h4 id="2-1-3-3、弱引用"><a href="#2-1-3-3、弱引用" class="headerlink" title="2.1.3.3、弱引用"></a>2.1.3.3、弱引用</h4><ul>
+<h4 id="2-1-3-3、弱引用-WeakReference"><a href="#2-1-3-3、弱引用-WeakReference" class="headerlink" title="2.1.3.3、弱引用(WeakReference)"></a>2.1.3.3、弱引用(WeakReference)</h4><ul>
 <li>仅有弱引用引用该对象时，在垃圾回收时，无论内存是否充足，都会回收弱引用对象</li>
 <li>可以配合引用队列来释放弱引用自身</li>
 </ul>
-<h4 id="2-1-3-4、虚引用"><a href="#2-1-3-4、虚引用" class="headerlink" title="2.1.3.4、虚引用"></a>2.1.3.4、虚引用</h4><ul>
+<h4 id="2-1-3-4、虚引用-PhantomReference"><a href="#2-1-3-4、虚引用-PhantomReference" class="headerlink" title="2.1.3.4、虚引用(PhantomReference)"></a>2.1.3.4、虚引用(PhantomReference)</h4><ul>
 <li>必须配合引用该队列使用，主要配合ByteBuffer使用，被引用对象回收时，会将虚引用入队，由Reference Handler线程调用虚拟引用相关方法释放直接内存</li>
 </ul>
-<h4 id="2-1-3-5、终结器引用"><a href="#2-1-3-5、终结器引用" class="headerlink" title="2.1.3.5、终结器引用"></a>2.1.3.5、终结器引用</h4><ul>
+<h4 id="2-1-3-5、终结器引用-FinalReference"><a href="#2-1-3-5、终结器引用-FinalReference" class="headerlink" title="2.1.3.5、终结器引用(FinalReference)"></a>2.1.3.5、终结器引用(FinalReference)</h4><ul>
 <li>必须配合引用该队列使用，无需手动编码，但其内部配合引用队列使用，在垃圾回收时，终结器引用入队(被引用对象暂时没看被回收)，再由Finalizer线程通过终结器引用找到被引用对象并调用它的finalize方法，第二次GC时才能回收被引用对象。</li>
 </ul>
 <p><strong>软引用实例：</strong></p>
@@ -530,22 +542,22 @@
 <p><strong>弱引用实例</strong>：</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 演示弱引用</span><br><span class="hljs-comment"> * -Xmx20m -XX:+PrintGCDetails -verbose:gc</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo2_5</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> final <span class="hljs-built_in">int</span> _4MB = <span class="hljs-number">4</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>        <span class="hljs-comment">//  list --&gt; WeakReference --&gt; byte[]</span><br>        List&lt;WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt;&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt; <span class="hljs-keyword">ref</span> = <span class="hljs-keyword">new</span> WeakReference&lt;&gt;(<span class="hljs-keyword">new</span> <span class="hljs-built_in">byte</span>[_4MB]);<br>            list.<span class="hljs-keyword">add</span>(<span class="hljs-keyword">ref</span>);<br>            <span class="hljs-keyword">for</span> (WeakReference&lt;<span class="hljs-built_in">byte</span>[]&gt; w : list) &#123;<br>                System.<span class="hljs-keyword">out</span>.print(w.<span class="hljs-keyword">get</span>()+<span class="hljs-string">&quot; &quot;</span>);<br>            &#125;<br>            System.<span class="hljs-keyword">out</span>.println();<br><br>        &#125;<br>        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;循环结束：&quot;</span> + list.size());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="2-1-4、垃圾回收算法"><a href="#2-1-4、垃圾回收算法" class="headerlink" title="2.1.4、垃圾回收算法"></a>2.1.4、垃圾回收算法</h3><h4 id="2-1-4-1、标记清除"><a href="#2-1-4-1、标记清除" class="headerlink" title="2.1.4.1、标记清除"></a>2.1.4.1、标记清除</h4><p>定义：Mark Sweep</p>
+<h2 id="2-2、垃圾回收算法"><a href="#2-2、垃圾回收算法" class="headerlink" title="2.2、垃圾回收算法"></a>2.2、垃圾回收算法</h2><h3 id="2-2-1、标记清除"><a href="#2-2-1、标记清除" class="headerlink" title="2.2.1、标记清除"></a>2.2.1、标记清除</h3><p>定义：Mark Sweep</p>
 <p><img src="/2022/10/26/JVM/image-20221027135600774.png" srcset="/img/loading.gif" lazyload alt="image-20221027135600774"></p>
 <p>优点：速度快</p>
 <p>缺点：容易产生内存碎片</p>
-<h4 id="2-1-4-2、标记整理"><a href="#2-1-4-2、标记整理" class="headerlink" title="2.1.4.2、标记整理"></a>2.1.4.2、标记整理</h4><p>定义：Mark Compact</p>
+<h3 id="2-2-2、标记整理"><a href="#2-2-2、标记整理" class="headerlink" title="2.2.2、标记整理"></a>2.2.2、标记整理</h3><p>定义：Mark Compact</p>
 <p><img src="/2022/10/26/JVM/image-20221027135813905.png" srcset="/img/loading.gif" lazyload alt="image-20221027135813905"></p>
 <p>优点：不会产生内存碎片</p>
 <p>缺点：效率比较低</p>
-<h4 id="2-1-4-3、复制"><a href="#2-1-4-3、复制" class="headerlink" title="2.1.4.3、复制"></a>2.1.4.3、复制</h4><p>定义：Copy</p>
+<h3 id="2-2-3、复制"><a href="#2-2-3、复制" class="headerlink" title="2.2.3、复制"></a>2.2.3、复制</h3><p>定义：Copy</p>
 <p><img src="/2022/10/26/JVM/image-20221027135944213.png" srcset="/img/loading.gif" lazyload alt="image-20221027135944213"></p>
 <p><img src="/2022/10/26/JVM/image-20221027135957779.png" srcset="/img/loading.gif" lazyload alt="image-20221027135957779"></p>
 <p><img src="/2022/10/26/JVM/image-20221027140013820.png" srcset="/img/loading.gif" lazyload alt="image-20221027140013820"> </p>
 <p><img src="/2022/10/26/JVM/image-20221027140030356.png" srcset="/img/loading.gif" lazyload alt="image-20221027140030356"></p>
 <p>优点：不会产生内存碎片</p>
 <p>缺点：会占用双倍的内存空间</p>
-<h2 id="2-2、分代垃圾回收"><a href="#2-2、分代垃圾回收" class="headerlink" title="2.2、分代垃圾回收"></a>2.2、分代垃圾回收</h2><p><strong>老年代：</strong>Java中长时间使用（长时间存活）的对象存储在老年代当中，老年代的垃圾回收很久才发生一次</p>
+<h2 id="2-3、分代垃圾回收"><a href="#2-3、分代垃圾回收" class="headerlink" title="2.3、分代垃圾回收"></a>2.3、分代垃圾回收</h2><p><strong>老年代：</strong>Java中长时间使用（长时间存活）的对象存储在老年代当中，老年代的垃圾回收很久才发生一次</p>
 <p><strong>新生代</strong>：Java中用完了就可以丢弃的（朝生幕死）对象存储在新生代当中，新生代的垃圾回收(Minor GC)发生的比较频繁</p>
 <p><img src="/2022/10/26/JVM/image-20221027140540693.png" srcset="/img/loading.gif" lazyload alt="image-20221027140540693"></p>
 <p><strong>分代垃圾回收的执行顺序：</strong></p>
@@ -608,8 +620,274 @@
 </tr>
 </tbody></table>
 </li>
+<li><p>一个线程内部的OOM不会导致整个主线程终短</p>
+</li>
 </ul>
-<h2 id="2-3、垃圾回收器"><a href="#2-3、垃圾回收器" class="headerlink" title="2.3、垃圾回收器"></a>2.3、垃圾回收器</h2><h2 id="2-4、垃圾回收调优"><a href="#2-4、垃圾回收调优" class="headerlink" title="2.4、垃圾回收调优"></a>2.4、垃圾回收调优</h2><h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1>
+<h2 id="2-4、垃圾回收器"><a href="#2-4、垃圾回收器" class="headerlink" title="2.4、垃圾回收器"></a>2.4、垃圾回收器</h2><h3 id="2-4-1、串行"><a href="#2-4-1、串行" class="headerlink" title="2.4.1、串行"></a>2.4.1、串行</h3><ul>
+<li><p>单线程</p>
+</li>
+<li><p>堆内存较小，适合个人电脑</p>
+</li>
+<li><p>开启串行回收器语句： -XX:UseSerialGC &#x3D; Serial + SerialOld</p>
+<p>**ps:**此处的Serial处于新生代，采用的算法为复制(Copy)算法。Serialold处于老年代，采用的算法为标记整理算法。</p>
+<p><img src="/2022/10/26/JVM/image-20221027200556584.png" srcset="/img/loading.gif" lazyload alt="image-20221027200556584"></p>
+</li>
+</ul>
+<h3 id="2-4-2、吞吐量优先"><a href="#2-4-2、吞吐量优先" class="headerlink" title="2.4.2、吞吐量优先"></a>2.4.2、吞吐量优先</h3><ul>
+<li><p>多线程</p>
+</li>
+<li><p>堆内存较大，多核CPU</p>
+</li>
+<li><p>让单位时间内，STW的时间最短0.2 0.2 &#x3D; 0.4，垃圾回收时间占比最低，这样就称吞吐量高</p>
+</li>
+<li><p>开启吞吐量优先回收器语句：-XX:+UseParallelGC ~ -XX:+UseParallelOldGC</p>
+<ul>
+<li>控制线程数：-XX:ParallelGCThreads&#x3D;n</li>
+<li>采用调整自适应大小策略(调整的是新生代的大小)：-XX:+UseAdaptiveSizePolicy</li>
+<li>用来调整堆的大小来达到期望的吞吐量目标-XX:GCTimeRatio&#x3D;ratio （公式：1&#x2F;(1+ratio)）(若ratio为99，则意为允许在100分钟内有1分钟的时间来STW用来GC)</li>
+<li>用来调整每次垃圾回收的期望时间(默认的为200ms)-XX:MaxGCPauseMillis&#x3D;ms</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221027201022728.png" srcset="/img/loading.gif" lazyload alt="image-20221027201022728"></p>
+</li>
+</ul>
+<h3 id="2-4-3、响应时间优先"><a href="#2-4-3、响应时间优先" class="headerlink" title="2.4.3、响应时间优先"></a>2.4.3、响应时间优先</h3><ul>
+<li><p>多线程</p>
+</li>
+<li><p>堆内存较大，多核CPU</p>
+</li>
+<li><p>尽可能让单次STW的时间最短0.1 0.1 0.1 0.1 0.1&#x3D;0.5</p>
+</li>
+<li><p>开启响应时间优先的回收器语句：-XX:+UseConcMarkSweepGC ~ -XX:+UseParNewGC ~ SerialOld</p>
+<ul>
+<li><p>并行和并发的线程数设置：-XX:ParallelGCThreads&#x3D;n ~ -XX:ConcGCThreads&#x3D;threads</p>
+</li>
+<li><p>执行CMS垃圾回收的内存占比：-XX:CMSInitiatingOccupancyFraction&#x3D;percent</p>
+</li>
+<li><p>设置CMS垃圾回收重新标记前清除垃圾：-XX:+CMSScavengeBeforeRemark</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>ps：</strong>此处的ConcMarkSweepGC是工作在老年代的基于标记清除法的垃圾回收器，与之配合的是UseParNewGC，它是工作在新生代的基于复制算法的垃圾回收器。有时CMSGC会发生并发失败的问题，这个时候会采用补救措施SerialOld。</p>
+<p><img src="/2022/10/26/JVM/image-20221027202342818.png" srcset="/img/loading.gif" lazyload alt="image-20221027202342818"></p>
+<h3 id="2-4-4、G1"><a href="#2-4-4、G1" class="headerlink" title="2.4.4、G1"></a>2.4.4、G1</h3><p>定义：Garbage First</p>
+<ul>
+<li>2004 论文发布 </li>
+<li>2009 JDK 6u14 体验 </li>
+<li>2012 JDK 7u4 官方支持 </li>
+<li>2017 JDK 9 默认</li>
+</ul>
+<p>适用场景</p>
+<ul>
+<li>同时注重吞吐量（Throughput）和低延迟（Low latency），默认的暂停目标是 200 ms</li>
+<li>超大堆内存，会将堆划分为多个大小相等的 Region</li>
+<li>整体上是 标记+整理 算法，两个区域之间是 复制 算法</li>
+</ul>
+<p>相关JVM参数</p>
+<ul>
+<li><p>开启G1语句：-XX:+UseG1GC </p>
+<ul>
+<li><p>-XX:G1HeapRegionSize&#x3D;size </p>
+</li>
+<li><p>-XX:MaxGCPauseMillis&#x3D;time</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="1）G1垃圾回收阶段"><a href="#1）G1垃圾回收阶段" class="headerlink" title="1）G1垃圾回收阶段"></a>1）G1垃圾回收阶段</h4><p><img src="/2022/10/26/JVM/image-20221028090805853.png" srcset="/img/loading.gif" lazyload alt="image-20221028090805853"></p>
+<h4 id="2）Young-Collection"><a href="#2）Young-Collection" class="headerlink" title="2）Young Collection"></a>2）Young Collection</h4><ul>
+<li>会STW</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221028094245001.png" srcset="/img/loading.gif" lazyload alt="image-20221028094245001"></p>
+<p><img src="/2022/10/26/JVM/image-20221028094253567.png" srcset="/img/loading.gif" lazyload alt="image-20221028094253567"></p>
+<p><img src="/2022/10/26/JVM/image-20221028094305004.png" srcset="/img/loading.gif" lazyload alt="image-20221028094305004"></p>
+<h4 id="3）Young-Collection-CM-Concurrent-Mark"><a href="#3）Young-Collection-CM-Concurrent-Mark" class="headerlink" title="3）Young Collection + CM(Concurrent Mark)"></a>3）Young Collection + CM(Concurrent Mark)</h4><ul>
+<li>在Young GC时会进行GC Root的初始标记</li>
+<li>老年代占用堆空间比例达到阈值时，进行并发标记(不会STW)，有下面的JVM参数决定</li>
+</ul>
+<p>-XX:InitiatingHeapOccupancyPercent&#x3D;percent(默认45%)</p>
+<p><img src="/2022/10/26/JVM/image-20221028094850389.png" srcset="/img/loading.gif" lazyload alt="image-20221028094850389"></p>
+<h4 id="4）Mixed-Collection"><a href="#4）Mixed-Collection" class="headerlink" title="4）Mixed Collection"></a>4）Mixed Collection</h4><p>会对E、S、O进行全面垃圾回收</p>
+<ul>
+<li>最终标记(Remark)会STW</li>
+<li>拷贝存活(Evacuation)会STW</li>
+</ul>
+<p>-XX:MaxGCPauseMillis&#x3D;ms</p>
+<p><img src="/2022/10/26/JVM/image-20221028095006258.png" srcset="/img/loading.gif" lazyload alt="image-20221028095006258"></p>
+<h4 id="5）Full-GC"><a href="#5）Full-GC" class="headerlink" title="5）Full GC"></a>5）Full GC</h4><ul>
+<li>SerialGC<ul>
+<li>新生代内存不足发生的垃圾收集器 - minor GC</li>
+<li>老年代内存不足发生的垃圾收集器 - ful GC</li>
+</ul>
+</li>
+<li>ParallelGC<ul>
+<li>新生代内存不足发生的垃圾收集 - minor GC</li>
+<li>老年代内存不足发生的垃圾收集 - full GC</li>
+</ul>
+</li>
+<li>CMS<ul>
+<li>新生代内存不足发生的垃圾收集 - minor GC</li>
+<li>老年代内存不足</li>
+</ul>
+</li>
+<li>G1<ul>
+<li>新生代内存不足发生的垃圾收集 - minor GC</li>
+<li>老年代内存不足</li>
+</ul>
+</li>
+</ul>
+<h4 id="6）Young-Collection跨代引用"><a href="#6）Young-Collection跨代引用" class="headerlink" title="6）Young Collection跨代引用"></a>6）Young Collection跨代引用</h4><ul>
+<li>新生代回收的跨代引用(老年代引用新生代)问题</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221028095213153.png" srcset="/img/loading.gif" lazyload alt="image-20221028095213153"></p>
+<ul>
+<li>卡表与 Remembered Set</li>
+<li>在引用变更时通过 post-write barrier + dirty card queue</li>
+<li>concurrent refinement threads 更新 Remembered Set</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221028095242383.png" srcset="/img/loading.gif" lazyload alt="image-20221028095242383"></p>
+<h4 id="7）Remark"><a href="#7）Remark" class="headerlink" title="7）Remark"></a>7）Remark</h4><ul>
+<li>pre-write barrier + satb_mark_queue</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221028095308744.png" srcset="/img/loading.gif" lazyload alt="image-20221028095308744"></p>
+<h4 id="8）JDK-8u20字符串去重"><a href="#8）JDK-8u20字符串去重" class="headerlink" title="8）JDK 8u20字符串去重"></a>8）JDK 8u20字符串去重</h4><ul>
+<li>优点：节省大量内存</li>
+<li>缺点：略微躲闪用了cpu时间，新生代回收时间略微增加</li>
+</ul>
+<p>-XX:+UseStringDeduplication</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">String</span> s1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">&quot;hello&quot;</span>); <span class="hljs-regexp">//</span> char[]&#123;<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>&#125;<br><span class="hljs-built_in">String</span> s2 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">&quot;hello&quot;</span>); <span class="hljs-regexp">//</span> char[]&#123;<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;l&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>将所有新分配的字符串放入一个队列</li>
+<li>当新生代回收时，G1并发检查是否有字符串重复</li>
+<li>如果它们值一样，让它们引用同一个 char[]</li>
+<li>注意，与 String.intern() 不一样<ul>
+<li>String.intern() 关注的是字符串对象</li>
+<li>而字符串去重关注的是 char[]</li>
+<li>在 JVM 内部，使用了不同的字符串表</li>
+</ul>
+</li>
+</ul>
+<h4 id="9）JDK-8u40并发标记类卸载"><a href="#9）JDK-8u40并发标记类卸载" class="headerlink" title="9）JDK 8u40并发标记类卸载"></a>9）JDK 8u40并发标记类卸载</h4><p>所有对象都经过并发标记后，就能知道哪些类不再被使用，当一个类加载器的所有类都不再使用，则卸 载它所加载的所有类</p>
+<p>-XX:+ClassUnloadingWithConcurrentMark 默认启用</p>
+<h4 id="10）JDK-8u60回收巨型对象"><a href="#10）JDK-8u60回收巨型对象" class="headerlink" title="10）JDK 8u60回收巨型对象"></a>10）JDK 8u60回收巨型对象</h4><ul>
+<li>一个对象大于 region 的一半时，称之为巨型对象</li>
+<li>G1 不会对巨型对象进行拷贝</li>
+<li>回收时被优先考虑</li>
+<li>G1 会跟踪老年代所有 incoming 引用，这样老年代 incoming 引用为0 的巨型对象就可以在新生 代垃圾回收时处理掉</li>
+</ul>
+<h4 id="11）JDK-9-并发标记起始时间的调整"><a href="#11）JDK-9-并发标记起始时间的调整" class="headerlink" title="11）JDK 9 并发标记起始时间的调整"></a>11）JDK 9 并发标记起始时间的调整</h4><ul>
+<li>并发标记必须在堆空间占满前完成，否则退化为 FullGC</li>
+<li>JDK 9 之前需要使用 -XX:InitiatingHeapOccupancyPercent</li>
+<li>JDK 9 可以动态调整<ul>
+<li>-XX:InitiatingHeapOccupancyPercent 用来设置初始值</li>
+<li>进行数据采样并动态调整</li>
+<li>总会添加一个安全的空档空间</li>
+</ul>
+</li>
+</ul>
+<h4 id="12）JDK-9-更高效的回收"><a href="#12）JDK-9-更高效的回收" class="headerlink" title="12）JDK 9 更高效的回收"></a>12）JDK 9 更高效的回收</h4><ul>
+<li>250+增强 </li>
+<li>180+bug修复 </li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning">https://docs.oracle.com/en/java/javase/12/gctuning</a></li>
+</ul>
+<h2 id="2-5、垃圾回收调优"><a href="#2-5、垃圾回收调优" class="headerlink" title="2.5、垃圾回收调优"></a>2.5、垃圾回收调优</h2><p>预备知识</p>
+<ul>
+<li>掌握GC相关的VM参数，会基本的空间调整</li>
+<li>掌握相关工具</li>
+<li>明白一点：调优跟应用、环境有关，没有放之四海而皆准的法则</li>
+</ul>
+<p>查看当前虚拟机运行参数：</p>
+<p>java -XX:+PrintFlagsFinal -version | findstr “GC”</p>
+<ul>
+<li>-XX:+PrintFlagsInitial 是打印所有的默认参数设置</li>
+<li>-XX:+PrintFlagsFinal 是打印最终值，如果某个默认值被新值覆盖，显示新值</li>
+<li>-XX:+PrintCommandLineFlags 是打印那些被新值覆盖的项</li>
+</ul>
+<h3 id="2-5-1、调优领域"><a href="#2-5-1、调优领域" class="headerlink" title="2.5.1、调优领域"></a>2.5.1、调优领域</h3><ul>
+<li>内存</li>
+<li>竞争锁</li>
+<li>cpu占用</li>
+<li>IO</li>
+</ul>
+<h3 id="2-5-2、确定目标"><a href="#2-5-2、确定目标" class="headerlink" title="2.5.2、确定目标"></a>2.5.2、确定目标</h3><ul>
+<li>[低延迟]还是[高吞吐量]，选择合适的回收器，比如：如果开发的是进行科学研究一般要求高吞吐量而不是低延迟，而如果开发的是互联网项目一般要求低延迟。</li>
+<li>低延迟的垃圾回收器有：CMS,G1,ZGC</li>
+<li>高吞吐量的垃圾回收器有：ParallelGC</li>
+<li>Zing虚拟机号称0停顿</li>
+</ul>
+<h3 id="2-5-3、最快的GC是不发生GC"><a href="#2-5-3、最快的GC是不发生GC" class="headerlink" title="2.5.3、最快的GC是不发生GC"></a>2.5.3、最快的GC是不发生GC</h3><ul>
+<li>查看FullGC前后的内存占用，考虑下面几个问题<ul>
+<li>数据是不是太多？</li>
+<li>数据表示是否太臃肿？<ul>
+<li>对象图</li>
+<li>对象大小</li>
+</ul>
+</li>
+<li>是否存在内存泄漏?</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-5-4、新生代调优"><a href="#2-5-4、新生代调优" class="headerlink" title="2.5.4、新生代调优"></a>2.5.4、新生代调优</h3><ul>
+<li>新生代的特点<ul>
+<li>所有的new操作的内存分配非常廉价<ul>
+<li>TLAB thread-local allocation buffer</li>
+</ul>
+</li>
+<li>死亡对象的回收代价是零</li>
+<li>大部分对象用过即死</li>
+<li>Minor GC的时间远远低于Full GC</li>
+</ul>
+</li>
+<li>新生代的内存越大越好吗？</li>
+</ul>
+<p>-Xmn Sets the initial and maximum size (in bytes) of the heap for the young generation (nursery). GC is performed in this region more often than in other regions. If the size for the young generation is too small, then a lot of minor garbage collections are performed. If the size is too large, then only full garbage collections are performed, which can take a long time to complete. Oracle recommends that you keep the size for the young generation greater than 25% and less than 50% of the overall heap size.</p>
+<ul>
+<li>调优后的理想状态（调优规则）：<ul>
+<li>新生代能容纳所有【并发量 * (请求-响应)】的数据</li>
+<li>幸存区大到能保留【当前活跃对象+需要晋升对象】</li>
+<li>晋升阈值配置得当，让长时间存活对象尽快晋升</li>
+</ul>
+</li>
+</ul>
+<p>-XX:MaxTenuringThreshold&#x3D;threshold </p>
+<p>-XX:+PrintTenuringDistribution</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs terminal">Desired survivor size 48286924 bytes, new threshold 10 (max 10)<br>- age 1: 28992024 bytes, 28992024 total<br>- age 2: 1366864 bytes, 30358888 total<br>- age 3: 1425912 bytes, 31784800 total<br>...<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-5-5、老年代调优"><a href="#2-5-5、老年代调优" class="headerlink" title="2.5.5、老年代调优"></a>2.5.5、老年代调优</h3><p>以CMS为例</p>
+<ul>
+<li><p>调优后的理想状态（调优规则）：</p>
+<ul>
+<li><p>以 CMS 为例 CMS 的老年代内存越大越好</p>
+</li>
+<li><p>先尝试不做调优，如果没有 Full GC 那么说明已经很不错了，否则先尝试调优新生代 </p>
+</li>
+<li><p>观察发生 Full GC 时老年代内存占用，将老年代内存预设调大 1&#x2F;4 ~ 1&#x2F;3</p>
+<ul>
+<li>-XX:CMSInitiatingOccupancyFraction&#x3D;percent</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-5-6、案例"><a href="#2-5-6、案例" class="headerlink" title="2.5.6、案例"></a>2.5.6、案例</h3><ul>
+<li>案例1：Full GC 和 Minor GC频繁<ul>
+<li>分析：GC特别频繁，说明我们的空间紧张，究竟是哪部分空间紧张呢？如果是新生代空间紧张，那么当我们业务高峰期来了大量对象被创建很快就把我们新生代的空间给塞满了，如果塞满了还会造成一个后果，它空间紧张了那么它对象晋升的阈值就会降低，导致很多本来生存周期很短的对象也会被晋升到老年代去，这样情况就进一步恶化了。老年代就会存在很多生存周期很短的对象，然后进一步触发Full GC的频繁发生。</li>
+<li>解决方法：增大了新生代的内存，之后新生代的内存充裕了这样Minor GC就不在那么频繁了，同时增大了幸存区的空间同时也提高了晋升阈值。这样就会让很多生命周期较短的对象尽可能的留在新生代而不要晋升到老年代中，这样也就会使老年代的Full GC频率降低。</li>
+</ul>
+</li>
+<li>案列2：请求高峰期发生Full GC，单次暂停时间特别长(CMS)<ul>
+<li>分析：</li>
+<li>解决方法：</li>
+</ul>
+</li>
+<li>案例3：老年代充裕情况下，发生Full GC（1.7）<ul>
+<li>分析：</li>
+<li>解决方法：</li>
+</ul>
+</li>
+</ul>
+<h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1>
                 
               </div>
             
@@ -668,7 +946,7 @@
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>John Doe</div>
+          <div>Kblayt</div>
         </div>
       
       
