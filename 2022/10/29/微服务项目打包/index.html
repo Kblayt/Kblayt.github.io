@@ -19,19 +19,19 @@
     <meta name="description" content="微服务项目打包1、项目结构说明 其中TakeAwayBack为父项目，其它项目为子项目，Common为其它项目所依赖的公共项目。 2、打包步骤2.1、配置父项目的pom文件修改打包为pom（一般父级的打包方式为pom，所以只要有子项目的项目都需要配置packaging节点为pom。比如：如果MerchantsConsumer下有子项目那么该项目pon文件中的packaging节点也要配置为pom）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务项目打包">
-<meta property="og:url" content="http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/index.html">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="微服务项目打包1、项目结构说明 其中TakeAwayBack为父项目，其它项目为子项目，Common为其它项目所依赖的公共项目。 2、打包步骤2.1、配置父项目的pom文件修改打包为pom（一般父级的打包方式为pom，所以只要有子项目的项目都需要配置packaging节点为pom。比如：如果MerchantsConsumer下有子项目那么该项目pon文件中的packaging节点也要配置为pom）">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png">
-<meta property="og:image" content="http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029115316876.png">
-<meta property="og:image" content="http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029115355897.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029115316876.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029115355897.png">
 <meta property="article:published_time" content="2022-10-29T02:17:13.000Z">
-<meta property="article:modified_time" content="2022-10-29T04:14:27.753Z">
+<meta property="article:modified_time" content="2022-10-29T04:39:42.875Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="微服务项目打包">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png">
+<meta name="twitter:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png">
   
   
   
@@ -73,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -277,7 +277,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="微服务项目打包"><a href="#微服务项目打包" class="headerlink" title="微服务项目打包"></a>微服务项目打包</h1><h2 id="1、项目结构说明"><a href="#1、项目结构说明" class="headerlink" title="1、项目结构说明"></a>1、项目结构说明</h2><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png" srcset="/img/loading.gif" lazyload alt="image-20221029104254419"></p>
+                <h1 id="微服务项目打包"><a href="#微服务项目打包" class="headerlink" title="微服务项目打包"></a>微服务项目打包</h1><h2 id="1、项目结构说明"><a href="#1、项目结构说明" class="headerlink" title="1、项目结构说明"></a>1、项目结构说明</h2><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/image-20221029104254419.png" srcset="/img/loading.gif" lazyload alt="image-20221029104254419"></p>
 <p>其中TakeAwayBack为父项目，其它项目为子项目，Common为其它项目所依赖的公共项目。</p>
 <h2 id="2、打包步骤"><a href="#2、打包步骤" class="headerlink" title="2、打包步骤"></a>2、打包步骤</h2><h3 id="2-1、配置父项目的pom文件"><a href="#2-1、配置父项目的pom文件" class="headerlink" title="2.1、配置父项目的pom文件"></a>2.1、配置父项目的pom文件</h3><p>修改打包为pom（一般父级的打包方式为pom，所以只要有子项目的项目都需要配置packaging节点为pom。比如：如果MerchantsConsumer下有子项目那么该项目pon文件中的packaging节点也要配置为pom）</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">packaging</span>&gt;</span>pom<span class="hljs-tag">&lt;/<span class="hljs-name">packaging</span>&gt;</span><br></code></pre></td></tr></table></figure>
@@ -368,7 +368,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>微服务项目打包</div>
-      <div>http://example.com/2022/10/29/微服务项目打包/</div>
+      <div>https://kblayt.github.io/2022/10/29/微服务项目打包/</div>
     </div>
     <div class="license-meta">
       

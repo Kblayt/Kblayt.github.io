@@ -19,7 +19,7 @@
     <meta name="description" content="1、打开想要提交或者克隆的项目文件夹 2、进入该文件夹打开Git Bash Here 3、初始化用户，告诉git你是谁  git config –global user.name “你的名字或昵称”  git config –global user.email “你的邮箱”   4、在该文件夹中执行下面命令，完成初始化  git init  git remote add origin &lt;项目">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git提交项目笔记">
-<meta property="og:url" content="http://example.com/2022/10/22/Git%E6%8F%90%E4%BA%A4%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/22/Git%E6%8F%90%E4%BA%A4%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="1、打开想要提交或者克隆的项目文件夹 2、进入该文件夹打开Git Bash Here 3、初始化用户，告诉git你是谁  git config –global user.name “你的名字或昵称”  git config –global user.email “你的邮箱”   4、在该文件夹中执行下面命令，完成初始化  git init  git remote add origin &lt;项目">
 <meta property="og:locale" content="zh_CN">
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          956 字
+          958 字
         
       </span>
     
@@ -288,14 +288,14 @@
 <ul>
 <li><p>git init</p>
 </li>
-<li><p>git remote add origin &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#109;">&#x67;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#109;</a>:xxx&#x2F;xxx.git</p>
+<li><p>git remote add origin &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#x63;&#111;&#109;">&#x67;&#105;&#x74;&#64;&#103;&#105;&#x74;&#101;&#x65;&#x2e;&#x63;&#111;&#109;</a>:xxx&#x2F;xxx.git</p>
 </li>
 <li><p>如果提交到github上则为： https:&#x2F;&#x2F;&lt;Personal access tokens(自己github上的tokens)&gt;@github.com&#x2F;Kblayt&#x2F;Kblayt.github.io.git</p>
 </li>
 </ul>
 <p>5、若想克隆，只需要执行命令</p>
 <ul>
-<li>git clone &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#101;&#101;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#101;&#101;&#46;&#x63;&#111;&#109;</a>:xxx&#x2F;xxx.git</li>
+<li>git clone &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x65;&#x65;&#46;&#x63;&#111;&#x6d;</a>:xxx&#x2F;xxx.git</li>
 </ul>
 <p>6、进入已经初始化好的或者克隆项目的目录然后执行：</p>
 <p>从服务器下更新项目，因为已经clone过，所以不需要再更新</p>
@@ -370,7 +370,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Git提交项目笔记</div>
-      <div>http://example.com/2022/10/22/Git提交项目笔记/</div>
+      <div>https://kblayt.github.io/2022/10/22/Git提交项目笔记/</div>
     </div>
     <div class="license-meta">
       

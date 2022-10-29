@@ -19,62 +19,62 @@
     <meta name="description" content="什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态 比较： JVM，JRE，JDK  学习JVM有什么用面试 理解底层的实现原理 中高级程序员必备技能   1、JVM内存结构 2、GC垃圾回收 3、Java Class（类的字节码结构、">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM">
-<meta property="og:url" content="http://example.com/2022/10/26/JVM/index.html">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/26/JVM/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态 比较： JVM，JRE，JDK  学习JVM有什么用面试 理解底层的实现原理 中高级程序员必备技能   1、JVM内存结构 2、GC垃圾回收 3、Java Class（类的字节码结构、">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE25e1cb46f11e9645a38327ed44b90a70.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE41561026b067c83cc38dbac758f4c182.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEcb7171c291b81048105a4fcc1b3adb03.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE25c52f6bcc83666a2b7882eeb1aafa8b.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE985e7c0ac9a60d961a873d7fd4404924.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEf9f8514f9942614b9db2a4882858fe5c.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE478700b79798874b7d2c1a67fac3a8a9.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE66d1731efb3000fc66666d0183362074.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE18bfa381dad22654f3ac2ccde831e642.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEd28878fea598d5b0ce56a9d8156f1569.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE434ca1e65faa9ec0c2881244b85f3961.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE5803d56511d00eed793f6dc0d2218794.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE51d16482e606b4cd95d2f4147ee89ca2.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEa7bec0913fa275fc4bb630c57a6bdd2b.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEc770e97a68b73a5e3152462fbef6ec97.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCEe08ac275d90a93d3eb8985ba2171024f.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE7f704c060d981682045cbee26a35eeeb.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026091351137.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026095722397.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026170923648.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221026171211997.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027085226369.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027092433116.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135600774.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135813905.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135944213.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027135957779.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140013820.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140030356.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027140540693.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027141430630.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027200556584.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027201022728.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221027202342818.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028090805853.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094245001.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094253567.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094305004.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028094850389.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095006258.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095213153.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095242383.png">
-<meta property="og:image" content="http://example.com/2022/10/26/JVM/image-20221028095308744.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE25e1cb46f11e9645a38327ed44b90a70.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE41561026b067c83cc38dbac758f4c182.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEcb7171c291b81048105a4fcc1b3adb03.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE25c52f6bcc83666a2b7882eeb1aafa8b.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE985e7c0ac9a60d961a873d7fd4404924.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEf9f8514f9942614b9db2a4882858fe5c.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE478700b79798874b7d2c1a67fac3a8a9.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE66d1731efb3000fc66666d0183362074.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE18bfa381dad22654f3ac2ccde831e642.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEd28878fea598d5b0ce56a9d8156f1569.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE434ca1e65faa9ec0c2881244b85f3961.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE5803d56511d00eed793f6dc0d2218794.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE51d16482e606b4cd95d2f4147ee89ca2.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEa7bec0913fa275fc4bb630c57a6bdd2b.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEc770e97a68b73a5e3152462fbef6ec97.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCEe08ac275d90a93d3eb8985ba2171024f.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE7f704c060d981682045cbee26a35eeeb.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221026091351137.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221026095722397.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE3463ee2dc6acab7dccf42a00cd82cbeb.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221026170923648.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221026171211997.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027085226369.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027092433116.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027135600774.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027135813905.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027135944213.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027135957779.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027140013820.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027140030356.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027140540693.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027141430630.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027200556584.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027201022728.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221027202342818.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028090805853.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028094245001.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028094253567.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028094305004.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028094850389.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095006258.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095213153.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095242383.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095308744.png">
 <meta property="article:published_time" content="2022-10-26T07:11:15.000Z">
 <meta property="article:modified_time" content="2022-10-29T00:23:43.421Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
+<meta name="twitter:image" content="https://kblayt.github.io/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
   
   
   
@@ -116,7 +116,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -940,7 +940,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>JVM</div>
-      <div>http://example.com/2022/10/26/JVM/</div>
+      <div>https://kblayt.github.io/2022/10/26/JVM/</div>
     </div>
     <div class="license-meta">
       
