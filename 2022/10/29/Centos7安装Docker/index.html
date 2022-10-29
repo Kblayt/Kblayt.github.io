@@ -337,7 +337,7 @@
 <h2 id="3-3-配置Docker信任地址"><a href="#3-3-配置Docker信任地址" class="headerlink" title="3.3.配置Docker信任地址"></a>3.3.配置Docker信任地址</h2><p>我们的私服采用的是http协议，默认不被Docker信任，所以需要做一个配置：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 打开要修改的文件</span><br>vi <span class="hljs-regexp">/etc/</span>docker/daemon.json<br><span class="hljs-comment"># 添加内容：</span><br><span class="hljs-string">&quot;insecure-registries&quot;</span>:[<span class="hljs-string">&quot;http://192.168.150.101:8080&quot;</span>]<br><span class="hljs-comment"># 重加载</span><br>systemctl daemon-reload<br><span class="hljs-comment"># 重启docker</span><br>systemctl restart docker<br><br></code></pre></td></tr></table></figure>
 
-
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
