@@ -16,15 +16,21 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="0.安装DockerDocker 分为 CE 和 EE 两大版本。CE 即社区版（免费，支持周期 7 个月），EE 即企业版，强调安全，付费使用，支持周期 24 个月。 Docker CE 分为 stable test 和 nightly 三个更新频道。 官方网站上有各种环境下的 安装指南，这里主要介绍 Docker CE 在 CentOS上的安装。 1.CentOS安装DockerDocker">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Centos7安装Docker">
 <meta property="og:url" content="http://example.com/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0.安装DockerDocker 分为 CE 和 EE 两大版本。CE 即社区版（免费，支持周期 7 个月），EE 即企业版，强调安全，付费使用，支持周期 24 个月。 Docker CE 分为 stable test 和 nightly 三个更新频道。 官方网站上有各种环境下的 安装指南，这里主要介绍 Docker CE 在 CentOS上的安装。 1.CentOS安装DockerDocker">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/WEBRESOURCE0cc64d0658051d2e441626162799fd29.png">
+<meta property="og:image" content="http://example.com/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/WEBRESOURCE87edc261969e51ab61c4107bd9b6725b.png">
 <meta property="article:published_time" content="2022-10-29T01:26:13.000Z">
-<meta property="article:modified_time" content="2022-10-29T01:26:13.077Z">
+<meta property="article:modified_time" content="2022-10-29T02:24:00.928Z">
 <meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="Centos7安装Docker">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/WEBRESOURCE0cc64d0658051d2e441626162799fd29.png">
   
   
   
@@ -216,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.9k 字
         
       </span>
     
@@ -227,7 +233,7 @@
         
         
         
-          1 分钟
+          25 分钟
         
       </span>
     
@@ -270,7 +276,68 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="0-安装Docker"><a href="#0-安装Docker" class="headerlink" title="0.安装Docker"></a>0.安装Docker</h1><p>Docker 分为 CE 和 EE 两大版本。CE 即社区版（免费，支持周期 7 个月），EE 即企业版，强调安全，付费使用，支持周期 24 个月。</p>
+<p>Docker CE 分为 stable test 和 nightly 三个更新频道。</p>
+<p>官方网站上有各种环境下的 安装指南，这里主要介绍 Docker CE 在 CentOS上的安装。</p>
+<h1 id="1-CentOS安装Docker"><a href="#1-CentOS安装Docker" class="headerlink" title="1.CentOS安装Docker"></a>1.CentOS安装Docker</h1><p>Docker CE 支持 64 位版本 CentOS 7，并且要求内核版本不低于 3.10， CentOS 7 满足最低内核的要求，所以我们在CentOS 7安装Docker。</p>
+<h2 id="1-1-卸载（可选）"><a href="#1-1-卸载（可选）" class="headerlink" title="1.1.卸载（可选）"></a>1.1.卸载（可选）</h2><p>如果之前安装过旧版本的Docker，可以使用下面命令卸载：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs livescript">yum remove docker <span class="hljs-string">\</span><br>                  docker-client <span class="hljs-string">\</span><br>                  docker-client-latest <span class="hljs-string">\</span><br>                  docker-common <span class="hljs-string">\</span><br>                  docker-latest <span class="hljs-string">\</span><br>                  docker-latest-logrotate <span class="hljs-string">\</span><br>                  docker-logrotate <span class="hljs-string">\</span><br>                  docker-selinux <span class="hljs-string">\</span><br>                  docker-engine-selinux <span class="hljs-string">\</span><br>                  docker-engine <span class="hljs-string">\</span><br>                  docker-ce<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-安装docker"><a href="#1-2-安装docker" class="headerlink" title="1.2.安装docker"></a>1.2.安装docker</h2><p>首先需要大家虚拟机联网，安装yum工具</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs haskell"><span class="hljs-title">yum</span> install -y yum-utils \<br>           device-mapper-persistent-<span class="hljs-class"><span class="hljs-keyword">data</span> \</span><br>           lvm2 <span class="hljs-comment">--skip-broken</span><br><br></code></pre></td></tr></table></figure>
+
+<p>然后更新本地镜像源：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 设置docker镜像源</span><br>yum-config-manager \<br>    --add-repo \<br>    https:<span class="hljs-regexp">//mi</span>rrors.aliyun.com<span class="hljs-regexp">/docker-ce/</span>linux<span class="hljs-regexp">/centos/</span>docker-ce.repo<br>    <br>sed -i <span class="hljs-string">&#x27;s/download.docker.com/mirrors.aliyun.com\/docker-ce/g&#x27;</span> <span class="hljs-regexp">/etc/yum</span>.repos.d/docker-ce.repo<br><br>yum makecache fast<br><br></code></pre></td></tr></table></figure>
+
+<p>然后输入命令：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum <span class="hljs-keyword">install</span> -y docker-ce<br><br></code></pre></td></tr></table></figure>
+
+<p>docker-ce为社区免费版本。稍等片刻，docker即可安装成功。</p>
+<h2 id="1-3-启动docker"><a href="#1-3-启动docker" class="headerlink" title="1.3.启动docker"></a>1.3.启动docker</h2><p>Docker应用需要用到各种端口，逐一去修改防火墙设置。非常麻烦，因此建议大家直接关闭防火墙！</p>
+<p>启动docker前，一定要关闭防火墙后！！</p>
+<p>启动docker前，一定要关闭防火墙后！！</p>
+<p>启动docker前，一定要关闭防火墙后！！</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-meta"># 关闭</span><br>systemctl <span class="hljs-keyword">stop</span> firewalld<br><span class="hljs-meta"># 禁止开机启动防火墙</span><br>systemctl <span class="hljs-keyword">disable</span> firewalld<br><br></code></pre></td></tr></table></figure>
+
+<p>通过命令启动docker：</p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl start docker  <span class="hljs-comment"># 启动docker服务</span><br><br><span class="hljs-params">system</span>ctl stop docker  <span class="hljs-comment"># 停止docker服务</span><br><br><span class="hljs-params">system</span>ctl restart docker  <span class="hljs-comment"># 重启docker服务</span><br><br></code></pre></td></tr></table></figure>
+
+<p>然后输入命令，可以查看docker版本：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">docker -v</span><br><br></code></pre></td></tr></table></figure>
+
+<p>如图：</p>
+<p><img src="/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/WEBRESOURCE0cc64d0658051d2e441626162799fd29.png" srcset="/img/loading.gif" lazyload alt="WEBRESOURCE0cc64d0658051d2e441626162799fd29"></p>
+<h2 id="1-4-配置镜像加速"><a href="#1-4-配置镜像加速" class="headerlink" title="1.4.配置镜像加速"></a>1.4.配置镜像加速</h2><p>docker官方镜像仓库网速较差，我们需要设置国内镜像服务：</p>
+<p>参考阿里云的镜像加速文档：<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</a></p>
+<h1 id="2-CentOS7安装DockerCompose"><a href="#2-CentOS7安装DockerCompose" class="headerlink" title="2.CentOS7安装DockerCompose"></a>2.CentOS7安装DockerCompose</h1><h2 id="2-1-下载"><a href="#2-1-下载" class="headerlink" title="2.1.下载"></a>2.1.下载</h2><p>Linux下需要通过命令下载：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 安装</span><br>curl -L https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/docker/</span>compose<span class="hljs-regexp">/releases/</span>download<span class="hljs-regexp">/1.23.1/</span>docker-compose-`uname -s`-`uname -m` &gt; <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>docker-compose<br><br></code></pre></td></tr></table></figure>
+
+<p>如果下载速度较慢，或者下载失败，可以使用课前资料提供的docker-compose文件：</p>
+<p><img src="/2022/10/29/Centos7%E5%AE%89%E8%A3%85Docker/WEBRESOURCE87edc261969e51ab61c4107bd9b6725b.png" srcset="/img/loading.gif" lazyload alt="WEBRESOURCE87edc261969e51ab61c4107bd9b6725b"></p>
+<p>上传到&#x2F;usr&#x2F;local&#x2F;bin&#x2F;目录也可以。</p>
+<h2 id="2-2-修改文件权限"><a href="#2-2-修改文件权限" class="headerlink" title="2.2.修改文件权限"></a>2.2.修改文件权限</h2><p>修改文件权限：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 修改权限</span><br>chmod +x <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>docker-compose<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-Base自动补全命令："><a href="#2-3-Base自动补全命令：" class="headerlink" title="2.3.Base自动补全命令："></a>2.3.Base自动补全命令：</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 补全命令</span><br>curl -L https:<span class="hljs-regexp">//</span>raw.githubusercontent.com<span class="hljs-regexp">/docker/</span>compose<span class="hljs-regexp">/1.29.1/</span>contrib<span class="hljs-regexp">/completion/</span>bash<span class="hljs-regexp">/docker-compose &gt; /</span>etc<span class="hljs-regexp">/bash_completion.d/</span>docker-compose<br><br></code></pre></td></tr></table></figure>
+
+<p>如果这里出现错误，需要修改自己的hosts文件：</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">echo <span class="hljs-string">&quot;199.232.68.133 raw.githubusercontent.com&quot;</span> &gt;&gt; <span class="hljs-regexp">/etc/</span>hosts<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="3-Docker镜像仓库"><a href="#3-Docker镜像仓库" class="headerlink" title="3.Docker镜像仓库"></a>3.Docker镜像仓库</h1><p>搭建镜像仓库可以基于Docker官方提供的DockerRegistry来实现。</p>
+<p>官网地址：<a target="_blank" rel="noopener" href="https://hub.docker.com/_/registry">https://hub.docker.com/_/registry</a></p>
+<h2 id="3-1-简化版镜像仓库"><a href="#3-1-简化版镜像仓库" class="headerlink" title="3.1.简化版镜像仓库"></a>3.1.简化版镜像仓库</h2><p>Docker官方的Docker Registry是一个基础版本的Docker镜像仓库，具备仓库管理的完整功能，但是没有图形化界面。</p>
+<p>搭建方式比较简单，命令如下：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livescript">docker run -d <span class="hljs-string">\</span><br>    --restart=always <span class="hljs-string">\</span><br>    --name registry	<span class="hljs-string">\</span><br>    -p <span class="hljs-number">5000</span>:<span class="hljs-number">5000</span> <span class="hljs-string">\</span><br>    -v registry-data:/<span class="hljs-keyword">var</span>/lib/registry <span class="hljs-string">\</span><br>    registry<br><br></code></pre></td></tr></table></figure>
+
+<p>命令中挂载了一个数据卷registry-data到容器内的&#x2F;var&#x2F;lib&#x2F;registry 目录，这是私有镜像库存放数据的目录。</p>
+<p>访问<a target="_blank" rel="noopener" href="http://yourip:5000/v2/_catalog">http://YourIp:5000/v2/_catalog</a> 可以查看当前私有镜像服务中包含的镜像</p>
+<h2 id="3-2-带有图形化界面版本"><a href="#3-2-带有图形化界面版本" class="headerlink" title="3.2.带有图形化界面版本"></a>3.2.带有图形化界面版本</h2><p>使用DockerCompose部署带有图象界面的DockerRegistry，命令如下：</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3.0&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">registry</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">registry</span><br>    <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./registry-data:/var/lib/registry</span><br>  <span class="hljs-attribute">ui</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">joxit/docker-registry-ui:static</span><br>    <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">8080:80</span><br>    <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">REGISTRY_TITLE=传智教育私有仓库</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">REGISTRY_URL=http://registry:5000</span><br>    <span class="hljs-attribute">depends_on</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">registry</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-配置Docker信任地址"><a href="#3-3-配置Docker信任地址" class="headerlink" title="3.3.配置Docker信任地址"></a>3.3.配置Docker信任地址</h2><p>我们的私服采用的是http协议，默认不被Docker信任，所以需要做一个配置：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 打开要修改的文件</span><br>vi <span class="hljs-regexp">/etc/</span>docker/daemon.json<br><span class="hljs-comment"># 添加内容：</span><br><span class="hljs-string">&quot;insecure-registries&quot;</span>:[<span class="hljs-string">&quot;http://192.168.150.101:8080&quot;</span>]<br><span class="hljs-comment"># 重加载</span><br>systemctl daemon-reload<br><span class="hljs-comment"># 重启docker</span><br>systemctl restart docker<br><br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -278,6 +345,41 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Java/SpringCloud/" class="category-chain-item">SpringCloud</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Centos7%E5%AE%89%E8%A3%85Docker/">#Centos7安装Docker</a>
+      
+    </div>
   
 </div>
 

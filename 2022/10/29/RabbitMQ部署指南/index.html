@@ -16,15 +16,20 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="RabbitMQ部署指南1.单机部署我们在Centos7虚拟机中使用Docker来安装。 1.1.下载镜像方式一：在线拉取 12docker pull rabbitmq:3-management  方式二：从本地加载 在课前资料已经提供了镜像包：  上传到虚拟机中后，使用命令加载镜像即可： 12docker load -i mq.tar  1.2.安装MQ执行下面的命令来运行MQ容器： 12345">
+<meta property="og:type" content="article">
 <meta property="og:title" content="RabbitMQ部署指南">
 <meta property="og:url" content="http://example.com/2022/10/29/RabbitMQ%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RabbitMQ部署指南1.单机部署我们在Centos7虚拟机中使用Docker来安装。 1.1.下载镜像方式一：在线拉取 12docker pull rabbitmq:3-management  方式二：从本地加载 在课前资料已经提供了镜像包：  上传到虚拟机中后，使用命令加载镜像即可： 12docker load -i mq.tar  1.2.安装MQ执行下面的命令来运行MQ容器： 12345">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/WEBRESOURCE0cbd3a023160ff7412cd9cf626deef19.png">
 <meta property="article:published_time" content="2022-10-29T01:27:08.000Z">
-<meta property="article:modified_time" content="2022-10-29T01:27:08.465Z">
+<meta property="article:modified_time" content="2022-10-29T02:20:04.326Z">
 <meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="RabbitMQ">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/WEBRESOURCE0cbd3a023160ff7412cd9cf626deef19.png">
   
   
   
@@ -216,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          790 字
         
       </span>
     
@@ -227,7 +232,7 @@
         
         
         
-          1 分钟
+          7 分钟
         
       </span>
     
@@ -270,7 +275,34 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="RabbitMQ部署指南"><a href="#RabbitMQ部署指南" class="headerlink" title="RabbitMQ部署指南"></a>RabbitMQ部署指南</h1><h1 id="1-单机部署"><a href="#1-单机部署" class="headerlink" title="1.单机部署"></a>1.单机部署</h1><p>我们在Centos7虚拟机中使用Docker来安装。</p>
+<h2 id="1-1-下载镜像"><a href="#1-1-下载镜像" class="headerlink" title="1.1.下载镜像"></a>1.1.下载镜像</h2><p>方式一：在线拉取</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">docker</span> pull rabbitmq:<span class="hljs-number">3</span>-management<br><br></code></pre></td></tr></table></figure>
+
+<p>方式二：从本地加载</p>
+<p>在课前资料已经提供了镜像包：</p>
+<p><img src="/WEBRESOURCE0cbd3a023160ff7412cd9cf626deef19.png" srcset="/img/loading.gif" lazyload alt="WEBRESOURCE0cbd3a023160ff7412cd9cf626deef19"></p>
+<p>上传到虚拟机中后，使用命令加载镜像即可：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">docker load -<span class="hljs-selector-tag">i</span> mq<span class="hljs-selector-class">.tar</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-安装MQ"><a href="#1-2-安装MQ" class="headerlink" title="1.2.安装MQ"></a>1.2.安装MQ</h2><p>执行下面的命令来运行MQ容器：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs livescript">docker run <span class="hljs-string">\</span><br> -e RABBITMQ_DEFAULT_USER=itcast <span class="hljs-string">\</span><br> -e RABBITMQ_DEFAULT_PASS=<span class="hljs-number">123321</span> <span class="hljs-string">\</span><br> --name mq <span class="hljs-string">\</span><br> --hostname mq1 <span class="hljs-string">\</span><br> -p <span class="hljs-number">15672</span>:<span class="hljs-number">15672</span> <span class="hljs-string">\</span><br> -p <span class="hljs-number">5672</span>:<span class="hljs-number">5672</span> <span class="hljs-string">\</span><br> -d <span class="hljs-string">\</span><br> rabbitmq:<span class="hljs-number">3</span>-management<br><br></code></pre></td></tr></table></figure>
+
+<h1 id="2-集群部署"><a href="#2-集群部署" class="headerlink" title="2.集群部署"></a>2.集群部署</h1><p>接下来，我们看看如何安装RabbitMQ的集群。</p>
+<h2 id="2-1-集群分类"><a href="#2-1-集群分类" class="headerlink" title="2.1.集群分类"></a>2.1.集群分类</h2><p>在RabbitMQ的官方文档中，讲述了两种集群的配置方式：</p>
+<ul>
+<li><p>普通模式：普通模式集群不进行数据同步，每个MQ都有自己的队列、数据信息（其它元数据信息如交换机等会同步）。例如我们有2个MQ：mq1，和mq2，如果你的消息在mq1，而你连接到了mq2，那么mq2会去mq1拉取消息，然后返回给你。如果mq1宕机，消息就会丢失。</p>
+</li>
+<li><p>镜像模式：与普通模式不同，队列会在各个mq的镜像节点之间同步，因此你连接到任何一个镜像节点，均可获取到消息。而且如果一个节点宕机，并不会导致数据丢失。不过，这种方式增加了数据同步的带宽消耗。</p>
+</li>
+</ul>
+<p>我们先来看普通模式集群。</p>
+<h2 id="2-2-设置网络"><a href="#2-2-设置网络" class="headerlink" title="2.2.设置网络"></a>2.2.设置网络</h2><p>首先，我们需要让3台MQ互相知道对方的存在。</p>
+<p>分别在3台机器中，设置 &#x2F;etc&#x2F;hosts文件，添加如下内容：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-number">192.168.150.101</span> mq1<br><span class="hljs-number">192.168.150.102</span> mq2<br><span class="hljs-number">192.168.150.103</span> mq3<br><br></code></pre></td></tr></table></figure>
+
+<p>并在每台机器上测试，是否可以ping通对方：</p>
+
                 
               </div>
             
@@ -278,6 +310,41 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Java/SpringCloud/" class="category-chain-item">SpringCloud</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/RabbitMQ/">#RabbitMQ</a>
+      
+    </div>
   
 </div>
 
