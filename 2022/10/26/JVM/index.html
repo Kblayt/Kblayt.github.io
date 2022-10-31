@@ -69,8 +69,14 @@
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095213153.png">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095242383.png">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221028095308744.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031110544226.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140109206.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140141999.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140206312.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140257982.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140316845.png">
 <meta property="article:published_time" content="2022-10-26T07:11:15.000Z">
-<meta property="article:modified_time" content="2022-10-29T00:23:43.421Z">
+<meta property="article:modified_time" content="2022-10-31T08:58:30.806Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
@@ -266,7 +272,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          20k 字
         
       </span>
     
@@ -277,7 +283,7 @@
         
         
         
-          98 分钟
+          167 分钟
         
       </span>
     
@@ -887,7 +893,312 @@
 </ul>
 </li>
 </ul>
-<h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+<h1 id="3、类加载与字节码技术"><a href="#3、类加载与字节码技术" class="headerlink" title="3、类加载与字节码技术"></a>3、类加载与字节码技术</h1><p><img src="/2022/10/26/JVM/image-20221031110544226.png" srcset="/img/loading.gif" lazyload alt="image-20221031110544226"></p>
+<h2 id="3-1、类文件结构"><a href="#3-1、类文件结构" class="headerlink" title="3.1、类文件结构"></a>3.1、类文件结构</h2><p>一个简单的 HelloWorld.java</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript">package cn.<span class="hljs-property">itcast</span>.<span class="hljs-property">jvm</span>.<span class="hljs-property">t5</span>;<br><br><span class="hljs-comment">// HelloWorld 示例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorld</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"><span class="hljs-built_in">String</span>[] args</span>) &#123;<br>		<span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;hello world&quot;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行 javac -parameters -d . HellowWorld.java </p>
+<p>编译为 HelloWorld.class 后是这个样子的：</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs tap">[root@localhost ~]<span class="hljs-comment"># od -t xC HelloWorld.class</span><br>0000000 ca fe ba be<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>34<span class="hljs-number"> 00 </span>23 0a<span class="hljs-number"> 00 </span>06<span class="hljs-number"> 00 </span>15 09<br>0000020<span class="hljs-number"> 00 </span>16<span class="hljs-number"> 00 </span>17<span class="hljs-number"> 08 </span>00<span class="hljs-number"> 18 </span>0a<span class="hljs-number"> 00 </span>19<span class="hljs-number"> 00 </span>1a<span class="hljs-number"> 07 </span>00 1b 07<br>0000040<span class="hljs-number"> 00 </span>1c<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 06 </span>3c<span class="hljs-number"> 69 </span>6e<span class="hljs-number"> 69 </span>74 3e<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 03 </span>28 29<br>0000060<span class="hljs-number"> 56 </span>01<span class="hljs-number"> 00 </span>04<span class="hljs-number"> 43 </span>6f<span class="hljs-number"> 64 </span>65<span class="hljs-number"> 01 </span>00 0f 4c<span class="hljs-number"> 69 </span>6e<span class="hljs-number"> 65 </span>4e<br>0000100<span class="hljs-number"> 75 </span>6d<span class="hljs-number"> 62 </span>65<span class="hljs-number"> 72 </span>54<span class="hljs-number"> 61 </span>62 6c<span class="hljs-number"> 65 </span>01<span class="hljs-number"> 00 </span>12 4c 6f 63<br>0000120<span class="hljs-number"> 61 </span>6c<span class="hljs-number"> 56 </span>61<span class="hljs-number"> 72 </span>69<span class="hljs-number"> 61 </span>62 6c<span class="hljs-number"> 65 </span>54<span class="hljs-number"> 61 </span>62 6c<span class="hljs-number"> 65 </span>01<br>0000140<span class="hljs-number"> 00 </span>04<span class="hljs-number"> 74 </span>68<span class="hljs-number"> 69 </span>73<span class="hljs-number"> 01 </span>00 1d 4c<span class="hljs-number"> 63 </span>6e 2f<span class="hljs-number"> 69 </span>74 63<br>0000160<span class="hljs-number"> 61 </span>73<span class="hljs-number"> 74 </span>2f 6a<span class="hljs-number"> 76 </span>6d 2f<span class="hljs-number"> 74 </span>35 2f<span class="hljs-number"> 48 </span>65 6c 6c 6f<br>0000200<span class="hljs-number"> 57 </span>6f<span class="hljs-number"> 72 </span>6c<span class="hljs-number"> 64 </span>3b<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 04 </span>6d<span class="hljs-number"> 61 </span>69 6e<span class="hljs-number"> 01 </span>00 16<br>0000220<span class="hljs-number"> 28 </span>5b 4c 6a<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>2f 6c<span class="hljs-number"> 61 </span>6e<span class="hljs-number"> 67 </span>2f<span class="hljs-number"> 53 </span>74 72<br>0000240<span class="hljs-number"> 69 </span>6e<span class="hljs-number"> 67 </span>3b<span class="hljs-number"> 29 </span>56<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 04 </span>61<span class="hljs-number"> 72 </span>67<span class="hljs-number"> 73 </span>01<span class="hljs-number"> 00 </span>13<br>0000260 5b 4c 6a<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>2f 6c<span class="hljs-number"> 61 </span>6e<span class="hljs-number"> 67 </span>2f<span class="hljs-number"> 53 </span>74<span class="hljs-number"> 72 </span>69<br>0000300 6e<span class="hljs-number"> 67 </span>3b<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 10 </span>4d<span class="hljs-number"> 65 </span>74<span class="hljs-number"> 68 </span>6f<span class="hljs-number"> 64 </span>50<span class="hljs-number"> 61 </span>72 61<br>0000320 6d<span class="hljs-number"> 65 </span>74<span class="hljs-number"> 65 </span>72<span class="hljs-number"> 73 </span>01<span class="hljs-number"> 00 </span>0a<span class="hljs-number"> 53 </span>6f<span class="hljs-number"> 75 </span>72<span class="hljs-number"> 63 </span>65 46<br>0000340<span class="hljs-number"> 69 </span>6c<span class="hljs-number"> 65 </span>01<span class="hljs-number"> 00 </span>0f<span class="hljs-number"> 48 </span>65 6c 6c 6f<span class="hljs-number"> 57 </span>6f<span class="hljs-number"> 72 </span>6c 64<br>0000360 2e 6a<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>0c<span class="hljs-number"> 00 </span>07<span class="hljs-number"> 00 </span>08<span class="hljs-number"> 07 </span>00 1d 0c<span class="hljs-number"> 00 </span>1e<br>0000400<span class="hljs-number"> 00 </span>1f<span class="hljs-number"> 01 </span>00 0b<span class="hljs-number"> 68 </span>65 6c 6c 6f<span class="hljs-number"> 20 </span>77 6f<span class="hljs-number"> 72 </span>6c 64<br>0000420<span class="hljs-number"> 07 </span>00<span class="hljs-number"> 20 </span>0c<span class="hljs-number"> 00 </span>21<span class="hljs-number"> 00 </span>22<span class="hljs-number"> 01 </span>00 1b<span class="hljs-number"> 63 </span>6e 2f<span class="hljs-number"> 69 </span>74<br>0000440<span class="hljs-number"> 63 </span>61<span class="hljs-number"> 73 </span>74 2f 6a<span class="hljs-number"> 76 </span>6d 2f<span class="hljs-number"> 74 </span>35 2f<span class="hljs-number"> 48 </span>65 6c 6c<br>0000460 6f<span class="hljs-number"> 57 </span>6f<span class="hljs-number"> 72 </span>6c<span class="hljs-number"> 64 </span>01<span class="hljs-number"> 00 </span>10 6a<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>2f 6c 61<br>0000500 6e<span class="hljs-number"> 67 </span>2f 4f<span class="hljs-number"> 62 </span>6a<span class="hljs-number"> 65 </span>63<span class="hljs-number"> 74 </span>01<span class="hljs-number"> 00 </span>10 6a<span class="hljs-number"> 61 </span>76 61<br>0000520 2f 6c<span class="hljs-number"> 61 </span>6e<span class="hljs-number"> 67 </span>2f<span class="hljs-number"> 53 </span>79<span class="hljs-number"> 73 </span>74<span class="hljs-number"> 65 </span>6d<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 03 </span>6f<br>0000540<span class="hljs-number"> 75 </span>74<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 15 </span>4c 6a<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>2f<span class="hljs-number"> 69 </span>6f 2f<span class="hljs-number"> 50 </span>72<br>0000560<span class="hljs-number"> 69 </span>6e<span class="hljs-number"> 74 </span>53<span class="hljs-number"> 74 </span>72<span class="hljs-number"> 65 </span>61 6d 3b<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 13 </span>6a<span class="hljs-number"> 61 </span>76<br>0000600<span class="hljs-number"> 61 </span>2f<span class="hljs-number"> 69 </span>6f 2f<span class="hljs-number"> 50 </span>72<span class="hljs-number"> 69 </span>6e<span class="hljs-number"> 74 </span>53<span class="hljs-number"> 74 </span>72<span class="hljs-number"> 65 </span>61 6d<br>0000620<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 07 </span>70<span class="hljs-number"> 72 </span>69 6e<span class="hljs-number"> 74 </span>6c 6e<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 15 </span>28 4c 6a<br>0000640<span class="hljs-number"> 61 </span>76<span class="hljs-number"> 61 </span>2f 6c<span class="hljs-number"> 61 </span>6e<span class="hljs-number"> 67 </span>2f<span class="hljs-number"> 53 </span>74<span class="hljs-number"> 72 </span>69 6e<span class="hljs-number"> 67 </span>3b<br>0000660<span class="hljs-number"> 29 </span>56<span class="hljs-number"> 00 </span>21<span class="hljs-number"> 00 </span>05<span class="hljs-number"> 00 </span>06<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>01<br>0000700<span class="hljs-number"> 00 </span>07<span class="hljs-number"> 00 </span>08<span class="hljs-number"> 00 </span>01<span class="hljs-number"> 00 </span>09<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>2f<span class="hljs-number"> 00 </span>01<span class="hljs-number"> 00 </span>01<br>0000720<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>05 2a b7<span class="hljs-number"> 00 </span>01 b1<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>0a 00<br>0000740<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 06 </span>00<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 04 </span>00 0b<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>0c 00<br>0000760<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 05 </span>00 0c<span class="hljs-number"> 00 </span>0d<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>09<span class="hljs-number"> 00 </span>0e 00<br>0001000 0f<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>09<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>37<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>01<span class="hljs-number"> 00 </span>00 00<br>0001020<span class="hljs-number"> 09 </span>b2<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 12 </span>03 b6<span class="hljs-number"> 00 </span>04 b1<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>0a<br>0001040<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>0a<span class="hljs-number"> 00 </span>02<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>06<span class="hljs-number"> 00 </span>08<span class="hljs-number"> 00 </span>07<span class="hljs-number"> 00 </span>0b<br>0001060<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>0c<span class="hljs-number"> 00 </span>01<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>09<span class="hljs-number"> 00 </span>10<span class="hljs-number"> 00 </span>11<span class="hljs-number"> 00 </span>00<br>0001100<span class="hljs-number"> 00 </span>12<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 00 </span>05<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 10 </span>00<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 13 </span>00<br>0001120<span class="hljs-number"> 00 </span>00<span class="hljs-number"> 02 </span>00 14<br></code></pre></td></tr></table></figure>
+
+<p>根据JVM规范，类文件结构如下:</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs abnf">ClassFile &#123;<br>	u4 magic<span class="hljs-comment">;</span><br>	u2 minor_version<span class="hljs-comment">;</span><br>	u2 major_version<span class="hljs-comment">;</span><br>	u2 constant_pool_count<span class="hljs-comment">;</span><br>	cp_info constant_pool[constant_pool_count-<span class="hljs-number">1</span>]<span class="hljs-comment">;</span><br>	u2 access_flags<span class="hljs-comment">;</span><br>	u2 this_class<span class="hljs-comment">;</span><br>	u2 super_class<span class="hljs-comment">;</span><br>	u2 interfaces_count<span class="hljs-comment">;</span><br>	u2 interfaces[interfaces_count]<span class="hljs-comment">;</span><br>	u2 fields_count<span class="hljs-comment">;</span><br>	field_info fields[fields_count]<span class="hljs-comment">;</span><br>	u2 methods_count<span class="hljs-comment">;</span><br>	method_info methods[methods_count]<span class="hljs-comment">;</span><br>	u2 attributes_count<span class="hljs-comment">;</span><br>	attribute_info attributes[attributes_count]<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-1、魔术-magic"><a href="#3-1-1、魔术-magic" class="headerlink" title="3.1.1、魔术(magic)"></a>3.1.1、魔术(magic)</h3><p>0~3 字节，表示它是否是【class】类型的文件 </p>
+<p>0000000 <em><strong>ca fe ba be</strong></em> 00 00 00 34 00 23 0a 00 06 00 15 09</p>
+<h3 id="3-1-2、版本"><a href="#3-1-2、版本" class="headerlink" title="3.1.2、版本"></a>3.1.2、版本</h3><p>4~7 字节，表示类的版本 00 34（52） 表示是 Java 8</p>
+<p>0000000 ca fe ba be <em><strong>00 00 00 34</strong></em> 00 23 0a 00 06 00 15 09</p>
+<h3 id="3-1-3、常量池"><a href="#3-1-3、常量池" class="headerlink" title="3.1.3、常量池"></a>3.1.3、常量池</h3><table>
+<thead>
+<tr>
+<th>ConstantType</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONSTANT_Class</td>
+<td>7</td>
+</tr>
+<tr>
+<td>CONSTANT_Fieldref</td>
+<td>9</td>
+</tr>
+<tr>
+<td>CONSTANT_Methodref</td>
+<td>10</td>
+</tr>
+<tr>
+<td>CONSTANT_InterfaceMethodref</td>
+<td>11</td>
+</tr>
+<tr>
+<td>CONSTANT_String</td>
+<td>8</td>
+</tr>
+<tr>
+<td>CONSTANT_Integer</td>
+<td>3</td>
+</tr>
+<tr>
+<td>CONSTANT_Float</td>
+<td>4</td>
+</tr>
+<tr>
+<td>CONSTANT_Long</td>
+<td>5</td>
+</tr>
+<tr>
+<td>CONSTANT_Double</td>
+<td>6</td>
+</tr>
+<tr>
+<td>CONSTANT_NameAndType</td>
+<td>12</td>
+</tr>
+<tr>
+<td>CONSTANT_Uft8</td>
+<td>1</td>
+</tr>
+<tr>
+<td>CONSTANT_MethodHandle</td>
+<td>15</td>
+</tr>
+<tr>
+<td>CONSTANT_MethodType</td>
+<td>16</td>
+</tr>
+<tr>
+<td>CONSTANT_InvokeDynamic</td>
+<td>18</td>
+</tr>
+</tbody></table>
+<p>8<del>9 字节，表示常量池长度，00 23 （35） 表示常量池有 #1</del>#34项，注意 #0 项不计入，也没有值 </p>
+<p>0000000 ca fe ba be 00 00 00 34 00 <em><strong>23 0a</strong></em> 00 06 00 15 09</p>
+<p>第#1项 0a 表示一个 Method 信息，00 06 和 00 15（21） 表示它引用了常量池中 #6 和 #21 项来获得 这个方法的【所属类】和【方法名】 </p>
+<p>0000000 ca fe ba be 00 00 00 34 00 23 <em><strong>0a 00 06 00 15</strong></em> 09</p>
+<p>第#2项 09 表示一个 Field 信息，00 16（22）和 00 17（23） 表示它引用了常量池中 #22 和 # 23 项 来获得这个成员变量的【所属类】和【成员变量名】 </p>
+<p>0000000 ca fe ba be 00 00 00 34 00 23 0a 00 06 00 15 <em><strong>09</strong></em> </p>
+<p>0000020 <em><strong>00 16 00 17</strong></em> 08 00 18 0a 00 19 00 1a 07 00 1b 07</p>
+<p>第#3项 08 表示一个字符串常量名称，00 18（24）表示它引用了常量池中 #24 项 </p>
+<p>0000020 00 16 00 17 <em><strong>08 00 18</strong></em> 0a 00 19 00 1a 07 00 1b 07</p>
+<p>第#4项 0a 表示一个 Method 信息，00 19（25） 和 00 1a（26） 表示它引用了常量池中 #25 和 #26 项来获得这个方法的【所属类】和【方法名】 </p>
+<p>0000020 00 16 00 17 08 00 18 <em><strong>0a 00 19 00 1a</strong></em> 07 00 1b 07</p>
+<p>第#5项 07 表示一个 Class 信息，00 1b（27） 表示它引用了常量池中 #27 项</p>
+<p>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a <em><strong>07 00 1b</strong></em> 07</p>
+<p>第#6项 07 表示一个 Class 信息，00 1c（28） 表示它引用了常量池中 #28 项 </p>
+<p>0000020 00 16 00 17 08 00 18 0a 00 19 00 1a 07 00 1b <em><strong>07</strong></em> </p>
+<p>0000040 <em><strong>00 1c</strong></em> 01 00 06 3c 69 6e 69 74 3e 01 00 03 28 29</p>
+<p>第#7项 01 表示一个 utf8 串，00 06 表示长度，3c 69 6e 69 74 3e 是【<init>】 </p>
+<p>0000040 00 1c <em><strong>01 00 06 3c 69 6e 69 74 3e</strong></em> 01 00 03 28 29</p>
+<p>第#8项 01 表示一个 utf8 串，00 03 表示长度，28 29 56 是【()V】其实就是表示无参、无返回值 </p>
+<p>0000040 00 1c 01 00 06 3c 69 6e 69 74 3e <em><strong>01 00 03 28 29</strong></em> </p>
+<p>0000060 <em><strong>56</strong></em> 01 00 04 43 6f 64 65 01 00 0f 4c 69 6e 65 4e</p>
+<p>第#9项 01 表示一个 utf8 串，00 04 表示长度，43 6f 64 65 是【Code】 </p>
+<p>0000060 56 <em><strong>01 00 04 43 6f 64 65</strong></em> 01 00 0f 4c 69 6e 65 4e</p>
+<p>第#10项 01 表示一个 utf8 串，00 0f（15） 表示长度，4c 69 6e 65 4e 75 6d 62 65 72 54 61 62 6c 65 是【LineNumberTable】 </p>
+<p>0000060 56 01 00 04 43 6f 64 65 <em><strong>01 00 0f 4c 69 6e 65 4e</strong></em></p>
+<p>0000100 <em><strong>75 6d 62 65 72 54 61 62 6c 65</strong></em> 01 00 12 4c 6f 63</p>
+<p>第#11项 01 表示一个 utf8 串，00 12（18） 表示长度，4c 6f 63 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65是【LocalVariableTable】 </p>
+<p>0000100 75 6d 62 65 72 54 61 62 6c 65 <em><strong>01 00 12 4c 6f 63</strong></em></p>
+<p>0000120 <em><strong>61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65</strong></em> 01</p>
+<p>第#12项 01 表示一个 utf8 串，00 04 表示长度，74 68 69 73 是【this】 </p>
+<p>0000120 61 6c 56 61 72 69 61 62 6c 65 54 61 62 6c 65 <em><strong>01</strong></em> </p>
+<p>0000140 <em><strong>00 04 74 68 69 73</strong></em> 01 00 1d 4c 63 6e 2f 69 74 63</p>
+<p>第#13项 01 表示一个 utf8 串，00 1d（29） 表示长度，是【Lcn&#x2F;itcast&#x2F;t5&#x2F;HelloWorld;】 </p>
+<p>0000140 00 04 74 68 69 73 <em><strong>01 00 1d 4c 63 6e 2f 69 74 63</strong></em> </p>
+<p>0000160 <em><strong>61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c 6f</strong></em> </p>
+<p>0000200 <em><strong>57 6f 72 6c 64 3b</strong></em> 01 00 04 6d 61 69 6e 01 00 16</p>
+<p>第#14项 01 表示一个 utf8 串，00 04 表示长度，74 68 69 73 是【main】 </p>
+<p>0000200 57 6f 72 6c 64 3b <em><strong>01 00 04 6d 61 69 6e</strong></em> 01 00 16</p>
+<p>第#15项 01 表示一个 utf8 串，00 16（22） 表示长度，是【([Ljava&#x2F;lang&#x2F;String;)V】其实就是参数为 字符串数组，无返回值 </p>
+<p>0000200 57 6f 72 6c 64 3b 01 00 04 6d 61 69 6e <em><strong>01 00 16</strong></em> </p>
+<p>0000220 <em><strong>28 5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72</strong></em> </p>
+<p>0000240 <em><strong>69 6e 67 3b 29 56</strong></em> 01 00 04 61 72 67 73 01 00 13</p>
+<p>第#16项 01 表示一个 utf8 串，00 04 表示长度，是【args】 </p>
+<p>0000240 69 6e 67 3b 29 56 <em><strong>01 00 04 61 72 67 73</strong></em> 01 00 13</p>
+<p>第#17项 01 表示一个 utf8 串，00 13（19） 表示长度，是【[Ljava&#x2F;lang&#x2F;String;】 </p>
+<p>0000240 69 6e 67 3b 29 56 01 00 04 61 72 67 73 <em><strong>01 00 13</strong></em> </p>
+<p>0000260 <em><strong>5b 4c 6a 61 76 61 2f 6c 61 6e 67 2f 53 74 72 69</strong></em> </p>
+<p>0000300 <em><strong>6e 67 3b</strong></em> 01 00 10 4d 65 74 68 6f 64 50 61 72 61</p>
+<p>第#18项 01 表示一个 utf8 串，00 10（16） 表示长度，是【MethodParameters】 </p>
+<p>0000300 6e 67 3b <em><strong>01 00 10 4d 65 74 68 6f 64 50 61 72 61</strong></em> </p>
+<p>0000320 <em><strong>6d 65 74 65</strong></em> 72 73 01 00 0a 53 6f 75 72 63 65 46</p>
+<p>第#19项 01 表示一个 utf8 串，00 0a（10） 表示长度，是【SourceFile】 </p>
+<p>0000320 6d 65 74 65 72 73 <em><strong>01 00 0a 53 6f 75 72 63 65 46</strong></em> </p>
+<p>0000340 <em><strong>69 6c 65</strong></em> 01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 64</p>
+<p>第#20项 01 表示一个 utf8 串，00 0f（15） 表示长度，是【HelloWorld.java】 </p>
+<p>0000340 69 6c 65 <em><strong>01 00 0f 48 65 6c 6c 6f 57 6f 72 6c 64</strong></em> </p>
+<p>0000360 <em><strong>2e 6a 61 76 61</strong></em> 0c 00 07 00 08 07 00 1d 0c 00 1e</p>
+<p>第#21项 0c 表示一个 【名+类型】，00 07 00 08 引用了常量池中 #7 #8 两项 </p>
+<p>0000360 2e 6a 61 76 61 <em><strong>0c 00 07 00 08</strong></em> 07 00 1d 0c 00 1e</p>
+<p>第#22项 07 表示一个 Class 信息，00 1d（29） 引用了常量池中 #29 项 </p>
+<p>0000360 2e 6a 61 76 61 0c 00 07 00 08 <em><strong>07 00 1d</strong></em> 0c 00 1e</p>
+<p>第#23项 0c 表示一个 【名+类型】，00 1e（30） 00 1f （31）引用了常量池中 #30 #31 两项 </p>
+<p>0000360 2e 6a 61 76 61 0c 00 07 00 08 07 00 1d <em><strong>0c 00 1e</strong></em> </p>
+<p>0000400 <em><strong>00 1f</strong></em> 01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64</p>
+<p>第#24项 01 表示一个 utf8 串，00 0f（15） 表示长度，是【hello world】 </p>
+<p>0000400 00 1f <em><strong>01 00 0b 68 65 6c 6c 6f 20 77 6f 72 6c 64</strong></em></p>
+<p>第#25项 07 表示一个 Class 信息，00 20（32） 引用了常量池中 #32 项 </p>
+<p>0000420 <em><strong>07 00 20</strong></em> 0c 00 21 00 22 01 00 1b 63 6e 2f 69 74</p>
+<p>第#26项 0c 表示一个 【名+类型】，00 21（33） 00 22（34）引用了常量池中 #33 #34 两项 </p>
+<p>0000420 07 00 20 <em><strong>0c 00 21 00 22</strong></em> 01 00 1b 63 6e 2f 69 74</p>
+<p>第#27项 01 表示一个 utf8 串，00 1b（27） 表示长度，是【cn&#x2F;itcast&#x2F;t5&#x2F;HelloWorld】 </p>
+<p>0000420 07 00 20 0c 00 21 00 22 <em><strong>01 00 1b 63 6e 2f 69 74</strong></em> </p>
+<p>0000440 <em><strong>63 61 73 74 2f 6a 76 6d 2f 74 35 2f 48 65 6c 6c</strong></em> </p>
+<p>0000460 <em><strong>6f 57 6f 72 6c 64</strong></em> 01 00 10 6a 61 76 61 2f 6c 61</p>
+<p>第#28项 01 表示一个 utf8 串，00 10（16） 表示长度，是【java&#x2F;lang&#x2F;Object】 </p>
+<p>0000460 6f 57 6f 72 6c 64 <em><strong>01 00 10 6a 61 76 61 2f 6c 61</strong></em> </p>
+<p>0000500 <em><strong>6e 67 2f 4f 62 6a 65 63 74</strong></em> 01 00 10 6a 61 76 61</p>
+<p>第#29项 01 表示一个 utf8 串，00 10（16） 表示长度，是【java&#x2F;lang&#x2F;System】 </p>
+<p>0000500 6e 67 2f 4f 62 6a 65 63 74 <em><strong>01 00 10 6a 61 76 61</strong></em> </p>
+<p>0000520 <em><strong>2f 6c 61 6e 67 2f 53 79 73 74 65 6d</strong></em> 01 00 03 6f</p>
+<p>第#30项 01 表示一个 utf8 串，00 03 表示长度，是【out】 </p>
+<p>0000520 2f 6c 61 6e 67 2f 53 79 73 74 65 6d <em><strong>01 00 03 6f</strong></em> </p>
+<p>0000540 <em><strong>75 74</strong></em> 01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72</p>
+<p>第#31项 01 表示一个 utf8 串，00 15（21） 表示长度，是【Ljava&#x2F;io&#x2F;PrintStream;】 </p>
+<p>0000540 75 74 <em><strong>01 00 15 4c 6a 61 76 61 2f 69 6f 2f 50 72</strong></em> </p>
+<p>0000560 <em><strong>69 6e 74 53 74 72 65 61 6d 3b</strong></em> 01 00 13 6a 61 76</p>
+<p>第#32项 01 表示一个 utf8 串，00 13（19） 表示长度，是【java&#x2F;io&#x2F;PrintStream】 </p>
+<p>0000560 69 6e 74 53 74 72 65 61 6d 3b <em><strong>01 00 13 6a 61 76</strong></em></p>
+<p>0000600 <em><strong>61 2f 69 6f 2f 50 72 69 6e 74 53 74 72 65 61 6d</strong></em></p>
+<p>第#33项 01 表示一个 utf8 串，00 07 表示长度，是【println】 </p>
+<p>0000620 <em><strong>01 00 07 70 72 69 6e 74 6c 6e</strong></em> 01 00 15 28 4c 6a</p>
+<p>第#34项 01 表示一个 utf8 串，00 15（21） 表示长度，是【(Ljava&#x2F;lang&#x2F;String;)V】 </p>
+<p>0000620 01 00 07 70 72 69 6e 74 6c 6e <em><strong>01 00 15 28 4c 6a</strong></em> </p>
+<p>0000640 <em><strong>61 76 61 2f 6c 61 6e 67 2f 53 74 72 69 6e 67 3b</strong></em> </p>
+<p>0000660 <em><strong>29 56</strong></em> 00 21 00 05 00 06 00 00 00 00 00 02 00 01</p>
+<h3 id="3-1-4、访问标识与继承信息"><a href="#3-1-4、访问标识与继承信息" class="headerlink" title="3.1.4、访问标识与继承信息"></a>3.1.4、访问标识与继承信息</h3><p>21 表示该 class 是一个类，公共的 </p>
+<p>0000660 29 56 <em><strong>00 21</strong></em> 00 05 00 06 00 00 00 00 00 02 00 01 </p>
+<p>05 表示根据常量池中 #5 找到本类全限定名 </p>
+<p>0000660 29 56 00 21 <em><strong>00 05</strong></em> 00 06 00 00 00 00 00 02 00 01 </p>
+<p>06 表示根据常量池中 #6 找到父类全限定名 </p>
+<p>0000660 29 56 00 21 00 05 <em><strong>00 06</strong></em> 00 00 00 00 00 02 00 01 </p>
+<p>表示接口的数量，本类为 0 </p>
+<p>0000660 29 56 00 21 00 05 00 06 <em><strong>00 00</strong></em> 00 00 00 02 00 0</p>
+<table>
+<thead>
+<tr>
+<th>Flag Name</th>
+<th>Value</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ACC_PUBLIC</td>
+<td>0x0001</td>
+<td>Declared public ; may be accessed from outside its  package.</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>0x0010</td>
+<td>Declared final ; no subclasses allowed.</td>
+</tr>
+<tr>
+<td>ACC_SUPER</td>
+<td>0x0020</td>
+<td>Treat superclass methods specially when invoked by the invokespecial instruction.</td>
+</tr>
+<tr>
+<td>ACC_INTERFACE</td>
+<td>0x0200</td>
+<td>Is an interface, not a class.</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>0x0400</td>
+<td>Declared abstract ; must not be instantiated.</td>
+</tr>
+<tr>
+<td>ACC_SYNTHETIC</td>
+<td>0x1000</td>
+<td>Declared synthetic; not present in the source code.</td>
+</tr>
+<tr>
+<td>ACC_ANNOTATION</td>
+<td>0x2000</td>
+<td>Declared as an annotation type.</td>
+</tr>
+<tr>
+<td>ACC_ENUM</td>
+<td>0x4000</td>
+<td>Declared as an enum type.</td>
+</tr>
+</tbody></table>
+<h3 id="3-1-5、Field信息"><a href="#3-1-5、Field信息" class="headerlink" title="3.1.5、Field信息"></a>3.1.5、Field信息</h3><p>表示成员变量数量，本类为 0 </p>
+<p>0000660 29 56 00 21 00 05 00 06 00 00 <em><strong>00 00</strong></em> 00 02 00 01</p>
+<table>
+<thead>
+<tr>
+<th>FieldType</th>
+<th>Type</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B</td>
+<td>byte</td>
+<td>signed byte</td>
+</tr>
+<tr>
+<td>C</td>
+<td>char</td>
+<td>Unicode character code point in the Basic Multilingual Plane, encoded with UTF-16</td>
+</tr>
+<tr>
+<td>D</td>
+<td>double</td>
+<td>double-precision floating-point value</td>
+</tr>
+<tr>
+<td>F</td>
+<td>float</td>
+<td>single-precision floating-point value</td>
+</tr>
+<tr>
+<td>I</td>
+<td>int</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>J</td>
+<td>long</td>
+<td>long integer</td>
+</tr>
+<tr>
+<td>L <br />ClassName <br />;</td>
+<td>reference</td>
+<td>an instance of class ClassName</td>
+</tr>
+<tr>
+<td>S</td>
+<td>short</td>
+<td>signed short</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>boolean</td>
+<td>true or false</td>
+</tr>
+<tr>
+<td>[</td>
+<td>reference</td>
+<td>one array dimension</td>
+</tr>
+</tbody></table>
+<h3 id="3-1-6、Method信息"><a href="#3-1-6、Method信息" class="headerlink" title="3.1.6、Method信息"></a>3.1.6、Method信息</h3><p><img src="/2022/10/26/JVM/image-20221031140109206.png" srcset="/img/loading.gif" lazyload alt="image-20221031140109206"></p>
+<p><img src="/2022/10/26/JVM/image-20221031140141999.png" srcset="/img/loading.gif" lazyload alt="image-20221031140141999"></p>
+<p><img src="/2022/10/26/JVM/image-20221031140206312.png" srcset="/img/loading.gif" lazyload alt="image-20221031140206312"><img src="/2022/10/26/JVM/image-20221031140257982.png" srcset="/img/loading.gif" lazyload alt="image-20221031140257982"></p>
+<p><img src="/2022/10/26/JVM/image-20221031140316845.png" srcset="/img/loading.gif" lazyload alt="image-20221031140316845"></p>
+<h3 id="3-1-7、附加属性"><a href="#3-1-7、附加属性" class="headerlink" title="3.1.7、附加属性"></a>3.1.7、附加属性</h3><ul>
+<li>00 01 表示附加属性数量</li>
+<li>00 13 表示引用了常量池 #19 项，即【SourceFile】</li>
+<li>00 00 00 02 表示此属性的长度</li>
+<li>00 14 表示引用了常量池 #20 项，即【HelloWorld.java】</li>
+</ul>
+<p>0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00</p>
+<p>0001120 00 00 02 00 14</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html</a></p>
+<h2 id="3-2、字节码指令"><a href="#3-2、字节码指令" class="headerlink" title="3.2、字节码指令"></a>3.2、字节码指令</h2><h2 id="3-3、编译器处理"><a href="#3-3、编译器处理" class="headerlink" title="3.3、编译器处理"></a>3.3、编译器处理</h2><h2 id="3-4、类加载阶段"><a href="#3-4、类加载阶段" class="headerlink" title="3.4、类加载阶段"></a>3.4、类加载阶段</h2><h2 id="3-5、类加载器"><a href="#3-5、类加载器" class="headerlink" title="3.5、类加载器"></a>3.5、类加载器</h2><h2 id="3-6、运行期优化"><a href="#3-6、运行期优化" class="headerlink" title="3.6、运行期优化"></a>3.6、运行期优化</h2><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
