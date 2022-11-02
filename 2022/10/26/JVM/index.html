@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态 比较： JVM，JRE，JDK  学习JVM有什么用面试 理解底层的实现原理 中高级程序员必备技能   1、JVM内存结构 2、GC垃圾回收 3、Java Class（类的字节码结构、">
+    <meta name="description" content="title: JVMdate: 2022-10-26 15:11:15categories:    - Java    - JVMtags:    - JVM    - JVM调优  什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM">
 <meta property="og:url" content="https://kblayt.github.io/2022/10/26/JVM/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态 比较： JVM，JRE，JDK  学习JVM有什么用面试 理解底层的实现原理 中高级程序员必备技能   1、JVM内存结构 2、GC垃圾回收 3、Java Class（类的字节码结构、">
+<meta property="og:description" content="title: JVMdate: 2022-10-26 15:11:15categories:    - Java    - JVMtags:    - JVM    - JVM调优  什么是JVM  ？ 定义： Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境） 好处： 一次编写，到处运行 自动内存管理，垃圾回收功能 数组下标越界检查 多态">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/63923723e6a1ee131cc1e80176ef78f8.jpeg">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/WEBRESOURCE25e1cb46f11e9645a38327ed44b90a70.png">
@@ -75,8 +75,63 @@
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140206312.png">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140257982.png">
 <meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221031140316845.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103445192.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103427032.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103518271.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103601651.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103614954.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103632461.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103643166.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103656297.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103705315.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103722807.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103815252.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103929219.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102103934229.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104009697.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104021847.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104029382.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104045057.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104057398.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104108668.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104115884.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104129152.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104135622.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104145763.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104153687.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104205754.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104212672.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104241504.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104325220.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104450398.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104455844.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104520641.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104530903.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104537395.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104544336.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104556881.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104603865.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104617984.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104624772.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104630356.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104636559.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102104641852.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105020761.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105228962.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105408966.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105618094.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105803812.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102105843791.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110127313.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110145382.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110235601.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110306376.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110319143.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110340837.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110353791.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/26/JVM/image-20221102110413384.png">
 <meta property="article:published_time" content="2022-10-26T07:11:15.000Z">
-<meta property="article:modified_time" content="2022-10-31T08:58:30.806Z">
+<meta property="article:modified_time" content="2022-11-02T03:17:57.310Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary_large_image">
@@ -272,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          20k 字
+          27k 字
         
       </span>
     
@@ -283,7 +338,7 @@
         
         
         
-          167 分钟
+          228 分钟
         
       </span>
     
@@ -326,7 +381,10 @@
             
               <div class="markdown-body">
                 
-                <h1 id="什么是JVM-？"><a href="#什么是JVM-？" class="headerlink" title="什么是JVM  ？"></a>什么是JVM  ？</h1><p> 定义：</p>
+                <hr>
+<p>title: JVM<br>date: 2022-10-26 15:11:15<br>categories:<br>    - Java<br>    - JVM<br>tags:<br>    - JVM<br>    - JVM调优</p>
+<hr>
+<h1 id="什么是JVM-？"><a href="#什么是JVM-？" class="headerlink" title="什么是JVM  ？"></a>什么是JVM  ？</h1><p> 定义：</p>
 <p>Java Virtual  Machine ＿ java程序的运行环环境（java二进制字节码的运行环境）</p>
 <p>好处：</p>
 <p>一次编写，到处运行</p>
@@ -1198,7 +1256,354 @@
 <p>0001100 00 12 00 00 00 05 01 00 10 00 00 00 01 00 13 00</p>
 <p>0001120 00 00 02 00 14</p>
 <p>参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html</a></p>
-<h2 id="3-2、字节码指令"><a href="#3-2、字节码指令" class="headerlink" title="3.2、字节码指令"></a>3.2、字节码指令</h2><h2 id="3-3、编译器处理"><a href="#3-3、编译器处理" class="headerlink" title="3.3、编译器处理"></a>3.3、编译器处理</h2><h2 id="3-4、类加载阶段"><a href="#3-4、类加载阶段" class="headerlink" title="3.4、类加载阶段"></a>3.4、类加载阶段</h2><h2 id="3-5、类加载器"><a href="#3-5、类加载器" class="headerlink" title="3.5、类加载器"></a>3.5、类加载器</h2><h2 id="3-6、运行期优化"><a href="#3-6、运行期优化" class="headerlink" title="3.6、运行期优化"></a>3.6、运行期优化</h2><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+<h2 id="3-2、字节码指令"><a href="#3-2、字节码指令" class="headerlink" title="3.2、字节码指令"></a>3.2、字节码指令</h2><h3 id="3-2-1、入门"><a href="#3-2-1、入门" class="headerlink" title="3.2.1、入门"></a>3.2.1、入门</h3><p>接着上一节，研究一下两组字节码指令，一个是</p>
+<p><code>public cn.itcast.jvm.t5.HelloWorld();</code>  构造方法的字节码指令</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">2a</span> b7 <span class="hljs-number">00</span> <span class="hljs-number">01</span> b1<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>2a &#x3D;&gt; aload_0 加载 slot 0 的局部变量，即 this，做为下面的 invokespecial 构造方法调用的参数 </li>
+<li>b7 &#x3D;&gt; invokespecial 预备调用构造方法，哪个方法呢？ </li>
+<li>00 01 引用常量池中 #1 项，即【 Method java&#x2F;lang&#x2F;Object.””:()V 】</li>
+<li>b1 表示返回</li>
+</ol>
+<p>另一个是 public static void main(java.lang.String[]); 主方法的字节码指令</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">b2</span> <span class="hljs-number">00</span> <span class="hljs-number">02</span> <span class="hljs-number">12</span> <span class="hljs-number">03</span> b6 <span class="hljs-number">00</span> <span class="hljs-number">04</span> b1<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>b2 &#x3D;&gt; getstatic 用来加载静态变量，哪个静态变量呢？ </li>
+<li>00 02 引用常量池中 #2 项，即【Field java&#x2F;lang&#x2F;System.out:Ljava&#x2F;io&#x2F;PrintStream;】</li>
+<li>12 &#x3D;&gt; ldc 加载参数，哪个参数呢？ </li>
+<li>03 引用常量池中 #3 项，即 【String hello world】 </li>
+<li>b6 &#x3D;&gt; invokevirtual 预备调用成员方法，哪个方法呢？ </li>
+<li>00 04 引用常量池中 #4 项，即【Method java&#x2F;io&#x2F;PrintStream.println:(Ljava&#x2F;lang&#x2F;String;)V】 </li>
+<li>b1 表示返回</li>
+</ol>
+<p>请参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5</a></p>
+<h3 id="3-2-2、javap工具"><a href="#3-2-2、javap工具" class="headerlink" title="3.2.2、javap工具"></a>3.2.2、javap工具</h3><p>自己分析类文件结构太麻烦了，Oracle 提供了 javap 工具来反编译 class 文件</p>
+<p><img src="/2022/10/26/JVM/image-20221102103445192.png" srcset="/img/loading.gif" lazyload alt="image-20221102103445192"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103427032.png" srcset="/img/loading.gif" lazyload alt="image-20221102103427032"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103518271.png" srcset="/img/loading.gif" lazyload alt="image-20221102103518271"></p>
+<h3 id="3-2-3、图解方法执行流程"><a href="#3-2-3、图解方法执行流程" class="headerlink" title="3.2.3、图解方法执行流程"></a>3.2.3、图解方法执行流程</h3><p>1）原始 java 代码</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">package</span> cn.itcast.jvm.t3.bytecode;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment">	* 演示 字节码指令 和 操作数栈、常量池的关系</span><br><span class="hljs-comment">	*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> Demo3_1 &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(String[] args) &#123;<br>		<span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;<br>		<span class="hljs-keyword">int</span> b = <span class="hljs-keyword">Short</span>.MAX_VALUE + <span class="hljs-number">1</span>;<br>		<span class="hljs-keyword">int</span> c = a + b;<br>		System.out.<span class="hljs-keyword">println</span>(c);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2）编译后的字节码文件</p>
+<p><img src="/2022/10/26/JVM/image-20221102103601651.png" srcset="/img/loading.gif" lazyload alt="image-20221102103601651"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103614954.png" srcset="/img/loading.gif" lazyload alt="image-20221102103614954"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103632461.png" srcset="/img/loading.gif" lazyload alt="image-20221102103632461"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103643166.png" srcset="/img/loading.gif" lazyload alt="image-20221102103643166"></p>
+<p>3）常量池载入运行时常量池</p>
+<p><img src="/2022/10/26/JVM/image-20221102103656297.png" srcset="/img/loading.gif" lazyload alt="image-20221102103656297"></p>
+<p>4）方法字节码载入方法区</p>
+<p><img src="/2022/10/26/JVM/image-20221102103705315.png" srcset="/img/loading.gif" lazyload alt="image-20221102103705315"></p>
+<p>5）main 线程开始运行，分配栈帧内存</p>
+<p>（stack&#x3D;2，locals&#x3D;4）</p>
+<p><img src="/2022/10/26/JVM/image-20221102103722807.png" srcset="/img/loading.gif" lazyload alt="image-20221102103722807"></p>
+<p>6）执行引擎开始执行字节码</p>
+<p>bipush 10</p>
+<ul>
+<li>将一个 byte 压入操作数栈（其长度会补齐 4 个字节），类似的指令还有</li>
+<li>sipush 将一个 short 压入操作数栈（其长度会补齐 4 个字节） </li>
+<li>ldc 将一个 int 压入操作数栈 </li>
+<li>ldc2_w 将一个 long 压入操作数栈（分两次压入，因为 long 是 8 个字节） </li>
+<li>这里小的数字都是和字节码指令存在一起，超过 short 范围的数字存入了常量池</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102103815252.png" srcset="/img/loading.gif" lazyload alt="image-20221102103815252"></p>
+<p>istore_1</p>
+<ul>
+<li>将操作数栈顶数据弹出，存入局部变量表的 slot 1</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102103929219.png" srcset="/img/loading.gif" lazyload alt="image-20221102103929219"></p>
+<p><img src="/2022/10/26/JVM/image-20221102103934229.png" srcset="/img/loading.gif" lazyload alt="image-20221102103934229"></p>
+<p>ldc #3</p>
+<ul>
+<li>从常量池加载 #3 数据到操作数栈 </li>
+<li>注意 Short.MAX_VALUE 是 32767，所以 32768 &#x3D; Short.MAX_VALUE + 1 实际是在编译期间计算好的</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102104009697.png" srcset="/img/loading.gif" lazyload alt="image-20221102104009697"></p>
+<p>istore_2</p>
+<p><img src="/2022/10/26/JVM/image-20221102104021847.png" srcset="/img/loading.gif" lazyload alt="image-20221102104021847"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104029382.png" srcset="/img/loading.gif" lazyload alt="image-20221102104029382"></p>
+<p>iload_1</p>
+<p><img src="/2022/10/26/JVM/image-20221102104045057.png" srcset="/img/loading.gif" lazyload alt="image-20221102104045057"></p>
+<p>iload_2</p>
+<p><img src="/2022/10/26/JVM/image-20221102104057398.png" srcset="/img/loading.gif" lazyload alt="image-20221102104057398"></p>
+<p>iadd</p>
+<p><img src="/2022/10/26/JVM/image-20221102104108668.png" srcset="/img/loading.gif" lazyload alt="image-20221102104108668"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104115884.png" srcset="/img/loading.gif" lazyload alt="image-20221102104115884"></p>
+<p>istore_3</p>
+<p><img src="/2022/10/26/JVM/image-20221102104129152.png" srcset="/img/loading.gif" lazyload alt="image-20221102104129152"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104135622.png" srcset="/img/loading.gif" lazyload alt="image-20221102104135622"></p>
+<p>getstatic #4</p>
+<p><img src="/2022/10/26/JVM/image-20221102104145763.png" srcset="/img/loading.gif" lazyload alt="image-20221102104145763"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104153687.png" srcset="/img/loading.gif" lazyload alt="image-20221102104153687"></p>
+<p>iload_3</p>
+<p><img src="/2022/10/26/JVM/image-20221102104205754.png" srcset="/img/loading.gif" lazyload alt="image-20221102104205754"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104212672.png" srcset="/img/loading.gif" lazyload alt="image-20221102104212672"></p>
+<p>invokevirtual #5</p>
+<ul>
+<li>找到常量池 #5 项 </li>
+<li>定位到方法区 java&#x2F;io&#x2F;PrintStream.println:(I)V 方法 </li>
+<li>生成新的栈帧（分配 locals、stack等） </li>
+<li>传递参数，执行新栈帧中的字节码</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102104241504.png" srcset="/img/loading.gif" lazyload alt="image-20221102104241504"></p>
+<ul>
+<li>执行完毕，弹出栈帧 </li>
+<li>清除 main 操作数栈内容</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102104325220.png" srcset="/img/loading.gif" lazyload alt="image-20221102104325220"></p>
+<p>return</p>
+<ul>
+<li>完成 main 方法调用，弹出 main 栈帧 </li>
+<li>程序结束</li>
+</ul>
+<h3 id="3-2-4、练习-分析i"><a href="#3-2-4、练习-分析i" class="headerlink" title="3.2.4、练习 - 分析i++"></a>3.2.4、练习 - 分析i++</h3><p>目的：从字节码角度分析 a++ 相关题目</p>
+<p>源码：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">package cn.itcast.jvm.t3.bytecode;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">	* 从字节码角度分析 a++ 相关题目</span><br><span class="hljs-comment">	*/</span><br><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> Demo3_2 &#123;<br>	<span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) &#123;<br>		<span class="hljs-type">int</span> a = <span class="hljs-number">10</span>;<br>		<span class="hljs-type">int</span> b = a++ + ++a + a<span class="hljs-comment">--;</span><br>		<span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(a);<br>		<span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(b);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码：</p>
+<p><img src="/2022/10/26/JVM/image-20221102104450398.png" srcset="/img/loading.gif" lazyload alt="image-20221102104450398"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104455844.png" srcset="/img/loading.gif" lazyload alt="image-20221102104455844"></p>
+<p>分析：</p>
+<ul>
+<li>注意 iinc 指令是直接在局部变量 slot 上进行运算 </li>
+<li>a++ 和 ++a 的区别是先执行 iload 还是 先执行 iinc</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102104520641.png" srcset="/img/loading.gif" lazyload alt="image-20221102104520641"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104530903.png" srcset="/img/loading.gif" lazyload alt="image-20221102104530903"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104537395.png" srcset="/img/loading.gif" lazyload alt="image-20221102104537395"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104544336.png" srcset="/img/loading.gif" lazyload alt="image-20221102104544336"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104556881.png" srcset="/img/loading.gif" lazyload alt="image-20221102104556881"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104603865.png" srcset="/img/loading.gif" lazyload alt="image-20221102104603865"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104617984.png" srcset="/img/loading.gif" lazyload alt="image-20221102104617984"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104624772.png" srcset="/img/loading.gif" lazyload alt="image-20221102104624772"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104630356.png" srcset="/img/loading.gif" lazyload alt="image-20221102104630356"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104636559.png" srcset="/img/loading.gif" lazyload alt="image-20221102104636559"></p>
+<p><img src="/2022/10/26/JVM/image-20221102104641852.png" srcset="/img/loading.gif" lazyload alt="image-20221102104641852"></p>
+<h3 id="3-2-5、条件判断指令"><a href="#3-2-5、条件判断指令" class="headerlink" title="3.2.5、条件判断指令"></a>3.2.5、条件判断指令</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>助记符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x99</td>
+<td>ifeq</td>
+<td>判断是否 &#x3D;&#x3D; 0</td>
+</tr>
+<tr>
+<td>0x9a</td>
+<td>ifne</td>
+<td>判断是否 !&#x3D; 0</td>
+</tr>
+<tr>
+<td>0x9b</td>
+<td>iflt</td>
+<td>判断是否 &lt; 0</td>
+</tr>
+<tr>
+<td>0x9c</td>
+<td>ifge</td>
+<td>判断是否 &gt;&#x3D; 0</td>
+</tr>
+<tr>
+<td>0x9d</td>
+<td>ifgt</td>
+<td>判断是否 &gt; 0</td>
+</tr>
+<tr>
+<td>0x9e</td>
+<td>ifle</td>
+<td>判断是否 &lt;&#x3D; 0</td>
+</tr>
+<tr>
+<td>0x9f</td>
+<td>if_icmpeq</td>
+<td>两个int是否 &#x3D;&#x3D;</td>
+</tr>
+<tr>
+<td>0xa0</td>
+<td>if_icmpne</td>
+<td>两个int是否 !&#x3D;</td>
+</tr>
+<tr>
+<td>0xa1</td>
+<td>if_icmplt</td>
+<td>两个int是否 &lt;</td>
+</tr>
+<tr>
+<td>0xa2</td>
+<td>if_icmpge</td>
+<td>两个int是否 &gt;&#x3D;</td>
+</tr>
+<tr>
+<td>0xa3</td>
+<td>if_icmpgt</td>
+<td>两个int是否 &gt;</td>
+</tr>
+<tr>
+<td>0xa4</td>
+<td>if_icmple</td>
+<td>两个int是否 &lt;&#x3D;</td>
+</tr>
+<tr>
+<td>0xa5</td>
+<td>if_acmpeq</td>
+<td>两个引用是否 &#x3D;&#x3D;</td>
+</tr>
+<tr>
+<td>0xa6</td>
+<td>if_acmpne</td>
+<td>两个引用是否 !&#x3D;</td>
+</tr>
+<tr>
+<td>0xc6</td>
+<td>ifnull</td>
+<td>判断是否 &#x3D;&#x3D; null</td>
+</tr>
+<tr>
+<td>0xc7</td>
+<td>ifnonnull</td>
+<td>判断是否 !&#x3D; null</td>
+</tr>
+</tbody></table>
+<p>几点说明：</p>
+<ul>
+<li>byte，short，char 都会按 int 比较，因为操作数栈都是 4 字节 </li>
+<li>goto 用来进行跳转到指定行号的字节码</li>
+</ul>
+<p>源码：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_3</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		<span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">if</span>(a == <span class="hljs-number">0</span>) &#123;<br>			a = <span class="hljs-number">10</span>;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			a = <span class="hljs-number">20</span>;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码：</p>
+<p><img src="/2022/10/26/JVM/image-20221102105020761.png" srcset="/img/loading.gif" lazyload alt="image-20221102105020761"></p>
+<p>思考：以上比较指令中没有 long，float，double 的比较，那么它们要比较怎么办？</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.lcmp">https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.lcmp</a></p>
+<h3 id="3-2-6、循环控制指令"><a href="#3-2-6、循环控制指令" class="headerlink" title="3.2.6、循环控制指令"></a>3.2.6、循环控制指令</h3><p>其实循环控制还是前面介绍的那些指令，例如 while 循环：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_4</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		<span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">while</span> (a &lt; <span class="hljs-number">10</span>) &#123;<br>			a++;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码是：</p>
+<p><img src="/2022/10/26/JVM/image-20221102105228962.png" srcset="/img/loading.gif" lazyload alt="image-20221102105228962"></p>
+<p>再比如 do while 循环：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_5</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		<span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">do</span> &#123;<br>			a++;<br>		&#125; <span class="hljs-keyword">while</span> (a &lt; <span class="hljs-number">10</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码是：</p>
+<p>0: iconst_0 </p>
+<p>1: istore_1 </p>
+<p>2: iinc 1, 1 </p>
+<p>5: iload_1 </p>
+<p>6: bipush 10 </p>
+<p>8: if_icmplt 2 </p>
+<p>11: return</p>
+<p>最后再看看 for 循环：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_6</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>		<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码是：</p>
+<p><img src="/2022/10/26/JVM/image-20221102105408966.png" srcset="/img/loading.gif" lazyload alt="image-20221102105408966"></p>
+<p>注意：比较 while 和 for 的字节码，你发现它们是一模一样的，殊途也能同归</p>
+<h3 id="3-2-7、练习-判断结果"><a href="#3-2-7、练习-判断结果" class="headerlink" title="3.2.7、练习 - 判断结果"></a>3.2.7、练习 - 判断结果</h3><p>请从字节码角度分析，下列代码运行的结果：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_6_1</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br>		<span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;<br>		<span class="hljs-keyword">while</span> (i &lt; <span class="hljs-number">10</span>) &#123;<br>			x = x++;<br>			i++;<br>		&#125;<br>		System.out.<span class="hljs-built_in">println</span>(x); <span class="hljs-comment">// 结果是 0</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-8、构造方法"><a href="#3-2-8、构造方法" class="headerlink" title="3.2.8、构造方法"></a>3.2.8、构造方法</h3><p>1）<code>&lt;cinit&gt;()V</code></p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_8_1</span> &#123;<br>	<span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> i = <span class="hljs-number">10</span>;<br>	<span class="hljs-keyword">static</span> &#123;<br>		i = <span class="hljs-number">20</span>;<br>	&#125;<br>	<span class="hljs-keyword">static</span> &#123;<br>		i = <span class="hljs-number">30</span>;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译器会按从上至下的顺序，收集所有 static 静态代码块和静态成员赋值的代码，合并为一个特殊的方法 <code>&lt;cinit&gt;()V</code> ：</p>
+<p><img src="/2022/10/26/JVM/image-20221102105618094.png" srcset="/img/loading.gif" lazyload alt="image-20221102105618094"></p>
+<p>练习：自己调整一下 static 变量和静态代码块的位置，观察字节码的改动</p>
+<p>2）<code>&lt;init&gt;()V</code></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_8_2</span> &#123;<br>	<span class="hljs-keyword">private</span> <span class="hljs-type">String</span> a = <span class="hljs-string">&quot;s1&quot;</span>;<br>	&#123;<br>		b = <span class="hljs-number">20</span>;<br>	&#125;<br>	<span class="hljs-keyword">private</span> <span class="hljs-type">int</span> b = <span class="hljs-number">10</span>;<br>	&#123;<br>		a = <span class="hljs-string">&quot;s2&quot;</span>;<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Demo3_8_2</span><span class="hljs-params">(<span class="hljs-type">String</span> a, <span class="hljs-type">int</span> b)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.a = a;<br>		<span class="hljs-keyword">this</span>.b = b;<br>	&#125;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">String</span>[] args)</span> </span>&#123;<br>		Demo3_8_2 d = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Demo3_8_2</span>(<span class="hljs-string">&quot;s3&quot;</span>, <span class="hljs-number">30</span>);<br>		System.out.<span class="hljs-built_in">println</span>(d.a);<br>		System.out.<span class="hljs-built_in">println</span>(d.b);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译器会按从上至下的顺序，收集所有 {} 代码块和成员变量赋值的代码，形成新的构造方法，但原始构 造方法内的代码总是在最后</p>
+<p><img src="/2022/10/26/JVM/image-20221102105803812.png" srcset="/img/loading.gif" lazyload alt="image-20221102105803812"></p>
+<h3 id="3-2-9、方法调用"><a href="#3-2-9、方法调用" class="headerlink" title="3.2.9、方法调用"></a>3.2.9、方法调用</h3><p>看一下几种不同的方法调用对应的字节码指令</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Demo3_9</span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Demo3_9</span>()</span> &#123; &#125;<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test1</span>()</span> &#123; &#125;<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> final <span class="hljs-keyword">void</span> <span class="hljs-title">test2</span>()</span> &#123; &#125;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test3</span>()</span> &#123; &#125;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test4</span>()</span> &#123; &#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span> &#123;<br>		Demo3_9 d = <span class="hljs-keyword">new</span> Demo3_9();<br>		d.test1();<br>		d.test2();<br>		d.test3();<br>		d.test4();<br>		Demo3_9.test4();<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>字节码：</p>
+<p><img src="/2022/10/26/JVM/image-20221102105843791.png" srcset="/img/loading.gif" lazyload alt="image-20221102105843791"></p>
+<ul>
+<li>new 是创建【对象】，给对象分配堆内存，执行成功会将【对象引用】压入操作数栈 </li>
+<li>dup 是赋值操作数栈栈顶的内容，本例即为【对象引用】，为什么需要两份引用呢，一个是要配合 invokespecial 调用该对象的构造方法 “”:()V （会消耗掉栈顶一个引用），另一个要 配合 astore_1 赋值给局部变量 </li>
+<li>最终方法（final），私有方法（private），构造方法都是由 invokespecial 指令来调用，属于静态绑定 </li>
+<li>普通成员方法是由 invokevirtual 调用，属于动态绑定，即支持多态 </li>
+<li>成员方法与静态方法调用的另一个区别是，执行方法前是否需要【对象引用】 </li>
+<li>比较有意思的是 d.test4(); 是通过【对象引用】调用一个静态方法，可以看到在调用 invokestatic 之前执行了 pop 指令，把【对象引用】从操作数栈弹掉了😂 </li>
+<li>还有一个执行 invokespecial 的情况是通过 super 调用父类方法</li>
+</ul>
+<h3 id="3-2-10、多态的原理"><a href="#3-2-10、多态的原理" class="headerlink" title="3.2.10、多态的原理"></a>3.2.10、多态的原理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cn.itcast.jvm.t3.bytecode;<br><br><span class="hljs-keyword">import</span> java.io.IOException;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 演示多态原理，注意加上下面的 JVM 参数，禁用指针压缩</span><br><span class="hljs-comment">* -XX:-UseCompressedOops -XX:-UseCompressedClassPointers</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo3_10</span> &#123;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(Animal animal)</span> &#123;<br>		animal.eat();<br>		System.out.println(animal.toString());<br>	&#125;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>		test(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Cat</span>());<br>		test(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Dog</span>());<br>		System.in.read();<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Animal</span> &#123;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">eat</span><span class="hljs-params">()</span>;<br>	<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> String <span class="hljs-title function_">toString</span><span class="hljs-params">()</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;我是&quot;</span> + <span class="hljs-built_in">this</span>.getClass().getSimpleName();<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Dog</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">eat</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-string">&quot;啃骨头&quot;</span>);<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Cat</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span> &#123;<br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">eat</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-string">&quot;吃鱼&quot;</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>1）运行代码</p>
+<p>停在 System.in.read() 方法上，这时运行 jps 获取进程 id</p>
+<p>2）运行 HSDB 工具</p>
+<p>进入 JDK 安装目录，执行<code>java -cp ./lib/sa-jdi.jar sun.jvm.hotspot.HSDB</code></p>
+<p>3）查找某个对象</p>
+<p>打开 Tools -&gt; Find Object By Query </p>
+<p>输入 <code>select d from cn.itcast.jvm.t3.bytecode.Dog d</code> 点击 Execute 执行</p>
+<p><img src="/2022/10/26/JVM/image-20221102110127313.png" srcset="/img/loading.gif" lazyload alt="image-20221102110127313"></p>
+<p>4）查看对象内存结构</p>
+<p>点击超链接可以看到对象的内存结构，此对象没有任何属性，因此只有对象头的 16 字节，前 8 字节是 MarkWord，后 8 字节就是对象的 Class 指针</p>
+<p>但目前看不到它的实际地址</p>
+<p><img src="/2022/10/26/JVM/image-20221102110145382.png" srcset="/img/loading.gif" lazyload alt="image-20221102110145382"></p>
+<p>5）查看对象 Class 的内存地址</p>
+<p>可以通过 Windows -&gt; Console 进入命令行模式，执行<code>mem 0x00000001299b4978 2</code></p>
+<p>mem 有两个参数，参数 1 是对象地址，参数 2 是查看 2 行（即 16 字节）</p>
+<p>结果中第二行 0x000000001b7d4028 即为 Class 的内存地址</p>
+<p><img src="/2022/10/26/JVM/image-20221102110235601.png" srcset="/img/loading.gif" lazyload alt="image-20221102110235601"></p>
+<p>6）查看类的 vtable</p>
+<ul>
+<li>方法1：Alt+R 进入 Inspector 工具，输入刚才的 Class 内存地址，看到如下界面</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102110306376.png" srcset="/img/loading.gif" lazyload alt="image-20221102110306376"></p>
+<ul>
+<li>方法2：或者 Tools -&gt; Class Browser 输入 Dog 查找，可以得到相同的结果</li>
+</ul>
+<p><img src="/2022/10/26/JVM/image-20221102110319143.png" srcset="/img/loading.gif" lazyload alt="image-20221102110319143"></p>
+<p>无论通过哪种方法，都可以找到 Dog Class 的 vtable 长度为 6，意思就是 Dog 类有 6 个虚方法（多态相关的，final，static 不会列入）</p>
+<p>那么这 6 个方法都是谁呢？从 Class 的起始地址开始算，偏移 0x1b8 就是 vtable 的起始地址，进行计算得到：</p>
+<p><img src="/2022/10/26/JVM/image-20221102110340837.png" srcset="/img/loading.gif" lazyload alt="image-20221102110340837"></p>
+<p>通过 Windows -&gt; Console 进入命令行模式，执行</p>
+<p><img src="/2022/10/26/JVM/image-20221102110353791.png" srcset="/img/loading.gif" lazyload alt="image-20221102110353791"></p>
+<p>就得到了 6 个虚方法的入口地址</p>
+<p>7）验证方法地址</p>
+<p>通过 Tools -&gt; Class Browser 查看每个类的方法定义，比较可知</p>
+<p><img src="/2022/10/26/JVM/image-20221102110413384.png" srcset="/img/loading.gif" lazyload alt="image-20221102110413384"></p>
+<p>对号入座，发现</p>
+<ul>
+<li>eat() 方法是 Dog 类自己的 </li>
+<li>toString() 方法是继承 String 类的 </li>
+<li>finalize() ，equals()，hashCode()，clone() 都是继承 Object 类的</li>
+</ul>
+<p>8）小结</p>
+<p>当执行 invokevirtual 指令时， </p>
+<ol>
+<li>先通过栈帧中的对象引用找到对象 </li>
+<li>分析对象头，找到对象的实际 Class </li>
+<li>Class 结构中有 vtable，它在类加载的链接阶段就已经根据方法的重写规则生成好了 </li>
+<li>查表得到方法的具体地址 </li>
+<li>执行方法的字节码</li>
+</ol>
+<h3 id="3-2-11、异常处理"><a href="#3-2-11、异常处理" class="headerlink" title="3.2.11、异常处理"></a>3.2.11、异常处理</h3><h3 id="3-2-12、练习-finally"><a href="#3-2-12、练习-finally" class="headerlink" title="3.2.12、练习 - finally"></a>3.2.12、练习 - finally</h3><h3 id="3-2-13、synchronized"><a href="#3-2-13、synchronized" class="headerlink" title="3.2.13、synchronized"></a>3.2.13、synchronized</h3><h2 id="3-3、编译器处理"><a href="#3-3、编译器处理" class="headerlink" title="3.3、编译器处理"></a>3.3、编译器处理</h2><h3 id="3-3-1、默认构造器"><a href="#3-3-1、默认构造器" class="headerlink" title="3.3.1、默认构造器"></a>3.3.1、默认构造器</h3><h3 id="3-3-2、自动拆装箱"><a href="#3-3-2、自动拆装箱" class="headerlink" title="3.3.2、自动拆装箱"></a>3.3.2、自动拆装箱</h3><h3 id="3-3-3、泛型集合取值"><a href="#3-3-3、泛型集合取值" class="headerlink" title="3.3.3、泛型集合取值"></a>3.3.3、泛型集合取值</h3><h3 id="3-3-4、可变参数"><a href="#3-3-4、可变参数" class="headerlink" title="3.3.4、可变参数"></a>3.3.4、可变参数</h3><h3 id="3-3-5、foreach循环"><a href="#3-3-5、foreach循环" class="headerlink" title="3.3.5、foreach循环"></a>3.3.5、foreach循环</h3><h3 id="3-3-6、switch字符串"><a href="#3-3-6、switch字符串" class="headerlink" title="3.3.6、switch字符串"></a>3.3.6、switch字符串</h3><h3 id="3-3-7、switch枚举"><a href="#3-3-7、switch枚举" class="headerlink" title="3.3.7、switch枚举"></a>3.3.7、switch枚举</h3><h3 id="3-3-8、枚举类"><a href="#3-3-8、枚举类" class="headerlink" title="3.3.8、枚举类"></a>3.3.8、枚举类</h3><h3 id="3-3-9、try-with-resources"><a href="#3-3-9、try-with-resources" class="headerlink" title="3.3.9、try-with-resources"></a>3.3.9、try-with-resources</h3><h3 id="3-3-10、方法重写时的桥接方法"><a href="#3-3-10、方法重写时的桥接方法" class="headerlink" title="3.3.10、方法重写时的桥接方法"></a>3.3.10、方法重写时的桥接方法</h3><h3 id="3-3-11、匿名内部类"><a href="#3-3-11、匿名内部类" class="headerlink" title="3.3.11、匿名内部类"></a>3.3.11、匿名内部类</h3><h2 id="3-4、类加载阶段"><a href="#3-4、类加载阶段" class="headerlink" title="3.4、类加载阶段"></a>3.4、类加载阶段</h2><h3 id="3-4-1、加载"><a href="#3-4-1、加载" class="headerlink" title="3.4.1、加载"></a>3.4.1、加载</h3><h3 id="3-4-2、链接"><a href="#3-4-2、链接" class="headerlink" title="3.4.2、链接"></a>3.4.2、链接</h3><h3 id="3-4-3、初始化"><a href="#3-4-3、初始化" class="headerlink" title="3.4.3、初始化"></a>3.4.3、初始化</h3><h3 id="3-4-4、练习"><a href="#3-4-4、练习" class="headerlink" title="3.4.4、练习"></a>3.4.4、练习</h3><h2 id="3-5、类加载器"><a href="#3-5、类加载器" class="headerlink" title="3.5、类加载器"></a>3.5、类加载器</h2><h3 id="3-5-1、启动类加载器"><a href="#3-5-1、启动类加载器" class="headerlink" title="3.5.1、启动类加载器"></a>3.5.1、启动类加载器</h3><h3 id="3-5-2、扩展类加载器"><a href="#3-5-2、扩展类加载器" class="headerlink" title="3.5.2、扩展类加载器"></a>3.5.2、扩展类加载器</h3><h3 id="3-5-3、双亲委派模式"><a href="#3-5-3、双亲委派模式" class="headerlink" title="3.5.3、双亲委派模式"></a>3.5.3、双亲委派模式</h3><h3 id="3-5-4、线程上下文类加载器"><a href="#3-5-4、线程上下文类加载器" class="headerlink" title="3.5.4、线程上下文类加载器"></a>3.5.4、线程上下文类加载器</h3><h3 id="3-5-5、自定义类加载器"><a href="#3-5-5、自定义类加载器" class="headerlink" title="3.5.5、自定义类加载器"></a>3.5.5、自定义类加载器</h3><h2 id="3-6、运行期优化"><a href="#3-6、运行期优化" class="headerlink" title="3.6、运行期优化"></a>3.6、运行期优化</h2><h3 id="3-6-1、即时编译"><a href="#3-6-1、即时编译" class="headerlink" title="3.6.1、即时编译"></a>3.6.1、即时编译</h3><h3 id="3-6-2、反射优化"><a href="#3-6-2、反射优化" class="headerlink" title="3.6.2、反射优化"></a>3.6.2、反射优化</h3><h1 id="4、内存模型"><a href="#4、内存模型" class="headerlink" title="4、内存模型"></a>4、内存模型</h1><h2 id="4-1、java内存模型"><a href="#4-1、java内存模型" class="headerlink" title="4.1、java内存模型"></a>4.1、java内存模型</h2><p>4.1.1、原子性</p>
+<p>4.1.2、问题分析</p>
+<p>4.1.3、解决方法</p>
+<h2 id="4-2、可见性"><a href="#4-2、可见性" class="headerlink" title="4.2、可见性"></a>4.2、可见性</h2><p>4.2.1、退不出的循环</p>
+<p>4.2.2、解决方法</p>
+<p>4.2.3、可见性</p>
+<h2 id="4-3、有序性"><a href="#4-3、有序性" class="headerlink" title="4.3、有序性"></a>4.3、有序性</h2><p>4.3.1、诡异的结果</p>
+<p>4.3.2、解决方法</p>
+<p>4.3.3、有序性理解</p>
+<p>4.3.4、happens-before</p>
+<h2 id="4-4、CAS与原子类"><a href="#4-4、CAS与原子类" class="headerlink" title="4.4、CAS与原子类"></a>4.4、CAS与原子类</h2><p>4.4.1、CAS</p>
+<p>4.4.2、乐观锁与悲观锁</p>
+<p>4.4.3、原子操作类</p>
+<h2 id="4-5、synchronized优化"><a href="#4-5、synchronized优化" class="headerlink" title="4.5、synchronized优化"></a>4.5、synchronized优化</h2><p>4.5.1、轻量级锁</p>
+<p>4.5.2、锁膨胀</p>
+<p>4.5.3、重量锁</p>
+<p>4.5.4、偏向锁</p>
+<p>4.5.5、其它优化</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
