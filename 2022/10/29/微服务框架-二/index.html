@@ -23,42 +23,42 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="DockerDocker项目部署问题 Docker如何解决大型项目依赖关系复杂，不同组件依赖的兼容性问题？  Docker允许开发中将应用、依赖、函数库、配置一起打包，形成可移植镜像 Docker应用运行在容器中，使用沙箱机制，相互隔离  Docker如何解决开发、测试、生产环境有差异的问题  Docker镜像中包含完整运行环境，包括系统函数库，仅依赖系统的Linux内核，因此可以在任意Linux">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101053397.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101114303.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101310555.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101434783.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101441028.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101456037.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101459085.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101531610.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101601141.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101605054.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101650554.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101713739.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101745919.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101748208.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101825721.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103101936256.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102135824.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102249544.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102327484.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102811650.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102907677.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102915336.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102922183.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103102952419.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103205861.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103300909.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103336106.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103342723.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103504956.png">
-<meta property="og:image" content="https://kblayt.github.io/image-20221103103514811.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101053397.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101114303.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101310555.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101434783.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101441028.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101456037.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101459085.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101531610.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101601141.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101605054.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101650554.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101713739.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101745919.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101748208.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101825721.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101936256.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102135824.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102249544.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102327484.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102811650.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102907677.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102915336.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102922183.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102952419.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103205861.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103300909.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103336106.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103342723.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103504956.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103514811.png">
 <meta property="article:published_time" content="2022-10-29T02:32:15.000Z">
 <meta property="article:modified_time" content="2023-02-27T02:52:32.702Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="微服务框架与Docker">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/image-20221103101053397.png">
+<meta name="twitter:image" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101053397.png">
   
   
   
@@ -332,12 +332,12 @@
 <td></td>
 </tr>
 </tbody></table>
-<p><img src="/image-20221103101053397.png" srcset="/img/loading.gif" lazyload alt="image-20221103101053397"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101053397.png" srcset="/img/loading.gif" lazyload alt="image-20221103101053397"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>Docker是一个快速交付应用、运行应用的技术：</p>
 <p>1.可以将程序及其依赖、运行环境一起打包为一个镜像，可以迁移到任意Linux操作系统</p>
 <p>2.运行时利用沙箱机制形成隔离容器，各个应用互不干扰</p>
 <p>3.启动、移除都可以通过一行命令完成，方便快捷</p>
-<h2 id="Docker与虚拟机"><a href="#Docker与虚拟机" class="headerlink" title="Docker与虚拟机"></a><strong>Docker与虚拟机</strong></h2><p>虚拟机（virtual machine）是在操作系统中模拟硬件设备，然后运行另一个操作系统，比如在 Windows系统里面运行 Ubuntu 系统，这样就可以运行任意的Ubuntu应用了。<img src="/image-20221103101114303.png" srcset="/img/loading.gif" lazyload alt="image-20221103101114303"></p>
+<h2 id="Docker与虚拟机"><a href="#Docker与虚拟机" class="headerlink" title="Docker与虚拟机"></a><strong>Docker与虚拟机</strong></h2><p>虚拟机（virtual machine）是在操作系统中模拟硬件设备，然后运行另一个操作系统，比如在 Windows系统里面运行 Ubuntu 系统，这样就可以运行任意的Ubuntu应用了。<img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101114303.png" srcset="/img/loading.gif" lazyload alt="image-20221103101114303"></p>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>Docker和虚拟机的差异：</p>
 <p>•docker是一个系统进程；虚拟机是在操作系统中的操作系统</p>
 <p>•docker体积小、启动速度快、性能好；虚拟机体积大、启动速度慢、性能一般</p>
@@ -349,7 +349,7 @@
 <li>服务端(server)：Docker守护进程，负责处理Docker指令，管理镜像、容器等</li>
 <li>客户端(client)：通过命令或RestAPI向Docker服务端发送指令。可以在本地或远程向服务端发送指令</li>
 </ul>
-<p><img src="/image-20221103101310555.png" srcset="/img/loading.gif" lazyload alt="image-20221103101310555"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101310555.png" srcset="/img/loading.gif" lazyload alt="image-20221103101310555"></p>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>镜像：</p>
 <ul>
 <li>将应用程序及其依赖、环境、配置打包在一起</li>
@@ -372,9 +372,9 @@
 <li>在没有指定tag时，默认是latest，代表最新版本的镜像</li>
 </ul>
 <p>例如：mysql:5.7</p>
-<p><img src="/image-20221103101434783.png" srcset="/img/loading.gif" lazyload alt="image-20221103101434783"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101434783.png" srcset="/img/loading.gif" lazyload alt="image-20221103101434783"></p>
 <p>docker –help、docker images –help查看帮助文档</p>
-<p><img src="/image-20221103101441028.png" srcset="/img/loading.gif" lazyload alt="image-20221103101441028"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101441028.png" srcset="/img/loading.gif" lazyload alt="image-20221103101441028"></p>
 <p>利用dockersave将nginx镜像导出磁盘，然后再通过load加载回来：</p>
 <p>步骤一：利用docker xx –help命令查看docker save和docker load的语法</p>
 <p>步骤二：使用docker save导出镜像到磁盘 </p>
@@ -388,8 +388,8 @@
 <li>docker save </li>
 <li>docker load</li>
 </ul>
-<h3 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a><strong>容器操作</strong></h3><p><img src="/image-20221103101456037.png" srcset="/img/loading.gif" lazyload alt="image-20221103101456037"></p>
-<p><img src="/image-20221103101459085.png" srcset="/img/loading.gif" lazyload alt="image-20221103101459085"></p>
+<h3 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a><strong>容器操作</strong></h3><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101456037.png" srcset="/img/loading.gif" lazyload alt="image-20221103101456037"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101459085.png" srcset="/img/loading.gif" lazyload alt="image-20221103101459085"></p>
 <h4 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>dockerrun命令的常见参数有哪些？</p>
 <ul>
 <li>–name：指定容器名称</li>
@@ -406,7 +406,7 @@
 <ul>
 <li>docker ps</li>
 </ul>
-<p><img src="/image-20221103101531610.png" srcset="/img/loading.gif" lazyload alt="image-20221103101531610"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101531610.png" srcset="/img/loading.gif" lazyload alt="image-20221103101531610"></p>
 <h4 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>查看容器状态：</p>
 <ul>
 <li>docker ps</li>
@@ -422,8 +422,8 @@
 <li>命令是docker exec -it [容器名] [要执行的命令]</li>
 <li>exec命令可以进入容器修改文件，但是在容器内修改文件是不推荐的</li>
 </ul>
-<p><img src="/image-20221103101601141.png" srcset="/img/loading.gif" lazyload alt="image-20221103101601141"></p>
-<p><img src="/image-20221103101605054.png" srcset="/img/loading.gif" lazyload alt="image-20221103101605054"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101601141.png" srcset="/img/loading.gif" lazyload alt="image-20221103101601141"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101605054.png" srcset="/img/loading.gif" lazyload alt="image-20221103101605054"></p>
 <h3 id="数据卷（容器数据管理）"><a href="#数据卷（容器数据管理）" class="headerlink" title="数据卷（容器数据管理）"></a><strong>数据卷（容器数据管理）</strong></h3><p>容器与数据耦合存在的问题</p>
 <ul>
 <li>不便于修改：当我们要修改Nginx的html内容时，需要进入容器内部修改，很不方便。</li>
@@ -431,7 +431,7 @@
 <li>升级维护困难：数据在容器内，如果要升级容器必然删除就容器，所有数据都跟着删除了。</li>
 </ul>
 <p>数据卷（volume）是一个虚拟目录，指向宿主机文件系统中的某个目录。</p>
-<p><img src="/image-20221103101650554.png" srcset="/img/loading.gif" lazyload alt="image-20221103101650554"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101650554.png" srcset="/img/loading.gif" lazyload alt="image-20221103101650554"></p>
 <h4 id="数据卷操作的基本语法如下："><a href="#数据卷操作的基本语法如下：" class="headerlink" title="数据卷操作的基本语法如下："></a><strong>数据卷操作的基本语法如下：</strong></h4><ul>
 <li>docker volume [COMMAND]</li>
 </ul>
@@ -443,7 +443,7 @@
 <li>prune 删除未使用的volume</li>
 <li>rm 删除一个或多个指定的volume</li>
 </ul>
-<p><img src="/image-20221103101713739.png" srcset="/img/loading.gif" lazyload alt="image-20221103101713739"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101713739.png" srcset="/img/loading.gif" lazyload alt="image-20221103101713739"></p>
 <h4 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>数据卷的作用：</p>
 <ul>
 <li>将容器与数据分离，解耦合，方便操作容器内数据，保证数据安全</li>
@@ -457,8 +457,8 @@
 <li>docker volume prune</li>
 </ul>
 <h4 id="挂载数据卷"><a href="#挂载数据卷" class="headerlink" title="挂载数据卷"></a><strong>挂载数据卷</strong></h4><p>我们在创建容器时，可以通过-v参数来挂在一个数据卷到某个容器目录</p>
-<p><img src="/image-20221103101745919.png" srcset="/img/loading.gif" lazyload alt="image-20221103101745919"></p>
-<p><img src="/image-20221103101748208.png" srcset="/img/loading.gif" lazyload alt="image-20221103101748208"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101745919.png" srcset="/img/loading.gif" lazyload alt="image-20221103101745919"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101748208.png" srcset="/img/loading.gif" lazyload alt="image-20221103101748208"></p>
 <h4 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>数据卷挂载方式：</p>
 <ul>
 <li>-v volumeName: &#x2F;targetContainerPath</li>
@@ -478,7 +478,7 @@
 <p>①挂载&#x2F;tmp&#x2F;mysql&#x2F;data到mysql容器内数据存储目录</p>
 <p>②挂载&#x2F;tmp&#x2F;mysql&#x2F;conf&#x2F;hmy.cnf到mysql容器的配置文件</p>
 <p>③设置MySQL密码</p>
-<h4 id="数据卷挂载的方式对比："><a href="#数据卷挂载的方式对比：" class="headerlink" title="数据卷挂载的方式对比："></a><strong>数据卷挂载的方式对比：</strong></h4><p><img src="/image-20221103101825721.png" srcset="/img/loading.gif" lazyload alt="image-20221103101825721"></p>
+<h4 id="数据卷挂载的方式对比："><a href="#数据卷挂载的方式对比：" class="headerlink" title="数据卷挂载的方式对比："></a><strong>数据卷挂载的方式对比：</strong></h4><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101825721.png" srcset="/img/loading.gif" lazyload alt="image-20221103101825721"></p>
 <p><strong>总结</strong></p>
 <p>1.docker run的命令中通过 -v 参数挂载文件或目录到容器中：</p>
 <p>​	①-v volume名称:容器内目录</p>
@@ -490,7 +490,7 @@
 <h2 id="Dockerfile自定义镜像"><a href="#Dockerfile自定义镜像" class="headerlink" title="Dockerfile自定义镜像"></a><strong>Dockerfile自定义镜像</strong></h2><h3 id="镜像结构"><a href="#镜像结构" class="headerlink" title="镜像结构"></a><strong>镜像结构</strong></h3><ul>
 <li>镜像是将应用程序及其需要的系统函数库、环境、配置、依赖打包而成。</li>
 </ul>
-<p><img src="/image-20221103101936256.png" srcset="/img/loading.gif" lazyload alt="image-20221103101936256"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103101936256.png" srcset="/img/loading.gif" lazyload alt="image-20221103101936256"></p>
 <h3 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>镜像是分层结构，每一层称为一个Layer</p>
 <ul>
 <li>BaseImage层：包含基本的系统函数库、环境变量、文件系统</li>
@@ -553,7 +553,7 @@
 
 <p>DockerCompose的详细语法参考官网：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">https://docs.docker.com/compose/compose-file/</a></p>
 <h2 id="DockerCompose部署"><a href="#DockerCompose部署" class="headerlink" title="DockerCompose部署"></a><strong>DockerCompose部署</strong></h2><h3 id="实现思路如下："><a href="#实现思路如下：" class="headerlink" title="实现思路如下："></a><strong>实现思路如下：</strong></h3><p>①查看课前资料提供的cloud-demo文件夹，里面已经编写好了docker-compose文件</p>
-<p><img src="/image-20221103102135824.png" srcset="/img/loading.gif" lazyload alt="image-20221103102135824"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102135824.png" srcset="/img/loading.gif" lazyload alt="image-20221103102135824"></p>
 <p>②修改自己的cloud-demo项目，将数据库、nacos地址都命名为docker-compose中的服务名</p>
 <p>③使用maven打包工具，将项目中的每个微服务都打包为app.jar</p>
 <p>④将打包好的app.jar拷贝到cloud-demo中的每一个对应的子目录中</p>
@@ -563,7 +563,7 @@
 <li>公共仓库：例如Docker官方的<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>，国内也有一些云服务商提供类似于Docker Hub 的公开服务，比如<a target="_blank" rel="noopener" href="https://c.163.com/hub">网易云镜像服务</a>、<a target="_blank" rel="noopener" href="https://hub.daocloud.io/">DaoCloud</a><a target="_blank" rel="noopener" href="https://hub.daocloud.io/">镜像服务</a>、<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云镜像服务</a>等。</li>
 <li>除了使用公开仓库外，用户还可以在本地搭建私有 Docker Registry。企业自己的镜像最好是采用私有Docker Registry来实现。</li>
 </ul>
-<h3 id="向镜像仓库推送镜像"><a href="#向镜像仓库推送镜像" class="headerlink" title="向镜像仓库推送镜像"></a><strong>向镜像仓库推送镜像</strong></h3><h3 id="从镜像仓库拉取镜像"><a href="#从镜像仓库拉取镜像" class="headerlink" title="从镜像仓库拉取镜像"></a><strong>从镜像仓库拉取镜像</strong></h3><h1 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a><strong>RabbitMQ</strong></h1><h2 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h2><p><img src="/image-20221103102249544.png" srcset="/img/loading.gif" lazyload alt="image-20221103102249544"></p>
+<h3 id="向镜像仓库推送镜像"><a href="#向镜像仓库推送镜像" class="headerlink" title="向镜像仓库推送镜像"></a><strong>向镜像仓库推送镜像</strong></h3><h3 id="从镜像仓库拉取镜像"><a href="#从镜像仓库拉取镜像" class="headerlink" title="从镜像仓库拉取镜像"></a><strong>从镜像仓库拉取镜像</strong></h3><h1 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a><strong>RabbitMQ</strong></h1><h2 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h2><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102249544.png" srcset="/img/loading.gif" lazyload alt="image-20221103102249544"></p>
 <p>优点：</p>
 <ul>
 <li>时效性较强，可以立即得到结果</li>
@@ -590,8 +590,8 @@
 </ul>
 <h2 id="什么是MQ"><a href="#什么是MQ" class="headerlink" title="什么是MQ"></a><strong>什么是MQ</strong></h2><p>MQ（MessageQueue），消息队列，字面来看就是存放消息的队列。也就是事件驱动架构中的Broker</p>
 <p>MQ常见框架</p>
-<p><img src="/image-20221103102327484.png" srcset="/img/loading.gif" lazyload alt="image-20221103102327484"></p>
-<h2 id="RabbitMQ快速入门"><a href="#RabbitMQ快速入门" class="headerlink" title="RabbitMQ快速入门"></a><strong>RabbitMQ快速入门</strong></h2><h1 id="RabbitMQ概述和安装"><a href="#RabbitMQ概述和安装" class="headerlink" title="RabbitMQ概述和安装"></a><strong>RabbitMQ概述和安装</strong></h1><h2 id="RabbitMQ的结构和概念"><a href="#RabbitMQ的结构和概念" class="headerlink" title="RabbitMQ的结构和概念"></a><strong>RabbitMQ的结构和概念</strong></h2><p><img src="/image-20221103102811650.png" srcset="/img/loading.gif" lazyload alt="image-20221103102811650"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102327484.png" srcset="/img/loading.gif" lazyload alt="image-20221103102327484"></p>
+<h2 id="RabbitMQ快速入门"><a href="#RabbitMQ快速入门" class="headerlink" title="RabbitMQ快速入门"></a><strong>RabbitMQ快速入门</strong></h2><h1 id="RabbitMQ概述和安装"><a href="#RabbitMQ概述和安装" class="headerlink" title="RabbitMQ概述和安装"></a><strong>RabbitMQ概述和安装</strong></h1><h2 id="RabbitMQ的结构和概念"><a href="#RabbitMQ的结构和概念" class="headerlink" title="RabbitMQ的结构和概念"></a><strong>RabbitMQ的结构和概念</strong></h2><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102811650.png" srcset="/img/loading.gif" lazyload alt="image-20221103102811650"></p>
 <h2 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>RabbitMQ中的几个概念：</p>
 <ul>
 <li>channel：操作MQ的工具</li>
@@ -599,19 +599,19 @@
 <li>queue：缓存消息</li>
 <li>virtual host：虚拟主机，是对queue、exchange等资源的逻辑分组</li>
 </ul>
-<h2 id="五种常见的消息模型"><a href="#五种常见的消息模型" class="headerlink" title="五种常见的消息模型"></a><strong>五种常见的消息模型</strong></h2><p><img src="/image-20221103102907677.png" srcset="/img/loading.gif" lazyload alt="image-20221103102907677"></p>
+<h2 id="五种常见的消息模型"><a href="#五种常见的消息模型" class="headerlink" title="五种常见的消息模型"></a><strong>五种常见的消息模型</strong></h2><p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102907677.png" srcset="/img/loading.gif" lazyload alt="image-20221103102907677"></p>
 <p>官方的BasicQueue是基于最基础的消息队列模型来实现的，只包括三个角色：</p>
 <ul>
 <li>publisher：消息发布这，将消息发送到队列queue</li>
 <li>queue：消息队列，负责接受并缓存消息</li>
 <li>consumer：订阅队列，处理队列中的消息</li>
 </ul>
-<p><img src="/image-20221103102915336.png" srcset="/img/loading.gif" lazyload alt="image-20221103102915336"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102915336.png" srcset="/img/loading.gif" lazyload alt="image-20221103102915336"></p>
 <p>实现步骤：</p>
 <ul>
 <li>导入课前资料中的demo工程</li>
 </ul>
-<p><img src="/image-20221103102922183.png" srcset="/img/loading.gif" lazyload alt="image-20221103102922183"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102922183.png" srcset="/img/loading.gif" lazyload alt="image-20221103102922183"></p>
 <ul>
 <li>运行publisher服务中的测试类PublisherTest中的测试方法testSendMessage()</li>
 <li>查看RabbitMQ控制台的消息</li>
@@ -629,7 +629,7 @@
 <p>4.定义consumer的消费行为handleDelivery()</p>
 <p>5.利用channel将消费者与队列绑定</p>
 <h1 id="SpringAMQP"><a href="#SpringAMQP" class="headerlink" title="SpringAMQP"></a><strong>SpringAMQP</strong></h1><h2 id="SpringAMQP-1"><a href="#SpringAMQP-1" class="headerlink" title="SpringAMQP"></a><strong>SpringAMQP</strong></h2><p>SpringAmqp的官方地址：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">https://spring.io/projects/spring-amqp</a></p>
-<p><img src="/image-20221103102952419.png" srcset="/img/loading.gif" lazyload alt="image-20221103102952419"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103102952419.png" srcset="/img/loading.gif" lazyload alt="image-20221103102952419"></p>
 <h2 id="BasicQueue"><a href="#BasicQueue" class="headerlink" title="BasicQueue"></a><strong>BasicQueue</strong></h2><p>利用SpringAMQP实现BasicQueue中的基础消息队列功能</p>
 <p>流程如下：</p>
 <p>1.在父工程中引入spring-amqp的依赖，因为publisher和consumer服务都需要amqp依赖，因此这里把依赖直接放到父工程中</p>
@@ -668,7 +668,7 @@
 <li>利用RabbitTemplate的convertAndSend方法</li>
 </ul>
 <h2 id="WorkQueue"><a href="#WorkQueue" class="headerlink" title="WorkQueue"></a><strong>WorkQueue</strong></h2><p>Work queue，工作队列，可以提高消息处理速度，避免队列消息堆积</p>
-<p><img src="/image-20221103103205861.png" srcset="/img/loading.gif" lazyload alt="image-20221103103205861"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103205861.png" srcset="/img/loading.gif" lazyload alt="image-20221103103205861"></p>
 <p>模拟WorkQueue，实现一个队列绑定多个消费者</p>
 <p>基本思路如下：</p>
 <p>1.在publisher服务中定义测试方法，每秒产生50条消息，发送到simple.queue</p>
@@ -698,16 +698,16 @@
 <li>Topic：话题</li>
 </ul>
 <p>ps：exchange负责消息路由，而不是存储，路由失败则消息丢失。</p>
-<p><img src="/image-20221103103300909.png" srcset="/img/loading.gif" lazyload alt="image-20221103103300909"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103300909.png" srcset="/img/loading.gif" lazyload alt="image-20221103103300909"></p>
 <h3 id="发布订阅之-FanoutExchange"><a href="#发布订阅之-FanoutExchange" class="headerlink" title="发布订阅之-FanoutExchange"></a><strong>发布订阅之-FanoutExchange</strong></h3><p>Fanout Exchange会将接收到的消息路由到每一个跟其绑定的queue</p>
-<p><img src="/image-20221103103336106.png" srcset="/img/loading.gif" lazyload alt="image-20221103103336106"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103336106.png" srcset="/img/loading.gif" lazyload alt="image-20221103103336106"></p>
 <p>实现思路如下：</p>
 <p>1.在consumer服务中，利用代码声明队列、交换机，并将两者绑定</p>
 <p>2.在consumer服务中，编写两个消费者方法，分别监听fanout.queue1和fanout.queue2</p>
 <p>3.在publisher中编写测试方法，向itcast.fanout发送消息</p>
 <p>步骤1：在consumer服务声明Exchange、Queue、Binding</p>
 <p>SpringAMQP提供了声明交换机、队列、绑定关系的API，例如：</p>
-<p><img src="/image-20221103103342723.png" srcset="/img/loading.gif" lazyload alt="image-20221103103342723"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103342723.png" srcset="/img/loading.gif" lazyload alt="image-20221103103342723"></p>
 <p>在consumer服务常见一个类，添加@Configuration注解，并声明FanoutExchange、Queue和绑定关系对象Binding，代码如下：</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FanoutConfig</span>&#123;<br>    <span class="hljs-comment">// 声明FanoutExchange交换机    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">FanoutExchangefanoutExchange</span>()&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FanoutExchange</span>(<span class="hljs-string">&quot;itcast.fanout&quot;</span>);    <br>    &#125;    <br>    <span class="hljs-comment">// 声明第1个队列    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Queue</span> <span class="hljs-title function_">fanoutQueue1</span>(<span class="hljs-params"></span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Queue</span>(<span class="hljs-string">&quot;fanout.queue1&quot;</span>);<br>    &#125;    <br>    <span class="hljs-comment">//绑 定队列1和交换机    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Binding</span> <span class="hljs-title function_">bindingQueue1</span>(<span class="hljs-params">Queue fanoutQueue1,FanoutExchange fanoutExchange</span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">BindingBuilder</span>.<span class="hljs-title function_">bind</span>(fanoutQueue1).<span class="hljs-title function_">to</span>(fanoutExchange);<br>    &#125;    <br>    <span class="hljs-comment">// ...略， 以相同方式声明第2个队列，并完成绑定</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -738,12 +738,12 @@
 <li>发布者发送消息时，指定消息的RoutingKey</li>
 <li>Exchange将消息路由到BindingKey与消息RoutingKey一致的队列</li>
 </ul>
-<p><img src="/image-20221103103504956.png" srcset="/img/loading.gif" lazyload alt="image-20221103103504956"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103504956.png" srcset="/img/loading.gif" lazyload alt="image-20221103103504956"></p>
 <p>实现思路如下：</p>
 <p>1.利用@RabbitListener声明Exchange、Queue、RoutingKey</p>
 <p>2.在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2</p>
 <p>3.在publisher中编写测试方法，向itcast. direct发送消息</p>
-<p><img src="/image-20221103103514811.png" srcset="/img/loading.gif" lazyload alt="image-20221103103514811"></p>
+<p><img src="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20221103103514811.png" srcset="/img/loading.gif" lazyload alt="image-20221103103514811"></p>
 <p>步骤1：在consumer服务声明Exchange、Queue</p>
 <p>1.在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2，</p>
 <p>2.并利用@RabbitListener声明Exchange、Queue、RoutingKey</p>
