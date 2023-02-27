@@ -1,0 +1,1140 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="DockerDocker项目部署问题 Docker如何解决大型项目依赖关系复杂，不同组件依赖的兼容性问题？  Docker允许开发中将应用、依赖、函数库、配置一起打包，形成可移植镜像 Docker应用运行在容器中，使用沙箱机制，相互隔离  Docker如何解决开发、测试、生产环境有差异的问题  Docker镜像中包含完整运行环境，包括系统函数库，仅依赖系统的Linux内核，因此可以在任意Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务框架与Docker(二)">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="DockerDocker项目部署问题 Docker如何解决大型项目依赖关系复杂，不同组件依赖的兼容性问题？  Docker允许开发中将应用、依赖、函数库、配置一起打包，形成可移植镜像 Docker应用运行在容器中，使用沙箱机制，相互隔离  Docker如何解决开发、测试、生产环境有差异的问题  Docker镜像中包含完整运行环境，包括系统函数库，仅依赖系统的Linux内核，因此可以在任意Linux">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101053397.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101114303.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101310555.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101434783.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101441028.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101456037.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101459085.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101531610.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101601141.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101605054.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101650554.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101713739.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101745919.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101748208.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101825721.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103101936256.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102135824.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102249544.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102327484.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102811650.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102907677.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102915336.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102922183.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103102952419.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103205861.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103300909.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103336106.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103342723.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103504956.png">
+<meta property="og:image" content="https://kblayt.github.io/image-20221103103514811.png">
+<meta property="article:published_time" content="2022-10-29T02:32:15.000Z">
+<meta property="article:modified_time" content="2023-02-27T02:52:32.702Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="微服务框架与Docker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/image-20221103101053397.png">
+  
+  
+  
+  <title>微服务框架与Docker(二) - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="微服务框架与Docker(二)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-29 10:32" pubdate>
+          2022年10月29日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          100 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">微服务框架与Docker(二)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a><strong>Docker</strong></h1><h2 id="Docker-1"><a href="#Docker-1" class="headerlink" title="Docker"></a><strong>Docker</strong></h2><p>项目部署问题</p>
+<p>Docker如何解决大型项目依赖关系复杂，不同组件依赖的兼容性问题？</p>
+<ul>
+<li>Docker允许开发中将应用、依赖、函数库、配置一起<strong>打包</strong>，形成可移植镜像</li>
+<li>Docker应用运行在容器中，使用沙箱机制，相互<strong>隔离</strong></li>
+</ul>
+<p>Docker如何解决开发、测试、生产环境有差异的问题</p>
+<ul>
+<li>Docker镜像中包含完整运行环境，包括系统函数库，仅依赖系统的Linux内核，因此可以在任意Linux操作系统上运行</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ZooKeeper</th>
+<th>Dubbo</th>
+<th>ActiveMQ</th>
+<th>Redis</th>
+<th>MySQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Portainer</strong></td>
+<td><strong>ElasticSearch</strong></td>
+<td><strong>Kibana</strong></td>
+<td><strong>Logstash</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="/image-20221103101053397.png" srcset="/img/loading.gif" lazyload alt="image-20221103101053397"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>Docker是一个快速交付应用、运行应用的技术：</p>
+<p>1.可以将程序及其依赖、运行环境一起打包为一个镜像，可以迁移到任意Linux操作系统</p>
+<p>2.运行时利用沙箱机制形成隔离容器，各个应用互不干扰</p>
+<p>3.启动、移除都可以通过一行命令完成，方便快捷</p>
+<h2 id="Docker与虚拟机"><a href="#Docker与虚拟机" class="headerlink" title="Docker与虚拟机"></a><strong>Docker与虚拟机</strong></h2><p>虚拟机（virtual machine）是在操作系统中模拟硬件设备，然后运行另一个操作系统，比如在 Windows系统里面运行 Ubuntu 系统，这样就可以运行任意的Ubuntu应用了。<img src="/image-20221103101114303.png" srcset="/img/loading.gif" lazyload alt="image-20221103101114303"></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>Docker和虚拟机的差异：</p>
+<p>•docker是一个系统进程；虚拟机是在操作系统中的操作系统</p>
+<p>•docker体积小、启动速度快、性能好；虚拟机体积大、启动速度慢、性能一般</p>
+<h2 id="Docker架构"><a href="#Docker架构" class="headerlink" title="Docker架构"></a><strong>Docker架构</strong></h2><h3 id="容器和镜像"><a href="#容器和镜像" class="headerlink" title="容器和镜像"></a><strong>容器和镜像</strong></h3><p><strong>镜像（Image）</strong>：Docker将应用程序及其所需的依赖、函数库、环境、配置等文件打包在一起，称为镜像。</p>
+<p><strong>容器（Container）</strong>：镜像中的应用程序运行后形成的进程就是<strong>容器</strong>，只是Docker会给容器做隔离，对外不可见。</p>
+<h3 id="Docker和DockerHub"><a href="#Docker和DockerHub" class="headerlink" title="Docker和DockerHub"></a><strong>Docker和DockerHub</strong></h3><p>DockerHub：<a target="_blank" rel="noopener" href="https://hub.docker.com/">DockerHub</a>是一个Docker镜像的托管平台。这样的平台称为Docker Registry。国内也有类似于DockerHub的公开服务，比如<a target="_blank" rel="noopener" href="https://c.163yun.com/hub">网易云镜像服务</a>、<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云镜像库</a>等。</p>
+<h3 id="docker架构"><a href="#docker架构" class="headerlink" title="docker架构"></a><strong>docker架构</strong></h3><p>Docker是一个CS架构的程序，由两部分组成：</p>
+<ul>
+<li>服务端(server)：Docker守护进程，负责处理Docker指令，管理镜像、容器等</li>
+<li>客户端(client)：通过命令或RestAPI向Docker服务端发送指令。可以在本地或远程向服务端发送指令</li>
+</ul>
+<p><img src="/image-20221103101310555.png" srcset="/img/loading.gif" lazyload alt="image-20221103101310555"></p>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>镜像：</p>
+<ul>
+<li>将应用程序及其依赖、环境、配置打包在一起</li>
+</ul>
+<p>容器：</p>
+<ul>
+<li>镜像运行起来就是容器，一个镜像可以运行多个容器</li>
+</ul>
+<p>Docker结构：</p>
+<ul>
+<li>服务端：接收命令或远程请求，操作镜像或容器</li>
+<li>客户端：发送命令或者请求到Docker服务端</li>
+</ul>
+<p>DockerHub：</p>
+<ul>
+<li>一个镜像托管的服务器，类似的还有阿里云镜像服务，统称为DockerRegistry</li>
+</ul>
+<h2 id="安装Docker（参考centos7安装docker）"><a href="#安装Docker（参考centos7安装docker）" class="headerlink" title="安装Docker（参考centos7安装docker）"></a><strong>安装Docker</strong>（参考centos7安装docker）</h2><h2 id="Docker基本操作"><a href="#Docker基本操作" class="headerlink" title="Docker基本操作"></a><strong>Docker基本操作</strong></h2><h3 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a><strong>镜像操作</strong></h3><ul>
+<li>镜像名称一般分两部分组成：[repository]:[tag]。</li>
+<li>在没有指定tag时，默认是latest，代表最新版本的镜像</li>
+</ul>
+<p>例如：mysql:5.7</p>
+<p><img src="/image-20221103101434783.png" srcset="/img/loading.gif" lazyload alt="image-20221103101434783"></p>
+<p>docker –help、docker images –help查看帮助文档</p>
+<p><img src="/image-20221103101441028.png" srcset="/img/loading.gif" lazyload alt="image-20221103101441028"></p>
+<p>利用dockersave将nginx镜像导出磁盘，然后再通过load加载回来：</p>
+<p>步骤一：利用docker xx –help命令查看docker save和docker load的语法</p>
+<p>步骤二：使用docker save导出镜像到磁盘 </p>
+<p>步骤三：使用docker load加载镜像</p>
+<h4 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>镜像操作有哪些？</p>
+<ul>
+<li>docker images</li>
+<li>docker rmi</li>
+<li>docker pull</li>
+<li>docker push</li>
+<li>docker save </li>
+<li>docker load</li>
+</ul>
+<h3 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a><strong>容器操作</strong></h3><p><img src="/image-20221103101456037.png" srcset="/img/loading.gif" lazyload alt="image-20221103101456037"></p>
+<p><img src="/image-20221103101459085.png" srcset="/img/loading.gif" lazyload alt="image-20221103101459085"></p>
+<h4 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>dockerrun命令的常见参数有哪些？</p>
+<ul>
+<li>–name：指定容器名称</li>
+<li>-p：指定端口映射</li>
+<li>-d：让容器后台运行</li>
+</ul>
+<p>查看容器日志的命令：</p>
+<ul>
+<li>docker logs</li>
+<li>添加 -f</li>
+</ul>
+<p>参数可以持续查看日志</p>
+<p>查看容器状态：</p>
+<ul>
+<li>docker ps</li>
+</ul>
+<p><img src="/image-20221103101531610.png" srcset="/img/loading.gif" lazyload alt="image-20221103101531610"></p>
+<h4 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>查看容器状态：</p>
+<ul>
+<li>docker ps</li>
+<li>添加-a参数查看所有状态的容器</li>
+</ul>
+<p>删除容器：</p>
+<ul>
+<li>docker rm</li>
+<li>不能删除运行中的容器，除非添加 -f 参数</li>
+</ul>
+<p>进入容器：</p>
+<ul>
+<li>命令是docker exec -it [容器名] [要执行的命令]</li>
+<li>exec命令可以进入容器修改文件，但是在容器内修改文件是不推荐的</li>
+</ul>
+<p><img src="/image-20221103101601141.png" srcset="/img/loading.gif" lazyload alt="image-20221103101601141"></p>
+<p><img src="/image-20221103101605054.png" srcset="/img/loading.gif" lazyload alt="image-20221103101605054"></p>
+<h3 id="数据卷（容器数据管理）"><a href="#数据卷（容器数据管理）" class="headerlink" title="数据卷（容器数据管理）"></a><strong>数据卷（容器数据管理）</strong></h3><p>容器与数据耦合存在的问题</p>
+<ul>
+<li>不便于修改：当我们要修改Nginx的html内容时，需要进入容器内部修改，很不方便。</li>
+<li>数据不可服用：在容器内的修改对外是不可见的。所有修改对新创建的容器是不可复用的。</li>
+<li>升级维护困难：数据在容器内，如果要升级容器必然删除就容器，所有数据都跟着删除了。</li>
+</ul>
+<p>数据卷（volume）是一个虚拟目录，指向宿主机文件系统中的某个目录。</p>
+<p><img src="/image-20221103101650554.png" srcset="/img/loading.gif" lazyload alt="image-20221103101650554"></p>
+<h4 id="数据卷操作的基本语法如下："><a href="#数据卷操作的基本语法如下：" class="headerlink" title="数据卷操作的基本语法如下："></a><strong>数据卷操作的基本语法如下：</strong></h4><ul>
+<li>docker volume [COMMAND]</li>
+</ul>
+<p>docker volume命令是数据卷操作，根据命令后跟随的command来确定下一步的操作：</p>
+<ul>
+<li>create 创建一个volume</li>
+<li>inspect 显示一个或多个volume的信息</li>
+<li>ls 列出所有的volume</li>
+<li>prune 删除未使用的volume</li>
+<li>rm 删除一个或多个指定的volume</li>
+</ul>
+<p><img src="/image-20221103101713739.png" srcset="/img/loading.gif" lazyload alt="image-20221103101713739"></p>
+<h4 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>数据卷的作用：</p>
+<ul>
+<li>将容器与数据分离，解耦合，方便操作容器内数据，保证数据安全</li>
+</ul>
+<p>数据卷操作：</p>
+<ul>
+<li>docker volume create</li>
+<li>docker volume ls</li>
+<li>docker volume inspect</li>
+<li>docker volume rm</li>
+<li>docker volume prune</li>
+</ul>
+<h4 id="挂载数据卷"><a href="#挂载数据卷" class="headerlink" title="挂载数据卷"></a><strong>挂载数据卷</strong></h4><p>我们在创建容器时，可以通过-v参数来挂在一个数据卷到某个容器目录</p>
+<p><img src="/image-20221103101745919.png" srcset="/img/loading.gif" lazyload alt="image-20221103101745919"></p>
+<p><img src="/image-20221103101748208.png" srcset="/img/loading.gif" lazyload alt="image-20221103101748208"></p>
+<h4 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>数据卷挂载方式：</p>
+<ul>
+<li>-v volumeName: &#x2F;targetContainerPath</li>
+<li>如果容器运行时volume不存在，会自动被创建出来</li>
+</ul>
+<p>案例：创建并运行一个MySQL容器，将宿主机目录直接挂载到容器</p>
+<p>提示：目录挂载与数据卷挂载的语法是类似的：</p>
+<ul>
+<li>-v [宿主机目录]:[容器内目录]</li>
+<li>-v [宿主机文件]:[容器内文件]</li>
+</ul>
+<p>实现思路如下：</p>
+<p>1.在将课前资料中的mysql.tar文件上传到虚拟机，通过load命令加载为镜像</p>
+<p>2.创建目录&#x2F;tmp&#x2F;mysql&#x2F;data</p>
+<p>3.创建目录&#x2F;tmp&#x2F;mysql&#x2F;conf，将课前资料提供的hmy.cnf文件上传到&#x2F;tmp&#x2F;mysql&#x2F;conf</p>
+<p>4.去DockerHub查阅资料，创建并运行MySQL容器，要求：</p>
+<p>①挂载&#x2F;tmp&#x2F;mysql&#x2F;data到mysql容器内数据存储目录</p>
+<p>②挂载&#x2F;tmp&#x2F;mysql&#x2F;conf&#x2F;hmy.cnf到mysql容器的配置文件</p>
+<p>③设置MySQL密码</p>
+<h4 id="数据卷挂载的方式对比："><a href="#数据卷挂载的方式对比：" class="headerlink" title="数据卷挂载的方式对比："></a><strong>数据卷挂载的方式对比：</strong></h4><p><img src="/image-20221103101825721.png" srcset="/img/loading.gif" lazyload alt="image-20221103101825721"></p>
+<p><strong>总结</strong></p>
+<p>1.docker run的命令中通过 -v 参数挂载文件或目录到容器中：</p>
+<p>​	①-v volume名称:容器内目录</p>
+<p>​	②-v 宿主机文件:容器内文件</p>
+<p>​	③-v 宿主机目录:容器内目录</p>
+<p>2.数据卷挂载与目录直接挂载的</p>
+<p>​	①数据卷挂载耦合度低，由docker来管理目录，但是目录较深，不好找</p>
+<p>​	②目录挂载耦合度高，需要我们自己管理目录，不过目录容易寻找查看</p>
+<h2 id="Dockerfile自定义镜像"><a href="#Dockerfile自定义镜像" class="headerlink" title="Dockerfile自定义镜像"></a><strong>Dockerfile自定义镜像</strong></h2><h3 id="镜像结构"><a href="#镜像结构" class="headerlink" title="镜像结构"></a><strong>镜像结构</strong></h3><ul>
+<li>镜像是将应用程序及其需要的系统函数库、环境、配置、依赖打包而成。</li>
+</ul>
+<p><img src="/image-20221103101936256.png" srcset="/img/loading.gif" lazyload alt="image-20221103101936256"></p>
+<h3 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>镜像是分层结构，每一层称为一个Layer</p>
+<ul>
+<li>BaseImage层：包含基本的系统函数库、环境变量、文件系统</li>
+<li>Entrypoint：入口，是镜像中应用启动的命令</li>
+<li>其它：在BaseImage基础上添加依赖、安装程序、完成整个应用的安装和配置</li>
+</ul>
+<h3 id="什么是dockerfile"><a href="#什么是dockerfile" class="headerlink" title="什么是dockerfile"></a><strong>什么是dockerfile</strong></h3><p>Dockerfile就是要给文本文件，其中包含一个个的指令，用指令来说明要执行什么操作来构建镜像。每一个指令都会形成一层Layer。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>指定基础镜像</td>
+<td>FROM centos:6</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>设置环境变量，可在后面指令使用</td>
+<td>ENV key value</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>拷贝本地文件到镜像的指定目录</td>
+<td>COPY .&#x2F;mysql-5.7.rpm &#x2F;tmp</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>执行Linux的shell命令，一般是安装过程的命令</td>
+<td>RUN yum install gcc</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>指定容器运行时监听的端口，是给镜像使用者看的</td>
+<td>EXPOSE 8080</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>镜像中应用的启动命令，容器运行时调用</td>
+<td>ENTRYPOINT java -jar xx.jar</td>
+</tr>
+</tbody></table>
+<p>更新详细语法说明，请参考官网文档： <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder">https://docs.docker.com/engine/reference/builder</a></p>
+<p>Dockerfile实际上就是方便编程人员生成一个脚本文件方便以后再次需要安装或者执行某个操作时不需要再次去输入Docker指令</p>
+<p>Dockerfile执行指令：docker build -t [docker文件名称]</p>
+<p>实际上shell指令也能生成脚本文件，在secureCRT工具中Script-&gt;Start Recording Script、Start Recording Scrip、run</p>
+<h3 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>1.Dockerfile的本质是一个文件，通过指令描述镜像的构建过程</p>
+<p>2.Dockerfile的第一行必须是FROM，从一个基础镜像来构建</p>
+<p>3.基础镜像可以是基本操作系统，如Ubuntu。也可以是其他人制作好的镜像，例如：java:8-alpine</p>
+<h2 id="DockerCompose"><a href="#DockerCompose" class="headerlink" title="DockerCompose"></a><strong>DockerCompose</strong></h2><p>什么是DockerCompose</p>
+<ul>
+<li>Docker Compose可以基于Compose文件帮我们快速的部署分布式应用，而无需手动一个个创建和运行容器！</li>
+<li>Compose文件是一个文本文件，通过指令定义集群中的每个容器如何运行。</li>
+</ul>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">version:</span> <span class="hljs-string">&quot;3.8&quot;</span><br><span class="hljs-symbol">services:</span><br><span class="hljs-symbol">  mysql:</span><br><span class="hljs-symbol">    image:</span> mysql:<span class="hljs-number">5.7</span><span class="hljs-number">.25</span><br><span class="hljs-symbol">    environment:</span><br><span class="hljs-symbol">     MYSQL_ROOT_PASSWORD:</span><span class="hljs-number">123</span> <br><span class="hljs-symbol">    volumes:</span><br>     - <span class="hljs-string">&quot;/tmp/mysql/data:/var/lib/mysql&quot;</span><br>     -  <span class="hljs-string">&quot;/tmp/mysql/conf/hmy.cnf:/etc/mysql/conf.d/hmy.cnf&quot;</span><br><span class="hljs-symbol">  web:</span><br><span class="hljs-symbol">    build:</span> .<br><span class="hljs-symbol">    ports:</span><br>     -<span class="hljs-string">&quot;8090:8090&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>DockerCompose的详细语法参考官网：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">https://docs.docker.com/compose/compose-file/</a></p>
+<h2 id="DockerCompose部署"><a href="#DockerCompose部署" class="headerlink" title="DockerCompose部署"></a><strong>DockerCompose部署</strong></h2><h3 id="实现思路如下："><a href="#实现思路如下：" class="headerlink" title="实现思路如下："></a><strong>实现思路如下：</strong></h3><p>①查看课前资料提供的cloud-demo文件夹，里面已经编写好了docker-compose文件</p>
+<p><img src="/image-20221103102135824.png" srcset="/img/loading.gif" lazyload alt="image-20221103102135824"></p>
+<p>②修改自己的cloud-demo项目，将数据库、nacos地址都命名为docker-compose中的服务名</p>
+<p>③使用maven打包工具，将项目中的每个微服务都打包为app.jar</p>
+<p>④将打包好的app.jar拷贝到cloud-demo中的每一个对应的子目录中</p>
+<p>⑤将cloud-demo上传至虚拟机，利用 docker-compose up -d 来部署</p>
+<h2 id="Docker镜像中心"><a href="#Docker镜像中心" class="headerlink" title="Docker镜像中心"></a><strong>Docker镜像中心</strong></h2><h3 id="搭建私有镜像中心"><a href="#搭建私有镜像中心" class="headerlink" title="搭建私有镜像中心"></a><strong>搭建私有镜像中心</strong></h3><p>镜像仓库（Docker Registry ）有公共的和私有的两种形式：</p>
+<ul>
+<li>公共仓库：例如Docker官方的<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a>，国内也有一些云服务商提供类似于Docker Hub 的公开服务，比如<a target="_blank" rel="noopener" href="https://c.163.com/hub">网易云镜像服务</a>、<a target="_blank" rel="noopener" href="https://hub.daocloud.io/">DaoCloud</a><a target="_blank" rel="noopener" href="https://hub.daocloud.io/">镜像服务</a>、<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">阿里云镜像服务</a>等。</li>
+<li>除了使用公开仓库外，用户还可以在本地搭建私有 Docker Registry。企业自己的镜像最好是采用私有Docker Registry来实现。</li>
+</ul>
+<h3 id="向镜像仓库推送镜像"><a href="#向镜像仓库推送镜像" class="headerlink" title="向镜像仓库推送镜像"></a><strong>向镜像仓库推送镜像</strong></h3><h3 id="从镜像仓库拉取镜像"><a href="#从镜像仓库拉取镜像" class="headerlink" title="从镜像仓库拉取镜像"></a><strong>从镜像仓库拉取镜像</strong></h3><h1 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a><strong>RabbitMQ</strong></h1><h2 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h2><p><img src="/image-20221103102249544.png" srcset="/img/loading.gif" lazyload alt="image-20221103102249544"></p>
+<p>优点：</p>
+<ul>
+<li>时效性较强，可以立即得到结果</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>耦合度高：每次加入新的需求，都要修改原来的代码</li>
+<li>性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。</li>
+<li>资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源</li>
+<li>级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如同多米诺骨牌一样，迅速导致整个微服务群故障</li>
+</ul>
+<h2 id="异步通讯"><a href="#异步通讯" class="headerlink" title="异步通讯"></a><strong>异步通讯</strong></h2><p>异步调用常见实现就是事件驱动模式</p>
+<p>异步通信的优点：</p>
+<ul>
+<li>耦合度低</li>
+<li>吞吐量提升</li>
+<li>故障隔离</li>
+<li>流量削峰</li>
+</ul>
+<p>异步通信的缺点：</p>
+<ul>
+<li>依赖于Broker的可靠性、安全性、吞吐能力</li>
+<li>架构复杂了，业务没有明显的流程线，不好追踪管理</li>
+</ul>
+<h2 id="什么是MQ"><a href="#什么是MQ" class="headerlink" title="什么是MQ"></a><strong>什么是MQ</strong></h2><p>MQ（MessageQueue），消息队列，字面来看就是存放消息的队列。也就是事件驱动架构中的Broker</p>
+<p>MQ常见框架</p>
+<p><img src="/image-20221103102327484.png" srcset="/img/loading.gif" lazyload alt="image-20221103102327484"></p>
+<h2 id="RabbitMQ快速入门"><a href="#RabbitMQ快速入门" class="headerlink" title="RabbitMQ快速入门"></a><strong>RabbitMQ快速入门</strong></h2><h1 id="RabbitMQ概述和安装"><a href="#RabbitMQ概述和安装" class="headerlink" title="RabbitMQ概述和安装"></a><strong>RabbitMQ概述和安装</strong></h1><h2 id="RabbitMQ的结构和概念"><a href="#RabbitMQ的结构和概念" class="headerlink" title="RabbitMQ的结构和概念"></a><strong>RabbitMQ的结构和概念</strong></h2><p><img src="/image-20221103102811650.png" srcset="/img/loading.gif" lazyload alt="image-20221103102811650"></p>
+<h2 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>RabbitMQ中的几个概念：</p>
+<ul>
+<li>channel：操作MQ的工具</li>
+<li>exchange：路由消息到队列中</li>
+<li>queue：缓存消息</li>
+<li>virtual host：虚拟主机，是对queue、exchange等资源的逻辑分组</li>
+</ul>
+<h2 id="五种常见的消息模型"><a href="#五种常见的消息模型" class="headerlink" title="五种常见的消息模型"></a><strong>五种常见的消息模型</strong></h2><p><img src="/image-20221103102907677.png" srcset="/img/loading.gif" lazyload alt="image-20221103102907677"></p>
+<p>官方的BasicQueue是基于最基础的消息队列模型来实现的，只包括三个角色：</p>
+<ul>
+<li>publisher：消息发布这，将消息发送到队列queue</li>
+<li>queue：消息队列，负责接受并缓存消息</li>
+<li>consumer：订阅队列，处理队列中的消息</li>
+</ul>
+<p><img src="/image-20221103102915336.png" srcset="/img/loading.gif" lazyload alt="image-20221103102915336"></p>
+<p>实现步骤：</p>
+<ul>
+<li>导入课前资料中的demo工程</li>
+</ul>
+<p><img src="/image-20221103102922183.png" srcset="/img/loading.gif" lazyload alt="image-20221103102922183"></p>
+<ul>
+<li>运行publisher服务中的测试类PublisherTest中的测试方法testSendMessage()</li>
+<li>查看RabbitMQ控制台的消息</li>
+<li>启动consumer服务，查看是否能接收消息</li>
+</ul>
+<h2 id="总结-11"><a href="#总结-11" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>基本消息队列的消息发送流程：</p>
+<p>1.建立connection</p>
+<p>2.创建channel</p>
+<p>3.利用channel声明队列</p>
+<p>4.利用channel向队列发送消息</p>
+<p>基本消息队列的消息接收流程：</p>
+<p>1.建立connection</p>
+<p>2.创建channel</p>
+<p>3.利用channel声明队列</p>
+<p>4.定义consumer的消费行为handleDelivery()</p>
+<p>5.利用channel将消费者与队列绑定</p>
+<h1 id="SpringAMQP"><a href="#SpringAMQP" class="headerlink" title="SpringAMQP"></a><strong>SpringAMQP</strong></h1><h2 id="SpringAMQP-1"><a href="#SpringAMQP-1" class="headerlink" title="SpringAMQP"></a><strong>SpringAMQP</strong></h2><p>SpringAmqp的官方地址：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">https://spring.io/projects/spring-amqp</a></p>
+<p><img src="/image-20221103102952419.png" srcset="/img/loading.gif" lazyload alt="image-20221103102952419"></p>
+<h2 id="BasicQueue"><a href="#BasicQueue" class="headerlink" title="BasicQueue"></a><strong>BasicQueue</strong></h2><p>利用SpringAMQP实现BasicQueue中的基础消息队列功能</p>
+<p>流程如下：</p>
+<p>1.在父工程中引入spring-amqp的依赖，因为publisher和consumer服务都需要amqp依赖，因此这里把依赖直接放到父工程中</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--AMQP依赖，包含RabbitMQ--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>2.在publisher服务中利用RabbitTemplate发送消息到simple.queue这个队列</p>
+<ul>
+<li>在publisher服务中编写application.yml，添加mq连接信息：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">rabbitmq:</span><br>      <span class="hljs-attr">host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.101</span> <span class="hljs-comment"># 主机名</span><br>          <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span> <span class="hljs-comment"># 端口    </span><br>          <span class="hljs-attr">virtual-host:</span> <span class="hljs-string">/</span> <span class="hljs-comment"># 虚拟主机     </span><br>          <span class="hljs-attr">username:</span> <span class="hljs-string">itcast</span> <span class="hljs-comment"># 用户名    </span><br>          <span class="hljs-attr">password:</span> <span class="hljs-number">123321</span> <span class="hljs-comment"># 密码</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在publisher服务中新建一个测试类，编写测试方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RunWith(SpringRunner.class)</span><br><span class="hljs-meta">@SpringBootTest</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringAmqpTest</span>&#123;<br>    <span class="hljs-meta">@Autowired</span>    <br>    privateRabbitTemplate rabbitTemplate;    <br>    <span class="hljs-meta">@Test</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSimpleQueue</span><span class="hljs-params">()</span>&#123;<br>             <span class="hljs-type">String</span> <span class="hljs-variable">queueName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;simple.queue&quot;</span>;        <br>             <span class="hljs-type">String</span> <span class="hljs-variable">message</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;hello, spring amqp!&quot;</span>;        <br>             rabbitTemplate.convertAndSend(queueName,message);    <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.在consumer服务中编写消费逻辑，绑定simple.queue这个队列</p>
+<ul>
+<li>在sonsumer服务中编写application.yml，添加mq连接信息：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">rabbitmq:</span><br>      <span class="hljs-attr">host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.101</span> <span class="hljs-comment"># 主机名</span><br>          <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span> <span class="hljs-comment"># 端口    </span><br>          <span class="hljs-attr">virtual-host:</span> <span class="hljs-string">/</span> <span class="hljs-comment"># 虚拟主机     </span><br>          <span class="hljs-attr">username:</span> <span class="hljs-string">itcast</span> <span class="hljs-comment"># 用户名    </span><br>          <span class="hljs-attr">password:</span> <span class="hljs-number">123321</span> <span class="hljs-comment"># 密码</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在consumer服务中新建一个类，编写消费逻辑：</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringRabbitListener</span>&#123;<br>    <span class="hljs-meta">@RabbitListener(queues = <span class="hljs-string">&quot;simple.queue&quot;</span>)</span>    <br>    <span class="hljs-keyword">public</span> void listenSimpleQueueMessage(String msg) throwsInterruptedException &#123;<br>            System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">&quot;spring 消费者接收到消息 ：【&quot;</span> + msg + <span class="hljs-string">&quot;】&quot;</span>);    <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结-12"><a href="#总结-12" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>什么是AMQP？</p>
+<ul>
+<li>应用间消息通信的一种协议，与语言和平台无关。</li>
+</ul>
+<p>SpringAMQP如何发送消息？</p>
+<ul>
+<li>引入amqp的starter依赖</li>
+<li>配置RabbitMQ地址</li>
+<li>利用RabbitTemplate的convertAndSend方法</li>
+</ul>
+<h2 id="WorkQueue"><a href="#WorkQueue" class="headerlink" title="WorkQueue"></a><strong>WorkQueue</strong></h2><p>Work queue，工作队列，可以提高消息处理速度，避免队列消息堆积</p>
+<p><img src="/image-20221103103205861.png" srcset="/img/loading.gif" lazyload alt="image-20221103103205861"></p>
+<p>模拟WorkQueue，实现一个队列绑定多个消费者</p>
+<p>基本思路如下：</p>
+<p>1.在publisher服务中定义测试方法，每秒产生50条消息，发送到simple.queue</p>
+<p>2.在consumer服务中定义两个消息监听者，都监听simple.queue队列</p>
+<p>3.消费者1每秒处理50条消息，消费者2每秒处理10条消息</p>
+<p>实现步骤：</p>
+<p>1.生产者循环发送消息到simple.queue(在publisher服务中添加一个测试方法，循环发送50条消息到simple.queue队列)</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Test<br>public void test<span class="hljs-constructor">WorkQueue()</span>throws InterruptedException&#123;<br>    <span class="hljs-comment">// 队列名称    </span><br>    StringqueueName = <span class="hljs-string">&quot;simple.queue&quot;</span>;    <br>    <span class="hljs-comment">// 消息    </span><br>    Stringmessage = <span class="hljs-string">&quot;hello,message__&quot;</span>;    <br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">50</span>;i++) &#123;<br>            <span class="hljs-comment">// 发送消息        </span><br>            rabbitTemplate.convert<span class="hljs-constructor">AndSend(<span class="hljs-params">queueName</span>, <span class="hljs-params">message</span> + <span class="hljs-params">i</span>)</span>;<br>            <span class="hljs-comment">// 避免发送太快        </span><br>            <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Thread</span>.</span></span>sleep(<span class="hljs-number">20</span>);    <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2.编写两个消费者，都监听simple.queue</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@<span class="hljs-constructor">RabbitListener(<span class="hljs-params">queues</span> = <span class="hljs-string">&quot;simple.queue&quot;</span>)</span><br>public void listen<span class="hljs-constructor">SimpleQueueMessage(Stringmsg)</span> throwsInterruptedException &#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(<span class="hljs-string">&quot;spring 消费者1接收到消息：【&quot;</span> + msg + <span class="hljs-string">&quot;】&quot;</span>);<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Thread</span>.</span></span>sleep(<span class="hljs-number">25</span>);<br>&#125;<br><br>@<span class="hljs-constructor">RabbitListener(<span class="hljs-params">queues</span> = <span class="hljs-string">&quot;simple.queue&quot;</span>)</span> <br>public void listen<span class="hljs-constructor">SimpleQueueMessage2(Stringmsg)</span> throwsInterruptedException &#123;<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>err.println(<span class="hljs-string">&quot;spring 消费者2接收到消息：【&quot;</span> + msg + <span class="hljs-string">&quot;】&quot;</span>);<br>    <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Thread</span>.</span></span>sleep(<span class="hljs-number">100</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>3.消费预取限制（目的是解决消费预取机制导致的消息会平均分配的问题）</p>
+<p>修改application.xml文件，设置preFetch这个值，可以控制预取消息的上限：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">rabbitmq:</span><br>      <span class="hljs-attr">host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.150</span><span class="hljs-number">.101</span> <span class="hljs-comment"># 主机名</span><br>          <span class="hljs-attr">port:</span> <span class="hljs-number">5672</span> <span class="hljs-comment"># 端口    </span><br>          <span class="hljs-attr">virtual-host:</span> <span class="hljs-string">/</span> <span class="hljs-comment"># 虚拟主机     </span><br>          <span class="hljs-attr">username:</span> <span class="hljs-string">itcast</span> <span class="hljs-comment"># 用户名    </span><br>          <span class="hljs-attr">password:</span> <span class="hljs-number">123321</span> <span class="hljs-comment"># 密码    </span><br>          <span class="hljs-attr">listener:</span>      <br>               <span class="hljs-attr">simple:</span><br>                   <span class="hljs-attr">prefetch:</span> <span class="hljs-number">1</span> <span class="hljs-comment"># 每次只能获取一条消息，处理完成才能获取下一个消息</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="总结-13"><a href="#总结-13" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>Work模型的使用：</p>
+<ul>
+<li>多个消费者绑定到一个队列，同一条消息只会被一个消费者处理</li>
+<li>通过设置prefetch来控制消费者预取的消息数量</li>
+</ul>
+<h2 id="发布-Publish-x2F-订阅-Subscirbe"><a href="#发布-Publish-x2F-订阅-Subscirbe" class="headerlink" title="发布(Publish)&#x2F;订阅(Subscirbe)"></a><strong>发布(Publish)&#x2F;订阅(Subscirbe)</strong></h2><p>发布订阅模式与之前的两种模型的区别就是允许将同一消息发送给多个消费者。实现方式是加入了exchange(交换机)。</p>
+<p>常见的exchange类型包括：</p>
+<ul>
+<li>Fanout：广播</li>
+<li>Direct：路由</li>
+<li>Topic：话题</li>
+</ul>
+<p>ps：exchange负责消息路由，而不是存储，路由失败则消息丢失。</p>
+<p><img src="/image-20221103103300909.png" srcset="/img/loading.gif" lazyload alt="image-20221103103300909"></p>
+<h3 id="发布订阅之-FanoutExchange"><a href="#发布订阅之-FanoutExchange" class="headerlink" title="发布订阅之-FanoutExchange"></a><strong>发布订阅之-FanoutExchange</strong></h3><p>Fanout Exchange会将接收到的消息路由到每一个跟其绑定的queue</p>
+<p><img src="/image-20221103103336106.png" srcset="/img/loading.gif" lazyload alt="image-20221103103336106"></p>
+<p>实现思路如下：</p>
+<p>1.在consumer服务中，利用代码声明队列、交换机，并将两者绑定</p>
+<p>2.在consumer服务中，编写两个消费者方法，分别监听fanout.queue1和fanout.queue2</p>
+<p>3.在publisher中编写测试方法，向itcast.fanout发送消息</p>
+<p>步骤1：在consumer服务声明Exchange、Queue、Binding</p>
+<p>SpringAMQP提供了声明交换机、队列、绑定关系的API，例如：</p>
+<p><img src="/image-20221103103342723.png" srcset="/img/loading.gif" lazyload alt="image-20221103103342723"></p>
+<p>在consumer服务常见一个类，添加@Configuration注解，并声明FanoutExchange、Queue和绑定关系对象Binding，代码如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FanoutConfig</span>&#123;<br>    <span class="hljs-comment">// 声明FanoutExchange交换机    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">FanoutExchangefanoutExchange</span>()&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FanoutExchange</span>(<span class="hljs-string">&quot;itcast.fanout&quot;</span>);    <br>    &#125;    <br>    <span class="hljs-comment">// 声明第1个队列    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Queue</span> <span class="hljs-title function_">fanoutQueue1</span>(<span class="hljs-params"></span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Queue</span>(<span class="hljs-string">&quot;fanout.queue1&quot;</span>);<br>    &#125;    <br>    <span class="hljs-comment">//绑 定队列1和交换机    </span><br>    <span class="hljs-meta">@Bean</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Binding</span> <span class="hljs-title function_">bindingQueue1</span>(<span class="hljs-params">Queue fanoutQueue1,FanoutExchange fanoutExchange</span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-title class_">BindingBuilder</span>.<span class="hljs-title function_">bind</span>(fanoutQueue1).<span class="hljs-title function_">to</span>(fanoutExchange);<br>    &#125;    <br>    <span class="hljs-comment">// ...略， 以相同方式声明第2个队列，并完成绑定</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>步骤2：在consumer服务声明两个消费者</p>
+<p>在consumer服务的SpringRabbitListener类中，添加两个方法，分别监听fanout.queue1和fanout.queue2：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@RabbitListener</span>(queues = <span class="hljs-string">&quot;fanout.queue1&quot;</span>)<br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">listenFanoutQueue1</span>(<span class="hljs-params">Stringmsg</span>) &#123;<br>    <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;消费者1接收到Fanout消息：【&quot;</span> + msg + <span class="hljs-string">&quot;】&quot;</span>);<br>&#125;<br><span class="hljs-meta">@RabbitListener</span>(queues = <span class="hljs-string">&quot;fanout.queue2&quot;</span>) <br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">listenFanoutQueue2</span>(<span class="hljs-params">Stringmsg</span>) &#123;<br>    <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;消费者2接收到Fanout消息：【&quot;</span> + msg + <span class="hljs-string">&quot;】&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>步骤3：在publisher服务发送消息到FanoutExchange</p>
+<p>在publisher服务的SpringAmqpTest类中添加测试方法：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">testFanoutExchange</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-comment">// 队列名称    </span><br>    <span class="hljs-title class_">StringexchangeName</span> = <span class="hljs-string">&quot;itcast.fanout&quot;</span>;    <br>    <span class="hljs-comment">// 消息    </span><br>    <span class="hljs-title class_">Stringmessage</span> = <span class="hljs-string">&quot;hello,everyone!&quot;</span>;    <br>    <span class="hljs-comment">// 发送消息，参数分别是：交互机名称、RoutingKey（暂时为空）、消息     </span><br>    rabbitTemplate.<span class="hljs-title function_">convertAndSend</span>(exchangeName, <span class="hljs-string">&quot;&quot;</span>, message);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="总结-14"><a href="#总结-14" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>交换机的作用是什么？</p>
+<ul>
+<li>接收publisher发送的消息</li>
+<li>将消息按照规则路由到与之绑定的队列</li>
+<li>不能缓存消息，路由失败，消息丢失</li>
+<li>FanoutExchange的会将消息路由到每个绑定的队列</li>
+</ul>
+<p>声明队列、交换机、绑定关系的Bean是什么？</p>
+<ul>
+<li>Queue</li>
+<li>FanoutExchange</li>
+<li>Binding</li>
+</ul>
+<h3 id="发布订阅之-DirectExchange"><a href="#发布订阅之-DirectExchange" class="headerlink" title="发布订阅之-DirectExchange"></a><strong>发布订阅之-DirectExchange</strong></h3><p>Direct Exchange 会将接收到的消息根据规则路由到指定的Queue，因此称为路由模式（routes）。</p>
+<ul>
+<li>每一个Queue都与Exchange设置一个BindingKey</li>
+<li>发布者发送消息时，指定消息的RoutingKey</li>
+<li>Exchange将消息路由到BindingKey与消息RoutingKey一致的队列</li>
+</ul>
+<p><img src="/image-20221103103504956.png" srcset="/img/loading.gif" lazyload alt="image-20221103103504956"></p>
+<p>实现思路如下：</p>
+<p>1.利用@RabbitListener声明Exchange、Queue、RoutingKey</p>
+<p>2.在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2</p>
+<p>3.在publisher中编写测试方法，向itcast. direct发送消息</p>
+<p><img src="/image-20221103103514811.png" srcset="/img/loading.gif" lazyload alt="image-20221103103514811"></p>
+<p>步骤1：在consumer服务声明Exchange、Queue</p>
+<p>1.在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2，</p>
+<p>2.并利用@RabbitListener声明Exchange、Queue、RoutingKey</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@RabbitListener</span>(bindings = <span class="hljs-variable">@QueueBinding</span>(<br>        value = <span class="hljs-variable">@Queue</span>(name = <span class="hljs-string">&quot;direct.queue1&quot;</span>),<br>        exchange = <span class="hljs-variable">@Exchange</span>(name = <span class="hljs-string">&quot;itcast.direct&quot;</span>, type = ExchangeTypes.DIRECT),<br>        key = &#123;<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;blue&quot;</span>&#125;<br>))<br>public void <span class="hljs-built_in">listenDirectQueue1</span>(String System.msg)&#123;<br>        <span class="hljs-selector-tag">out</span><span class="hljs-selector-class">.println</span>(<span class="hljs-string">&quot;消费者1接收到Direct消息：【&quot;</span>+msg+<span class="hljs-string">&quot;】&quot;</span>);<br>&#125;<br><br>@<span class="hljs-selector-tag">RabbitListener</span>(bindings = <span class="hljs-variable">@QueueBinding</span>(<br>        value = <span class="hljs-variable">@Queue</span>(name= <span class="hljs-string">&quot;direct.queue2&quot;</span>),<br>        exchange = <span class="hljs-variable">@Exchange</span>(name = <span class="hljs-string">&quot;itcast.direct&quot;</span>, type = ExchangeTypes.DIRECT),<br>        key = &#123;<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;yellow&quot;</span>&#125;<br>))<br><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">listenDirectQueue2</span>(String System.msg)&#123;<br>        <span class="hljs-selector-tag">out</span><span class="hljs-selector-class">.println</span>(<span class="hljs-string">&quot;消费者2接收到Direct消息：【&quot;</span>+msg+<span class="hljs-string">&quot;】 &quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>步骤2：在publisher服务发送消息到DirectExchange</p>
+<p>在publisher服务的SpringAmqpTest类中添加测试方法：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">testDirectExchange</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-comment">// 队列名称</span><br>    <span class="hljs-title class_">String</span> exchangeName = <span class="hljs-string">&quot;itcast.direct&quot;</span>;<br>    <span class="hljs-comment">// 消息 </span><br>    <span class="hljs-title class_">String</span> message = <span class="hljs-string">&quot;红色警报！日本乱排核废水，导致海洋生物变异，惊现哥斯拉！&quot;</span>;<br>    <span class="hljs-comment">// 发送消息，参数依次为：交换机名称，RoutingKey，消息</span><br>    rabbitTemplate.<span class="hljs-title function_">convertAndSend</span>(exchangeName, <span class="hljs-string">&quot;red&quot;</span>, message);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="总结-15"><a href="#总结-15" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>描述下Direct交换机与Fanout交换机的差异？</p>
+<ul>
+<li>Fanout交换机将消息路由给每一个与之绑定的队列</li>
+<li>Direct交换机根据RoutingKey判断路由给哪个队列</li>
+<li>如果多个队列具有相同的RoutingKey，则与Fanout功能类似</li>
+</ul>
+<p>基于@RabbitListener注解声明队列和交换机有哪些常见注解？</p>
+<ul>
+<li>@Queue</li>
+<li>@Exchange</li>
+</ul>
+<h3 id="发布订阅之-TopicExchange"><a href="#发布订阅之-TopicExchange" class="headerlink" title="发布订阅之-TopicExchange"></a><strong>发布订阅之-TopicExchange</strong></h3><h1 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a><strong>ElasticSearch</strong></h1><h1 id="RestClient"><a href="#RestClient" class="headerlink" title="RestClient"></a><strong>RestClient</strong></h1><h1 id="DSL查询语法"><a href="#DSL查询语法" class="headerlink" title="DSL查询语法"></a><strong>DSL查询语法</strong></h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Java/SpringCloud/" class="category-chain-item">SpringCloud</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E4%B8%8EDocker/">#微服务框架与Docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>微服务框架与Docker(二)</div>
+      <div>https://kblayt.github.io/2022/10/29/微服务框架-二/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/29/nginx/" title="nginx">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">nginx</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%80/" title="微服务框架与Docker(一)">
+                        <span class="hidden-mobile">微服务框架与Docker(一)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
