@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="微服务框架（三）一、RabbitMQ同步通讯 优点：  时效性较强，可以立即得到结果  缺点：  耦合度高：每次加入新的需求，都要修改原来的代码 性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。 资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源 级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png">
+<meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230112103315060.png">
 <meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230112103411953.png">
 <meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230112103447854.png">
 <meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230112103507805.png">
@@ -60,11 +60,11 @@
 <meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230127231431066.png">
 <meta property="og:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230127231445728.png">
 <meta property="article:published_time" content="2023-02-27T02:52:14.000Z">
-<meta property="article:modified_time" content="2023-02-27T03:53:27.334Z">
+<meta property="article:modified_time" content="2023-02-28T02:39:29.864Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="微服务框架">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png">
+<meta name="twitter:image" content="e:\MyBlog\Hexo\source_posts\%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89\image-20230112103315060.png">
   
   
   
@@ -310,7 +310,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="微服务框架（三）"><a href="#微服务框架（三）" class="headerlink" title="微服务框架（三）"></a>微服务框架（三）</h1><h2 id="一、RabbitMQ"><a href="#一、RabbitMQ" class="headerlink" title="一、RabbitMQ"></a>一、<strong>RabbitMQ</strong></h2><h3 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h3><p><img src="/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png" srcset="/img/loading.gif" lazyload alt="image-20230112103315060"></p>
+                <h1 id="微服务框架（三）"><a href="#微服务框架（三）" class="headerlink" title="微服务框架（三）"></a>微服务框架（三）</h1><h2 id="一、RabbitMQ"><a href="#一、RabbitMQ" class="headerlink" title="一、RabbitMQ"></a>一、<strong>RabbitMQ</strong></h2><h3 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h3><p><img src="E:\MyBlog\Hexo\source_posts\微服务框架-三\image-20230112103315060.png" srcset="/img/loading.gif" lazyload alt="image-20230112103315060"></p>
 <p>优点：</p>
 <ul>
 <li>时效性较强，可以立即得到结果</li>
