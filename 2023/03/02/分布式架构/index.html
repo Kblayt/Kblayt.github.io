@@ -16,24 +16,32 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、打开想要提交或者克隆的项目文件夹 2、进入该文件夹打开Git Bash Here 3、初始化用户，告诉git你是谁  git config –global user.name “你的名字或昵称”  git config –global user.email “你的邮箱”   4、在该文件夹中执行下面命令，完成初始化  git init  git remote add origin &lt;项目">
+    <meta name="description" content="要理解分布式系统，主要需要明白一下2个方面：  分布式系统一定是由多个节点组成的系统。其中，节点指的是计算机服务器，而且这些节点一般不是孤立的，而是互通的。 这些连通的节点上部署了我们的节点，并且相互的操作会有协同。  不同的业务模块部署在不同的服务器上或者同一个业务模块分拆多个子业务，部署在不同的服务器上，解决高并发的问题，提供可扩展性以及高可用性，业务中使用分布式的场景主要有分布式存储以及分布">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git提交项目笔记">
-<meta property="og:url" content="https://kblayt.github.io/2022/10/22/Git%E6%8F%90%E4%BA%A4%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="分布式架构">
+<meta property="og:url" content="https://kblayt.github.io/2023/03/02/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1、打开想要提交或者克隆的项目文件夹 2、进入该文件夹打开Git Bash Here 3、初始化用户，告诉git你是谁  git config –global user.name “你的名字或昵称”  git config –global user.email “你的邮箱”   4、在该文件夹中执行下面命令，完成初始化  git init  git remote add origin &lt;项目">
+<meta property="og:description" content="要理解分布式系统，主要需要明白一下2个方面：  分布式系统一定是由多个节点组成的系统。其中，节点指的是计算机服务器，而且这些节点一般不是孤立的，而是互通的。 这些连通的节点上部署了我们的节点，并且相互的操作会有协同。  不同的业务模块部署在不同的服务器上或者同一个业务模块分拆多个子业务，部署在不同的服务器上，解决高并发的问题，提供可扩展性以及高可用性，业务中使用分布式的场景主要有分布式存储以及分布">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-22T07:21:46.000Z">
-<meta property="article:modified_time" content="2022-10-22T07:27:06.000Z">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp">
+<meta property="article:published_time" content="2023-03-02T02:16:14.000Z">
+<meta property="article:modified_time" content="2023-03-02T02:33:45.009Z">
 <meta property="article:author" content="Kblayt">
-<meta property="article:tag" content="git">
-<meta property="article:tag" content="gitee">
-<meta property="article:tag" content="github">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
   
   
   
-  <title>Git提交项目笔记 - Hexo</title>
+  <title>分布式架构 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Git提交项目笔记"></span>
+            <span id="subtitle" data-typed-text="分布式架构"></span>
           
         </div>
 
@@ -209,8 +217,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-10-22 15:21" pubdate>
-          2022年10月22日 下午
+        <time datetime="2023-03-02 10:16" pubdate>
+          2023年3月2日 上午
         </time>
       </span>
     
@@ -221,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          954 字
+          2.1k 字
         
       </span>
     
@@ -232,7 +240,7 @@
         
         
         
-          8 分钟
+          18 分钟
         
       </span>
     
@@ -270,56 +278,82 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Git提交项目笔记</h1>
+            <h1 style="display: none">分布式架构</h1>
             
             
               <div class="markdown-body">
                 
-                <p>1、打开想要提交或者克隆的项目文件夹</p>
-<p>2、进入该文件夹打开Git Bash Here</p>
-<p>3、初始化用户，告诉git你是谁</p>
+                <p>要理解分布式系统，主要需要明白一下2个方面：</p>
+<ol>
+<li>分布式系统一定是由多个节点组成的系统。其中，节点指的是计算机服务器，而且这些节点一般不是孤立的，而是互通的。</li>
+<li>这些连通的节点上部署了我们的节点，并且相互的操作会有协同。</li>
+</ol>
+<p>不同的业务模块部署在不同的服务器上或者同一个业务模块分拆多个子业务，部署在不同的服务器上，解决高并发的问题，提供可扩展性以及高可用性，业务中使用分布式的场景主要有分布式存储以及分布式计算。分布式存储中可以将数据分片到多个节点上，不仅可以提高性能（可扩展性），同时也可以使用多个节点对同一份数据进行备份。</p>
+<p><strong>分布式环境的特点</strong></p>
+<ol>
+<li>分布性：服务部署空间具有多样性</li>
+<li>并发性：程序运行过程中，并发性操作是很常见的。比如同一个分布式系统中的多个节点，同时访问一个共享资源。数据库、分布式存储</li>
+<li>无序性：进程之间的消息通信，会出现顺序不一致问题</li>
+</ol>
+<p><strong>分布式环境下面临的问题</strong></p>
+<ol>
+<li>网络通信：网络本身的不可靠性，因此会涉及到一些网络通信问题</li>
+<li>网络分区(脑裂)：当网络发生异常导致分布式系统中部分节点之间的网络延时不断增大，最终导致组成分布式架构的所有节点，只有部分节点能够正常通信</li>
+<li>三态：在分布式架构里面多了个状态：超时，所以有三态： 成功、失败、超时</li>
+<li>分布式事务：ACID(原子性、一致性、隔离性、持久性)</li>
+<li>中心化和去中心化：冷备或者热备</li>
+</ol>
+<p>分布式架构里面，很多的架构思想采用的是：当集群发生故障的时候，集群中的人群会自动“选举”出一个新的领导。</p>
+<p>最典型的是： zookeeper &#x2F; etcd</p>
+<p>经典的CAP&#x2F;BASE理论</p>
+<p><strong>CAP理论</strong></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png" srcset="/img/loading.gif" lazyload alt="CAP理论"></p>
+<p>1998年，加州大学的计算机科学家 Eric Brewer 提出，分布式系统有三个指标。</p>
 <ul>
-<li><p>git config –global user.name “你的名字或昵称”</p>
-</li>
-<li><p>git config –global user.email “你的邮箱”</p>
-</li>
+<li>Consistency</li>
+<li>Availability</li>
+<li>Partition tolerance</li>
 </ul>
-<p>4、在该文件夹中执行下面命令，完成初始化</p>
-<ul>
-<li><p>git init</p>
-</li>
-<li><p>git remote add origin &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#x65;&#101;&#46;&#99;&#111;&#109;">&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#x65;&#101;&#46;&#99;&#111;&#109;</a>:xxx&#x2F;xxx.git</p>
-</li>
-<li><p>如果提交到github上则为： https:&#x2F;&#x2F;&lt;Personal access tokens(自己github上的tokens)&gt;@github.com&#x2F;Kblayt&#x2F;Kblayt.github.io.git</p>
-</li>
-</ul>
-<p>5、若想克隆，只需要执行命令</p>
-<ul>
-<li>git clone &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a target="_blank" rel="noopener" href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#103;&#x69;&#x74;&#64;&#x67;&#105;&#x74;&#101;&#x65;&#46;&#99;&#x6f;&#109;">&#103;&#x69;&#x74;&#64;&#x67;&#105;&#x74;&#101;&#x65;&#46;&#99;&#x6f;&#109;</a>:xxx&#x2F;xxx.git</li>
-</ul>
-<p>6、进入已经初始化好的或者克隆项目的目录然后执行：</p>
-<p>从服务器下更新项目，因为已经clone过，所以不需要再更新</p>
-<ul>
-<li>git pull origin master</li>
-</ul>
-<p>7、做一些修改后执行如下命令完成一次完整的提交</p>
-<ul>
-<li><p>git add .</p>
-</li>
-<li><p>git commit -m “安装教程测试”</p>
-</li>
-<li><p>git push origin master</p>
-</li>
-</ul>
-<p>注意：提交命令有两个，git push origin master（正常提交）和git push origin master -f（强制提交，强制提交可能会把之前的commit注释信息，不会改变修改的代码，慎用），都是提交到master分支 其他常见git命令</p>
-<ul>
-<li><p>查看所有分支 ：git branch -a</p>
-</li>
-<li><p>切换到某一分支：git checkout 分支名称</p>
-</li>
-<li><p>合并分支：git merge 原分支 目标分支</p>
-</li>
-</ul>
+<p>它们的第一个字母分别是 C、A、P。</p>
+<p>Eric Brewer 说，这三个指标不可能同时做到。这个结论就叫做 CAP 定理。</p>
+<p>1、分区容错 （Partition-tolerance）</p>
+<p>先看 Partition tolerance，中文叫做”分区容错”。</p>
+<p>大多数分布式系统都分布在多个子网络。每个子网络就叫做一个区（partition）。分区容错的意思是，区间通信可能失败。比如，一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>上图中，G1 和 G2 是两台跨区的服务器。G1 向 G2 发送一条消息，G2 可能无法收到。系统设计的时候，必须考虑到这种情况。</p>
+<p>一般来说，分区容错无法避免，因此可以认为 CAP 的 P 总是成立。CAP 定理告诉我们，剩下的 C 和 A 无法同时做到。</p>
+<p>2、一致性（Consistency）</p>
+<p>Consistency 中文叫做”一致性”。意思是，写操作之后的读操作，必须返回该值。举例来说，某条记录是 v0，用户向 G1 发起一个写操作，将其改为 v1。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>接下来，用户的读操作就会得到 v1。这就叫一致性。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>问题是，用户有可能向 G2 发起读操作，由于 G2 的值没有发生变化，因此返回的是 v0。G1 和 G2 读操作的结果不一致，这就不满足一致性了。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>为了让 G2 也能变为 v1，就要在 G1 写操作的时候，让 G1 向 G2 发送一条消息，要求 G2 也改成 v1。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这样的话，用户向 G2 发起读操作，也能得到 v1。</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3、可用性（Availability）</p>
+<p>Availability 中文叫做”可用性”，意思是只要收到用户的请求，服务器就必须给出回应。</p>
+<p>用户可以选择向 G1 或 G2 发起读操作。不管是哪台服务器，只要收到请求，就必须告诉用户，到底是 v0 还是 v1，否则就不满足可用性。</p>
+<p>4、Consistency 和 Availability 的矛盾</p>
+<p>一致性和可用性，为什么不可能同时成立？答案很简单，因为可能通信失败（即出现分区容错）。</p>
+<p>如果保证 G2 的一致性，那么 G1 必须在写操作时，锁定 G2 的读操作和写操作。只有数据同步后，才能重新开放读写。锁定期间，G2 不能读写，没有可用性不。</p>
+<p>如果保证 G2 的可用性，那么势必不能锁定 G2，所以一致性不成立。</p>
+<p>综上所述，G2 无法同时做到一致性和可用性。系统设计时只能选择一个目标。如果追求一致性，那么无法保证所有节点的可用性；如果追求所有节点的可用性，那就没法做到一致性。</p>
+<p><strong>BASE</strong></p>
+<p>基于CAP理论，CAP理论并不适用于数据库事务（因为更新一些错误的数据而导致数据出现紊乱，无论什么样的数据库高可用方案都是徒劳） ，虽然XA事务可以保证数据库在分布式系统下的ACID特性，但是会带来性能方面的影响；</p>
+<p>eBay尝试了一种完全不同的套路，放宽了对事务ACID的要求。提出了BASE理论</p>
+<p>Basically available ： 数据库采用分片模式， 把100W的用户数据分布在5个实例上。如果破坏了其中一个实例，仍然可以保证</p>
+<p>80%的用户可用</p>
+<p>soft-state： 在基于client-server模式的系统中，server端是否有状态，决定了系统是否具备良好的水平扩展、负载均衡、故障恢复等特性。</p>
+<p>Server端承诺会维护client端状态数据，这个状态仅仅维持一小段时间, 这段时间以后，server端就会丢弃这个状态，恢复正常状态</p>
+<p>Eventually consistent：数据的最终一致性</p>
+<p>集群与分布式区别</p>
+<p>集群：复制模式，每台机器做一样的事。</p>
+<p>分布式：两台机器分工合作，每台机器做的不一样。</p>
+<p>常见的分布式系统</p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -338,7 +372,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="category-chain-item">项目管理工具</a>
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
   
   
 
@@ -353,11 +387,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/git/">#git</a>
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">#分布式</a>
       
-        <a href="/tags/gitee/">#gitee</a>
-      
-        <a href="/tags/github/">#github</a>
+        <a href="/tags/%E6%9E%B6%E6%9E%84/">#架构</a>
       
     </div>
   
@@ -369,8 +401,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Git提交项目笔记</div>
-      <div>https://kblayt.github.io/2022/10/22/Git提交项目笔记/</div>
+      <div>分布式架构</div>
+      <div>https://kblayt.github.io/2023/03/02/分布式架构/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +414,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年10月22日</div>
+          <div>2023年3月2日</div>
         </div>
       
       
@@ -414,9 +446,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/10/26/JVM/" title="JVM">
+                      <a href="/2023/03/06/Java%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E5%90%84%E7%B1%BB%E9%94%81/" title="Java中常见的各类锁">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">JVM</span>
+                        <span class="hidden-mobile">Java中常见的各类锁</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -424,8 +456,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/10/21/%E5%A4%A7%E6%95%B0%E6%8D%AE/" title="大数据">
-                        <span class="hidden-mobile">大数据</span>
+                      <a href="/2023/03/02/XXL-JOB/" title="XXL-JOB">
+                        <span class="hidden-mobile">XXL-JOB</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
