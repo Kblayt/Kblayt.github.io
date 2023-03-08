@@ -24,7 +24,7 @@
 <meta property="og:description" content="乐观锁悲观锁自旋锁Synchronized同步锁ReentrantLock非公平锁公平锁可重入锁(递归锁)读写锁独占锁共享锁独占锁共享锁锁状态重量级锁(Mutex Lock)轻量级锁偏向锁锁升级分段锁同步锁与死锁同步锁死锁锁优化思路Condition类和Object类锁方法参考文档：https:&#x2F;&#x2F;blog.csdn.net&#x2F;xingchensuiyue&#x2F;article&#x2F;details&#x2F;10871">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-06T10:53:21.000Z">
-<meta property="article:modified_time" content="2023-03-06T10:58:28.080Z">
+<meta property="article:modified_time" content="2023-03-06T11:15:26.822Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="锁">
 <meta name="twitter:card" content="summary_large_image">
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          203 字
+          253 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          2 分钟
+          3 分钟
         
       </span>
     
@@ -274,6 +274,7 @@
               <div class="markdown-body">
                 
                 <h1 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h1><h1 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h1><h1 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h1><h1 id="Synchronized同步锁"><a href="#Synchronized同步锁" class="headerlink" title="Synchronized同步锁"></a>Synchronized同步锁</h1><h1 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h1><h1 id="非公平锁"><a href="#非公平锁" class="headerlink" title="非公平锁"></a>非公平锁</h1><h1 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h1><h1 id="可重入锁-递归锁"><a href="#可重入锁-递归锁" class="headerlink" title="可重入锁(递归锁)"></a>可重入锁(递归锁)</h1><h1 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h1><h1 id="独占锁共享锁"><a href="#独占锁共享锁" class="headerlink" title="独占锁共享锁"></a>独占锁共享锁</h1><h2 id="独占锁"><a href="#独占锁" class="headerlink" title="独占锁"></a>独占锁</h2><h2 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a>共享锁</h2><h1 id="锁状态"><a href="#锁状态" class="headerlink" title="锁状态"></a>锁状态</h1><h2 id="重量级锁-Mutex-Lock"><a href="#重量级锁-Mutex-Lock" class="headerlink" title="重量级锁(Mutex Lock)"></a>重量级锁(Mutex Lock)</h2><h2 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h2><h2 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h2><h2 id="锁升级"><a href="#锁升级" class="headerlink" title="锁升级"></a>锁升级</h2><h2 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h2><h1 id="同步锁与死锁"><a href="#同步锁与死锁" class="headerlink" title="同步锁与死锁"></a>同步锁与死锁</h1><h2 id="同步锁"><a href="#同步锁" class="headerlink" title="同步锁"></a>同步锁</h2><h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><h2 id="锁优化思路"><a href="#锁优化思路" class="headerlink" title="锁优化思路"></a>锁优化思路</h2><h1 id="Condition类和Object类锁方法"><a href="#Condition类和Object类锁方法" class="headerlink" title="Condition类和Object类锁方法"></a>Condition类和Object类锁方法</h1><p>参考文档：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xingchensuiyue/article/details/108716466">https://blog.csdn.net/xingchensuiyue/article/details/108716466</a></p>
+<p>参考文档：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/jyroy/p/11365935.html">https://www.cnblogs.com/jyroy/p/11365935.html</a></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -370,6 +371,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/03/08/Java%E8%A7%A3%E6%9E%90%E5%9C%B0%E5%9D%80%E5%B7%A5%E5%85%B7%E6%96%B9%E6%B3%95/" title="Java解析地址工具方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java解析地址工具方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
