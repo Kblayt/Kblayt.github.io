@@ -23,12 +23,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="python中的算数运算符   运算符 描述 实例    + 加 10 + 20 &#x3D; 30   - 减 10 - 20 &#x3D; -10   * 乘 10 * 20 &#x3D; 200   &#x2F; 除 10 &#x2F; 20 &#x3D; 0.5   &#x2F;&#x2F; 取整除 返回除法的整数部分(商) 9&#x2F;&#x2F;2输出结果 4   % 取余数 返回除">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230314162133065.png">
 <meta property="article:published_time" content="2022-10-21T08:38:52.000Z">
-<meta property="article:modified_time" content="2023-03-08T07:04:38.661Z">
+<meta property="article:modified_time" content="2023-03-24T08:54:47.460Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="Python基础">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230314162133065.png">
   
   
   
@@ -220,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.4k 字
+          11k 字
         
       </span>
     
@@ -231,7 +233,7 @@
         
         
         
-          37 分钟
+          93 分钟
         
       </span>
     
@@ -569,7 +571,8 @@
 <li>当Python重编译时，它会自动检查源文件和字节码文件的时间戳</li>
 <li>如果你又修改了源代码，下次程序运行时，字节码将自动重新创建</li>
 </ul>
-<h1 id="高级变量类型"><a href="#高级变量类型" class="headerlink" title="高级变量类型"></a>高级变量类型</h1><ul>
+<h1 id="高级变量类型"><a href="#高级变量类型" class="headerlink" title="高级变量类型"></a>高级变量类型</h1><p>ps：对象.之后按Tab键可以查看对象可以使用的操作方法</p>
+<ul>
 <li>列表</li>
 <li>元组</li>
 <li>字典</li>
@@ -577,7 +580,7 @@
 <li>公共方法</li>
 <li>变量高级</li>
 </ul>
-<h2 id="1、列表"><a href="#1、列表" class="headerlink" title="1、列表"></a>1、列表</h2><ul>
+<h2 id="1、列表（可以修改）"><a href="#1、列表（可以修改）" class="headerlink" title="1、列表（可以修改）"></a>1、列表（可以修改）</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a><strong>定义：</strong></h3><ul>
 <li>List（列表）是Python中使用最频繁的数据类型。</li>
 <li>专门用于存储一串信息</li>
 <li>列表用[ ]定义，数据之间使用，分隔</li>
@@ -695,24 +698,536 @@
 <li><p>使用for就能够实现迭代遍历</p>
 <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs fortran"># for 循环内部使用的变量 <span class="hljs-keyword">in</span> 列表<br>for <span class="hljs-keyword">name</span> <span class="hljs-keyword">in</span> name_list:<br>	循环内部针对列表元素进行操作<br>	<span class="hljs-built_in">print</span>(<span class="hljs-keyword">name</span>)<br></code></pre></td></tr></table></figure></li>
 </ul>
-<h2 id="2、元组"><a href="#2、元组" class="headerlink" title="2、元组"></a>2、元组</h2><ul>
+<h2 id="2、元组（不可修改）"><a href="#2、元组（不可修改）" class="headerlink" title="2、元组（不可修改）"></a>2、元组（不可修改）</h2><h3 id="定义：-1"><a href="#定义：-1" class="headerlink" title="定义："></a><strong>定义：</strong></h3><ul>
 <li>Tuple（元组）与列表类似，不同之处在于元组的元素不能修改<ul>
 <li>元组表示多个元素组成的序列</li>
 <li>元组在Python开发中，有特定的应用场景</li>
 </ul>
 </li>
 <li>用于存储一串信息，数据之间使用，分割</li>
-<li>元组用{}定义</li>
+<li>元组用()定义</li>
 <li>元组的索引 从0开始<ul>
 <li>索引就是数据在元组中的位置编号</li>
 </ul>
 </li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">info_tuple = &#123;<span class="hljs-string">&quot;zhangsan&quot;</span>,<span class="hljs-number">18</span>,<span class="hljs-number">1.75</span>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">info_tuple = (<span class="hljs-string">&quot;zhangsan&quot;</span>,<span class="hljs-number">18</span>,<span class="hljs-number">1.75</span>)<br></code></pre></td></tr></table></figure>
 
 <p>创建空元组</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">tuple</span> = &#123;&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">tuple</span> = ()<br></code></pre></td></tr></table></figure>
 
+<p>元组中 只包含一个元素时，需要在元素后面添加逗号</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">info_tuple</span> = (<span class="hljs-number">50</span>,)<br></code></pre></td></tr></table></figure>
+
+<p>元组的常用方法</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">info</span>.count	<span class="hljs-keyword">info</span>.<span class="hljs-keyword">index</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="循环遍历-1"><a href="#循环遍历-1" class="headerlink" title="循环遍历"></a>循环遍历</h3><ul>
+<li>取值 就是从 元组中获取存储在指定位置的数据</li>
+<li>遍历就是从头到尾依次从元组中获取数据</li>
+</ul>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-comment"># for 循环内部使用的变量 in 元组</span><br><span class="hljs-keyword">for</span> <span class="hljs-built_in">item</span> <span class="hljs-keyword">in</span> info:<br>	循环内部针对元组元素进行操作<br>	print(<span class="hljs-built_in">item</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>在 Python中，可以使用for循环遍历所有非数字型类型的变量：列表、元组、字典以及字符串</strong></li>
+<li>ps：在实际开发中，除非能够确认元组中的数据类型，否则针对元组的循环遍历需求并不是很多</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a><strong>应用场景</strong></h3><ul>
+<li>尽管可以使用for in 遍历元组</li>
+<li>但是在开发中，更多的应用场景是：<ul>
+<li>函数的参数和返回值，一个函数可以接受任意多个参数，或者一次返回多个数据</li>
+<li>格式字符串，格式化字符串后面的()本质上就是一个元组</li>
+<li>让列表不可以被修改，以保护数据安全</li>
+</ul>
+</li>
+</ul>
+<p><strong>元组和列表之间的转化</strong></p>
+<ul>
+<li>使用 list 函数可以把元组转换成列表</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">list</span><span class="hljs-params">(元组)</span></span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用tuple函数可以把列表转换成元组</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">tuple</span><span class="hljs-params">(列表)</span></span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3、字典"><a href="#3、字典" class="headerlink" title="3、字典"></a>3、字典</h2><h3 id="定义：-2"><a href="#定义：-2" class="headerlink" title="定义："></a><strong>定义：</strong></h3><ul>
+<li>dictionary（字典）是除列表以外Python之中最灵活的数据类型</li>
+<li>字典同样可以用来存储多个数据<ul>
+<li>通常用于存储描述一个<strong>物体</strong>的相关信息</li>
+</ul>
+</li>
+<li>和列表的区别<ul>
+<li>列表是有序的对象集合</li>
+<li>字典是无序的对象集合</li>
+</ul>
+</li>
+<li>字典用{}定义</li>
+<li>字典使用<strong>键值对</strong>存储数据，键值对之间使用，分隔<ul>
+<li>键key是索引</li>
+<li>值value是数据</li>
+<li>键和值之间使用:分割</li>
+<li>键必须是唯一的</li>
+<li>值可以取任何数据类型，但<strong>键</strong>只能使用字符串、数字或元组</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ada">xiaoming = &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;小明&quot;</span>,<br>			<span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-number">18</span>,<br>			<span class="hljs-string">&quot;gender&quot;</span>: <span class="hljs-literal">True</span>,<br>			<span class="hljs-string">&quot;height&quot;</span>: <span class="hljs-number">1.75</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="常用操作："><a href="#常用操作：" class="headerlink" title="常用操作："></a><strong>常用操作：</strong></h3><p>len(字典)：获取字典的键值对数量</p>
+<p>字典.keys()：获取所有key列表</p>
+<p>字典.values()：所有value列表</p>
+<p>字典.items()：所有(key,value)元组列表</p>
+<p>字典[key]：可以从字典中取值，key不存在会报错</p>
+<p>字典.get(key)：可以从字典中取值，key不存在不会报错</p>
+<p>del 字典[key]：删除指定键值对，key不会存在报错</p>
+<p>字典.pop(key)：删除指定键值对，key不存在会报错</p>
+<p>字典.popitem()：随机删除一个键值对</p>
+<p>字典[key] &#x3D; value：如果key存在，修改数据，如果key不存在，新增键值对</p>
+<p>字典.setdefault(key,value)：如果key存在，不会修改数据秒如果key不存在，新增键值对</p>
+<p>字典.update(字典2)：将字典2的数据合并到字典1</p>
+<h3 id="循环遍历-2"><a href="#循环遍历-2" class="headerlink" title="循环遍历"></a>循环遍历</h3><ul>
+<li>遍历就是依次从字典中获取所有键值对</li>
+</ul>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs maxima"># <span class="hljs-keyword">for</span> 循环内部使用的 <span class="hljs-built_in">key</span>的变量 <span class="hljs-keyword">in</span> 字典<br><span class="hljs-keyword">for</span> <span class="hljs-built_in">key</span> <span class="hljs-keyword">in</span> xiaoming：<br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&quot;</span><span class="hljs-built_in">%s</span> : <span class="hljs-built_in">%s</span><span class="hljs-string">&quot; % (key,xiaoming[key]))</span><br></code></pre></td></tr></table></figure>
+
+<p>ps：在实际开发中，由于字典中每一个键值对保存数据的类型是不同的，所有正对字典的循环遍历需求并不是很多。</p>
+<h3 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>尽管可以使用for in遍历字典</li>
+<li>但是在开发中，更多的应用场景是：<ul>
+<li>使用多个键值对，存储描述一个物体的相关信息——描述更复杂的数据信息</li>
+<li>将多个字典放在一个列表中，再进行遍历，再循环体内部针对每一个字典进行相同的处理</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">card_list</span> = [&#123;<span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;zhangsan&quot;</span>,<br>			  <span class="hljs-string">&quot;qq&quot;</span>:<span class="hljs-string">&quot;123456&quot;</span>,<br>			  <span class="hljs-string">&quot;phone&quot;</span>:<span class="hljs-string">&quot;110&quot;</span>&#125;,<br>			 &#123;<span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;lisi&quot;</span>,<br>			  <span class="hljs-string">&quot;qq&quot;</span>:<span class="hljs-string">&quot;56789&quot;</span>,<br>			  <span class="hljs-string">&quot;phone&quot;</span>:<span class="hljs-string">&quot;11111&quot;</span><br>			&#125;]<br></code></pre></td></tr></table></figure>
+
+<h2 id="4、字符串"><a href="#4、字符串" class="headerlink" title="4、字符串"></a>4、字符串</h2><h3 id="定义：-3"><a href="#定义：-3" class="headerlink" title="定义："></a>定义：</h3><ul>
+<li>字符串就是一串字符，是编程语言中表示文本的数据类型</li>
+<li>在Python中可以使用一对双引号””或者一对单引号’’定义一个字符串<ul>
+<li>跟java一样需要用到多重引号需要转义</li>
+</ul>
+</li>
+<li>可以使用索引获取一个字符串中指定位置的字符，索引计数从0开始</li>
+<li>也可以使用for循环遍历字符串中每一个字符</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-type">string</span> = <span class="hljs-string">&quot;Hello Python&quot;</span><br><br><span class="hljs-keyword">for</span> c in <span class="hljs-type">string</span>:<br>	<span class="hljs-built_in">print</span>(c)<br></code></pre></td></tr></table></figure>
+
+<h3 id="常用操作：-1"><a href="#常用操作：-1" class="headerlink" title="常用操作："></a>常用操作：</h3><p>len(字符串)：获取字符串的长度</p>
+<p>字符串.count(字符串)：小字符串在大字符串出现的次数</p>
+<p>字符串[索引]：从字符串中取出单个字符</p>
+<p>字符串.index(字符串)：获取小字符串第一次出现的索引</p>
+<h4 id="判断类型"><a href="#判断类型" class="headerlink" title="判断类型"></a><strong>判断类型</strong></h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.isspace()</td>
+<td>如果string中只包含空额，则返回True</td>
+</tr>
+<tr>
+<td>string.isalnum()</td>
+<td>如果string至少有一个字符并且所有字符都是字母或数字则返回True</td>
+</tr>
+<tr>
+<td>string.isalpha()</td>
+<td>如果string至少有一个字符并且所有字符都是字母则返回True</td>
+</tr>
+<tr>
+<td>string.isdecimal()</td>
+<td>如果string只包含数字则返回True，全角数字</td>
+</tr>
+<tr>
+<td>string.isdigit()</td>
+<td>如果string只包含数字则返回True，全角数字、(1)、\u00b2</td>
+</tr>
+<tr>
+<td>string.isnumeric()</td>
+<td>如果string只包含数字则返回True，全角数字，汉字数字</td>
+</tr>
+<tr>
+<td>string.istitle</td>
+<td>如果string是标题化的（每个单词的首字母大写）则返回True</td>
+</tr>
+<tr>
+<td>string.islower()</td>
+<td>如果string中包含至少一个区分大小写的字符，并且所有这些（区分大小写的）字符都是小写，则返回True</td>
+</tr>
+<tr>
+<td>string.isupper()</td>
+<td>如果string中包含至少一个区分大小写的字符，并且所有这些（区分大小写的）字符都是大写，则返回True</td>
+</tr>
+</tbody></table>
+<h4 id="查找和替换"><a href="#查找和替换" class="headerlink" title="查找和替换"></a>查找和替换</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.startswith(str)</td>
+<td>检查字符串是否是以str开头，是则返回True</td>
+</tr>
+<tr>
+<td>string.endswith(str)</td>
+<td>检查字符串是否是以str结束，是则返回True</td>
+</tr>
+<tr>
+<td>string.find(str,start&#x3D;0,end&#x3D;len(string))</td>
+<td>检测str是否包含在string中，如果start和end指定范围，则检测是否包含在指定范围内，如果是返回开始的索引值，否则返回-1</td>
+</tr>
+<tr>
+<td>string.rfind(str,start&#x3D;0,end&#x3D;len(string))</td>
+<td>类似于find()函数，不过是从右边开始查找</td>
+</tr>
+<tr>
+<td>string.index(str,start&#x3D;0,end&#x3D;len(string))</td>
+<td>跟find()方法类似，只不过如果str不在string会报错</td>
+</tr>
+<tr>
+<td>string.rindex(str,start&#x3D;0,end&#x3D;len(string))</td>
+<td>类似于index()，不过是从右边开始</td>
+</tr>
+<tr>
+<td>string.replace(old_str,new_str,num&#x3D;string.count(old))</td>
+<td>把string中的old_str替换new_str,如果num指定，则替换不超过num次</td>
+</tr>
+</tbody></table>
+<h4 id="大小写转化"><a href="#大小写转化" class="headerlink" title="大小写转化"></a>大小写转化</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.capitalize()</td>
+<td>把字符串的第一个字符大写</td>
+</tr>
+<tr>
+<td>string.title()</td>
+<td>把字符串的每个单词首字母大写</td>
+</tr>
+<tr>
+<td>string.lower()</td>
+<td>转换 string 中所有大写字符为小写</td>
+</tr>
+<tr>
+<td>string.upper()</td>
+<td>转换 string 中的小写字母为大写</td>
+</tr>
+<tr>
+<td>string.swapcase()</td>
+<td>翻转 string 中的大小写</td>
+</tr>
+</tbody></table>
+<h4 id="文本对齐"><a href="#文本对齐" class="headerlink" title="文本对齐"></a>文本对齐</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.ljust(width)</td>
+<td>返回一个原字符串左对齐，并使用空格填充至长度 width 的新字符串</td>
+</tr>
+<tr>
+<td>string.rjust(width)</td>
+<td>返回一个原字符串右对齐，并使用空格填充至长度 width 的新字符串</td>
+</tr>
+<tr>
+<td>string.center(width)</td>
+<td>返回一个原字符串居中，并使用空格填充至长度 width 的新字符串</td>
+</tr>
+</tbody></table>
+<h4 id="去除空白字符"><a href="#去除空白字符" class="headerlink" title="去除空白字符"></a>去除空白字符</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.lstrip()</td>
+<td>截掉string 左边(开始)的空白字符</td>
+</tr>
+<tr>
+<td>string.rstrip()</td>
+<td>截掉 string 右边(末尾)的空白字符</td>
+</tr>
+<tr>
+<td>string.strip()</td>
+<td>截掉string左右两边的空白字符</td>
+</tr>
+</tbody></table>
+<h4 id="拆分和连接"><a href="#拆分和连接" class="headerlink" title="拆分和连接"></a>拆分和连接</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string.partition(str)</td>
+<td>把字符串 string 分成一个3元素的元组(str前面,str,str后面)</td>
+</tr>
+<tr>
+<td>string.rpartition(str)</td>
+<td>类似于 partition0方法，不过是从右边开始查找</td>
+</tr>
+<tr>
+<td>string.split(str&#x3D;””,num)</td>
+<td>以str 为分隔符拆分 string，如果 num 有指定值，则仅分隔 num +1个子字符串，str 默认包含 r; tn’和空格</td>
+</tr>
+<tr>
+<td>string.splitlines()</td>
+<td>按照行(‘\r’,’\n’,’\r\n’)分隔，返回一个包含各行作为元素的列表</td>
+</tr>
+<tr>
+<td>string.join(seq)</td>
+<td>以string 作为分隔符，将 seq中所有的元素 (的字符串表示) 合并为一个新的字符串</td>
+</tr>
+</tbody></table>
+<h3 id="字符串的切片："><a href="#字符串的切片：" class="headerlink" title="字符串的切片："></a>字符串的切片：</h3><ul>
+<li>切片 方法适用于字符串、列表、元组<ul>
+<li>切片 使用索引值来限定范围，从一个大的字符串中切出小的字符串</li>
+<li>列表和元组都是有序的集合，都能够通过索引值获取到对应的数据</li>
+<li>字典是一个无序的集合，是使用键值对保存数据</li>
+</ul>
+</li>
+</ul>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230314162133065.png" srcset="/img/loading.gif" lazyload alt="image-20230314162133065"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">字符串<span class="hljs-selector-attr">[开始索引:结束索引:步长]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ol>
+<li>指定的区间属于左闭右开型 [开始索引，结束索引）&#x3D;&gt; 开始索引 &gt;&#x3D; 范围 &lt; 结束索引</li>
+<li>从头开始，开始索引数字可以省略，冒号不能省略</li>
+<li>到末尾结束，结束索引数字可以省略，冒号不能省略</li>
+<li>步长默认为1，如果连续切片，数字和冒号都可以省略</li>
+</ol>
+<h2 id="5、公共方法"><a href="#5、公共方法" class="headerlink" title="5、公共方法"></a>5、公共方法</h2><h3 id="5-1、Python内置函数"><a href="#5-1、Python内置函数" class="headerlink" title="5.1、Python内置函数"></a>5.1、Python内置函数</h3><p>Python包含了一下内置函数：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>len(item)</td>
+<td>计算容器中元素个数</td>
+<td></td>
+</tr>
+<tr>
+<td>del(item)</td>
+<td>删除变量</td>
+<td>del有两种方式</td>
+</tr>
+<tr>
+<td>max(item)</td>
+<td>返回容器中元素最大值</td>
+<td>如果是字典，只针对key比较</td>
+</tr>
+<tr>
+<td>min(item)</td>
+<td>返回容器中元素最小值</td>
+<td>如果是字典，只针对key比较</td>
+</tr>
+<tr>
+<td>cmp(item1,item2)</td>
+<td>比较两个值，-1小于&#x2F;0相等&#x2F;1大于</td>
+<td>Python 3.x取消了cmp函数</td>
+</tr>
+</tbody></table>
+<p>ps：字符串标胶符合一下规则：”0” &lt; “A” &lt; “a”</p>
+<h3 id="5-2、切片"><a href="#5-2、切片" class="headerlink" title="5.2、切片"></a>5.2、切片</h3><table>
+<thead>
+<tr>
+<th>描述</th>
+<th>Python表达式</th>
+<th>结果</th>
+<th>支持的数据类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>切片</td>
+<td>“0123456789”[::-2]</td>
+<td>“97531”</td>
+<td>字符串、列表、元组</td>
+</tr>
+</tbody></table>
+<ul>
+<li>切片使用索引值来限定范围，从一个大的字符串中切出小的字符串</li>
+<li>列表和元组都是有序的集合，都能够通过索引值获取到对应的数据</li>
+<li>字典是一个无序的集合，时使用键值对保存数据</li>
+</ul>
+<h3 id="5-3、运算符"><a href="#5-3、运算符" class="headerlink" title="5.3、运算符"></a>5.3、运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>Python表达式</th>
+<th>结果</th>
+<th>描述</th>
+<th>支持的数据类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>[1,2]+[3,4]</td>
+<td>[1,2,3,4]</td>
+<td>合并</td>
+<td>字符串、列表、元组</td>
+</tr>
+<tr>
+<td>*</td>
+<td>[“Hi!”] * 4</td>
+<td>[“Hi!”,”Hi!”,”Hi!”,”Hi!”]</td>
+<td>重复</td>
+<td>字符串、列表、元组</td>
+</tr>
+<tr>
+<td>ln</td>
+<td>3 in (1,2,3)</td>
+<td>True</td>
+<td>元素是否存在</td>
+<td>字符串、列表、元组、字典</td>
+</tr>
+<tr>
+<td>not in</td>
+<td>4 not in（1,2,3）</td>
+<td>True</td>
+<td>元素是否不存在</td>
+<td>字符串、列表、元组、字典</td>
+</tr>
+<tr>
+<td>&gt; &gt;&#x3D; &#x3D;&#x3D; &lt; &lt;&#x3D;</td>
+<td>(1,2,3) &lt; (2,2,3)</td>
+<td>True</td>
+<td>元素比较</td>
+<td>字符串、列表、元组</td>
+</tr>
+</tbody></table>
+<p>ps：</p>
+<ul>
+<li>in在对字典操作时，判断的是字典的键</li>
+<li>in和not in 被称为成员运算符</li>
+</ul>
+<h3 id="5-4、完整的For循环语法"><a href="#5-4、完整的For循环语法" class="headerlink" title="5.4、完整的For循环语法"></a>5.4、完整的For循环语法</h3><p>在Python中完成的for循环的语法如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">for</span> 变量 <span class="hljs-keyword">in</span> 集合:<br>	循环体代码<br><span class="hljs-keyword">else</span>:<br>	没有通过<span class="hljs-keyword">break</span>退出循环，循环结束后，会执行的代码<br></code></pre></td></tr></table></figure>
+
+<h1 id="变量进阶"><a href="#变量进阶" class="headerlink" title="变量进阶"></a>变量进阶</h1><p>目标：</p>
+<ul>
+<li>变量的引用</li>
+<li>可变和不可变类型</li>
+<li>局部变量和全局变量</li>
+</ul>
+<h2 id="1、变量的引用"><a href="#1、变量的引用" class="headerlink" title="1、变量的引用"></a>1、变量的引用</h2><ul>
+<li>变量和数据都是保存在内存中的</li>
+<li>在Python中函数的参数传递以及返回值都是靠引用传递的</li>
+</ul>
+<h3 id="1-1、引用的概念"><a href="#1-1、引用的概念" class="headerlink" title="1.1、引用的概念"></a>1.1、引用的概念</h3><p>在Python中</p>
+<ul>
+<li>变量和数据是分开存储的</li>
+<li>数据保存在内存中的一个位置</li>
+<li>变量中保存着数据在内存中的地址</li>
+<li>变量中记录数据的地址，就叫作引用</li>
+<li>使用id()函数可以查看变量中保存数据所在的内存地址</li>
+</ul>
+<p>ps：如果变量已经被定义，当给一个变量赋值的时候，本质上是修改了数据的引用</p>
+<ul>
+<li>变量不再对之前的数据引用</li>
+<li>变量改为对新赋值的数据引用</li>
+</ul>
+<h3 id="1-2、变量引用的示例"><a href="#1-2、变量引用的示例" class="headerlink" title="1.2、变量引用的示例"></a>1.2、变量引用的示例</h3><h3 id="1-3、函数的参数和返回值的传递"><a href="#1-3、函数的参数和返回值的传递" class="headerlink" title="1.3、函数的参数和返回值的传递"></a>1.3、函数的参数和返回值的传递</h3><p>在Python中，函数的实参&#x2F;返回值 都是靠引用来传递来的</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs perl">def test(num):<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;-&quot;</span> * <span class="hljs-number">50</span>)<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;%d 在函数内的内存地址是 %x&quot;</span> % (num, id(num)))<br>	<br>	result = <span class="hljs-number">100</span><br>	<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;返回值 %d 在内存中的地址是 %x&quot;</span> % (result, id(result)))<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;-&quot;</span> * <span class="hljs-number">50</span>)<br>	<br>	<span class="hljs-keyword">return</span> result<br><br>a = <span class="hljs-number">10</span><br><span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;调用函数前 实参内存地址是 %x&quot;</span> % id(a))<br><span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;调用函数前 返回值内存地址是 %x&quot;</span> % id(r))<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2、可变和不可变类型"><a href="#2、可变和不可变类型" class="headerlink" title="2、可变和不可变类型"></a>2、可变和不可变类型</h2><ul>
+<li>不可变类型，内存中的数据不允许被修改<ul>
+<li>数据类型 int，bool，float，complex，long(2.x)</li>
+<li>字符串 str</li>
+<li>元组 tuple</li>
+</ul>
+</li>
+<li>可变类型，内存中的数据可以被修改<ul>
+<li>列表 list</li>
+<li>字典 dict</li>
+</ul>
+</li>
+</ul>
+<p>ps：字典的key只能使用不可变类型的数据</p>
+<ol>
+<li>可变类型的数据变化，是通过方法来实现的</li>
+<li>如果给一个可变类型的变量，赋值了一个新的数据，引用会修改<ul>
+<li>变量不再对之前的数据引用</li>
+<li>变量改为对新赋值的数据引用</li>
+</ul>
+</li>
+</ol>
+<p>哈希（hash）</p>
+<ul>
+<li>Python中内置有一个名字叫做hash(o)的函数<ul>
+<li>接受一个不可变类型的数据作为参数</li>
+<li>返回结果是一个整数</li>
+</ul>
+</li>
+<li>hash是一种算法，其作用就是提起数据的特征码（指纹）<ul>
+<li>相同的内容得到相同的结果</li>
+<li>不同的内容得到不同的结果</li>
+</ul>
+</li>
+<li>在Python中，设置字典的键值对时，会首先对key进行hash已决定如何在内存中保存字典的数据，以方便后续对字典的操作：CRUD<ul>
+<li>键值对的key必须是不可变类型数据</li>
+<li>键值对的value可以是任意类型的数据</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、局部变量和全局变量"><a href="#3、局部变量和全局变量" class="headerlink" title="3、局部变量和全局变量"></a>3、局部变量和全局变量</h2><ul>
+<li>局部变量实在函数内部定义的变量，只能在函数内部使用</li>
+<li>全局变量实在函数外部定义的变量（没有定义在某一个函数内），所有函数内部都可以使用这个变量</li>
+</ul>
+<h3 id="3-1-局部变量"><a href="#3-1-局部变量" class="headerlink" title="3.1 局部变量"></a>3.1 局部变量</h3><ul>
+<li>局部变量是在函数内部定义的变量，只能在函数内部使用</li>
+<li>函数执行结束后，函数内部的局部变量会被系统回收</li>
+<li>不同的函数，可以定义相同名字的局部变量，但是各用各的不会产生影响</li>
+</ul>
+<p>局部变量的生命周期</p>
+<ul>
+<li>所谓生命周期就是变量从被创建到被系统回收的过程</li>
+<li>局部变量在函数执行时，才会被创建</li>
+<li>函数执行结束后局部变量被系统回收</li>
+<li>局部变量在生命周期内，可以用来存储函数内部临时使用到的数据</li>
+</ul>
+<h3 id="3-2-全局变量"><a href="#3-2-全局变量" class="headerlink" title="3.2 全局变量"></a>3.2 全局变量</h3><ul>
+<li>全局变量是在函数外部定义的变量，所有函数内部都可以使用这个变量</li>
+</ul>
+<p>ps：函数执行时，需要处理变量时会：</p>
+<ol>
+<li>首先查找函数内部是否存在指定名称的局部变量，如果有，直接使用</li>
+<li>如果没有，查找函数外部是否存在指定名称的全局变量，如果有，直接使用</li>
+<li>如果还没有，程序报错。</li>
+</ol>
+<p>1）函数不能直接修改全局变量的引用</p>
+<ul>
+<li>全局变量是在函数外部定义的变量（没有定义在某一个函数内），所有函数内部都可以使用这个变量</li>
+<li>在函数内部，可以通过全局变量的引用获取对应的数据</li>
+<li>但是，不允许直接修改全局变量的引用——使用赋值语句修改全局变量的值</li>
+</ul>
+<p>ps：如果在函数内部定义了一个与全局变量相同的局部变量，他们只是名称相同而已，在函数内部不能直接修改全局变量的值。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs csharp">demo1()<br><span class="hljs-meta">#全局变量</span><br>num = <span class="hljs-number">10</span><br><br><span class="hljs-function">def <span class="hljs-title">demo1</span>():</span><br><span class="hljs-function">	num</span> = <span class="hljs-number">99</span><br>	print(<span class="hljs-string">&quot;demo1 ==&gt; %d&quot;</span> % num)<br>	<br><span class="hljs-function">def <span class="hljs-title">demo2</span>():</span><br><span class="hljs-function">	<span class="hljs-title">print</span>(<span class="hljs-params"><span class="hljs-string">&quot;demo1 ==&gt; %d&quot;</span> % num</span>)</span><br><span class="hljs-function">	</span><br><span class="hljs-function"><span class="hljs-title">demo1</span>()</span><br><span class="hljs-function"><span class="hljs-title">demo2</span>()</span><br></code></pre></td></tr></table></figure>
+
+<p>2）在函数内部修改全局变量的值</p>
+<ul>
+<li><p>如果在函数中需要修改全局变量，需要使用global进行声明</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">num</span> = <span class="hljs-number">10</span><br><span class="hljs-variable">def</span> <span class="hljs-function"><span class="hljs-title">demo1</span>():</span><br><span class="hljs-function"></span><br><span class="hljs-function">	<span class="hljs-title">print</span>(<span class="hljs-string">&quot;demo1&quot;</span> + <span class="hljs-string">&quot;-&quot;</span> * <span class="hljs-number">50</span>)</span><br>	<br>	<span class="hljs-variable">global</span> <span class="hljs-variable">num</span><br>	<br>	<span class="hljs-variable">num</span> = <span class="hljs-number">100</span><br>	<span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-number">100</span>)</span><br>	<br><span class="hljs-variable">def</span> <span class="hljs-function"><span class="hljs-title">demo2</span>():</span><br><span class="hljs-function">	</span><br><span class="hljs-function">	<span class="hljs-title">print</span>(<span class="hljs-string">&quot;demo2&quot;</span> + <span class="hljs-string">&quot;-&quot;</span> *<span class="hljs-number">50</span>)</span><br>	<span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-variable">num</span>)</span><br>	<br><span class="hljs-function"><span class="hljs-title">demo1</span>()</span><br><span class="hljs-function"><span class="hljs-title">demo2</span>()</span><br><br><span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-string">&quot;over&quot;</span>)</span><br></code></pre></td></tr></table></figure></li>
+</ul>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
