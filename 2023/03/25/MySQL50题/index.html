@@ -16,19 +16,23 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL">
+    <meta name="description" content="#1、查询“001”课程比“002”课程成绩高的所有学生的学号； 123456789select distinct s1.SIDfrom score s1where(select s2.scorefrom score s2where s2.CID&#x3D;&quot;001&quot; and s1.SID&#x3D;s2.SID)(select s3.scorefrom score s3where s3.CID&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL50题">
 <meta property="og:url" content="https://kblayt.github.io/2023/03/25/MySQL50%E9%A2%98/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#1、查询“001”课程比“002”课程成绩高的所有学生的学号； 123456789select distinct s1.SIDfrom score s1where(select s2.scorefrom score s2where s2.CID&#x3D;&quot;001&quot; and s1.SID&#x3D;s2.SID)(select s3.scorefrom score s3where s3.CID&#x3D;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-25T05:09:36.000Z">
-<meta property="article:modified_time" content="2023-03-25T05:09:36.230Z">
+<meta property="article:modified_time" content="2023-03-25T05:27:14.274Z">
 <meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>MySQL - Hexo</title>
+  <title>MySQL50题 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="MySQL"></span>
+            <span id="subtitle" data-typed-text="MySQL50题"></span>
           
         </div>
 
@@ -216,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          12k 字
         
       </span>
     
@@ -227,7 +231,7 @@
         
         
         
-          1 分钟
+          97 分钟
         
       </span>
     
@@ -265,12 +269,165 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">MySQL</h1>
+            <h1 style="display: none">MySQL50题</h1>
             
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>#1、查询“001”课程比“002”课程成绩高的所有学生的学号；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select distinct s1.SID<br>from score s1<br>where<br>(select s2.score<br>from score s2<br>where s2.CID=&quot;001&quot; and s1.SID=s2.SID)<br>(select s3.score<br>from score s3<br>where s3.CID=&quot;002&quot; and s1.SID=s3.SID);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#2、查询平均成绩大于60分的同学的学号和平均成绩；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sid,avg(score) as a<br>from score<br>group by score.sid<br>having a&gt;60<br>order by a desc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#3、查询所有同学的学号、姓名、选课数、总成绩；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.SID,s.Sname,count(1),sum(score)<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>left join course as c<br>on sc.CID=c.CID<br>group by s.SID;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#4、查询姓“李”的老师的个数；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select count(1)<br>from teacher as t<br>where t.Tname like &quot;李%&quot;;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#5、查询没学过“叶平”老师课的同学的学号、姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select student.SID,student.Sname<br>from student<br>where student.Sname not in<br>(<br>select distinct s.Sname<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>left join course as c<br>on sc.CID=c.CID<br>left join teacher as t<br>on c.TID=t.TID<br>where t.Tname=&#x27;叶平&#x27;<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#6、查询学过“001”并且也学过编号“002”课程的同学的学号、姓名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.SID,s.Sname<br>from student as s<br>where s.SID in (<br>select sc1.SID<br>from score sc1,score sc2<br>where sc1.SID=sc2.SID and sc1.CID=001 and sc2.CID=002<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#7、查询学过“叶平”老师所教的所有课的同学的学号、姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT sid,sname FROM Student s WHERE NOT EXISTS<br>(<br>SELECT cid<br>FROM Course c<br>INNER JOIN Teacher t<br>ON c.TID=t.TID<br>WHERE t.TName=&#x27;叶平&#x27; AND CID NOT IN<br>(SELECT CID FROM score WHERE SID=s.SID)<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#8、查询课程编号“002”的成绩比课程编号“001”课程低的所有同学的学号、姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select DISTINCT s.SID,s.Sname<br>from score s1<br>left join student s<br>on s.SID=s1.SID<br>where<br>(select s2.score<br>from score s2<br>where s2.CID=&quot;001&quot; and s1.SID=s2.SID)<br>(select s3.score<br>from score s3<br>where s3.CID=&quot;002&quot; and s1.SID=s3.SID);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#9、查询所有课程成绩小于60分的同学的学号、姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select a.SID,a.Sname<br>from student as a<br>where a.SID not in(<br>select distinct s.SID<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>where sc.score&gt;=60<br>order by s.SID asc<br>)<br>order by a.SID asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#10、查询没有学全所有课的同学的学号、姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.SID,s.Sname<br>from student as s<br>where<br>(select count() from score as sc where s.SID=sc.SID)&lt;(select count() from course);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#11、查询至少有一门课与学号为“1001”的同学所学相同的同学的学号和姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select distinct a.SID,a.Sname<br>from student as a<br>left join score as b<br>on a.SID=b.SID<br>where b.CID in(<br>select score.CID<br>from score<br>where score.SID=1001<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#12、查询没有学过学号为“1001”同学所有门课的其他同学学号和姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select distinct s.SID,s.Sname<br>from student as s<br>left join score as sc1<br>on sc1.SID=s.SID<br>where s.SID not in (<br>select  sc.SID<br>from score as sc<br>where sc.CID in (<br>select CID from score where SID=1001<br>)<br>group by sc.SID<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#13、把“SC”表中“叶平”老师教的课的成绩都更改为此课程的平均成绩；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs mysql">update score s1<br>inner join(<br>select CID,avg(score) as ascore from score where CID in<br>(<br>select c.CID<br>from course as c,teacher as t<br>where c.TID=t.TID and t.Tname=&#x27;叶平&#x27;<br>)<br>group by CID<br>) as s2<br>set s1.score=s2.ascore where s1.CID=s2.CID;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#14、查询和“1002”号的同学学习的课程完全相同的其他同学学号和姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.SID &#x27;学号&#x27;,s.Sname &#x27;姓名&#x27;<br>from student as s ,score as sc1,<br>(select SID as si,COUNT(1) as co<br>from score<br>group by SID<br>)as a<br>where  s.SID=sc1.SID<br>and a.si=sc1.SID<br>and  sc1.cid in<br>(<br>select sc.CID<br>from score as sc<br>where sc.sID=1001<br>)<br>and a.co= (select COUNT(1) from score where SID=1001)<br>group by s.SID<br>having COUNT(1)=(select COUNT(1) from score where SID=1001);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#15、删除学习“叶平”老师课的SC表记录;</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">delete from score as sc<br>where sc.CID in(<br>select c.CID<br>from course as c<br>left join teacher as t<br>on c.TID=t.TID<br>where t.Tname=&#x27;叶平&#x27;<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#16、向SC表中插入一些记录，这些记录要求符合以下条件：没有上过编号“003”课程的同学学号的2号课的平均成绩；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs mysql">insert score<br>select distinct sc2.SID,2,ascore.a<br>from score as sc2, (<br>select avg(sc.score) as a<br>from score as sc<br>where sc.CID=002<br>)  as ascore<br>where sc2.SID not  in(<br>(select sc.SID<br>from score as sc<br>where sc.CID=003<br>)<br>)<br>group by sc2.SID<br></code></pre></td></tr></table></figure>
+
+<p><strong>#17、按平均成绩从高到低显示所有学生的“数据库”、“企业管理”、“英语”三门的课程成绩，按如下形式显示： 学生ID,数据库,企业管理,英语,有效课程数,有效平均分</strong></p>
+<p>&#x2F;&#x2F;?????????????????????????????</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT distinct sid &#x27;学生ID&#x27;,<br>(SELECT score FROM score a,course b WHERE a.cid=b.cid AND b.cname=&#x27;数据库&#x27; AND a.sid=c.sid)&#x27;数据库&#x27;,<br>(SELECT score FROM score a,course b WHERE a.cid=b.cid AND b.cname=&#x27;企业管理&#x27; AND a.sid=c.sid)&#x27;企业管理&#x27;,<br>(SELECT score FROM score a,course b WHERE a.cid=b.cid AND b.cname=&#x27;英语&#x27; AND a.sid=c.sid)&#x27;英语&#x27;,<br>(SELECT COUNT(1) FROM score a,course b WHERE a.cid=b.cid AND (b.cname=&#x27;数据库&#x27; OR b.cname=&#x27;企业管理&#x27;OR b.cname=&#x27;英语&#x27;  )AND a.sid=c.sid)&#x27;有效课程数&#x27;,<br>(SELECT AVG(score) FROM score a,course b WHERE a.cid=b.cid AND (b.cname=&#x27;数据库&#x27; OR b.cname=&#x27;企业管理&#x27;OR b.cname=&#x27;英语&#x27;  ) AND a.sid=c.sid) 有效平均分<br>FROM score c<br>ORDER BY 有效平均分 DESC;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#18、查询各科成绩最高和最低的分：以如下形式显示：课程ID，最高分，最低分</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.CID,max(sc.score),min(sc.score)<br>from score as sc<br>group by sc.CID<br>order by sc.CID asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#19、按各科平均成绩从低到高和及格率的百分数从高到低顺序</strong></p>
+<p>#case when then else</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.CID,avg(sc.score) as &#x27;平均成绩&#x27;,100**sum(case when sc.score&gt;=60 then 1 else 0 end)/count(1) as 及格率from score as scgroup by sc.CIDorder by avg(sc.score) asc,及格率 desc;#20、查询如下课程平均成绩和及格率的百分数(用&quot;1行&quot;显示): 企业管理（001），马克思（002），OO&amp;UML （003），数据库（004）selectsum(case when sc.CID=001 then sc.score else 0 end)/sum(case when sc.CID=001 then 1 else 0 end) as &#x27;企业管理平均成绩&#x27;,100**sum(case when sc.CID=001 and sc.score&gt;=60 then 1 else 0 end)/sum(case when sc.CID=001 then 1 else 0 end)as &#x27;企业管理及格率&#x27;,<br>sum(case when sc.CID=002 then sc.score else 0 end)/sum(case when sc.CID=002 then 1 else 0 end) as &#x27;马克思平均成绩&#x27;,<br>100**sum(case when sc.CID=002 and sc.score&gt;=60 then 1 else 0 end)/sum(case when sc.CID=002 then 1 else 0 end)as &#x27;马克思及格率&#x27;,sum(case when sc.CID=003 then sc.score else 0 end)/sum(case when sc.CID=003 then 1 else 0 end) as &#x27;UML平均成绩&#x27;,100**sum(case when sc.CID=003 and sc.score&gt;=60 then 1 else 0 end)/sum(case when sc.CID=003 then 1 else 0 end)as &#x27;UML及格率&#x27;,<br>sum(case when sc.CID=004 then sc.score else 0 end)/sum(case when sc.CID=004 then 1 else 0 end) as &#x27;数据库平均成绩&#x27;,<br>100*sum(case when sc.CID=004 and sc.score&gt;=60 then 1 else 0 end)/sum(case when sc.CID=004 then 1 else 0 end)as &#x27;数据库及格率&#x27;<br>from score as sc;<br></code></pre></td></tr></table></figure>
+
+<p>**&#x2F;<em>21、查询不同老师所教不同课程平均分从高到低显示</em>*</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT max(Z.TID) AS 教师ID,MAX(Z.Tname) AS 教师姓名,C.CID AS 课程ＩＤ,MAX(C.Cname) AS 课程名称,AVG(Score) AS 平均成绩 */<br>SELECT t.TID AS &#x27;教师ID&#x27;,t.Tname AS &#x27;教师姓名&#x27;,c.CID AS &#x27;课程ID&#x27;,C.Cname AS &#x27;课程名称&#x27;,avg(sc.score) AS &#x27;平均成绩&#x27;<br>from score as sc<br>left join course as c<br>on sc.CID=c.CID<br>left join teacher as t<br>on c.TID=t.TID<br>group by c.TID,c.CID<br>order by avg(sc.score) desc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#22、查询如下课程成绩第 3 名到第 6 名的学生成绩单：企业管理（001），马克思（002），UML （003），数据库（004）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT DISTINCT s.cid,<br>(SELECT s1.score FROM score s1 WHERE s1.cid = s.cid ORDER BY s1.score DESC LIMIT 2,1)&#x27;3&#x27;,<br>(SELECT s1.score FROM score s1 WHERE s1.cid = s.cid ORDER BY s1.score DESC LIMIT 3,1)&#x27;4&#x27;,<br>(SELECT s1.score FROM score s1 WHERE s1.cid = s.cid ORDER BY s1.score DESC LIMIT 4,1)&#x27;5&#x27;,<br>(SELECT s1.score FROM score s1 WHERE s1.cid = s.cid ORDER BY s1.score DESC LIMIT 5,1)&#x27;6&#x27;<br>FROM score s<br>WHERE s.cid IN (1,2,3,4)<br>order by s.cid<br>select t1.SID,<br>(select sname from student as stu where stu.SID=t1.SID) as 姓名,<br>(select Cname from Course as co where co.CID=t1.CID) as 课程名,<br>t1.score  as 成绩<br>from score t1<br>where (select count(1) from score where CID=t1.CID and score&gt;=t1.score) between 2 and 5<br>and CID in (&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;,&#x27;4&#x27;)<br>order by CID,t1.score desc<br></code></pre></td></tr></table></figure>
+
+<p><strong>#23、统计列印各科成绩,各分数段人数:课程ID,课程名称,[100-85],[85-70],[70-60],[ &lt;60]</strong></p>
+<p><strong>#case when between 小数 and 大数 then 1 else 0 end</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select<br>sc.CID as &#x27;课程ID&#x27;,<br>c.Cname as &#x27;课程名称&#x27;,<br>sum(case when sc.score BETWEEN 85 and 100 then 1 else 0 end) as &#x27;[100-85]&#x27;,<br>sum(case when sc.score BETWEEN 70 and 85 then 1 else 0 end) as &#x27;[85-70]&#x27;,<br>sum(case when sc.score BETWEEN 60 and 70 then 1 else 0 end) as &#x27;[70-60]&#x27;,<br>sum(case when sc.score BETWEEN 0 and 60 then 1 else 0 end) as &#x27;[60-0]&#x27;<br>from score as sc,course as c<br>where sc.CID=c.CID<br>group by sc.CID<br>order by sc.CID asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#24、查询学生平均成绩及其名次</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">set @n=0;<br>select a.SID,a.ascore,(@n:=@n+1) as 排名<br>from(<br>select SID,avg(score) as ascore<br>from score<br>group by SID<br>order by ascore desc<br>)as a<br></code></pre></td></tr></table></figure>
+
+<p><strong>#25、查询各科成绩前三名的记录:(不考虑成绩并列情况)</strong></p>
+<p>&#x2F;&#x2F;??????????????????????????????????????????</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select CID,score<br>from score as sc<br>where (select count(1) from score as sc1 where sc.CID=sc1.CID and sc.score<br>order by CID,score;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#26、查询每门课程被选修的学生数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.CID,c.Cname,sum(case when sc.score then 1 else 0 end) as 选修的学生数<br>from score as sc,course as c<br>where sc.CID=c.CID<br>group by sc.CID<br>order by sc.CID<br></code></pre></td></tr></table></figure>
+
+<p><strong>#27、查询出只选修了一门课程的全部学生的学号和姓名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.SID,s.Sname,sum(case when sc.CID then 1 else 0 end) as 每个人选修的课程数<br>from student as s,score as sc<br>where s.SID=sc.SID<br>group by s.SID<br>having 每个人选修的课程数=1;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#28、查询男生、女生人数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sum(case when s.Ssex=&#x27;男&#x27; then 1 else 0 end) as 男生人数,sum(case when s.Ssex=&#x27;女&#x27; then 1 else 0 end) as 女生人数<br>from student as s<br></code></pre></td></tr></table></figure>
+
+<p><strong>#29、查询姓“张”的学生名单</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select *<br>from student as s<br>where s.Sname like &#x27;张%&#x27;;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#30、查询同名同性学生名单，并统计同名人数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select *,count(1)<br>from student as s1,student as s2<br>where s1.SID!=s2.SID and s1.Sname=s2.Sname<br>insert student values (9999,&#x27;张无忌&#x27;,22,&#x27;男&#x27;);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#31、1981年出生的学生名单(注：Student表中Sage列的类型是datetime)</strong></p>
+<p>#运行时将student.Sage类型改为datetime类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select *<br>from student as s<br>where YEAR(s.Sage)=1981;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#32、查询每门课程的平均成绩，结果按平均成绩升序排列，平均成绩相同时，按课程号降序列</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.CID as 课程号,avg(sc.score) as 平均成绩<br>from score as sc<br>group by sc.CID<br>order by 平均成绩 desc,课程号 asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#33、查询平均成绩大于85的所有学生的学号、姓名和平均成绩</strong></p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> s.SID,s.Sname,<span class="hljs-built_in">avg</span>(sc.score) <span class="hljs-keyword">as</span> 个人平均成绩<br><span class="hljs-keyword">from</span> student <span class="hljs-keyword">as</span> s<br><span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> score <span class="hljs-keyword">as</span> sc<br><span class="hljs-keyword">on</span> s.SID=sc.SID<br><span class="hljs-keyword">group</span> <span class="hljs-keyword">by</span> sc.SID<br><span class="hljs-keyword">having</span> 个人平均成绩&gt;<span class="hljs-number">85</span><br><span class="hljs-keyword">insert</span> score <span class="hljs-keyword">values</span>(<span class="hljs-number">9999</span>,<span class="hljs-number">1</span>,<span class="hljs-number">95</span>),(<span class="hljs-number">9999</span>,<span class="hljs-number">2</span>,<span class="hljs-number">85</span>);<br><span class="hljs-keyword">insert</span> student <span class="hljs-keyword">values</span>(<span class="hljs-number">9999</span>,<span class="hljs-string">&#x27;刘红舸&#x27;</span>,<span class="hljs-number">22</span>,<span class="hljs-string">&#x27;男&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#34、查询课程名称为“数据库”，且分数低于60的学生姓名和分数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.Sname,sc.score<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>left join course as c<br>on sc.CID=c.CID<br>where c.Cname=&#x27;数据库&#x27; and sc.score&lt;60;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#35、查询所有学生的选课情况；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select distinct s.Sname,sc.CID,c.Cname<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>left join course as c<br>on sc.CID=c.CID<br>order by c.CID asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#36、查询任何一门课程成绩在70分以上的姓名、课程名称和分数；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT s.SID, s.Sname,c.cname,sc1.score<br>FROM score AS sc1, course c ,student s<br>WHERE sc1.sid=s.SID<br>AND c.cid=sc1.cid<br>AND s.SID NOT in<br>(<br>SELECT sc.SID<br>FROM score as sc<br>WHERE sc.score&lt;70<br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#37、查询不及格的课程，并按课程号从大到小排列</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.Sname,Cname,sc.score<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>left join course as c<br>on sc.CID=c.CID<br>where sc.score&lt;60<br>order by sc.CID desc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#38、查询课程编号为003且课程成绩在80分以上的学生的学号和姓名；</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select s.Sname,sc.CID,s.SID,sc.score<br>from student as s<br>left join score as sc<br>on s.SID=sc.SID<br>where sc.CID=003 and sc.score&gt;80;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#39、求选了课程的学生人数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select count(1) 选了课的学生人数<br>from(<br>select 1<br>from score<br>group by SID) as a;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#40、查询选修“叶平”老师所授课程的学生中，成绩最高的学生姓名及其成绩</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT *<br>FROM score as sc<br>LEFT JOIN student s ON sc.sid = s.sid<br>LEFT JOIN course c ON sc.cid = c.cid<br>LEFT JOIN teacher t ON c.tid = t.tid<br>WHERE t.tname = &#x27;叶平&#x27;<br>AND sc.score = (SELECT MAX(score) FROM score s1 WHERE sc.cid = s1.cid)<br></code></pre></td></tr></table></figure>
+
+<p><strong>#41、查询各个课程及相应的选修人数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select c.Cname,sum(case when sc.CID then 1 else 0 end) as 选修人数<br>from score as sc<br>left join course as c<br>on sc.CID=c.CID<br>group by sc.CID;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#42、查询不同课程成绩相同的学生的学号、课程号、学生成绩</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select distinct sc.SID,sc.CID,sc.score<br>from score as sc,score as sc1<br>where sc.CID!=sc1.CID and sc.score=sc1.score<br>order by sc.score desc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#43、查询每门功成绩最好的前两名</strong></p>
+<p>&#x2F;&#x2F;??????????????????????????????????????????</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select CID,score<br>from score as sc<br>where (select count(1) from score as sc1 where sc.CID=sc1.CID and sc.score<br>order by CID,score;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#44、统计每门课程的学生选修人数（超过10人的课程才统计）。要求输出课程号和选修人数，查询结果按人数降序排列，若人数相同，按课程号升序排列</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.CID,sum(case when sc.CID then 1 else 0 end) as 选修人数<br>from score as sc<br>inner join course as c<br>on sc.CID=c.CID<br>group by c.CID<br>having 选修人数&gt;=5<br>order by 选修人数 desc,c.CID asc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#45、检索至少选修两门课程的学生学号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.SID,count(1)<br>from score as sc<br>group by sc.SID<br>having count(1)&gt;=2<br></code></pre></td></tr></table></figure>
+
+<p><strong>#46、查询全部学生都选修的课程的课程号和课程名</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SELECT a.cid,a.cname FROM course a<br>WHERE  NOT EXISTS<br>(<br>SELECT *<br>FROM student<br>WHERE sid not  IN(<br>SELECT sid<br>FROM score<br>WHERE cid=a.cid<br>)<br>);<br>SELECT a.课程号,COUNT(1) AS &#x27;被选的人数&#x27;<br>FROM(<br>SELECT s.SID SID,s.Sname Sname,sc.CID 课程号,COUNT(sc.CID)<br>FROM student s<br>LEFT JOIN score as sc<br>ON s.SID = sc.SID<br>GROUP BY s.SID,sc.CID<br>ORDER BY s.SID<br>)AS a<br>GROUP BY a.课程号<br>HAVING COUNT(1)=(SELECT COUNT(1) FROM student)<br>insert score VALUES (1001,1,80)<br></code></pre></td></tr></table></figure>
+
+<p><strong>#47、查询没学过“叶平”老师讲授的任一门课程的学生姓名</strong></p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> s.SID,s.Sname<br><span class="hljs-keyword">from</span> student <span class="hljs-keyword">as</span> s<br><span class="hljs-keyword">where</span> s.SID <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> (<br><span class="hljs-keyword">select</span> sc.SID<br><span class="hljs-keyword">from</span> score <span class="hljs-keyword">as</span> sc<br><span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> course <span class="hljs-keyword">as</span> c<br><span class="hljs-keyword">on</span> sc.CID=c.CID<br><span class="hljs-keyword">left</span> <span class="hljs-keyword">join</span> teacher <span class="hljs-keyword">as</span> t<br><span class="hljs-keyword">on</span> c.TID=t.TID<br><span class="hljs-keyword">where</span> t.Tname=<span class="hljs-string">&#x27;叶平&#x27;</span><br>);<br></code></pre></td></tr></table></figure>
+
+<p><strong>#48、查询两门以上不及格课程的同学的学号及其平均成绩</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.SID,avg(sc.score),sum(case when sc.score&lt;=60 then 1 else 0 end) as 不及格门数<br>from score as sc<br>group by sc.SID<br>having 不及格门数&gt;=2<br></code></pre></td></tr></table></figure>
+
+<p><strong>#49、检索“004”课程分数小于60，按分数降序排列的同学学号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select sc.SID,sc.score<br>from score as sc<br>where sc.CID=004 and sc.score&lt;60<br>order by sc.score desc;<br></code></pre></td></tr></table></figure>
+
+<p><strong>#50、删除“002”同学的“001”课程的成绩</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">delete from score as sc<br>where sc.SID=002 and sc.CID=001;<br></code></pre></td></tr></table></figure>
+
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
@@ -278,6 +435,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">#数据库</a>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+    </div>
   
 </div>
 
@@ -287,7 +481,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>MySQL</div>
+      <div>MySQL50题</div>
       <div>https://kblayt.github.io/2023/03/25/MySQL50题/</div>
     </div>
     <div class="license-meta">
@@ -332,9 +526,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/03/25/MySQL/" title="MySQL50题">
+                      <a href="/2023/03/25/SQL%E8%AF%AD%E5%8F%A5%E5%85%B3%E9%94%AE%E8%AF%8D%E5%A4%A7%E5%85%A8/" title="SQL语句关键词大全">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">MySQL50题</span>
+                        <span class="hidden-mobile">SQL语句关键词大全</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
