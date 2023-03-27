@@ -24,8 +24,10 @@
 <meta property="og:description" content="python中的算数运算符   运算符 描述 实例    + 加 10 + 20 &#x3D; 30   - 减 10 - 20 &#x3D; -10   * 乘 10 * 20 &#x3D; 200   &#x2F; 除 10 &#x2F; 20 &#x3D; 0.5   &#x2F;&#x2F; 取整除 返回除法的整数部分(商) 9&#x2F;&#x2F;2输出结果 4   % 取余数 返回除">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230314162133065.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230327214025738.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230327214521586.png">
 <meta property="article:published_time" content="2022-10-21T08:38:52.000Z">
-<meta property="article:modified_time" content="2023-03-24T10:48:49.900Z">
+<meta property="article:modified_time" content="2023-03-27T14:42:48.229Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="Python基础">
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          11k 字
+          14k 字
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          93 分钟
+          116 分钟
         
       </span>
     
@@ -1228,6 +1230,127 @@
 <li><p>如果在函数中需要修改全局变量，需要使用global进行声明</p>
 <figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">num</span> = <span class="hljs-number">10</span><br><span class="hljs-variable">def</span> <span class="hljs-function"><span class="hljs-title">demo1</span>():</span><br><span class="hljs-function"></span><br><span class="hljs-function">	<span class="hljs-title">print</span>(<span class="hljs-string">&quot;demo1&quot;</span> + <span class="hljs-string">&quot;-&quot;</span> * <span class="hljs-number">50</span>)</span><br>	<br>	<span class="hljs-variable">global</span> <span class="hljs-variable">num</span><br>	<br>	<span class="hljs-variable">num</span> = <span class="hljs-number">100</span><br>	<span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-number">100</span>)</span><br>	<br><span class="hljs-variable">def</span> <span class="hljs-function"><span class="hljs-title">demo2</span>():</span><br><span class="hljs-function">	</span><br><span class="hljs-function">	<span class="hljs-title">print</span>(<span class="hljs-string">&quot;demo2&quot;</span> + <span class="hljs-string">&quot;-&quot;</span> *<span class="hljs-number">50</span>)</span><br>	<span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-variable">num</span>)</span><br>	<br><span class="hljs-function"><span class="hljs-title">demo1</span>()</span><br><span class="hljs-function"><span class="hljs-title">demo2</span>()</span><br><br><span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-string">&quot;over&quot;</span>)</span><br></code></pre></td></tr></table></figure></li>
 </ul>
+<p>3）全局变量定义的位置</p>
+<ul>
+<li>为了保证所有的函数都能够正确使用到全局变量，应该将全局变量定义在其他函数的上方</li>
+</ul>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs perl">a = <span class="hljs-number">10</span><br><br><br>def demo():<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;%d&quot;</span> % a)<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;%d&quot;</span> % b)<br>	<span class="hljs-keyword">print</span>(<span class="hljs-string">&quot;%d&quot;</span> % c)<br><br>b = <span class="hljs-number">20</span><br>demo()<br>c = <span class="hljs-number">30</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong></p>
+<ul>
+<li>由于全局变量c，是在调用函数之后，才定义的，在执行函数时，变量还没有定义，所以程序会报错！</li>
+</ul>
+<p>代码的结构示意图如下</p>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230327214025738.png" srcset="/img/loading.gif" lazyload alt="image-20230327214025738"></p>
+<p>4）全局变量命名的建议</p>
+<ul>
+<li>为了避免局部变量和全局变量出现混淆，在定义全局变量时，有一些公司会有开发要求，例如：全局变量名前应该改加g_或者gl的前缀</li>
+</ul>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>目标</p>
+<ul>
+<li>函数参数和返回值的作用</li>
+<li>函数的返回值 进阶</li>
+<li>函数的参数 进阶</li>
+<li>递归函数</li>
+</ul>
+<h2 id="01-函数参数和返回值的作用"><a href="#01-函数参数和返回值的作用" class="headerlink" title="01.函数参数和返回值的作用"></a>01.函数参数和返回值的作用</h2><p>函数根据有没有参数以及有没有返回值，可以相互组合，一共有四种组合形式</p>
+<ol>
+<li>无参数，无返回值</li>
+<li>无参数，有返回值</li>
+<li>有参数，无返回值</li>
+<li>有参数，有返回值</li>
+</ol>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230327214521586.png" srcset="/img/loading.gif" lazyload alt="image-20230327214521586"></p>
+<h2 id="02-函数的返回值-进阶"><a href="#02-函数的返回值-进阶" class="headerlink" title="02.函数的返回值 进阶"></a>02.函数的返回值 进阶</h2><ul>
+<li>在程序开发中，有时候，会希望一个函数执行结束后，告诉调用者一个结果，以便调用者针对具体的结果做后续的处理</li>
+<li>返回值 是函数 完成过工作后，最后 给调用者的一个结果</li>
+<li>在函数中使用 return 关键字可以返回结果</li>
+<li>调用函数一方，可以使用变量来接受函数的返回结果</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp">当方法返回值是一个元组时，<br><span class="hljs-function">def <span class="hljs-title">ab</span>():</span><br><span class="hljs-function"><span class="hljs-keyword">return</span> a,b</span>;<br>可以使用一个元组来接收<br>result = ab()<br>也可以将元组拆开来接收<br>a, b = ab();<br></code></pre></td></tr></table></figure>
+
+<p>交换两个数字</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment"># 解法1 - 使用临时变量</span><br>c = <span class="hljs-keyword">b</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">b </span>= a<br>a = c<br><br><span class="hljs-comment"># 解法2 - 不适用临时变量</span><br>a = a + <span class="hljs-keyword">b</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">b </span>= a - <span class="hljs-keyword">b</span><br><span class="hljs-keyword"></span>a = a - <span class="hljs-keyword">b</span><br><span class="hljs-keyword"></span><br><span class="hljs-comment"># 解法3 - python的元组</span><br>a, <span class="hljs-keyword">b </span>= <span class="hljs-keyword">b, </span>a<br></code></pre></td></tr></table></figure>
+
+<h2 id="03-函数的参数-进阶"><a href="#03-函数的参数-进阶" class="headerlink" title="03.函数的参数 进阶"></a>03.函数的参数 进阶</h2><p><strong>3.1.不可变和可变的参数</strong></p>
+<p><strong>问题1：</strong>在函数内部，针对参数使用的赋值语句，会不会影响到调用函数时传递的实参变量？</p>
+<p>不会</p>
+<ul>
+<li>无论传递的参数是可变的还是不可变的<ul>
+<li>只要针对参数使用赋值语句，会在函数内部修改局部变量的引用，不会影响到外部变量的引用</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs routeros">def demo(num, num_list):<br><br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;函数内部&quot;</span>)<br>	<br>	# 赋值语句<br>	num = 200<br>	num_list = [1, 2, 3]<br>	<br>	<span class="hljs-built_in">print</span>(num)<br>	<span class="hljs-built_in">print</span>(num_list)<br>	<br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;函数代码完成&quot;</span>)<br>	<br>gl_num = 99<br>gl_list = [4, 5, 6]<br>demo(gl_num, gl_list)<br><span class="hljs-built_in">print</span>(gl_num)<br><span class="hljs-built_in">print</span>(gl_list)<br>	<br></code></pre></td></tr></table></figure>
+
+<p><strong>问题2：</strong>如果传递的参数是可变类型，在函数内部，使用方法修改了数据的内容，同样会影响到外部的数据</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss">def <span class="hljs-built_in">mutable</span>(num_list):<br>	# num_list = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>	num_list.<span class="hljs-built_in">extend</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br>	<br>	<span class="hljs-built_in">print</span>(num_list)<br>	<br>gl_list = [<span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>]<br><span class="hljs-built_in">mutable</span>(gl_list)<br><span class="hljs-built_in">print</span>(gl_list)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在python中，列表变量调用+&#x3D;本质上实在执行列表变量的extend方法，不会修改变量的引用</li>
+</ul>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs maxima">def <span class="hljs-built_in">demo</span>(<span class="hljs-built_in">num</span>, num_list):<br><br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;函数内部代码&quot;</span>)<br>	<br>	# <span class="hljs-built_in">num</span> = <span class="hljs-built_in">num</span> + <span class="hljs-built_in">num</span><br>	<span class="hljs-built_in">num</span> += <span class="hljs-built_in">num</span><br>	# num_list.extend(num_list)由于是调用方法，使用不会修改变量的引用<br>	# 函数执行结束后， 外部数据同样会发生变化<br>	num_list += num_list<br>	<br>	<span class="hljs-built_in">print</span>(<span class="hljs-built_in">num</span>)<br>	<span class="hljs-built_in">print</span>(num_list)<br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;函数代码完成&quot;</span>)<br>	<br>gl_num = <span class="hljs-number">9</span><br>gl_list = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><span class="hljs-built_in">demo</span>(gl_num, gl_list)<br><span class="hljs-built_in">print</span>(gl_num)<br><span class="hljs-built_in">print</span>(gl_list)<br></code></pre></td></tr></table></figure>
+
+<p><strong>3.2 缺省参数</strong></p>
+<ul>
+<li>定义函数时，可以给某个参数指定一个默认值，具有默认值的参数就叫做缺省参数</li>
+<li>调用函数时，如果没有传入缺省参数的值，则在函数内部使用定义函数时指定的参数默认值</li>
+<li>函数的缺省参数，将常见的值设置为参数的缺省值，从而简化函数的调用</li>
+<li>例如：对列表排序的方法</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">gl_num_list = [6, 3, 9]<br><br><span class="hljs-comment"># 默认就是升序排序，因为这种应用需求更多</span><br>gl_num_list.sort()<br><span class="hljs-built_in">print</span>(gl_num_list)<br><br><span class="hljs-comment"># 只有当需要降序排序时，才需要传递&quot;reverse&quot;参数</span><br>gl_num_list.sort(<span class="hljs-attribute">reverse</span>=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(gl_num_list)<br></code></pre></td></tr></table></figure>
+
+<p><strong>指定函数的缺省参数</strong></p>
+<ul>
+<li>在参数后使用赋值语句，可以指定参数的缺省值</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">def print_info(name, <span class="hljs-attribute">gender</span>=<span class="hljs-literal">True</span>):<br><br>	gender_text = <span class="hljs-string">&quot;男生&quot;</span><br>	<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> gender:<br>		gender_text = <span class="hljs-string">&quot;女生&quot;</span><br>	<br>	<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;%s 是 %s&quot;</span> % (name, gender_text))<br></code></pre></td></tr></table></figure>
+
+<p>ps:</p>
+<ol>
+<li>缺省参数，需要使用最常见的值作为默认值！</li>
+<li>如果一个参数的值布恩那个确定，则不应该设置默认值，具体的数值在调用函数时，由外界传递</li>
+</ol>
+<p><strong>缺省参数的注意事项</strong></p>
+<p>1）缺省参数的定义位置</p>
+<ul>
+<li>必须保证带有默认值的缺省参数在参数列表末尾</li>
+<li>所以，一下定义是错误的！</li>
+</ul>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">def print<span class="hljs-constructor">_info(<span class="hljs-params">name</span>, <span class="hljs-params">gender</span>=True, <span class="hljs-params">title</span>)</span>:<br></code></pre></td></tr></table></figure>
+
+<p>2)调用带有多个缺省参数的函数</p>
+<ul>
+<li>在调用函数时，如果有多个缺省参数，需要指定参数名，这样解释器才能够知道参数的对应关系！</li>
+</ul>
+<p><strong>3.3 多值参数</strong></p>
+<p><strong>定义支持多值参数的参数</strong></p>
+<ul>
+<li>有时可能需要一个函数能够处理的参数 个数 是不确定的，这个时候，就可以使用多值参数</li>
+<li>python 中有两种多值参数：<ul>
+<li>参数名前面增加一个 * 可以接收元组</li>
+<li>参数名前面增加两个 * 可以接收字典</li>
+</ul>
+</li>
+<li>一般在给多值参数命名时，习惯使用以下两个名字<ul>
+<li>*args ——存放 元组参数，前面有一个 * </li>
+<li>*<em>kwargs —— 存放 字典 参数，前面有两个</em></li>
+</ul>
+</li>
+<li>args 是 arguments 的缩写，有变量的含义</li>
+<li>kw 是 keyword的缩写，kwargs 可以记忆键值对参数</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros">def demo(num, <span class="hljs-number">*a</span>rgs, **kwargs):<br>	<br>	<span class="hljs-built_in">print</span>(num)<br>	<span class="hljs-built_in">print</span>(args)<br>	<span class="hljs-built_in">print</span>(kwargs)<br>	<br>demo(1, 2, 3, 4, 5, <span class="hljs-attribute">name</span>=<span class="hljs-string">&quot;小明&quot;</span>, <span class="hljs-attribute">age</span>=18, <span class="hljs-attribute">gender</span>=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+
+<p>提示：多指参数的应用会经常出现在网络上一些大牛开发的框架中，知道多指参数，有利于我们能够读懂大牛的代码</p>
+<p><strong>多值参数案例——计算任意多个数字的和</strong></p>
+<p><strong>需求</strong></p>
+<ol>
+<li>定义一个函数sum_numbers,可以接收的任意多个整数</li>
+<li>功能要求：将传递的所有数字累加并返回累加结果</li>
+</ol>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs maxima">def sum_numbers(*<span class="hljs-built_in">args</span>):<br>	<br>	<span class="hljs-built_in">num</span> = <span class="hljs-number">0</span><br>	# 遍历<span class="hljs-built_in">args</span>元组顺序求和<br>	<span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> <span class="hljs-built_in">args</span>:<br>		<span class="hljs-built_in">num</span> += n<br>		<br>	<span class="hljs-built_in">return</span> <span class="hljs-built_in">num</span><br>	<br><span class="hljs-built_in">print</span>(sum_numbers(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br></code></pre></td></tr></table></figure>
+
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
