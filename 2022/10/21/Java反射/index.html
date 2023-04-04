@@ -19,20 +19,20 @@
     <meta name="description" content="反射类的加载概述和分类1.类加载的概述当程序要使用某个类时，如果该类还未被加载到内存中，则系统会通过加载，链接，初始化三步来实现对这个类进行初始化。 加载 就是指class文件读入内存，并且为之创建一个Class对象。任何类被使用时系统都会建立一个class对象。 链接 验证 是否有正确的内部结构，并和其它类协调一致。 准备 负责为类的静态成员分配内村，并设置默认初始化值。 解析 酱类的二进制数据">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java反射与XML&amp;JSON">
-<meta property="og:url" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/index.html">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="反射类的加载概述和分类1.类加载的概述当程序要使用某个类时，如果该类还未被加载到内存中，则系统会通过加载，链接，初始化三步来实现对这个类进行初始化。 加载 就是指class文件读入内存，并且为之创建一个Class对象。任何类被使用时系统都会建立一个class对象。 链接 验证 是否有正确的内部结构，并和其它类协调一致。 准备 负责为类的静态成员分配内村，并设置默认初始化值。 解析 酱类的二进制数据">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png">
-<meta property="og:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE7903b6f0673f48b511e7f09f5aa7aab0.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png">
+<meta property="og:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84/WEBRESOURCE7903b6f0673f48b511e7f09f5aa7aab0.png">
 <meta property="article:published_time" content="2022-10-21T02:47:31.000Z">
-<meta property="article:modified_time" content="2022-10-27T07:27:48.000Z">
+<meta property="article:modified_time" content="2023-04-04T10:58:12.356Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="反射">
 <meta property="article:tag" content="XML">
 <meta property="article:tag" content="JSON">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png">
+<meta name="twitter:image" content="https://kblayt.github.io/2022/10/21/Java%E5%8F%8D%E5%B0%84/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png">
   
   
   
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          1.7k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          18 分钟
+          14 分钟
         
       </span>
     
@@ -313,40 +313,14 @@
 <h4 id="三种方式"><a href="#三种方式" class="headerlink" title="三种方式"></a>三种方式</h4><p>1.Object类的getClass()方法，判断两个对象是否时同一个字节码文件</p>
 <p>2.静态属性class，锁对象</p>
 <p>3.Class类中静态方法forName(),读取配置文件</p>
-<p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84%E4%B8%8EXML-Json/WEBRESOURCE7903b6f0673f48b511e7f09f5aa7aab0.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84/WEBRESOURCE59d8c4c388d4fa76527dcf6a69038ba1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2022/10/21/Java%E5%8F%8D%E5%B0%84/WEBRESOURCE7903b6f0673f48b511e7f09f5aa7aab0.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="通过反射获取带参构造方法并使用"><a href="#通过反射获取带参构造方法并使用" class="headerlink" title="通过反射获取带参构造方法并使用"></a>通过反射获取带参构造方法并使用</h4><p>Constructor</p>
 <p>Class类的newInstance()方法是使用该无参的构造函数创建对象，如果一个类没有无参的构造函数，就不能这样创建了，可以调用Class类的getConstructor（String.class,int.class）方法获取一个指定的构造函数然后再调用Constructor类的newInstance(“张三”，20)方法创建对象</p>
 <h4 id="通过反射获取成员变量并使用"><a href="#通过反射获取成员变量并使用" class="headerlink" title="通过反射获取成员变量并使用"></a>通过反射获取成员变量并使用</h4><p>Field</p>
 <p>Class.getField(String)方法可以获取类中的指定字段(可见的)，如果时私有的可以用getDeclaedField(“name”)方法获取，通过set(obj，”李四”)方法可以设置指定对象上该字段的值，如果是私有的需要先调用setAccessible(true)设置访问权限，用获取的指定的字段调用get(obj)可以获取指定对象中该字段的值</p>
 <h4 id="通过反射获取方法并使用"><a href="#通过反射获取方法并使用" class="headerlink" title="通过反射获取方法并使用"></a>通过反射获取方法并使用</h4><p>Method</p>
 <p>Class.getMethod(String，Class…)和Class.getDeclareMethod(String,Class…)方法可以获取类中的指定方法，调用invoke(object，object…)可以调用该法ing发，Class.getMethod(”eat“)invoke(obj)Class.getMethod(“eat”，int.class)invoke(obj,10)</p>
-<h1 id="XML-amp-JSON"><a href="#XML-amp-JSON" class="headerlink" title="XML&amp;JSON"></a>XML&amp;JSON</h1><h2 id="XML（EXtensible-Markup-Language）"><a href="#XML（EXtensible-Markup-Language）" class="headerlink" title="XML（EXtensible Markup Language）"></a>XML（EXtensible Markup Language）</h2><p>可扩展标记语言</p>
-<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>与操作系统、编程语言的开发平台无关</p>
-<p>实现不同系统之间的数据交换</p>
-<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><p>数据交互</p>
-<p>配置应用程序和网站</p>
-<p>Ajax基石</p>
-<h4 id="XML文档内容由一系列标签元素组成"><a href="#XML文档内容由一系列标签元素组成" class="headerlink" title="XML文档内容由一系列标签元素组成"></a>XML文档内容由一系列标签元素组成</h4><p>&lt;元素名 属性名&#x3D;”属性值“&gt;元素内容&lt;&#x2F;元素名&gt;</p>
-<p>xml命名空间的作用</p>
-<h4 id="解析XML技术"><a href="#解析XML技术" class="headerlink" title="解析XML技术"></a>解析XML技术</h4><p>DOM</p>
-<p>基于XML文档树结构的解析</p>
-<p>适用于多次访问的XML文档</p>
-<p>特点：速度快，比较消耗资源</p>
-<p>SAX</p>
-<p>基于事件的解析</p>
-<p>适用于大数据量的XML文档</p>
-<p>特点：占用资源少，内存消耗小</p>
-<p>DOM4J（主流）</p>
-<p>非常优秀的Java XML API</p>
-<p>性能优异、功能强大</p>
-<p>开放源代码</p>
-<p>DOM解析XML文件步骤</p>
-<h2 id="JSON-JavaScript-Object-Notation"><a href="#JSON-JavaScript-Object-Notation" class="headerlink" title="JSON(JavaScript Object Notation)"></a>JSON(JavaScript Object Notation)</h2><p>轻量级的文本数据交换格式</p>
-<p>具有自我描述性</p>
-<p>比XML传输速度快</p>
-<p>阿里开源JSON解析框架</p>
-<p>FastJSON</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
@@ -404,7 +378,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Java反射与XML&amp;JSON</div>
-      <div>https://kblayt.github.io/2022/10/21/Java反射与XML-Json/</div>
+      <div>https://kblayt.github.io/2022/10/21/Java反射/</div>
     </div>
     <div class="license-meta">
       
