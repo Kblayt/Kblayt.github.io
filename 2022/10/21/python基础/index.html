@@ -30,8 +30,13 @@
 <meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230328132003869.png">
 <meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230328192440145.png">
 <meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230401103925673.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230404191843224.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230404194416886.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230407185607587.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230407190504525.png">
+<meta property="og:image" content="https://kblayt.github.io/python%E5%9F%BA%E7%A1%80/image-20230408104141174.png">
 <meta property="article:published_time" content="2022-10-21T08:38:52.000Z">
-<meta property="article:modified_time" content="2023-04-03T08:26:12.559Z">
+<meta property="article:modified_time" content="2023-04-08T02:53:42.812Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="Python基础">
@@ -228,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          19k 字
+          21k 字
         
       </span>
     
@@ -239,7 +244,7 @@
         
         
         
-          160 分钟
+          176 分钟
         
       </span>
     
@@ -1703,6 +1708,170 @@
 </blockquote>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Cat</span>:<br><br>	<span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"><span class="hljs-variable language_">self</span>, new_name</span>):<br>	<br>		<span class="hljs-variable language_">self</span>.name = new_name<br>		<br>		print(<span class="hljs-string">&quot;%s 来了&quot;</span> % <span class="hljs-variable language_">self</span>.name)<br>		<br>	<span class="hljs-keyword">def</span> <span class="hljs-title function_">__del__</span>(<span class="hljs-params"><span class="hljs-variable language_">self</span></span>):<br>	<br>		print(<span class="hljs-string">&quot;%s 去了&quot;</span> % <span class="hljs-variable language_">self</span>.name)<br>		<br>	<span class="hljs-keyword">def</span> <span class="hljs-title function_">__str__</span>(<span class="hljs-params"><span class="hljs-variable language_">self</span></span>):<br>		<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;我是小猫: %s&quot;</span> % <span class="hljs-variable language_">self</span>.name<br>		<br>tom = Cat(<span class="hljs-string">&quot;Tom&quot;</span>)<br>print(tom)<br></code></pre></td></tr></table></figure>
 
+<h1 id="面向对象封装案列"><a href="#面向对象封装案列" class="headerlink" title="面向对象封装案列"></a>面向对象封装案列</h1><p><strong>目标</strong></p>
+<ul>
+<li>封装</li>
+<li>小明爱跑步</li>
+<li>存放家具</li>
+</ul>
+<h2 id="01-封装"><a href="#01-封装" class="headerlink" title="01.封装"></a>01.封装</h2><ol>
+<li>封装是面向对象编程的一大特点</li>
+<li>面向对象编程的第一步——将属性和方法封装到一个抽象的类中</li>
+<li>外接使用类创建对象，然后让对象调用方法</li>
+<li>对象方法的细节，被封装在类的内部</li>
+</ol>
+<h2 id="02-小明爱跑步"><a href="#02-小明爱跑步" class="headerlink" title="02.小明爱跑步"></a>02.小明爱跑步</h2><p><strong>需求</strong></p>
+<ol>
+<li>小明体重75公斤</li>
+<li>小明每次跑步会减肥0.5kg</li>
+<li>小明每次吃东西体重增加1kg</li>
+</ol>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230404191843224.png" srcset="/img/loading.gif" lazyload alt="image-20230404191843224"></p>
+<h2 id="03-摆放家具"><a href="#03-摆放家具" class="headerlink" title="03.摆放家具"></a>03.摆放家具</h2><p><strong>需求</strong></p>
+<ol>
+<li>房子（House）有 户型、总面积 和 家具名称列表<ul>
+<li>新房子没有任何家具</li>
+</ul>
+</li>
+<li>家具（HousrItem）有名字 和占地面积<ul>
+<li>席梦思（bed）占地4平米</li>
+<li>衣柜（chest）占地2平米</li>
+<li>餐桌（table）占地1.5平米</li>
+</ul>
+</li>
+<li>将以上三件家具添加到房子中</li>
+<li>打印房子时，要求输出：户型、总面积、剩余面积、家具名称列表</li>
+</ol>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230404194416886.png" srcset="/img/loading.gif" lazyload alt="image-20230404194416886"></p>
+<p><strong>剩余面积</strong></p>
+<ol>
+<li>在创建房子对象时，定义一个剩余面积的属性，初始值和总面积相等</li>
+<li>当调用add_item方法，向房间添加家具时，让 剩余面积 -&#x3D; 家具面积</li>
+</ol>
+<p>思考：应该先开发哪一个类？</p>
+<p>答案——家具类</p>
+<ol>
+<li>家具简单</li>
+<li>房子要使用到家具，被使用的类通常应该先开发</li>
+</ol>
+<p><strong>小结</strong></p>
+<ol>
+<li>创建了一个房子类，使用到__init__ 和 __str__两个内置方法</li>
+<li>准备了一个 add_item 方法 准备添加家具</li>
+<li>使用房子类 创建了 一个房子对象</li>
+<li>让房子对象调用了三次 add_item方法，将 三件家具 以实参船吊 add_item内部</li>
+</ol>
+<p><strong>添加家具：</strong></p>
+<p><strong>需求</strong></p>
+<ul>
+<li>判断 家具的面积 是否 超过剩余面积，如果超过，提示不能添加这件家具</li>
+<li>将 家具的名称追加到家具名称列表中</li>
+<li>用 房子的剩余面积 - 家具面积</li>
+</ul>
+<h1 id="私有属性和私有方法"><a href="#私有属性和私有方法" class="headerlink" title="私有属性和私有方法"></a>私有属性和私有方法</h1><h2 id="01-应用场景及定义方式"><a href="#01-应用场景及定义方式" class="headerlink" title="01.应用场景及定义方式"></a>01.应用场景及定义方式</h2><p><strong>应用场景</strong></p>
+<ul>
+<li>在实际开发中，对象的某些属性或方法可能只希望在对象的内部被使用，而不希望在外部被访问到</li>
+<li>私有属性就是对象不希望公开的属性</li>
+<li>私有方法就是对象不希望公开的方法</li>
+</ul>
+<p><strong>定义方式</strong></p>
+<ul>
+<li>在定义属性或方法时，在属性名或者方法名前增加两个下划线，定义的就是私有属性或方法</li>
+</ul>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230407185607587.png" srcset="/img/loading.gif" lazyload alt="image-20230407185607587"></p>
+<h2 id="02-伪私有属性和私有方法（科普）"><a href="#02-伪私有属性和私有方法（科普）" class="headerlink" title="02.伪私有属性和私有方法（科普）"></a>02.伪私有属性和私有方法（科普）</h2><blockquote>
+<p>ps：在日常开发中，不要使用这种方式，访问对象的私有属性或私有方法</p>
+</blockquote>
+<p>Python中，并没有真正意义的私有</p>
+<ul>
+<li>在给属性、方法命名时，实际是对名称做了一些特殊处理，使得外界无法访问到</li>
+<li>处理方式：在 名称 前面加上 _类名 &#x3D;&gt; _类名__名称</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 私有属性，外部不能直接访问到</span><br><span class="hljs-built_in">print</span>(xiaofang._Women__age)<br><br><span class="hljs-comment"># 私有方法，外部不能直接调用</span><br>xiaofang._Women__secret()<br></code></pre></td></tr></table></figure>
+
+<h1 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h1><p><strong>目标</strong></p>
+<ul>
+<li>单继承</li>
+<li>多继承</li>
+</ul>
+<p><strong>面向对象三大特征</strong>：封装、继承、多态</p>
+<h2 id="01-单继承"><a href="#01-单继承" class="headerlink" title="01.单继承"></a>01.单继承</h2><h3 id="1-1-继承的概念、语法和特点"><a href="#1-1-继承的概念、语法和特点" class="headerlink" title="1.1 继承的概念、语法和特点"></a>1.1 继承的概念、语法和特点</h3><p><strong>继承的概念</strong>：子类 拥有 父类的所有方法和属性</p>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230407190504525.png" srcset="/img/loading.gif" lazyload alt="image-20230407190504525"></p>
+<p>1）<strong>继承的语法</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">class</span> 类名(父类名)：<br><br>	<span class="hljs-symbol">pass</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>子类 继承自 父类，可以直接享受 父类中已经封装好的方法，不需要再次开发</li>
+<li>子类 中应该根据 职责，封装子类特有的属性和方法</li>
+</ul>
+<p>2）<strong>专业术语</strong></p>
+<ul>
+<li>Dog 类是 Animal 类的子类，Animal类是 Dog 类的父类，Dog 类从 Animal 类继承</li>
+<li>Dog 类是 Animal的派生类，Animal类是Dog类的基类，Dog类从Animal类派生</li>
+</ul>
+<p>3）<strong>继承的传递性</strong></p>
+<ul>
+<li>C 类从 B类继承，B类又从A类继承</li>
+<li>那么 C 类就具有B类和A类的所有属性和方法</li>
+</ul>
+<p>子类拥有父类以及父类的父类中封装的所有属性和方法</p>
+<h3 id="1-2方法的重写"><a href="#1-2方法的重写" class="headerlink" title="1.2方法的重写"></a>1.2方法的重写</h3><ul>
+<li>子类 拥有父类的所有方法和属性</li>
+<li>子类 继承自父类，可以直接享受父类中硬件封装好的方法，不需要再次开发</li>
+</ul>
+<p><strong>应用场景</strong></p>
+<ul>
+<li>当 父类 的方法实现不能满足子类需求时，可以对方法进行 重写(override)</li>
+</ul>
+<p><img src="/python%E5%9F%BA%E7%A1%80/image-20230408104141174.png" srcset="/img/loading.gif" lazyload alt="image-20230408104141174"></p>
+<p><strong>重写</strong> 父类方法有两种情况：</p>
+<ol>
+<li><strong>覆盖</strong> 父类的方法</li>
+<li>对父类方法进行 <strong>扩展</strong></li>
+</ol>
+<p>1）<strong>覆盖父类的方法</strong></p>
+<ul>
+<li>如果在开发中，父类的方法实现和子类的方法实现，完全不同</li>
+<li>就可以使用 覆盖的方式，在子类中重新编写父类的方法实现</li>
+</ul>
+<blockquote>
+<p>具体的实现方式，就相当于在子类中 定义了一个 和 父类同名的方法并且实现</p>
+</blockquote>
+<p>重写之后，在运行时，只会调用子类中重写的方法，而不再会调用父类封装的方法</p>
+<p>2）<strong>对父类方法进行扩展</strong></p>
+<ul>
+<li>如果在开发中，子类的方法实现中包含父类方法实现<ul>
+<li>父类原本封装的方法实现是子类方法的一部分</li>
+</ul>
+</li>
+<li>就可以使用扩展的方式<ol>
+<li>在子类中 重写父类的方法</li>
+<li>在需要的位置使用super().父类方法 来调用父类方法的执行</li>
+<li>代码其他的位置针对子类的需求，编写子类特有的代码实现</li>
+</ol>
+</li>
+</ul>
+<p>关于super</p>
+<ul>
+<li>在Python中super是一个特殊的类</li>
+<li>super()就是使用super类创建出来的对象</li>
+<li>最常 使用的场景就是在 重写父类方法时，调用在父类中封装的方法实现</li>
+</ul>
+<p><strong>调用父类方法的另外一种方式（不推荐使用）</strong></p>
+<blockquote>
+<p>在Python 2.x时，如果需要调用父类的方法，还可以使用以下方式</p>
+</blockquote>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crystal">父类名.方法(<span class="hljs-keyword">self</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>这种方式，目前在Python 3.x还支持这种方式</li>
+<li>这种方法不推荐使用，因为一旦父类发生变化，方法调用位置的类名同样需要求改</li>
+</ul>
+<p><strong>提示</strong></p>
+<ul>
+<li>在开发时，父类名 和 super()两种方式不要混用</li>
+<li>如果使用当前子类名调用方法，会形成递归调用，出现死循环</li>
+</ul>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
