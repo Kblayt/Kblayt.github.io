@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="概JDK8 Stream详解概念  Stream是Java8 API的新成员，它允许以声明性方式处理数据集合 。 特点  （1）代码简洁：函数式编程写出的代码简洁且意图明确，使用stream接口让你从此告别for循环。（2）多核友好：Java函数式编程使得编写并行程序从未如此简单，你需要的全部就是调用一下方法。 流程12341）第一步：把集合转换为流stream2）第二步：操作stream流str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8新特性之Stream流的集合操作">
+<meta property="og:url" content="https://kblayt.github.io/2022/10/21/Java/Java8%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8BStream%E6%B5%81%E7%9A%84%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概JDK8 Stream详解概念  Stream是Java8 API的新成员，它允许以声明性方式处理数据集合 。 特点  （1）代码简洁：函数式编程写出的代码简洁且意图明确，使用stream接口让你从此告别for循环。（2）多核友好：Java函数式编程使得编写并行程序从未如此简单，你需要的全部就是调用一下方法。 流程12341）第一步：把集合转换为流stream2）第二步：操作stream流str">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-21T01:46:33.000Z">
+<meta property="article:modified_time" content="2023-05-31T02:48:49.350Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="Java8新特性">
+<meta property="article:tag" content="Stream流代替for循环">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Java8新特性之Stream流的集合操作 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java8新特性之Stream流的集合操作"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-21 09:46" pubdate>
+          2022年10月21日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          104 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Java8新特性之Stream流的集合操作</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="概JDK8-Stream详解"><a href="#概JDK8-Stream详解" class="headerlink" title="概JDK8 Stream详解"></a>概JDK8 Stream详解</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><blockquote>
+</blockquote>
+<p>Stream是Java8 API的新成员，它允许以声明性方式处理数据集合 。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><blockquote>
+</blockquote>
+<p>（1）代码简洁：函数式编程写出的代码简洁且意图明确，使用stream接口让你从此告别for循环。<br>（2）多核友好：Java函数式编程使得编写并行程序从未如此简单，你需要的全部就是调用一下方法。</p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs glsl"><span class="hljs-number">1</span>）第一步：把集合转换为流<span class="hljs-keyword">stream</span><br><span class="hljs-number">2</span>）第二步：操作<span class="hljs-keyword">stream</span>流<br><span class="hljs-keyword">stream</span>流在管道中经过中间操作（intermediate operation）的处理，最后由最终操作(terminal operation)得到前面处理的结果<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h2><blockquote>
+</blockquote>
+<p>两种：中间操作符、终止操作符</p>
+<h3 id="中间操作符"><a href="#中间操作符" class="headerlink" title="中间操作符"></a>中间操作符</h3><table>
+<thead>
+<tr>
+<th>流方法</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>filter</td>
+<td>用于通过设置的条件过滤出元素</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “”, “bc”, “efg”, “abcd”,””, “jkl”);List&lt;String&gt; filtered &#x3D; strings.stream().filter(string -&gt; !string.isEmpty()).collect(Collectors.toList());</td>
+</tr>
+<tr>
+<td>distinct</td>
+<td>返回一个元素各异（根据流所生成元素的hashCode和equals方法实现）的流。</td>
+<td>List&lt;Integer&gt; numbers &#x3D; Arrays.asList(1, 2, 1, 3, 3, 2, 4);numbers.stream().filter(i -&gt; i % 2 &#x3D;&#x3D; 0).distinct().forEach(System.out::println);</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>会返回一个不超过给定长度的流。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abc”, “bc”, “efg”, “abcd”,”jkl”, “jkl”);List&lt;String&gt; limited &#x3D; strings.stream().limit(3).collect(Collectors.toList());</td>
+</tr>
+<tr>
+<td>skip</td>
+<td>返回一个扔掉了前n个元素的流。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abc”, “bc”, “efg”, “abcd”,”jkl”, “jkl”);List&lt;String&gt; skiped &#x3D; strings.stream().skip(3).collect(Collectors.toList());</td>
+</tr>
+<tr>
+<td>map</td>
+<td>接受一个函数作为参数。这个函数会被应用到每个元素上，并将其映射成一个新的元素（使用映射一词，是因为它和转换类似，但其中的细微差别在于它是&quot;创建一个新版本”而不是去&quot;修改”）。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abc”, “bc”, “efg”, “abcd”,”jkl”, “jkl”);List&lt;String&gt; mapped &#x3D; strings.stream().map(str-&gt;str+”-itcast”).collect(Collectors.toList());</td>
+</tr>
+<tr>
+<td>flatMap</td>
+<td>使用flatMap方法的效果是，各个数组并不是分别映射成一个流，而是映射成流的内容。所有使用map(Arrays::stream)时生成的单个流都被合并起来，即扁平化为一个流。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abc”, “bc”, “efg”, “abcd”,”jkl”, “jkl”);Stream&lt;Character&gt; flatMap &#x3D; strings.stream().flatMap(Java8StreamTest::getCharacterByString);</td>
+</tr>
+<tr>
+<td>sorted</td>
+<td>返回排序后的流</td>
+<td>List&lt;String&gt; strings1 &#x3D; Arrays.asList(“abc”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);List&lt;String&gt; sorted1 &#x3D; strings1.stream().sorted().collect(Collectors.toList());</td>
+</tr>
+</tbody></table>
+<blockquote>
+</blockquote>
+<p>示例代码：<br>1）filter</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述:根据条件过滤集合数据<br>* @return : void<br>*/<br>  @Test<br>  public void filter()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; filtered = strings.stream().filter(string -&gt; !string.isEmpty()).collect(Collectors.toList());<br>  out.println(filtered);<br>  &#125;<br></code></pre></td></tr></table></figure>
+<p>2）distinct</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述:去除集合中重复数据<br>* @return : void<br>*/<br>  @Test<br>  public void distinct()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abc&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; distincted = strings.stream().distinct().collect(Collectors.toList());<br>  out.println(distincted);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>3）limit</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述:指定获取集合前x条数据，重新构造一个新的集合<br>* @return : void<br>*/<br>  @Test<br>  public void limit()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abc&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; limited = strings.stream().limit(3).collect(Collectors.toList());<br>  out.println(limited);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>4）skip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述:排除集合前x条数据，把后面的数据重新构造一个新的集合<br>* @return : void<br>*/<br>  @Test<br>  public void skip()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abc&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; skiped = strings.stream().skip(3).collect(Collectors.toList());<br>  out.println(skiped);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>5）map</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">    /**<br>    * 功能描述:对集合中所有元素统一处理<br>* @return : void<br>  */<br>  @Test<br>  public void map()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abc&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; mapped = strings.stream().map(str-&gt;str+&quot;-itcast&quot;).collect(Collectors.toList());<br>  out.println(mapped);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>6）flatMap</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述:对集合中所有元素统一处理<br>* @return : void<br>*/<br>  @Test<br>  public void flatMap()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abc&quot;, &quot;bc&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  Stream&lt;String&gt; stringStream = strings.stream().map(x -&gt; x);<br>  Stream&lt;String&gt; stringStream1 = strings.stream().flatMap(x -&gt; Arrays.asList(x.split(&quot; &quot;)).stream());<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>7）sorted</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 对集合进行排序<br>* @return : void<br>*/<br>  @Test<br>  public void sorted()&#123;<br>  List&lt;String&gt; strings1 = Arrays.asList(&quot;abc&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  List&lt;String&gt; strings2 = Arrays.asList(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;, &quot;赵柳&quot;, &quot;张哥&quot;,&quot;李哥&quot;, &quot;王哥&quot;);<br>  List&lt;Integer&gt; strings3 = Arrays.asList(10, 2, 30, 22, 1,0, -9);<br>  List&lt;String&gt; sorted1 = strings1.stream().sorted().collect(Collectors.toList());<br>  List&lt;String&gt; sorted2 = strings2.stream().sorted(Collections.reverseOrder(Collator.getInstance(Locale.CHINA))).collect(Collectors.toList());<br>  List&lt;Integer&gt; sorted3 = strings3.stream().sorted().collect(Collectors.toList());<br>  out.println(sorted1);<br>  out.println(sorted2);<br>  out.println(sorted3);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>Map、flatMap区别</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-built_in">map</span>：对流中每一个元素进行处理<br>flatMap：流扁平化，让你把一个流中的“每个值”都换成另一个流，然后把所有的流连接起来成为一个流 <br>总结：<span class="hljs-built_in">map</span>是对一级元素进行操作，flatmap是对二级元素操作。<br><br></code></pre></td></tr></table></figure>
+
+<p>本质区别：map返回一个值；flatmap返回一个流，多个值。</p>
+<p>应用场景：map对集合中每个元素加工,返回加工后结果；flatmap对集合中每个元素加工后，做扁平化处理后（拆分层级，放到同一层）然后返回</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 方法一</span><br><span class="hljs-comment"> * 功能描述:  通过使用map、flatMap把字符串转换为字符输出对比区别</span><br><span class="hljs-comment"> * @return : void</span><br><span class="hljs-comment"> */</span><br>@Test<br>public void flat<span class="hljs-constructor">Map2Map()</span>&#123;<br>    List&lt;String&gt; strings = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">as</span><span class="hljs-constructor">List(<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&quot;bc&quot;</span>, <span class="hljs-string">&quot;efg&quot;</span>, <span class="hljs-string">&quot;abcd&quot;</span>,<span class="hljs-string">&quot;jkl&quot;</span>, <span class="hljs-string">&quot;jkl&quot;</span>)</span>;<br>    final Stream&lt;Character&gt; flatMap = strings.stream<span class="hljs-literal">()</span>.flat<span class="hljs-constructor">Map(Java8StreamTest::<span class="hljs-params">getCharacterByString</span>)</span>;<br>    flatMap.<span class="hljs-keyword">for</span><span class="hljs-constructor">Each(System.<span class="hljs-params">out</span>::<span class="hljs-params">println</span>)</span>;<br>    <span class="hljs-comment">//----------------------------------------------</span><br>    final Stream&lt;Stream&lt;Character&gt;&gt; mapStream = strings.stream<span class="hljs-literal">()</span>.map(Java8StreamTest::getCharacterByString);<br>    <span class="hljs-comment">//mapStream.forEach(System.out::println);</span><br>    out.println(<span class="hljs-string">&quot;------------------------------------------------&quot;</span>);<br>    mapStream.<span class="hljs-keyword">for</span><span class="hljs-constructor">Each(<span class="hljs-params">stream</span>-&gt; &#123;<span class="hljs-params">stream</span>.<span class="hljs-params">forEach</span>(<span class="hljs-params">character</span>-&gt;&#123;System.<span class="hljs-params">out</span>.<span class="hljs-params">println</span>(<span class="hljs-params">character</span>)</span>;&#125;);&#125;);<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+</blockquote>
+<p>公共方法（字符串转换为字符流）</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 功能描述:字符串转换为字符流</span><br><span class="hljs-comment">* @param str</span><br><span class="hljs-comment">* @return : java.util.stream.Stream&lt;java.lang.Character&gt;</span><br><span class="hljs-comment">*/</span><br><span class="hljs-built_in">public</span> static Stream&lt;<span class="hljs-type">Character</span>&gt; getCharacterByString(String str) &#123;<br>    List&lt;<span class="hljs-type">Character</span>&gt; characterList = <span class="hljs-built_in">new</span> ArrayList&lt;&gt;();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">Character</span> <span class="hljs-type">character</span> : str.toCharArray()) &#123;<br>    	characterList.<span class="hljs-keyword">add</span>(<span class="hljs-type">character</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> characterList.stream();<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="终止操作符"><a href="#终止操作符" class="headerlink" title="终止操作符"></a>终止操作符</h3><table>
+<thead>
+<tr>
+<th>流方法</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>anyMatch</td>
+<td>检查是否至少匹配一个元素，返回boolean。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);boolean b &#x3D; strings.stream().anyMatch(s -&gt; s &#x3D;&#x3D; “abc”);</td>
+</tr>
+<tr>
+<td>allMatch</td>
+<td>检查是否匹配所有元素，返回boolean。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);boolean b &#x3D; strings.stream().allMatch(s -&gt; s &#x3D;&#x3D; “abc”);</td>
+</tr>
+<tr>
+<td>noneMatch</td>
+<td>检查是否没有匹配所有元素，返回boolean。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“abc”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);boolean b &#x3D; strings.stream().noneMatch(s -&gt; s &#x3D;&#x3D; “abc”);</td>
+</tr>
+<tr>
+<td>findAny</td>
+<td>将返回当前流中的任意元素。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);Optional&lt;String&gt; any &#x3D; strings.stream().findAny();</td>
+</tr>
+<tr>
+<td>findFirst</td>
+<td>返回第一个元素</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);Optional&lt;String&gt; first &#x3D; strings.stream().findFirst();</td>
+</tr>
+<tr>
+<td>forEach</td>
+<td>遍历流</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);strings.stream().forEach(s -&gt; out.println(s));</td>
+</tr>
+<tr>
+<td>collect</td>
+<td>收集器，将流转换为其他形式。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);Set&lt;String&gt; set &#x3D; strings.stream().collect(Collectors.toSet());List&lt;String&gt; list &#x3D; strings.stream().collect(Collectors.toList());Map&lt;String, String&gt; map &#x3D; strings.stream().collect(Collectors.toMap(v -&gt;v.concat(“_name”), v1 -&gt; v1, (v1, v2) -&gt; v1));</td>
+</tr>
+<tr>
+<td>reduce</td>
+<td>可以将流中元素反复结合起来，得到一个值。使用 reduce((T, T) -&gt; T) 和 reduce(T, (T, T) -&gt; T) 用于组合流中的元素，如求和，求积，求最大值等。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);Optional&lt;String&gt; reduce &#x3D; strings.stream().reduce((acc,item) -&gt; {return acc+item;});if(reduce.isPresent())out.println(reduce.get());</td>
+</tr>
+<tr>
+<td>count</td>
+<td>返回流中元素总数。</td>
+<td>List&lt;String&gt; strings &#x3D; Arrays.asList(“cv”, “abd”, “aba”, “efg”, “abcd”,”jkl”, “jkl”);long count &#x3D; strings.stream().count();</td>
+</tr>
+</tbody></table>
+<blockquote>
+</blockquote>
+<p>示例代码<br>1）anyMatch</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 判断集合中是否至少存在一个元素满足条件<br>* @return : void<br>*/<br>  @Test<br>  public void anyMatch()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  boolean b = strings.stream().anyMatch(s -&gt; s == &quot;abc&quot;);<br>  out.println(b);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>2）allMatch</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 判断集合中是否所有元素都满足条件<br>* @return : void<br>*/<br>  @Test<br>  public void allMatch()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  boolean b = strings.stream().allMatch(s -&gt; s == &quot;abc&quot;);<br>  out.println(b);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>3）noneMatch</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 判断集合中是否所有元素都不满足条件<br>* @return : void<br>*/<br>  @Test<br>  public void noneMatch()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;abc&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  boolean b = strings.stream().noneMatch(s -&gt; s == &quot;abc&quot;);<br>  out.println(b);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>4）findAny</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 返回当前流中任意元素<br>* @return : void<br>*/<br>  @Test<br>  public void findAny()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;cv&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  Optional&lt;String&gt; any = strings.stream().findAny();<br>  if(any.isPresent()) out.println(any.get());<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>5）findFirst</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 返回当前流中第一个元素<br>* @return : void<br>*/<br>  @Test<br>  public void findFirst()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;cv&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  Optional&lt;String&gt; first = strings.stream().findFirst();<br>  if(first.isPresent()) out.println(first.get());<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>6）forEach java</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 遍历流<br>* @return : void<br>*/<br>  @Test<br>  public void foreach()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;cv&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  strings.stream().forEach(s -&gt; out.println(s));<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>7）collect</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 流转换为其他形式<br>* @return : void<br>*/<br>  @Test<br>  public void collect()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;cv&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  Set&lt;String&gt; set = strings.stream().collect(Collectors.toSet());<br>  List&lt;String&gt; list = strings.stream().collect(Collectors.toList());<br>  Map&lt;String, String&gt; map = strings.stream().collect(Collectors.toMap(v -&gt;v.concat(&quot;_name&quot;), v1 -&gt; v1, (v1, v2) -&gt; v1));<br>  out.println(set);<br>  out.println(list);<br>  out.println(map);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>8）reduce</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs angular2html">/**<br>* 功能描述 : 将流中元素反复结合起来，得到一个值<br>* @return : void<br>*/<br>  @Test<br>  public void reduce()&#123;<br>  List&lt;String&gt; strings = Arrays.asList(&quot;cv&quot;, &quot;abd&quot;, &quot;aba&quot;, &quot;efg&quot;, &quot;abcd&quot;,&quot;jkl&quot;, &quot;jkl&quot;);<br>  //reduce方法一<br>  Optional&lt;String&gt; reduce1 = strings.stream().reduce((acc,item) -&gt; &#123;return acc+item;&#125;);<br>  //reduce方法二<br>  String reduce2 = strings.stream().reduce(&quot;itcast&quot;, (acc, item) -&gt; &#123;<br>  return acc + item;<br>  &#125;);<br>  //reduce方法三<br>  ArrayList&lt;String&gt; reduce3 = strings.stream().reduce(<br>  new ArrayList&lt;String&gt;(),<br>  new BiFunction&lt;ArrayList&lt;String&gt;, String, ArrayList&lt;String&gt;&gt;() &#123;<br>  @Override<br>  public ArrayList&lt;String&gt; apply(ArrayList&lt;String&gt; acc, String item) &#123;<br>  acc.add(item);<br>  return acc;<br>  &#125;<br>  &#125;,<br>  new BinaryOperator&lt;ArrayList&lt;String&gt;&gt;() &#123;<br>  @Override<br>  public ArrayList&lt;String&gt; apply(ArrayList&lt;String&gt; acc, ArrayList&lt;String&gt; item) &#123;<br>  return acc;<br>  &#125;<br>  &#125;<br>  );<br>  if(reduce1.isPresent())out.println(reduce1.get());<br>  out.println(reduce2);<br>  out.println(reduce3);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>9）count</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* 功能描述 : 返回流中元素总数</span><br><span class="hljs-comment">* @return : void</span><br><span class="hljs-comment">*/</span><br>  @Test<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-keyword">count</span>()&#123;<br>  List&lt;String&gt; strings = Arrays.<span class="hljs-keyword">asList</span>(<span class="hljs-string">&quot;cv&quot;</span>, <span class="hljs-string">&quot;abd&quot;</span>, <span class="hljs-string">&quot;aba&quot;</span>, <span class="hljs-string">&quot;efg&quot;</span>, <span class="hljs-string">&quot;abcd&quot;</span>,<span class="hljs-string">&quot;jkl&quot;</span>, <span class="hljs-string">&quot;jkl&quot;</span>);<br>  <span class="hljs-keyword">long</span> <span class="hljs-keyword">count</span> = strings.stream().<span class="hljs-keyword">count</span>();<br>  out.<span class="hljs-keyword">println</span>(<span class="hljs-keyword">count</span>);<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意：文章中因排序部分用到外部比较器，需要导入外部jar包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--apache集合操作工具包--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.commons<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>commons-collections4<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.4<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+
+<h1 id="https-www-cnblogs-com-shoshana-kong-p-14406683-html"><a href="#https-www-cnblogs-com-shoshana-kong-p-14406683-html" class="headerlink" title="https://www.cnblogs.com/shoshana-kong/p/14406683.html"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shoshana-kong/p/14406683.html">https://www.cnblogs.com/shoshana-kong/p/14406683.html</a></h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java8%E6%96%B0%E7%89%B9%E6%80%A7/">#Java8新特性</a>
+      
+        <a href="/tags/Stream%E6%B5%81%E4%BB%A3%E6%9B%BFfor%E5%BE%AA%E7%8E%AF/">#Stream流代替for循环</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java8新特性之Stream流的集合操作</div>
+      <div>https://kblayt.github.io/2022/10/21/Java/Java8新特性之Stream流的集合操作/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/21/Java/Java%E9%AB%98%E7%BA%A7/" title="Java高级">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java高级</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/21/Java/IO%E6%B5%81%E3%80%81%E5%BA%8F%E5%88%97%E5%8C%96%E3%80%81%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="IO流、序列化、反序列化">
+                        <span class="hidden-mobile">IO流、序列化、反序列化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

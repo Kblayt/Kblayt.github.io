@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="了解需求在开发中，往往会遇到一些关于延时任务的需求。 例如  生成订单 30 分钟未支付，则自动取消 生成订单 60 秒后,给用户发短信  对上述的任务，我们给一个专业的名字来形容，那就是延时任务。那么这里就会产生一个问题，这个延时任务和定时任务的区别究竟在哪里呢？一共有如下几点区别 定时任务有明确的触发时间，延时任务没有 定时任务有执行周期，而延时任务在某事件触发后一段时间内执行，没有执行周期">
+<meta property="og:type" content="article">
+<meta property="og:title" content="定时任务分析">
+<meta property="og:url" content="https://kblayt.github.io/2023/03/11/%E4%B8%AD%E9%97%B4%E4%BB%B6/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="了解需求在开发中，往往会遇到一些关于延时任务的需求。 例如  生成订单 30 分钟未支付，则自动取消 生成订单 60 秒后,给用户发短信  对上述的任务，我们给一个专业的名字来形容，那就是延时任务。那么这里就会产生一个问题，这个延时任务和定时任务的区别究竟在哪里呢？一共有如下几点区别 定时任务有明确的触发时间，延时任务没有 定时任务有执行周期，而延时任务在某事件触发后一段时间内执行，没有执行周期">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/e63cf7f9fa0a4f5c84cf47cd50aa443etplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/507fc4e23c5649d4bd1cf4be7e53b791tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/6d279053962141eab843645ee02fc920tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/f6c7caa3148e47a3a194ac30c8ed47e0tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/6b767d8ffb5b4431ada4f31debc5942etplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/f2d1f7a9a66f404880201ffa365d7b56tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+<meta property="article:published_time" content="2023-03-11T07:35:06.000Z">
+<meta property="article:modified_time" content="2023-05-31T02:47:17.367Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="定时任务框架">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/e63cf7f9fa0a4f5c84cf47cd50aa443etplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp">
+  
+  
+  
+  <title>定时任务分析 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="定时任务分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-11 15:35" pubdate>
+          2023年3月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          99 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">定时任务分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="了解需求"><a href="#了解需求" class="headerlink" title="了解需求"></a>了解需求</h2><p>在开发中，往往会遇到一些关于延时任务的需求。</p>
+<p>例如</p>
+<ul>
+<li>生成订单 30 分钟未支付，则自动取消</li>
+<li>生成订单 60 秒后,给用户发短信</li>
+</ul>
+<p>对上述的任务，我们给一个专业的名字来形容，那就是延时任务。那么这里就会产生一个问题，这个延时任务和定时任务的区别究竟在哪里呢？一共有如下几点区别</p>
+<p>定时任务有明确的触发时间，延时任务没有</p>
+<p>定时任务有执行周期，而延时任务在某事件触发后一段时间内执行，没有执行周期</p>
+<p>定时任务一般执行的是批处理操作是多个任务，而延时任务一般是单个任务</p>
+<p>下面，我们以判断订单是否超时为例，进行方案分析</p>
+<h2 id="方案-1：数据库轮询"><a href="#方案-1：数据库轮询" class="headerlink" title="方案 1：数据库轮询"></a>方案 1：数据库轮询</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>该方案通常是在小型项目中使用，即通过一个线程定时的去扫描数据库，通过订单时间来判断是否有超时的订单，然后进行 update 或 delete 等操作</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>可以用 quartz 来实现的，简单介绍一下</p>
+<p>maven 项目引入一个依赖如下所示</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.quartz-scheduler<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>quartz<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>调用 Demo 类 MyJob 如下所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay1;<br><br><span class="hljs-keyword">import</span> org.quartz.*;<br><span class="hljs-keyword">import</span> org.quartz.impl.StdSchedulerFactory;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyJob</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Job</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">(JobExecutionContext context)</span> <span class="hljs-keyword">throws</span> JobExecutionException &#123;<br>        System.out.println(<span class="hljs-string">&quot;要去数据库扫描啦。。。&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-comment">// 创建任务</span><br>        <span class="hljs-type">JobDetail</span> <span class="hljs-variable">jobDetail</span> <span class="hljs-operator">=</span> JobBuilder.newJob(MyJob.class)<br>                .withIdentity(<span class="hljs-string">&quot;job1&quot;</span>, <span class="hljs-string">&quot;group1&quot;</span>).build();<br>        <span class="hljs-comment">// 创建触发器 每3秒钟执行一次</span><br>        <span class="hljs-type">Trigger</span> <span class="hljs-variable">trigger</span> <span class="hljs-operator">=</span> TriggerBuilder<br>                .newTrigger()<br>                .withIdentity(<span class="hljs-string">&quot;trigger1&quot;</span>, <span class="hljs-string">&quot;group3&quot;</span>)<br>                .withSchedule(<br>                        SimpleScheduleBuilder<br>                                .simpleSchedule()<br>                                .withIntervalInSeconds(<span class="hljs-number">3</span>).<br>                                repeatForever())<br>                .build();<br>        <span class="hljs-type">Scheduler</span> <span class="hljs-variable">scheduler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StdSchedulerFactory</span>().getScheduler();<br>        <span class="hljs-comment">// 将任务及其触发器放入调度器</span><br>        scheduler.scheduleJob(jobDetail, trigger);<br>        <span class="hljs-comment">// 调度器开始调度任务</span><br>        scheduler.start();<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>运行代码，可发现每隔 3 秒，输出如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">要去数据库扫描啦。。。<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>简单易行，支持集群操作</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>对服务器内存消耗大</li>
+<li>存在延迟，比如你每隔 3 分钟扫描一次，那最坏的延迟时间就是 3 分钟</li>
+<li>假设你的订单有几千万条，每隔几分钟这样扫描一次，数据库损耗极大</li>
+</ul>
+<h2 id="方案-2：JDK-的延迟队列"><a href="#方案-2：JDK-的延迟队列" class="headerlink" title="方案 2：JDK 的延迟队列"></a>方案 2：JDK 的延迟队列</h2><h3 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h3><p>该方案是利用 JDK 自带的 DelayQueue 来实现，这是一个无界阻塞队列，该队列只有在延迟期满的时候才能从中获取元素，放入 DelayQueue 中的对象，是必须实现 Delayed 接口的。</p>
+<p>DelayedQueue 实现工作流程如下图所示</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/e63cf7f9fa0a4f5c84cf47cd50aa443etplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>其中 Poll():获取并移除队列的超时元素，没有则返回空</p>
+<p>take():获取并移除队列的超时元素，如果没有则 wait 当前线程，直到有元素满足超时条件，返回结果。</p>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><p>定义一个类 OrderDelay 实现 Delayed，代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay2;<br><br><span class="hljs-keyword">import</span> java.util.concurrent.Delayed;<br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderDelay</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Delayed</span> &#123;<br><br>    <span class="hljs-keyword">private</span> String orderId;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">long</span> timeout;<br><br>    OrderDelay(String orderId, <span class="hljs-type">long</span> timeout) &#123;<br>        <span class="hljs-built_in">this</span>.orderId = orderId;<br>        <span class="hljs-built_in">this</span>.timeout = timeout + System.nanoTime();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">compareTo</span><span class="hljs-params">(Delayed other)</span> &#123;<br>        <span class="hljs-keyword">if</span> (other == <span class="hljs-built_in">this</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-type">OrderDelay</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> (OrderDelay) other;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">d</span> <span class="hljs-operator">=</span> (getDelay(TimeUnit.NANOSECONDS) - t.getDelay(TimeUnit.NANOSECONDS));<br>        <span class="hljs-keyword">return</span> (d == <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : ((d &lt; <span class="hljs-number">0</span>) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// 返回距离你自定义的超时时间还有多少</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">long</span> <span class="hljs-title function_">getDelay</span><span class="hljs-params">(TimeUnit unit)</span> &#123;<br>        <span class="hljs-keyword">return</span> unit.convert(timeout - System.nanoTime(), TimeUnit.NANOSECONDS);<br>    &#125;<br><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">print</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(orderId + <span class="hljs-string">&quot;编号的订单要删除啦。。。。&quot;</span>);<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>运行的测试 Demo 为，我们设定延迟时间为 3 秒</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay2;<br><br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.concurrent.DelayQueue;<br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DelayQueueDemo</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        List&lt;String&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;();<br>        list.add(<span class="hljs-string">&quot;00000001&quot;</span>);<br>        list.add(<span class="hljs-string">&quot;00000002&quot;</span>);<br>        list.add(<span class="hljs-string">&quot;00000003&quot;</span>);<br>        list.add(<span class="hljs-string">&quot;00000004&quot;</span>);<br>        list.add(<span class="hljs-string">&quot;00000005&quot;</span>);<br><br>        DelayQueue&lt;OrderDelay&gt; queue = newDelayQueue &lt; OrderDelay &gt; ();<br>        <span class="hljs-type">long</span> <span class="hljs-variable">start</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-comment">//延迟三秒取出</span><br>            queue.put(<span class="hljs-keyword">new</span> <span class="hljs-title class_">OrderDelay</span>(list.get(i), TimeUnit.NANOSECONDS.convert(<span class="hljs-number">3</span>, TimeUnit.SECONDS)));<br>            <span class="hljs-keyword">try</span> &#123;<br>                queue.take().print();<br>                System.out.println(<span class="hljs-string">&quot;After &quot;</span> + (System.currentTimeMillis() - start) + <span class="hljs-string">&quot; MilliSeconds&quot;</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>输出如下</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-number">00000001</span><span class="hljs-string">编号的订单要删除啦。。。。</span><br><span class="hljs-string">After</span> <span class="hljs-number">3003 </span><span class="hljs-string">MilliSeconds</span><br><span class="hljs-number">00000002</span><span class="hljs-string">编号的订单要删除啦。。。。</span><br><span class="hljs-string">After</span> <span class="hljs-number">6006 </span><span class="hljs-string">MilliSeconds</span><br><span class="hljs-number">00000003</span><span class="hljs-string">编号的订单要删除啦。。。。</span><br><span class="hljs-string">After</span> <span class="hljs-number">9006 </span><span class="hljs-string">MilliSeconds</span><br><span class="hljs-number">00000004</span><span class="hljs-string">编号的订单要删除啦。。。。</span><br><span class="hljs-string">After</span> <span class="hljs-number">12008</span> <span class="hljs-string">MilliSeconds</span><br><span class="hljs-number">00000005</span><span class="hljs-string">编号的订单要删除啦。。。。</span><br><span class="hljs-string">After</span> <span class="hljs-number">15009</span> <span class="hljs-string">MilliSeconds</span><br><span class="hljs-string">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看到都是延迟 3 秒，订单被删除</p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><p>效率高,任务触发时间延迟低。</p>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>服务器重启后，数据全部消失，怕宕机</li>
+<li>集群扩展相当麻烦</li>
+<li>因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现 OOM 异常</li>
+<li>代码复杂度较高</li>
+</ul>
+<h2 id="方案-3：时间轮算法"><a href="#方案-3：时间轮算法" class="headerlink" title="方案 3：时间轮算法"></a>方案 3：时间轮算法</h2><h3 id="思路-2"><a href="#思路-2" class="headerlink" title="思路"></a>思路</h3><p>先上一张时间轮的图(这图到处都是啦)</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/507fc4e23c5649d4bd1cf4be7e53b791tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>时间轮算法可以类比于时钟，如上图箭头（指针）按某一个方向按固定频率轮动，每一次跳动称为一个 tick。这样可以看出定时轮由个 3 个重要的属性参数，ticksPerWheel（一轮的 tick 数），tickDuration（一个 tick 的持续时间）以及 timeUnit（时间单位），例如当 ticksPerWheel&#x3D;60，tickDuration&#x3D;1，timeUnit&#x3D;秒，这就和现实中的始终的秒针走动完全类似了。</p>
+<p>如果当前指针指在 1 上面，我有一个任务需要 4 秒以后执行，那么这个执行的线程回调或者消息将会被放在 5 上。那如果需要在 20 秒之后执行怎么办，由于这个环形结构槽数只到 8，如果要 20 秒，指针需要多转 2 圈。位置是在 2 圈之后的 5 上面（20 % 8 + 1）</p>
+<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><p>我们用 Netty 的 HashedWheelTimer 来实现</p>
+<p>给 Pom 加上下面的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.netty<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>netty-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.1.24.Final<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>测试代码 HashedWheelTimerTest 如下所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay3;<br><br><span class="hljs-keyword">import</span> io.netty.util.HashedWheelTimer;<br><span class="hljs-keyword">import</span> io.netty.util.Timeout;<br><span class="hljs-keyword">import</span> io.netty.util.Timer;<br><span class="hljs-keyword">import</span> io.netty.util.TimerTask;<br><br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HashedWheelTimerTest</span> &#123;<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyTimerTask</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">TimerTask</span> &#123;<br><br>        <span class="hljs-type">boolean</span> flag;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyTimerTask</span><span class="hljs-params">(<span class="hljs-type">boolean</span> flag)</span> &#123;<br>            <span class="hljs-built_in">this</span>.flag = flag;<br>        &#125;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">(Timeout timeout)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>            System.out.println(<span class="hljs-string">&quot;要去数据库删除订单了。。。。&quot;</span>);<br>            <span class="hljs-built_in">this</span>.flag = <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] argv)</span> &#123;<br>        <span class="hljs-type">MyTimerTask</span> <span class="hljs-variable">timerTask</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyTimerTask</span>(<span class="hljs-literal">true</span>);<br>        <span class="hljs-type">Timer</span> <span class="hljs-variable">timer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashedWheelTimer</span>();<br>        timer.newTimeout(timerTask, <span class="hljs-number">5</span>, TimeUnit.SECONDS);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (timerTask.flag) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                Thread.sleep(<span class="hljs-number">1000</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>            System.out.println(i + <span class="hljs-string">&quot;秒过去了&quot;</span>);<br>            i++;<br>        &#125;<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>输出如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs">1秒过去了<br>2秒过去了<br>3秒过去了<br>4秒过去了<br>5秒过去了<br>要去数据库删除订单了。。。。<br>6秒过去了<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<h3 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h3><p>效率高,任务触发时间延迟时间比 delayQueue 低，代码复杂度比 delayQueue 低。</p>
+<h3 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>服务器重启后，数据全部消失，怕宕机</li>
+<li>集群扩展相当麻烦</li>
+<li>因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现 OOM 异常</li>
+</ul>
+<h2 id="方案-4：redis-缓存"><a href="#方案-4：redis-缓存" class="headerlink" title="方案 4：redis 缓存"></a>方案 4：redis 缓存</h2><h3 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h3><p>利用 redis 的 zset,zset 是一个有序集合，每一个元素(member)都关联了一个 score,通过 score 排序来取集合中的值</p>
+<p>添加元素:ZADD key score member [<a href="#">score member</a> …]</p>
+<p>按顺序查询元素:ZRANGE key start stop [WITHSCORES]</p>
+<p>查询元素 score:ZSCORE key member</p>
+<p>移除元素:ZREM key member [member …]</p>
+<p>测试如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">添加单个元素<br>redis&gt; ZADD page_rank 10 google.com<br>(<span class="hljs-built_in">integer</span>) 1<br><br>添加多个元素<br>redis&gt; ZADD page_rank 9 baidu.com 8 bing.com<br>(<span class="hljs-built_in">integer</span>) 2<br><br>redis&gt; ZRANGE page_rank 0 -1 WITHSCORES<br>1) <span class="hljs-string">&quot;bing.com&quot;</span><br>2) <span class="hljs-string">&quot;8&quot;</span><br>3) <span class="hljs-string">&quot;baidu.com&quot;</span><br>4) <span class="hljs-string">&quot;9&quot;</span><br>5) <span class="hljs-string">&quot;google.com&quot;</span><br>6) <span class="hljs-string">&quot;10&quot;</span><br><br>查询元素的score值<br>redis&gt; ZSCORE page_rank bing.com<br><span class="hljs-string">&quot;8&quot;</span><br><br>移除单个元素<br>redis&gt; ZREM page_rank google.com<br>(<span class="hljs-built_in">integer</span>) 1<br><br>redis&gt; ZRANGE page_rank 0 -1 WITHSCORES<br>1) <span class="hljs-string">&quot;bing.com&quot;</span><br>2) <span class="hljs-string">&quot;8&quot;</span><br>3) <span class="hljs-string">&quot;baidu.com&quot;</span><br>4) <span class="hljs-string">&quot;9&quot;</span><br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>那么如何实现呢？我们将订单超时时间戳与订单号分别设置为 score 和 member,系统扫描第一个元素判断是否超时，具体如下图所示</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/6d279053962141eab843645ee02fc920tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="实现一"><a href="#实现一" class="headerlink" title="实现一"></a>实现一</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay4;<br><br><span class="hljs-keyword">import</span> redis.clients.jedis.Jedis;<br><span class="hljs-keyword">import</span> redis.clients.jedis.JedisPool;<br><span class="hljs-keyword">import</span> redis.clients.jedis.Tuple;<br><br><span class="hljs-keyword">import</span> java.util.Calendar;<br><span class="hljs-keyword">import</span> java.util.Set;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppTest</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ADDR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;127.0.0.1&quot;</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">PORT</span> <span class="hljs-operator">=</span> <span class="hljs-number">6379</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">JedisPool</span> <span class="hljs-variable">jedisPool</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JedisPool</span>(ADDR, PORT);<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Jedis <span class="hljs-title function_">getJedis</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> jedisPool.getResource();<br>    &#125;<br><br>    <span class="hljs-comment">//生产者,生成5个订单放进去</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">productionDelayMessage</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-comment">//延迟3秒</span><br>            <span class="hljs-type">Calendar</span> <span class="hljs-variable">cal1</span> <span class="hljs-operator">=</span> Calendar.getInstance();<br>            cal1.add(Calendar.SECOND, <span class="hljs-number">3</span>);<br>            <span class="hljs-type">int</span> <span class="hljs-variable">second3later</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) (cal1.getTimeInMillis() / <span class="hljs-number">1000</span>);<br>            AppTest.getJedis().zadd(<span class="hljs-string">&quot;OrderId&quot;</span>, second3later, <span class="hljs-string">&quot;OID0000001&quot;</span> + i);<br>            System.out.println(System.currentTimeMillis() + <span class="hljs-string">&quot;ms:redis生成了一个订单任务：订单ID为&quot;</span> + <span class="hljs-string">&quot;OID0000001&quot;</span> + i);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">//消费者，取订单</span><br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">consumerDelayMessage</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Jedis</span> <span class="hljs-variable">jedis</span> <span class="hljs-operator">=</span> AppTest.getJedis();<br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            Set&lt;Tuple&gt; items = jedis.zrangeWithScores(<span class="hljs-string">&quot;OrderId&quot;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">if</span> (items == <span class="hljs-literal">null</span> || items.isEmpty()) &#123;<br>                System.out.println(<span class="hljs-string">&quot;当前没有等待的任务&quot;</span>);<br>                <span class="hljs-keyword">try</span> &#123;<br>                    Thread.sleep(<span class="hljs-number">500</span>);<br>                &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                    e.printStackTrace();<br>                &#125;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">score</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) ((Tuple) items.toArray()[<span class="hljs-number">0</span>]).getScore();<br>            <span class="hljs-type">Calendar</span> <span class="hljs-variable">cal</span> <span class="hljs-operator">=</span> Calendar.getInstance();<br>            <span class="hljs-type">int</span> <span class="hljs-variable">nowSecond</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) (cal.getTimeInMillis() / <span class="hljs-number">1000</span>);<br>            <span class="hljs-keyword">if</span> (nowSecond &gt;= score) &#123;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">orderId</span> <span class="hljs-operator">=</span> ((Tuple) items.toArray()[<span class="hljs-number">0</span>]).getElement();<br>                jedis.zrem(<span class="hljs-string">&quot;OrderId&quot;</span>, orderId);<br>                System.out.println(System.currentTimeMillis() + <span class="hljs-string">&quot;ms:redis消费了一个任务：消费的订单OrderId为&quot;</span> + orderId);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AppTest</span> <span class="hljs-variable">appTest</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AppTest</span>();<br>        appTest.productionDelayMessage();<br>        appTest.consumerDelayMessage();<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>此时对应输出如下</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/f6c7caa3148e47a3a194ac30c8ed47e0tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以看到，几乎都是 3 秒之后，消费订单。</p>
+<p>然而，这一版存在一个致命的硬伤，在高并发条件下，多消费者会取到同一个订单号，我们上测试代码 ThreadTest</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay4;<br><br><span class="hljs-keyword">import</span> java.util.concurrent.CountDownLatch;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadTest</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">threadNum</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">CountDownLatch</span> <span class="hljs-variable">cdl</span> <span class="hljs-operator">=</span> newCountDownLatch(threadNum);<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DelayMessage</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Runnable</span> &#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                cdl.await();<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>            <span class="hljs-type">AppTest</span> <span class="hljs-variable">appTest</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AppTest</span>();<br>            appTest.consumerDelayMessage();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AppTest</span> <span class="hljs-variable">appTest</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AppTest</span>();<br>        appTest.productionDelayMessage();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; threadNum; i++) &#123;<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">DelayMessage</span>()).start();<br>            cdl.countDown();<br>        &#125;<br>    &#125;<br><br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>输出如下所示</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/6b767d8ffb5b4431ada4f31debc5942etplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>显然，出现了多个线程消费同一个资源的情况。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>(1)用分布式锁，但是用分布式锁，性能下降了，该方案不细说。</p>
+<p>(2)对 ZREM 的返回值进行判断，只有大于 0 的时候，才消费数据，于是将 consumerDelayMessage()方法里的</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">if</span>(nowSecond &gt;= score)&#123;<br>    String orderId = ((Tuple)items<span class="hljs-selector-class">.toArray</span>()<span class="hljs-selector-attr">[0]</span>)<span class="hljs-selector-class">.getElement</span>();<br>    jedis<span class="hljs-selector-class">.zrem</span>(&quot;OrderId&quot;, orderId);<br>    System<span class="hljs-selector-class">.out</span><span class="hljs-selector-class">.println</span>(System.currentTimeMillis()+&quot;ms:redis消费了一个任务：消费的订单OrderId为<span class="hljs-string">&quot;+orderId);</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>修改为</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs erlang"><span class="hljs-function"><span class="hljs-title">if</span> <span class="hljs-params">(nowSecond &gt;= score)</span> &#123;</span><br><span class="hljs-function">    S<span class="hljs-title">tring</span> <span class="hljs-title">orderId</span> = <span class="hljs-params">((Tuple)</span> <span class="hljs-title">items</span>.<span class="hljs-title">toArray</span><span class="hljs-params">()</span>[0]).<span class="hljs-title">getElement</span><span class="hljs-params">()</span>;</span><br><span class="hljs-function">    L<span class="hljs-title">ong</span> <span class="hljs-title">num</span> = <span class="hljs-title">jedis</span>.<span class="hljs-title">zrem</span><span class="hljs-params">(<span class="hljs-string">&quot;OrderId&quot;</span>, orderId)</span>;</span><br><span class="hljs-function">    <span class="hljs-title">if</span> <span class="hljs-params">(num != null &amp;&amp; num &gt; <span class="hljs-number">0</span>)</span> &#123;</span><br><span class="hljs-function">        S<span class="hljs-title">ystem</span>.<span class="hljs-title">out</span>.<span class="hljs-title">println</span><span class="hljs-params">(System.currentTimeMillis() + <span class="hljs-string">&quot;ms:redis消费了一个任务：消费的订单OrderId为&quot;</span> + orderId)</span>;</span><br><span class="hljs-function">    &#125;</span><br><span class="hljs-function">&#125;</span><br><span class="hljs-function">复制代码</span><br></code></pre></td></tr></table></figure>
+
+<p>在这种修改后，重新运行 ThreadTest 类，发现输出正常了</p>
+<h3 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h3><p>该方案使用 redis 的 Keyspace Notifications，中文翻译就是键空间机制，就是利用该机制可以在 key 失效之后，提供一个回调，实际上是 redis 会给客户端发送一个消息。是需要 redis 版本 2.8 以上。</p>
+<h3 id="实现二"><a href="#实现二" class="headerlink" title="实现二"></a>实现二</h3><p>在 redis.conf 中，加入一条配置</p>
+<p>notify-keyspace-events Ex</p>
+<p>运行代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.rjzheng.delay5;<br><br><span class="hljs-keyword">import</span> redis.clients.jedis.JedisPool;<br><span class="hljs-keyword">import</span> redis.clients.jedis.JedisPubSub;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisTest</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ADDR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;127.0.0.1&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">PORT</span> <span class="hljs-operator">=</span> <span class="hljs-number">6379</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">JedisPool</span> <span class="hljs-variable">jedis</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JedisPool</span>(ADDR, PORT);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">RedisSub</span> <span class="hljs-variable">sub</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RedisSub</span>();<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                jedis.getResource().subscribe(sub, <span class="hljs-string">&quot;__keyevent@0__:expired&quot;</span>);<br>            &#125;<br>        &#125;).start();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>        init();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">orderId</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;OID000000&quot;</span> + i;<br>            jedis.getResource().setex(orderId, <span class="hljs-number">3</span>, orderId);<br>            System.out.println(System.currentTimeMillis() + <span class="hljs-string">&quot;ms:&quot;</span> + orderId + <span class="hljs-string">&quot;订单生成&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RedisSub</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JedisPubSub</span> &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onMessage</span><span class="hljs-params">(String channel, String message)</span> &#123;<br>            System.out.println(System.currentTimeMillis() + <span class="hljs-string">&quot;ms:&quot;</span> + message + <span class="hljs-string">&quot;订单取消&quot;</span>);<br><br>        &#125;<br>    &#125;<br>&#125;<br>复制代码<br></code></pre></td></tr></table></figure>
+
+<p>输出如下</p>
+<p><img src="/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90/f2d1f7a9a66f404880201ffa365d7b56tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.awebp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以明显看到 3 秒过后，订单取消了</p>
+<p>ps:redis 的 pub&#x2F;sub 机制存在一个硬伤，官网内容如下</p>
+<p>原:Because Redis Pub&#x2F;Sub is fire and forget currently there is no way to use this feature if your application demands reliable notification of events, that is, if your Pub&#x2F;Sub client disconnects, and reconnects later, all the events delivered during the time the client was disconnected are lost.</p>
+<p>翻: Redis 的发布&#x2F;订阅目前是即发即弃(fire and forget)模式的，因此无法实现事件的可靠通知。也就是说，如果发布&#x2F;订阅的客户端断链之后又重连，则在客户端断链期间的所有事件都丢失了。因此，方案二不是太推荐。当然，如果你对可靠性要求不高，可以使用。</p>
+<h3 id="优点-3"><a href="#优点-3" class="headerlink" title="优点"></a>优点</h3><p>(1) 由于使用 Redis 作为消息通道，消息都存储在 Redis 中。如果发送程序或者任务处理程序挂了，重启之后，还有重新处理数据的可能性。</p>
+<p>(2) 做集群扩展相当方便</p>
+<p>(3) 时间准确度高</p>
+<h3 id="缺点-3"><a href="#缺点-3" class="headerlink" title="缺点"></a>缺点</h3><p>需要额外进行 redis 维护</p>
+<h2 id="方案-5：使用消息队列"><a href="#方案-5：使用消息队列" class="headerlink" title="方案 5：使用消息队列"></a>方案 5：使用消息队列</h2><h3 id="思路-3"><a href="#思路-3" class="headerlink" title="思路"></a>思路</h3><p>我们可以采用 rabbitMQ 的延时队列。RabbitMQ 具有以下两个特性，可以实现延迟队列</p>
+<p>RabbitMQ 可以针对 Queue 和 Message 设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为 dead letter</p>
+<p>lRabbitMQ 的 Queue 可以配置 x-dead-letter-exchange 和 x-dead-letter-routing-key（可选）两个参数，用来控制队列内出现了 deadletter，则按照这两个参数重新路由。结合以上两个特性，就可以模拟出延迟消息的功能,具体的，我改天再写一篇文章，这里再讲下去，篇幅太长。</p>
+<h3 id="优点-4"><a href="#优点-4" class="headerlink" title="优点"></a>优点</h3><p>高效,可以利用 rabbitmq 的分布式特性轻易的进行横向扩展,消息支持持久化增加了可靠性。</p>
+<h3 id="缺点-4"><a href="#缺点-4" class="headerlink" title="缺点"></a>缺点</h3><p>本身的易用度要依赖于 rabbitMq 的运维.因为要引用 rabbitMq,所以复杂度和成本变高。</p>
+<p>作者：程序员大彬<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7181297729979547705">https://juejin.cn/post/7181297729979547705</a><br>来源：稀土掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%A1%86%E6%9E%B6/">#定时任务框架</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>定时任务分析</div>
+      <div>https://kblayt.github.io/2023/03/11/中间件/定时任务分析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/25/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL50%E9%A2%98/" title="MySQL50题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL50题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/08/Java/Java%E5%B7%A5%E5%85%B7%E6%96%B9%E6%B3%95%E4%B9%8B%E8%A7%A3%E6%9E%90%E5%9C%B0%E5%9D%80/" title="Java工具方法之解析地址">
+                        <span class="hidden-mobile">Java工具方法之解析地址</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

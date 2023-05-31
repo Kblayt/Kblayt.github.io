@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Ribbon与OpenFeign关系　　说到 OpenFeign就不得不提 Ribbon，OpenFeign默认将Ribbon作为负载均衡器，直接内置了 Ribbon。在导入OpenFeign 依赖后无需专门导入Ribbon 依赖。 　　Ribbon 是 Netflix 公司的一个开源的负载均衡项目，一个客户端负载均衡器，运行在消费者端。简单来说就是在消费者端配置对提供者的负载均衡器。这点与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenFeign与负载均衡">
+<meta property="og:url" content="https://kblayt.github.io/2023/03/01/%E5%BE%AE%E6%9C%8D%E5%8A%A1/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、Ribbon与OpenFeign关系　　说到 OpenFeign就不得不提 Ribbon，OpenFeign默认将Ribbon作为负载均衡器，直接内置了 Ribbon。在导入OpenFeign 依赖后无需专门导入Ribbon 依赖。 　　Ribbon 是 Netflix 公司的一个开源的负载均衡项目，一个客户端负载均衡器，运行在消费者端。简单来说就是在消费者端配置对提供者的负载均衡器。这点与">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014215359284-507267638.png">
+<meta property="og:image" content="https://kblayt.github.io/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014220110841-1283013534.png">
+<meta property="og:image" content="https://kblayt.github.io/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014220305776-594987007.png">
+<meta property="article:published_time" content="2023-03-01T02:22:42.000Z">
+<meta property="article:modified_time" content="2023-05-31T02:44:38.205Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="OpenFeign">
+<meta property="article:tag" content="负载均衡">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014215359284-507267638.png">
+  
+  
+  
+  <title>OpenFeign与负载均衡 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OpenFeign与负载均衡"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-01 10:22" pubdate>
+          2023年3月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">OpenFeign与负载均衡</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="一、Ribbon与OpenFeign关系"><a href="#一、Ribbon与OpenFeign关系" class="headerlink" title="一、Ribbon与OpenFeign关系"></a>一、Ribbon与OpenFeign关系</h2><p>　　说到 OpenFeign就不得不提 Ribbon，OpenFeign默认将Ribbon作为负载均衡器，直接内置了 Ribbon。在导入OpenFeign 依赖后无需专门导入Ribbon 依赖。</p>
+<p>　　Ribbon 是 Netflix 公司的一个开源的负载均衡项目，一个客户端负载均衡器，运行在消费者端。简单来说就是在消费者端配置对提供者的负载均衡器。这点与 Dubbo略有不同，Dubbo 在消费者端与提供者端均可配置负载均衡器。</p>
+<h2 id="二、声明式Rest客户端OpenFeign案例"><a href="#二、声明式Rest客户端OpenFeign案例" class="headerlink" title="二、声明式Rest客户端OpenFeign案例"></a>二、声明式Rest客户端OpenFeign案例</h2><h3 id="（一）消费端配置"><a href="#（一）消费端配置" class="headerlink" title="（一）消费端配置"></a>（一）消费端配置</h3><p>　　1、添加openfeign依赖</p>
+<p>　　　　注意， 这里使用的是 spring-cloud-starter-openfeign 依赖，而非 spring-cloud-starter-feign依赖。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--feign依赖--&gt;</span><br>     <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>         <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.3.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>     <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>　　2、定义feign接口</p>
+<p>　　　　使用@FeignClient设置需要调用的项目名称，同时使用RequestMapping进行调用，调用地址要和服务提供者的地址保持一致。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@FeignClient</span>(value = <span class="hljs-string">&quot;provider01-depart&quot;</span>)<span class="hljs-comment">//注解作用：声明当前为Feign客户端接口</span><br><span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/provider/depart&quot;</span>)<span class="hljs-comment">// 参数为要调用的提供者相应的uri，抽取所有方法的公有uri地址</span><br>public interface DepartService &#123;<span class="hljs-comment">//更加符合面向接口api调用习惯</span><br>    <span class="hljs-variable">@PostMapping</span>(<span class="hljs-string">&quot;/save&quot;</span>)<br>    boolean <span class="hljs-built_in">saveDepart</span>(<span class="hljs-variable">@RequestBody</span> Depart depart);<br>    <span class="hljs-variable">@DeleteMapping</span>(<span class="hljs-string">&quot;/del/&#123;id&#125;&quot;</span>)<br>    boolean <span class="hljs-built_in">removeDepartById</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) int id);<br>    <span class="hljs-variable">@PutMapping</span>(<span class="hljs-string">&quot;/update&quot;</span>)<br>    boolean <span class="hljs-built_in">modifyDepart</span>(<span class="hljs-variable">@RequestBody</span> Depart depart);<br>    <span class="hljs-variable">@GetMapping</span>(<span class="hljs-string">&quot;/get/&#123;id&#125;&quot;</span>)<br>    Depart <span class="hljs-built_in">getDepartById</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) int id);<br>    <span class="hljs-variable">@GetMapping</span>(<span class="hljs-string">&quot;/list&quot;</span>)<br>    List&lt;Depart&gt; <span class="hljs-built_in">listAllDeparts</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　3、处理器注入Feign客户端对象</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@RestController</span><br><span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/feign/consumer/depart&quot;</span>)<br>public class DepartFeignController &#123;<br>    <span class="hljs-variable">@Autowired</span><br>    private DepartService departService;<span class="hljs-comment">//跨服务根据id查询</span><br>    <span class="hljs-variable">@GetMapping</span>(<span class="hljs-string">&quot;/get/&#123;id&#125;&quot;</span>)<br>    public Depart <span class="hljs-built_in">getHandle</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) int id) &#123;<br>        <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">departService</span><span class="hljs-selector-class">.getDepartById</span>(id);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　4、修改启动类</p>
+<p>　　　　使用@EnableFeignClients来打开对Feign客户端的支持，同时设置客户端扫描的包。</p>
+<p>　　　　由于直接使用了Feign Client，因此就不再使用RestTemplate进行处理了。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@SpringBootApplication</span><br><span class="hljs-variable">@EnableFeignClients</span>(basePackages = <span class="hljs-string">&quot;com.lcl.cloud.alibaba.consumer02.service&quot;</span>)<span class="hljs-comment">//开启当前服务支持Feign客户端，作用扫描所有客户端接口</span><br>public class Consumer02Application &#123;<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">static</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">main</span>(String[] args) &#123;<br>        <span class="hljs-selector-tag">SpringApplication</span><span class="hljs-selector-class">.run</span>(Consumer02Application.class, args);<br>    &#125;<br><br><span class="hljs-comment">//    @Bean</span><br><span class="hljs-comment">//    @LoadBalanced</span><br><span class="hljs-comment">//    public RestTemplate restTemplate() &#123;</span><br><span class="hljs-comment">//        return new RestTemplate();</span><br><span class="hljs-comment">//    &#125;</span><br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　5、需要注意的一点，就是Feign的服务名称不能使用下划线和横线，否则会报 Service id not legal hostname (provider02_nacosconfig) 的错误。</p>
+<p><img src="/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014215359284-507267638.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="（二）超时配置"><a href="#（二）超时配置" class="headerlink" title="（二）超时配置"></a>（二）超时配置</h3><p>　　1、客户端的超时配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">default:</span><br>        <span class="hljs-comment">#连接超时时间</span><br>        <span class="hljs-attr">connectTimeout:</span> <span class="hljs-number">5000</span><br>        <span class="hljs-comment">#数据读取超时是时间</span><br>        <span class="hljs-attr">readTimeout:</span> <span class="hljs-number">5000</span><br></code></pre></td></tr></table></figure>
+
+<p> 　2、服务端模拟超时　　</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">public Depart get<span class="hljs-constructor">DepartById(<span class="hljs-params">int</span> <span class="hljs-params">id</span>)</span> &#123;<br>      <span class="hljs-keyword">try</span> &#123;<br>          <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TimeUnit</span>.</span><span class="hljs-module"><span class="hljs-identifier">SECONDS</span>.</span></span>sleep(<span class="hljs-number">6</span>);<br>      &#125; catch (InterruptedException e) &#123;<br>          e.print<span class="hljs-constructor">StackTrace()</span>;<br>      &#125;<br>      <span class="hljs-keyword">if</span>(repository.exists<span class="hljs-constructor">ById(<span class="hljs-params">id</span>)</span>) &#123;<br>          return repository.get<span class="hljs-constructor">One(<span class="hljs-params">id</span>)</span>;<br>      &#125;<br>      Depart depart = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Depart()</span>;<br>      depart.set<span class="hljs-constructor">Name(<span class="hljs-params">departName</span>)</span>;<br>      return depart;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　3、验证结果</p>
+<p><img src="/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014220110841-1283013534.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="（三）Gzip压缩设置"><a href="#（三）Gzip压缩设置" class="headerlink" title="（三）Gzip压缩设置"></a>（三）Gzip压缩设置</h3><p>　　Feign 支持对请求和响应进行 Gzip 压缩以提高通信效率。注意，这里的请求是指 Feign向提供者所提交的请求，响应是指 Feign 向客户端作出的响应。</p>
+<p><img src="/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/1782729-20211014220305776-594987007.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>　　配置在官网中可以查看：<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-cloud-openfeign/docs/2.2.5.RELEASE/reference/html/#feign-requestresponse-compression">https://docs.spring.io/spring-cloud-openfeign/docs/2.2.5.RELEASE/reference/html/#feign-requestresponse-compression</a></p>
+<p>　　参数如下所示：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">feign.compression.request.enabled</span>=<span class="hljs-literal">true</span><br><span class="hljs-attr">feign.compression.response.enabled</span>=<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="三、更换负载均衡策略"><a href="#三、更换负载均衡策略" class="headerlink" title="三、更换负载均衡策略"></a>三、更换负载均衡策略</h2><h3 id="（一）更换内置策略"><a href="#（一）更换内置策略" class="headerlink" title="（一）更换内置策略"></a>（一）更换内置策略</h3><p>　　若要更换负载均衡策略，则首先要了解负载均衡策略的定义接口 IRule。Ribbon 默认采用的是 RoundRobinRule，即轮询策略。但通过修改消费者工程的配置文件，或修改消费者的启动类或 JavaConfig 类可以实现更换负载均衡策略的目的。</p>
+<p>　　1、修改配置文件</p>
+<p>　　　　修改配置文件，在其中添加如下内容，指定要使用的负载均衡策略 <clientName>. <clientConfigNameSpace>.NFLoadBalancerRuleClassName。</p>
+<p>　　　　该方式的好处是，可以为不同的微服务指定相应的负载均衡策略。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">provider02Nacosconfig:</span><br><span class="hljs-symbol">  ribbon:</span><br><span class="hljs-symbol">    NFLoadBalancerRuleClassName:</span> com.netflix.loadbalancer.RandomRule<br></code></pre></td></tr></table></figure>
+
+<p>　　2、修改JavaConfig类</p>
+<p>　　　　在 JavaConfig 类中添加负载 Bean 方法。全局所有feign对应服务都可以生效。 </p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignConfiguration</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 配置随机的负载均衡策略</span><br><span class="hljs-comment">     * 特点：对所有的服务都生效</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">IRule</span> <span class="hljs-title function_">loadBalancedRule</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RandomRule</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="（二）自定义负载均衡策略"><a href="#（二）自定义负载均衡策略" class="headerlink" title="（二）自定义负载均衡策略"></a>（二）自定义负载均衡策略</h3><p>　　1、定义一个负载均衡策略</p>
+<p>　　　　该负载均衡策略的思路是：从所有可用的 provider 中排除掉指定端口号的provider，剩余 provider 进行随机选择。 </p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 自定义负载均衡算法</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomRule</span> implements IRule &#123;<br>    <span class="hljs-keyword">private</span> ILoadBalancer lb;<br>    <span class="hljs-keyword">private</span> List&lt;Integer&gt; excludePorts;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomRule</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomRule</span><span class="hljs-params">(List&lt;Integer&gt; excludePorts)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.excludePorts = excludePorts;<br>    &#125;<br><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title">setLoadBalancer</span><span class="hljs-params">(ILoadBalancer lb)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.lb = lb;<br>    &#125;<br><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> ILoadBalancer <span class="hljs-title">getLoadBalancer</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> lb;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 目标：自定义负载均衡策略：从所有可用的provider中排除掉指定端口号的provider，剩余provider进行随机选择</span><br><span class="hljs-comment">     * 实现步骤：</span><br><span class="hljs-comment">     * 1.获取到所有Server</span><br><span class="hljs-comment">     * 2.从所有Server中排除掉指定端口的Server后，剩余的Server</span><br><span class="hljs-comment">     * 3.从剩余Server中随机选择一个Server</span><br><span class="hljs-comment">     */</span><br>    @<span class="hljs-function">Override</span><br><span class="hljs-function">    <span class="hljs-keyword">public</span> <span class="hljs-built_in">Server</span> <span class="hljs-title">choose</span><span class="hljs-params">(Object key)</span> </span>&#123;<br>        <span class="hljs-comment">// 1.获取到所有Server</span><br>        List&lt;<span class="hljs-built_in">Server</span>&gt; servers = lb.<span class="hljs-built_in">getReachableServers</span>();<br>        <span class="hljs-comment">// 2.从所有Server中排除掉指定端口的Server后，剩余的Server</span><br>        List&lt;<span class="hljs-built_in">Server</span>&gt; availableServers = <span class="hljs-keyword">this</span>.<span class="hljs-built_in">getAvailableServers</span>(servers);<br>        <span class="hljs-comment">// 3.从剩余Server中随机选择一个Server</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-built_in">getAvailableRandomServers</span>(availableServers);<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;<span class="hljs-built_in">Server</span>&gt; <span class="hljs-title">getAvailableServers</span><span class="hljs-params">(List&lt;<span class="hljs-built_in">Server</span>&gt; servers)</span> </span>&#123;<br>        <span class="hljs-comment">// 若没有指定要排除的port，则返回所有Server</span><br>        <span class="hljs-keyword">if</span>(excludePorts == null || excludePorts.<span class="hljs-built_in">size</span>() == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> servers;<br>        &#125;<br>        List&lt;<span class="hljs-built_in">Server</span>&gt; aservers = servers.<span class="hljs-built_in">stream</span>()<br>                <span class="hljs-comment">// filter()</span><br>                <span class="hljs-comment">// noneMatch() 只有当流中所有元素都没有匹配上时，才返回true，只要有一个匹配上了，则返回false</span><br>                .<span class="hljs-built_in">filter</span>(server -&gt; excludePorts.<span class="hljs-built_in">stream</span>().<span class="hljs-built_in">noneMatch</span>(port -&gt; server.<span class="hljs-built_in">getPort</span>() == port))<br>                .<span class="hljs-built_in">collect</span>(Collectors.<span class="hljs-built_in">toList</span>());<br><br>        <span class="hljs-keyword">return</span> aservers;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-built_in">Server</span> <span class="hljs-title">getAvailableRandomServers</span><span class="hljs-params">(List&lt;<span class="hljs-built_in">Server</span>&gt; availableServers)</span> </span>&#123;<br>        <span class="hljs-comment">// 获取一个[0,availableServers.size())的随机数</span><br>        <span class="hljs-type">int</span> index = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Random</span>().<span class="hljs-built_in">nextInt</span>(availableServers.<span class="hljs-built_in">size</span>());<br>        <span class="hljs-keyword">return</span> availableServers.<span class="hljs-built_in">get</span>(index);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>　　2、修改JavaConfig类，使用自定义的负载均衡策略</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignConfiguration</span> &#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">IRule</span> <span class="hljs-title function_">loadBalancedRule</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">Integer</span>&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        list.<span class="hljs-title function_">add</span>(<span class="hljs-number">8081</span>);<span class="hljs-comment">//排除访问端口</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CustomRule</span>(list);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="（三）Ribbon内置负载均衡算法"><a href="#（三）Ribbon内置负载均衡算法" class="headerlink" title="（三）Ribbon内置负载均衡算法"></a>（三）Ribbon内置负载均衡算法</h3><p>　　1、 RoundRobinRule</p>
+<p>　　　　轮询策略：Ribbon 默认采用的策略。若经过一轮轮询没有找到可用的provider，其最多轮询 10 轮（代码中写死的，不能修改）。若还未找到，则返回 null。</p>
+<p>　　2、RandomRule</p>
+<p>　　　　随机策略：从所有可用的 provider 中随机选择一个。</p>
+<p>　　3、RetryRule</p>
+<p>　　　　重试策略：先按照 RoundRobinRule 策略获取 server，若获取失败，则在指定的时限内重试。默认的时限为 500 毫秒。</p>
+<p>　　4、BestAvailableRule</p>
+<p>　　　　最可用策略：选择并发量最小的 provider，即连接的消费者数量最少的provider。其会遍历服务列表中的每一个server，选择当前连接数量minimalConcurrentConnections 最小的server。</p>
+<p>　　5、AvailabilityFilteringRule</p>
+<p>　　　　可用过滤算法：该算法规则是过滤掉处于熔断状态的 server 与已经超过连接极限的server，对剩余 server 采用轮询策略。 </p>
+<h2 id="四、负载均衡器SpringCloudLoadBalancer"><a href="#四、负载均衡器SpringCloudLoadBalancer" class="headerlink" title="四、负载均衡器SpringCloudLoadBalancer"></a>四、负载均衡器SpringCloudLoadBalancer</h2><p>　　由于 Netflix 对于 Ribbon 的维护已经暂停，所以 Spring Cloud 对于负载均衡建议使用由其自己定义的 Spring Cloud LoadBalancer。对于Spring Cloud LoadBalancer 的使用非常简单。</p>
+<p>　　1、关闭Ribbon的负载均衡器</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">consumer01-depart</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">loadbalancer:</span><br>      <span class="hljs-comment"># 关闭Ribbon的负载均衡器</span><br>      <span class="hljs-attr">ribbon:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+
+<p>　　2、pom中添加LoadBalancer依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--spring cloud loadbalancer 依赖--&gt;</span> <br>      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span> <br>          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span> <br>          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-loadbalancer<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.3.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OpenFeign/">#OpenFeign</a>
+      
+        <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OpenFeign与负载均衡</div>
+      <div>https://kblayt.github.io/2023/03/01/微服务/OpenFeign与负载均衡/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/XXL-JOB/" title="XXL-JOB">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">XXL-JOB</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/28/Typora%E8%AE%BE%E7%BD%AE%E5%9B%BE%E7%89%87%E4%BF%9D%E5%AD%98%E5%88%B0%E6%96%87%E6%A1%A3%E5%AF%B9%E5%BA%94%E7%9B%AE%E5%BD%95%E4%B8%8B/" title="Typora设置图片保存到文档对应目录下">
+                        <span class="hidden-mobile">Typora设置图片保存到文档对应目录下</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

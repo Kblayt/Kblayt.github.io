@@ -1,0 +1,863 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="微服务框架（三）一、RabbitMQ同步通讯 优点：  时效性较强，可以立即得到结果  缺点：  耦合度高：每次加入新的需求，都要修改原来的代码 性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。 资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源 级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务框架（三）">
+<meta property="og:url" content="https://kblayt.github.io/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="微服务框架（三）一、RabbitMQ同步通讯 优点：  时效性较强，可以立即得到结果  缺点：  耦合度高：每次加入新的需求，都要修改原来的代码 性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。 资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源 级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103411953.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103447854.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103507805.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103521290.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103536203.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103039235.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116095803429.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101927231.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101940820.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101959441.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116102014424.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116102040986.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116103028593.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116103233570.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114103013.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114124372.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114235425.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115254501.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115444115.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115510992.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115523769.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193714513.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115552283.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115600083.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193520315.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193620183.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193732249.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193741518.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230042757.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230103786.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230120951.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230137543.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231401622.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231431066.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231445728.png">
+<meta property="article:published_time" content="2023-02-27T02:52:14.000Z">
+<meta property="article:modified_time" content="2023-05-31T02:44:30.648Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="微服务框架">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png">
+  
+  
+  
+  <title>微服务框架（三） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="微服务框架（三）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-27 10:52" pubdate>
+          2023年2月27日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">微服务框架（三）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="微服务框架（三）"><a href="#微服务框架（三）" class="headerlink" title="微服务框架（三）"></a>微服务框架（三）</h1><h2 id="一、RabbitMQ"><a href="#一、RabbitMQ" class="headerlink" title="一、RabbitMQ"></a>一、<strong>RabbitMQ</strong></h2><h3 id="同步通讯"><a href="#同步通讯" class="headerlink" title="同步通讯"></a><strong>同步通讯</strong></h3><p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103315060.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103315060"></p>
+<p>优点：</p>
+<ul>
+<li>时效性较强，可以立即得到结果</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>耦合度高：每次加入新的需求，都要修改原来的代码</li>
+<li>性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。</li>
+<li>资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源</li>
+<li>级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如同多米诺骨牌一样，迅速导致整个微服务群故障</li>
+</ul>
+<h3 id="异步通讯"><a href="#异步通讯" class="headerlink" title="异步通讯"></a><strong>异步通讯</strong></h3><p>异步调用常见实现就是事件驱动模式</p>
+<p>异步通信的优点：</p>
+<ul>
+<li>耦合度低</li>
+<li>吞吐量提升</li>
+<li>故障隔离</li>
+<li>流量削峰</li>
+</ul>
+<p>异步通信的缺点：</p>
+<ul>
+<li>依赖于Broker的可靠性、安全性、吞吐能力</li>
+<li>架构复杂了，业务没有明显的流程线，不好追踪管理</li>
+</ul>
+<h3 id="什么是MQ"><a href="#什么是MQ" class="headerlink" title="什么是MQ"></a><strong>什么是MQ</strong></h3><p>MQ（MessageQueue），消息队列，字面来看就是存放消息的队列。也就是事件驱动架构中的Broker</p>
+<p><strong>MQ常见框架</strong></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103411953.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103411953"></p>
+<h3 id="RabbitMQ概述和安装"><a href="#RabbitMQ概述和安装" class="headerlink" title="RabbitMQ概述和安装"></a><strong>RabbitMQ概述和安装</strong></h3><p><strong>RabbitMQ的结构和概念</strong></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103447854.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103447854"></p>
+<p><strong>总结</strong></p>
+<p>RabbitMQ中的几个概念：</p>
+<ul>
+<li>channel：操作MQ的工具</li>
+<li>exchange：路由消息到队列中</li>
+<li>queue：缓存消息</li>
+<li>virtual host：虚拟主机，是对queue、exchange等资源的逻辑分组</li>
+</ul>
+<p><strong>五种常见的消息模型</strong></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103507805.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103507805"></p>
+<p>官方的BasicQueue是基于最基础的消息队列模型来实现的，只包括三个角色：</p>
+<ul>
+<li>publisher：消息发布这，将消息发送到队列queue</li>
+<li>queue：消息队列，负责接受并缓存消息</li>
+<li>consumer：订阅队列，处理队列中的消息</li>
+</ul>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103521290.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103521290"></p>
+<p>实现步骤：</p>
+<ul>
+<li>导入课前资料中的demo工程</li>
+<li><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103536203.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103536203"></li>
+<li>运行publisher服务中的测试类PublisherTest中的测试方法testSendMessage()</li>
+<li>查看RabbitMQ控制台的消息</li>
+<li>启动consumer服务，查看是否能接收消息</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>基本消息队列的消息发送流程：</p>
+<p>1.建立connection</p>
+<p>2.创建channel</p>
+<p>3.利用channel声明队列</p>
+<p>4.利用channel向队列发送消息</p>
+<p>基本消息队列的消息接收流程：</p>
+<p>1.建立connection</p>
+<p>2.创建channel</p>
+<p>3.利用channel声明队列</p>
+<p>4.定义consumer的消费行为handleDelivery()</p>
+<p>5.利用channel将消费者与队列绑定</p>
+<h2 id="二、SpringAMQP"><a href="#二、SpringAMQP" class="headerlink" title="二、SpringAMQP"></a>二、SpringAMQP</h2><h3 id="什么是SpringAMQP"><a href="#什么是SpringAMQP" class="headerlink" title="什么是SpringAMQP"></a><strong>什么是SpringAMQP</strong></h3><p>SpringAmqp的官方地址：<a target="_blank" rel="noopener" href="https://spring.io/projects/spring-amqp">https://spring.io/projects/spring-amqp</a></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230112103039235.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230112103039235"></p>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>什么是AMQP？</p>
+<ul>
+<li>应用间消息通信的一种协议，与语言和平台无关。</li>
+</ul>
+<p>SpringAMQP如何发送消息？</p>
+<ul>
+<li>引入amqp的starter依赖</li>
+<li>配置RabbitMQ地址</li>
+<li>利用RabbitTemplate的convertAndSend方法</li>
+</ul>
+<h3 id="1、Basic-Queue简单队列模型"><a href="#1、Basic-Queue简单队列模型" class="headerlink" title="1、Basic Queue简单队列模型"></a>1、Basic Queue简单队列模型</h3><p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116095803429.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116095803429"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101927231.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116101927231"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101940820.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116101940820"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116101959441.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116101959441"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116102014424.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116102014424"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116102040986.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116102040986"></p>
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h4><p>SpringAMQP如何接收消息？</p>
+<ul>
+<li>引入amqp的starter依赖</li>
+<li>配置RabbitMQ地址</li>
+<li>定义类，添加@Component注解</li>
+<li>类中声明方法，添加@RabbitListener注解，方法参数就时消息</li>
+</ul>
+<p>注意：消息一旦消费就会从队列删除，RabbitMQ没有消息回溯功能</p>
+<h3 id="2、Work-Queue工作队列模型"><a href="#2、Work-Queue工作队列模型" class="headerlink" title="2、Work Queue工作队列模型"></a>2、Work Queue工作队列模型</h3><p>Work queue，工作队列，可以提高消息处理速度，避免队列消息堆积</p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116103028593.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116103028593"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116103233570.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116103233570"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114103013.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116114103013"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114124372.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116114124372"></p>
+<p>观测结果为：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs dns">消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">0】10:38:08</span>.<span class="hljs-number">378</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">1】10:38:08</span>.<span class="hljs-number">402</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">2】10:38:08</span>.<span class="hljs-number">433</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">4】10:38:08</span>.<span class="hljs-number">496</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">6】10:38:08</span>.<span class="hljs-number">559</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">3】10:38:08</span>.<span class="hljs-number">617</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">8】10:38:08</span>.<span class="hljs-number">620</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">10】10:38:08</span>.<span class="hljs-number">681</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">12】10:38:08</span>.<span class="hljs-number">744</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">14】10:38:08</span>.<span class="hljs-number">807</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">5】10:38:08</span>.<span class="hljs-number">821</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">16】10:38:08</span>.<span class="hljs-number">868</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">18】10:38:08</span>.<span class="hljs-number">930</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">20】10:38:08</span>.<span class="hljs-number">994</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">7】10:38:09</span>.<span class="hljs-number">024</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">22】10:38:09</span>.<span class="hljs-number">056</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">24】10:38:09</span>.<span class="hljs-number">118</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">26】10:38:09</span>.<span class="hljs-number">180</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">9】10:38:09</span>.<span class="hljs-number">226</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">28】10:38:09</span>.<span class="hljs-number">243</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">30】10:38:09</span>.<span class="hljs-number">306</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">32】10:38:09</span>.<span class="hljs-number">368</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">11】10:38:09</span>.<span class="hljs-number">429</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">34】10:38:09</span>.<span class="hljs-number">430</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">36】10:38:09</span>.<span class="hljs-number">496</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">38】10:38:09</span>.<span class="hljs-number">557</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">40】10:38:09</span>.<span class="hljs-number">619</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">13】10:38:09</span>.<span class="hljs-number">634</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">42】10:38:09</span>.<span class="hljs-number">682</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">44】10:38:09</span>.<span class="hljs-number">745</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">46】10:38:09</span>.<span class="hljs-number">807</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">15】10:38:09</span>.<span class="hljs-number">836</span><br>消费者<span class="hljs-number">1</span>接收到消息：【hello,message__!<span class="hljs-number">48】10:38:09</span>.<span class="hljs-number">870</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">17】10:38:10</span>.<span class="hljs-number">037</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">19】10:38:10</span>.<span class="hljs-number">244</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">21】10:38:10</span>.<span class="hljs-number">451</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">23】10:38:10</span>.<span class="hljs-number">657</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">25】10:38:10</span>.<span class="hljs-number">865</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">27】10:38:11</span>.<span class="hljs-number">069</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">29】10:38:11</span>.<span class="hljs-number">270</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">31】10:38:11</span>.<span class="hljs-number">475</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">33】10:38:11</span>.<span class="hljs-number">681</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">35】10:38:11</span>.<span class="hljs-number">885</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">37】10:38:12</span>.<span class="hljs-number">091</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">39】10:38:12</span>.<span class="hljs-number">296</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">41】10:38:12</span>.<span class="hljs-number">501</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">43】10:38:12</span>.<span class="hljs-number">704</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">45】10:38:12</span>.<span class="hljs-number">909</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">47】10:38:13</span>.<span class="hljs-number">115</span><br>消费者<span class="hljs-number">2</span>........接收到消息：【hello,message__!<span class="hljs-number">49】10:38:13</span>.<span class="hljs-number">318</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="消费预取限制"><a href="#消费预取限制" class="headerlink" title="消费预取限制"></a>消费预取限制</h4><p>修改application.yml文件，设置preFetch这个值，可以控制预取消息的上限：</p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116114235425.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116114235425"></p>
+<h4 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h4><p>Work模型的使用：</p>
+<ul>
+<li><p>多个消费者绑定到一个队列，同一条消息只会被一个消费者处理</p>
+</li>
+<li><p>通过设置prefetch来控制消费者预取的消息数量</p>
+</li>
+</ul>
+<h3 id="发布（Publish）、订阅（Subscribe）"><a href="#发布（Publish）、订阅（Subscribe）" class="headerlink" title="发布（Publish）、订阅（Subscribe）"></a>发布（Publish）、订阅（Subscribe）</h3><p>发布订阅模式与之前案例的区别就是允许将同一消息发送给多个消费者。实现方式是加入了exchange（交换机）。</p>
+<p>常见exchange类型包括：</p>
+<ul>
+<li>Fanout：广播</li>
+<li>Direct：路由</li>
+<li>Topic：话题</li>
+</ul>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115254501.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115254501"></p>
+<p><strong>注意</strong>：exchange负责消息路由，而不是存储，路由失败则消息丢失</p>
+<h3 id="3、发布、订阅模型-Fanout"><a href="#3、发布、订阅模型-Fanout" class="headerlink" title="3、发布、订阅模型-Fanout"></a>3、发布、订阅模型-Fanout</h3><p><strong>Fanout Exchange</strong> 会将接收到的消息广播到<strong>每一个</strong>跟其绑定的queue****</p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115444115.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115444115"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115510992.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115510992"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115523769.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115523769"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193714513.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127193714513"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115552283.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115552283"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230116115600083.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230116115600083"></p>
+<h4 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h4><p>交换机的作用是什么？</p>
+<ul>
+<li>接收publisher发送的消息</li>
+<li>将消息按照规则路由到与之绑定的队列</li>
+<li>交换机不能缓存消息，如果路由失败，消息将会丢失</li>
+<li>FanoutExchange会将消息路由到每个绑定的队列</li>
+</ul>
+<p>声明队列、交换机、绑定关系的Bean是什么？</p>
+<ul>
+<li>Queue</li>
+<li>FanoutExchange</li>
+<li>Binding</li>
+</ul>
+<h3 id="4、发布、订阅模型-Direct"><a href="#4、发布、订阅模型-Direct" class="headerlink" title="4、发布、订阅模型-Direct"></a>4、发布、订阅模型-Direct</h3><p><strong>Direct Exchange</strong> 会将接收到的消息根据规则路由到<strong>指定的Queue</strong>，因此称为路由模式（routes）。</p>
+<ul>
+<li>每一个Queue都与Exchange设置一个BindingKey</li>
+<li>发布者发送消息时，指定消息的RoutingKey</li>
+<li>Exchange将消息路由到BindingKey与消息RoutingKey一致的队列</li>
+</ul>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193520315.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127193520315"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193620183.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127193620183"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193732249.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127193732249"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127193741518.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127193741518"></p>
+<h4 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h4><p>描述下Direct交换机与Fanout交换机的差异？</p>
+<ul>
+<li>Fanout交换机将消息路由给每一个与之绑定的队列</li>
+<li>Direct交换机根据RoutingKey判断路由给哪个队列</li>
+<li>如果多个队列具有相同的RoutingKey，则与Fanout功能类似</li>
+</ul>
+<p>基于@RabbitListener注解声明队列和交换机有哪些常见注解？</p>
+<ul>
+<li>@Queue</li>
+<li>@Exchange</li>
+</ul>
+<h3 id="5、发布、订阅模型-Topic"><a href="#5、发布、订阅模型-Topic" class="headerlink" title="5、发布、订阅模型-Topic"></a>5、发布、订阅模型-Topic</h3><p><strong>TopicExchange</strong>与<strong>DirectExchange</strong>类似，区别在于<strong>routingKey</strong>必须是多个单词的列表，并且以 <strong>.</strong> 分割。</p>
+<p>Queue与Exchange指定BindingKey时可以使用通配符：</p>
+<p>#：代指0个或多个单词</p>
+<p>*：代指一个单词</p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230042757.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127230042757"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230103786.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127230103786"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230120951.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127230120951"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127230137543.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127230137543"></p>
+<h4 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h4><p>描述下Direct交换机与Topic交换机的差异？</p>
+<p>•Topic交换机接收的消息RoutingKey必须是多个单词，以 <strong>.</strong> 分割</p>
+<p>•Topic交换机与队列绑定时的bindingKey可以指定通配符</p>
+<p>•#：代表0个或多个词</p>
+<p>•*：代表1个词</p>
+<h3 id="消息转换器"><a href="#消息转换器" class="headerlink" title="消息转换器"></a>消息转换器</h3><p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231401622.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127231401622"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231431066.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127231431066"></p>
+<p><img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/image-20230127231445728.png" srcset="/img/loading.gif" lazyload alt="微服务框架-三/image-20230127231445728"></p>
+<h4 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h4><p>SpringAMQP中消息的序列化和反序列化是怎么实现的？</p>
+<ul>
+<li>利用MessageConverter实现的，默认是JDK的序列化</li>
+<li>注意发送方与接收方必须使用相同的MessageConverter</li>
+</ul>
+<h2 id="三、分布式搜索-elasticsearch"><a href="#三、分布式搜索-elasticsearch" class="headerlink" title="三、分布式搜索-elasticsearch"></a>三、分布式搜索-elasticsearch</h2><p>1、初识elasticsearch</p>
+<p>2、索引库操作</p>
+<p>3、文档操作</p>
+<p>4、RestAPI</p>
+<h1 id="RestClient"><a href="#RestClient" class="headerlink" title="RestClient"></a><strong>RestClient</strong></h1><h1 id="DSL查询语法"><a href="#DSL查询语法" class="headerlink" title="DSL查询语法"></a><strong>DSL查询语法</strong></h1><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/">#微服务框架</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>微服务框架（三）</div>
+      <div>https://kblayt.github.io/2023/02/27/微服务/微服务框架-三/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/28/JavaWeb+SSM+SpringBoot/Spring%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%B0%81%E8%A3%85/" title="Java自定义注解封装">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java自定义注解封装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
+                        <span class="hidden-mobile">设计模式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
