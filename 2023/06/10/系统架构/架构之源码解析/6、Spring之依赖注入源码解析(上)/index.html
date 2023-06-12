@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="依赖注入底层原理流程图： Spring中到底有几种依赖注入的方式？首先分两种：  手动注入 自动注入  手动注入在XML中定义Bean时，就是手动注入，因为是程序员手动给某个属性指定了值。 123&lt;bean name&#x3D;&quot;userService&quot; class&#x3D;&quot;com.luban.service.UserService&quot;&gt;	&lt;property">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6、Spring之依赖注入源码解析">
+<meta property="og:url" content="https://kblayt.github.io/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="依赖注入底层原理流程图： Spring中到底有几种依赖注入的方式？首先分两种：  手动注入 自动注入  手动注入在XML中定义Bean时，就是手动注入，因为是程序员手动给某个属性指定了值。 123&lt;bean name&#x3D;&quot;userService&quot; class&#x3D;&quot;com.luban.service.UserService&quot;&gt;	&lt;property">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/image-20230611170400579.png">
+<meta property="article:published_time" content="2023-06-10T07:24:49.000Z">
+<meta property="article:modified_time" content="2023-06-12T09:39:41.777Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="源码框架">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/image-20230611170400579.png">
+  
+  
+  
+  <title>6、Spring之依赖注入源码解析 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="6、Spring之依赖注入源码解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-10 15:24" pubdate>
+          2023年6月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          63 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">6、Spring之依赖注入源码解析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>依赖注入底层原理流程图：<img src="/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/image-20230611170400579.png" srcset="/img/loading.gif" lazyload alt="image-20230611170400579"></p>
+<h2 id="Spring中到底有几种依赖注入的方式？"><a href="#Spring中到底有几种依赖注入的方式？" class="headerlink" title="Spring中到底有几种依赖注入的方式？"></a>Spring中到底有几种依赖注入的方式？</h2><p>首先分两种：</p>
+<ol>
+<li>手动注入</li>
+<li>自动注入</li>
+</ol>
+<h3 id="手动注入"><a href="#手动注入" class="headerlink" title="手动注入"></a>手动注入</h3><p>在XML中定义Bean时，就是手动注入，因为是<strong>程序员<strong><strong>手动</strong></strong>给某个属性指定了值</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;bean name=<span class="hljs-string">&quot;userService&quot;</span> class=<span class="hljs-string">&quot;com.luban.service.UserService&quot;</span>&gt;<br>	&lt;property name=<span class="hljs-string">&quot;orderService&quot;</span> ref=<span class="hljs-string">&quot;orderService&quot;</span>/&gt;<br>&lt;/bean&gt;<br></code></pre></td></tr></table></figure>
+
+<p>上面这种底层是通过<strong>set方法</strong>进行注入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;bean name=<span class="hljs-string">&quot;userService&quot;</span> class=<span class="hljs-string">&quot;com.luban.service.UserService&quot;</span>&gt;<br>	&lt;constructor-arg index=<span class="hljs-string">&quot;0&quot;</span> ref=<span class="hljs-string">&quot;orderService&quot;</span>/&gt;<br>&lt;/bean&gt;<br></code></pre></td></tr></table></figure>
+
+<p>上面这种底层是通过<strong>构造方法</strong>进行注入。</p>
+<p>所以手动注入的底层也就是分为两种：</p>
+<ol>
+<li>set方法注入</li>
+<li>构造方法注入</li>
+</ol>
+<h3 id="自动注入"><a href="#自动注入" class="headerlink" title="自动注入"></a>自动注入</h3><p>自动注入又分为两种：</p>
+<ol>
+<li>XML的autowire自动注入</li>
+<li>@Autowired注解的自动注入</li>
+</ol>
+<h3 id="XML的autowire自动注入"><a href="#XML的autowire自动注入" class="headerlink" title="XML的autowire自动注入"></a>XML的autowire自动注入</h3><p>在XML中，我们可以在定义一个Bean时去指定这个Bean的自动注入模式：</p>
+<ol>
+<li>byType</li>
+<li>byName</li>
+<li>constructor</li>
+<li>default</li>
+<li>no</li>
+</ol>
+<p>比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;bean id=<span class="hljs-string">&quot;userService&quot;</span> class=<span class="hljs-string">&quot;com.luban.service.UserService&quot;</span> autowire=<span class="hljs-string">&quot;byType&quot;</span>/&gt;<br></code></pre></td></tr></table></figure>
+
+<p>这么写，表示Spring会自动的给userService中所有的属性自动赋值（<strong>不需要</strong>这个属性上有@Autowired注解，但需要这个属性有对应的<strong>set方法</strong>）。</p>
+<p>在创建Bean的过程中，在填充属性时，Spring会去解析当前类，把<strong>当前类的所有****方法</strong>都解析出来，Spring会去解析每个方法得到对应的PropertyDescriptor对象，PropertyDescriptor中有几个属性：</p>
+<ol>
+<li><p><strong>name：这个name并不是方法的名字，而是拿方法名字进过处理后的名字</strong></p>
+</li>
+<li><ol>
+<li><strong>如果方法名字以“get”开头，比如“getXXX”,那么name&#x3D;XXX</strong></li>
+<li><strong>如果方法名字以“is”开头，比如“isXXX”,那么name&#x3D;XXX</strong></li>
+<li><strong>如果方法名字以“set”开头，比如“setXXX”,那么name&#x3D;XXX</strong></li>
+</ol>
+</li>
+<li><p><strong>readMethodRef：表示get方法的Method对象的引用</strong></p>
+</li>
+<li><p><strong>readMethodName：表示get方法的名字</strong></p>
+</li>
+<li><p><strong>writeMethodRef：****表示set方法的Method对象的引用</strong></p>
+</li>
+<li><p><strong>writeMethodName：****表示set方法的名字</strong></p>
+</li>
+<li><p><strong>propertyTypeRef：如果有get方法那么对应的就是返回值的类型，如果是set方法那么对应的就是set方法中唯一参数的类型</strong></p>
+</li>
+</ol>
+<p><strong>get方法的定义是：</strong> 方法参数个数为0个，并且 （方法名字以”get”开头 或者 方法名字以”is”开头并且方法的返回类型为boolean）</p>
+<p><strong>set方法的定义是：</strong>方法参数个数为1个，并且 （方法名字以”set”开头并且方法返回类型为void）</p>
+<p>所以，Spring在通过byName的自动填充属性时流程是：</p>
+<ol>
+<li>找到所有set方法所对应的XXX部分的名字</li>
+<li>根据XXX部分的名字去获取bean</li>
+</ol>
+<p>Spring在通过byType的自动填充属性时流程是：</p>
+<ol>
+<li>获取到set方法中的唯一参数的参数类型，并且根据该类型去容器中获取bean</li>
+<li>如果找到多个，会报错。</li>
+</ol>
+<p>以上，分析了autowire的byType和byName情况，那么接下来分析constructor，constructor表示通过构造方法注入，其实这种情况就比较简单了，没有byType和byName那么复杂。</p>
+<p>如果是constructor，那么就可以不写set方法了，当某个bean是通过构造方法来注入时，spring利用构造方法的参数信息从Spring容器中去找bean，找到bean之后作为参数传给构造方法，从而实例化得到一个bean对象，并完成属性赋值（属性赋值的代码得程序员来写）。</p>
+<p>我们这里先不考虑一个类有多个构造方法的情况，后面单独讲<strong>推断构造方法</strong>。我们这里只考虑只有一个有参构造方法。</p>
+<p>其实构造方法注入相当于byType+byName，普通的byType是根据set方法中的参数类型去找bean，找到多个会报错，而constructor就是通过构造方法中的参数类型去找bean，如果找到多个会根据参数名确定。</p>
+<p>另外两个：</p>
+<ol>
+<li>no，表示关闭autowire</li>
+<li>default，表示默认值，我们一直演示的某个bean的autowire，而也可以直接在<beans>标签中设置autowire，如果设置了，那么<bean>标签中设置的autowire如果为default，那么则会用<beans>标签中设置的autowire。</li>
+</ol>
+<p>可以发现XML中的自动注入是挺强大的，那么问题来了，<strong>为什么我们平时都是用的@Autowired注解呢？而没有用上文说的这种自动注入方式呢？</strong></p>
+<p>@Autowired注解相当于XML中的autowire属性的<strong>注解方式的替代</strong>。这是在官网上有提到的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Essentially, the <span class="hljs-meta">@Autowired</span> annotation provides the same capabilities as described in Autowiring Collaborators but with more fine-grained control and wider applicability<br></code></pre></td></tr></table></figure>
+
+
+
+<p>翻译一下：</p>
+<p>从本质上讲，@Autowired注解提供了与autowire相同的功能，但是拥有更细粒度的控制和更广泛的适用性。</p>
+<p>注意：<strong>更细粒度的控制</strong>。</p>
+<p>XML中的autowire控制的是整个bean的所有属性，而@Autowired注解是直接写在某个属性、某个set方法、某个构造方法上的。</p>
+<p>再举个例子，如果一个类有多个构造方法，那么如果用XML的autowire&#x3D;constructor，你无法控制到底用哪个构造方法，而你可以用@Autowired注解来直接指定你想用哪个构造方法。</p>
+<p>同时，用@Autowired注解，还可以控制，哪些属性想被自动注入，哪些属性不想，这也是细粒度的控制。</p>
+<p>但是@Autowired无法区分byType和byName，@Autowired是先byType，如果找到多个则byName。</p>
+<p>那么XML的自动注入底层其实也就是:</p>
+<ol>
+<li>set方法注入</li>
+<li>构造方法注入</li>
+</ol>
+<h3 id="Autowired注解的自动注入"><a href="#Autowired注解的自动注入" class="headerlink" title="@Autowired注解的自动注入"></a>@Autowired注解的自动注入</h3><p>上文说了@Autowired注解，是byType和byName的结合。</p>
+<p>@Autowired注解可以写在：</p>
+<ol>
+<li>属性上：先根据<strong>属性类型</strong>去找Bean，如果找到多个再根据<strong>属性名</strong>确定一个</li>
+<li>构造方法上：先根据方法<strong>参数类型</strong>去找Bean，如果找到多个再根据<strong>参数名</strong>确定一个</li>
+<li>set方法上：先根据方法<strong>参数类型</strong>去找Bean，如果找到多个再根据<strong>参数名</strong>确定一个</li>
+</ol>
+<p>而这种底层到了：</p>
+<ol>
+<li>属性注入</li>
+<li>set方法注入</li>
+<li>构造方法注入</li>
+</ol>
+<h2 id="寻找注入点"><a href="#寻找注入点" class="headerlink" title="寻找注入点"></a>寻找注入点</h2><p>在创建一个Bean的过程中，Spring会利用AutowiredAnnotationBeanPostProcessor的**postProcessMergedBeanDefinition()**找出注入点并缓存，找注入点的流程为：</p>
+<ol>
+<li>遍历当前类的所有的属性字段Field</li>
+<li>查看字段上是否存在@Autowired、@Value、@Inject中的其中任意一个，存在则认为该字段是一个注入点</li>
+<li>如果字段是static的，则不进行注入</li>
+<li>获取@Autowired中的required属性的值</li>
+<li>将字段信息构造成一个<strong>AutowiredFieldElement对象</strong>，作为一个<strong>注入点对象</strong>添加到currElements集合中。</li>
+<li>遍历当前类的所有方法Method</li>
+<li>判断当前Method是否是<strong>桥接方法</strong>，如果是找到原方法</li>
+<li>查看方法上是否存在@Autowired、@Value、@Inject中的其中任意一个，存在则认为该方法是一个注入点</li>
+<li>如果方法是static的，则不进行注入</li>
+<li>获取@Autowired中的required属性的值</li>
+<li>将方法信息构造成一个<strong>AutowiredMethodElement对象</strong>，作为一个<strong>注入点对象</strong>添加到currElements集合中。</li>
+<li>遍历完当前类的字段和方法后，将<strong>遍历父类</strong>的，直到没有父类。</li>
+<li>最后将currElements集合封装成一个InjectionMetadata对象，作为当前Bean对于的注入点集合对象，并缓存。</li>
+</ol>
+<h3 id="static的字段或方法为什么不支持"><a href="#static的字段或方法为什么不支持" class="headerlink" title="static的字段或方法为什么不支持"></a>static的字段或方法为什么不支持</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;prototype&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;prototype&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserService</span>  &#123;<br><br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> OrderService orderService;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-string">&quot;test123&quot;</span>);<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>看上面代码，UserService和OrderService都是原型Bean，假设Spring支持static字段进行自动注入，那么现在调用两次</p>
+<ol>
+<li>UserService userService1 &#x3D; context.getBean(“userService”)</li>
+<li>UserService userService2 &#x3D; context.getBean(“userService”)</li>
+</ol>
+<p>问此时，userService1的orderService值是什么？还是它自己注入的值吗？</p>
+<p>答案是不是，一旦userService2 创建好了之后，static orderService字段的值就发生了修改了，从而出现bug。</p>
+<h3 id="桥接方法"><a href="#桥接方法" class="headerlink" title="桥接方法"></a>桥接方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">UserInterface</span>&lt;T&gt; &#123;<br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">setOrderService</span><span class="hljs-params">(T t)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserService</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">UserInterface</span>&lt;OrderService&gt; &#123;<br><br>	<span class="hljs-keyword">private</span> OrderService orderService;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-meta">@Autowired</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setOrderService</span><span class="hljs-params">(OrderService orderService)</span> &#123;<br>		<span class="hljs-built_in">this</span>.orderService = orderService;<br>	&#125;<br><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> &#123;<br>		System.out.println(<span class="hljs-string">&quot;test123&quot;</span>);<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>UserService对应的字节码为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// class version 52.0 (52)</span><br><span class="hljs-comment">// access flags 0x21</span><br><span class="hljs-comment">// signature Ljava/lang/Object;Lcom/zhouyu/service/UserInterface&lt;Lcom/zhouyu/service/OrderService;&gt;;</span><br><span class="hljs-comment">// declaration: com/zhouyu/service/UserService implements com.zhouyu.service.UserInterface&lt;com.zhouyu.service.OrderService&gt;</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">com</span>/zhouyu/service/UserService <span class="hljs-keyword">implements</span> <span class="hljs-title class_">com</span>/zhouyu/service/UserInterface &#123;<br><br>  <span class="hljs-comment">// compiled from: UserService.java</span><br><br>  <span class="hljs-meta">@Lorg</span>/springframework/stereotype/Component;()<br><br>  <span class="hljs-comment">// access flags 0x2</span><br>  <span class="hljs-keyword">private</span> Lcom/zhouyu/service/OrderService; orderService<br><br>  <span class="hljs-comment">// access flags 0x1</span><br>  <span class="hljs-keyword">public</span> &lt;init&gt;()V<br>   L0<br>    LINENUMBER <span class="hljs-number">12</span> L0<br>    ALOAD <span class="hljs-number">0</span><br>    INVOKESPECIAL java/lang/Object.&lt;init&gt; ()V<br>    RETURN<br>   L1<br>    LOCALVARIABLE <span class="hljs-built_in">this</span> Lcom/zhouyu/service/UserService; L0 L1 <span class="hljs-number">0</span><br>    MAXSTACK = <span class="hljs-number">1</span><br>    MAXLOCALS = <span class="hljs-number">1</span><br><br>  <span class="hljs-comment">// access flags 0x1</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">setOrderService</span><span class="hljs-params">(Lcom/zhouyu/service/OrderService;)</span>V<br>  <span class="hljs-meta">@Lorg</span>/springframework/beans/factory/annotation/Autowired;()<br>   L0<br>    LINENUMBER <span class="hljs-number">19</span> L0<br>    ALOAD <span class="hljs-number">0</span><br>    ALOAD <span class="hljs-number">1</span><br>    PUTFIELD com/zhouyu/service/UserService.orderService : Lcom/zhouyu/service/OrderService;<br>   L1<br>    LINENUMBER <span class="hljs-number">20</span> L1<br>    RETURN<br>   L2<br>    LOCALVARIABLE <span class="hljs-built_in">this</span> Lcom/zhouyu/service/UserService; L0 L2 <span class="hljs-number">0</span><br>    LOCALVARIABLE orderService Lcom/zhouyu/service/OrderService; L0 L2 <span class="hljs-number">1</span><br>    MAXSTACK = <span class="hljs-number">2</span><br>    MAXLOCALS = <span class="hljs-number">2</span><br><br>  <span class="hljs-comment">// access flags 0x1</span><br>  <span class="hljs-keyword">public</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span>V<br>   L0<br>    LINENUMBER <span class="hljs-number">23</span> L0<br>    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;<br>    LDC <span class="hljs-string">&quot;test123&quot;</span><br>    INVOKEVIRTUAL java/io/PrintStream.println (Ljava/lang/String;)V<br>   L1<br>    LINENUMBER <span class="hljs-number">24</span> L1<br>    RETURN<br>   L2<br>    LOCALVARIABLE <span class="hljs-built_in">this</span> Lcom/zhouyu/service/UserService; L0 L2 <span class="hljs-number">0</span><br>    MAXSTACK = <span class="hljs-number">2</span><br>    MAXLOCALS = <span class="hljs-number">1</span><br><br>  <span class="hljs-comment">// access flags 0x1041</span><br>  <span class="hljs-keyword">public</span> synthetic bridge <span class="hljs-title function_">setOrderService</span><span class="hljs-params">(Ljava/lang/Object;)</span>V<br>  <span class="hljs-meta">@Lorg</span>/springframework/beans/factory/annotation/Autowired;()<br>   L0<br>    LINENUMBER <span class="hljs-number">11</span> L0<br>    ALOAD <span class="hljs-number">0</span><br>    ALOAD <span class="hljs-number">1</span><br>    CHECKCAST com/zhouyu/service/OrderService<br>    INVOKEVIRTUAL com/zhouyu/service/UserService.setOrderService (Lcom/zhouyu/service/OrderService;)V<br>    RETURN<br>   L1<br>    LOCALVARIABLE <span class="hljs-built_in">this</span> Lcom/zhouyu/service/UserService; L0 L1 <span class="hljs-number">0</span><br>    MAXSTACK = <span class="hljs-number">2</span><br>    MAXLOCALS = <span class="hljs-number">2</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>可以看到在UserSerivce的字节码中有两个setOrderService方法：</p>
+<ol>
+<li>public setOrderService(Lcom&#x2F;zhouyu&#x2F;service&#x2F;OrderService;)V</li>
+<li>public synthetic bridge setOrderService(Ljava&#x2F;lang&#x2F;Object;)V</li>
+</ol>
+<p>并且都是存在@Autowired注解的。</p>
+<p>所以在Spring中需要处理这种情况，当遍历到桥接方法时，得找到原方法。</p>
+<h2 id="注入点进行注入"><a href="#注入点进行注入" class="headerlink" title="注入点进行注入"></a>注入点进行注入</h2><p>Spring在AutowiredAnnotationBeanPostProcessor的**postProcessProperties()**方法中，会遍历所找到的注入点依次进行注入。</p>
+<h3 id="字段注入"><a href="#字段注入" class="headerlink" title="字段注入"></a>字段注入</h3><ol>
+<li>遍历所有的<strong>AutowiredFieldElement对象。</strong></li>
+<li>将对应的字段封装为<strong>DependencyDescriptor对象</strong>。</li>
+<li>调用BeanFactory的resolveDependency()方法，传入<strong>DependencyDescriptor对象</strong>，进行依赖查找，找到当前字段所匹配的Bean对象。</li>
+<li>将<strong>DependencyDescriptor对象</strong>和所找到的<strong>结果对象beanName</strong>封装成一个<strong>ShortcutDependencyDescriptor对象</strong>作为缓存，比如如果当前Bean是原型Bean，那么下次再来创建该Bean时，就可以直接拿缓存的结果对象beanName去BeanFactory中去那bean对象了，不用再次进行查找了</li>
+<li>利用反射将结果对象赋值给字段。</li>
+</ol>
+<h3 id="Set方法注入"><a href="#Set方法注入" class="headerlink" title="Set方法注入"></a>Set方法注入</h3><ol>
+<li>遍历所有的<strong>AutowiredMethodElement对象</strong></li>
+<li>遍历将对应的方法的参数，将每个参数封装成<strong>MethodParameter对象</strong></li>
+<li>将<strong>MethodParameter对象</strong>封装为<strong>DependencyDescriptor对象</strong></li>
+<li>调用BeanFactory的resolveDependency()方法，传入<strong>DependencyDescriptor对象</strong>，进行依赖查找，找到当前方法参数所匹配的Bean对象。</li>
+<li>将<strong>DependencyDescriptor对象</strong>和所找到的<strong>结果对象beanName</strong>封装成一个<strong>ShortcutDependencyDescriptor对象</strong>作为缓存，比如如果当前Bean是原型Bean，那么下次再来创建该Bean时，就可以直接拿缓存的结果对象beanName去BeanFactory中去那bean对象了，不用再次进行查找了</li>
+<li>利用反射将找到的所有结果对象传给当前方法，并执行。</li>
+</ol>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>6、Spring之依赖注入源码解析</div>
+      <div>https://kblayt.github.io/2023/06/10/系统架构/架构之源码解析/6、Spring之依赖注入源码解析(上)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/10/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" title="6、Spring之依赖注入源码解析(上)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">6、Spring之依赖注入源码解析(上)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/5%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E9%94%80%E6%AF%81%E8%BF%87%E7%A8%8B)/" title="5、Spring之Bean生命周期源码解析(Bean的销毁过程)">
+                        <span class="hidden-mobile">5、Spring之Bean生命周期源码解析(Bean的销毁过程)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
