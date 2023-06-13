@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Explain工具介绍使用EXPLAIN关键字可以模拟优化器执行SQL语句，分析你的查询语句或是结构的性能瓶颈在 select 语句之前增加 explain 关键字，MySQL 会在查询上设置一个标记，执行查询会返回执行计划的信息，而不是执行这条SQL注意：如果 from 中包含子查询，仍会执行该子查询，将结果放入临时表中 Explain分析示例参考官方文档：https:&#x2F;&#x2F;dev.mysql.c">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png">
-<meta property="og:image" content="https://kblayt.github.io/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153755294.png">
-<meta property="og:image" content="https://kblayt.github.io/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153841090.png">
-<meta property="og:image" content="https://kblayt.github.io/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612160801603.png">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153755294.png">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153841090.png">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612160801603.png">
 <meta property="article:published_time" content="2023-06-12T01:35:10.000Z">
-<meta property="article:modified_time" content="2023-06-12T09:37:57.325Z">
+<meta property="article:modified_time" content="2023-06-12T14:32:58.433Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png">
+<meta name="twitter:image" content="https://kblayt.github.io/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png">
   
   
   
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          1.8k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          17 分钟
+          16 分钟
         
       </span>
     
@@ -284,15 +284,15 @@
 
 <figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> extended <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> actor;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png" srcset="/img/loading.gif" lazyload alt="image-20230612145725856"></p>
+<p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png" srcset="/img/loading.gif" lazyload alt="image-20230612145725856"></p>
 <p>在查询中的每个表会输出一行，如果有两个表通过 join 连接查询，那么会输出两行</p>
 <h2 id="explain-两个变种"><a href="#explain-两个变种" class="headerlink" title="explain 两个变种"></a><strong>explain 两个变种</strong></h2><p>1）<strong>explain extended</strong>：会在 explain 的基础上额外提供一些查询优化的信息。紧随其后通过 show warnings 命令可以得到优化后的查询语句，从而看出优化器优化了什么。额外还有 filtered 列，是一个半分比的值，rows * filtered&#x2F;100 可以估算出将要和 explain 中前一个表进行连接的行数（前一个表指 explain 中的id值比当前表id值小的表）。</p>
 <figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> extended <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> film <span class="hljs-keyword">where</span> id = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153755294.png" srcset="/img/loading.gif" lazyload alt="image-20230612153755294"></p>
+<p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153755294.png" srcset="/img/loading.gif" lazyload alt="image-20230612153755294"></p>
 <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">mysql&gt; <span class="hljs-built_in">show</span> <span class="hljs-built_in">warnings</span>;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153841090.png" srcset="/img/loading.gif" lazyload alt="image-20230612153841090"></p>
+<p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153841090.png" srcset="/img/loading.gif" lazyload alt="image-20230612153841090"></p>
 <p>2）<strong>explain partitions</strong>：相比 explain 多了个 partitions 字段，如果查询是基于分区表的话，会显示查询将访问的分<br>区。</p>
 <h2 id="explain中的列"><a href="#explain中的列" class="headerlink" title="explain中的列"></a>explain中的列</h2><p>接下来我们将展示 explain 中每个列的信息。</p>
 <ol>
@@ -303,12 +303,11 @@
 <li><p>simple：简单查询。查询不包含子查询和union</p>
 <figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> film <span class="hljs-keyword">where</span> id = <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2.Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612160801603.png" srcset="/img/loading.gif" lazyload alt="image-20230612160801603"></p>
+<p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612160801603.png" srcset="/img/loading.gif" lazyload alt="image-20230612160801603"></p>
 </li>
 </ol>
 </li>
 </ol>
-<p> [02-VIP-Explain详解与索引最佳实践[666资源站：666java .com].pdf](C:\Users\刘红舸\Desktop\02-VIP-Explain详解与索引最佳实践[666资源站：666java .com].pdf) </p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
