@@ -4,6 +4,499 @@
   
   
   <entry>
+    <title>17、常用并发设计模式</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/17%E3%80%81%E5%B8%B8%E7%94%A8%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/17%E3%80%81%E5%B8%B8%E7%94%A8%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>16、CompletableFuture实战&amp;Disruptor原理剖析</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/16%E3%80%81CompletableFuture%E5%AE%9E%E6%88%98-Disruptor%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/16%E3%80%81CompletableFuture%E5%AE%9E%E6%88%98-Disruptor%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>15、并发编程之ForkJoin工作原理分析</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/15%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BForkJoin%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/15%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BForkJoin%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>14、阻塞队列BlockingQueue实战及其原理分析二</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14%E3%80%81%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97BlockingQueue%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E4%BA%8C/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14%E3%80%81%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97BlockingQueue%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E4%BA%8C/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>13、阻塞队列BlockingQueue实战及其原理分析一</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/13%E3%80%81%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97BlockingQueue%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E4%B8%80/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/13%E3%80%81%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97BlockingQueue%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E4%B8%80/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>12、深入理解AQS之ReentrantReadWriteLock实战</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/12%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8BReentrantReadWriteLock%E5%AE%9E%E6%88%98/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/12%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8BReentrantReadWriteLock%E5%AE%9E%E6%88%98/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>11、深入理解AQS之CyclicBarrie详解</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/11%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8BCyclicBarrie%E8%AF%A6%E8%A7%A3/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/11%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8BCyclicBarrie%E8%AF%A6%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>10、Semaphorer&amp;CountDownLatch详解</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/10%E3%80%81Semaphorer-CountDownLatch%E8%AF%A6%E8%A7%A3/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/10%E3%80%81Semaphorer-CountDownLatch%E8%AF%A6%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>9、深入理解AQS之独占锁ReentrantLock源码分析</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>8、并发锁机制之深入理解synchronize二</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/8%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized%E4%BA%8C/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/8%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized%E4%BA%8C/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>7、并发锁机制之深入理解synchronized</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>6、并发编程之CAS&amp;Atomic原子操作详情</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>5、并发编程之深入理解Java线程</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/5%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/5%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>4、Java并发线程池底层原理详解与源码分析</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/4%E3%80%81Java%E5%B9%B6%E5%8F%91%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/4%E3%80%81Java%E5%B9%B6%E5%8F%91%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>3、并发List、Set、ConcurrentHashMap底层原理</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>2、并发编程之深入理解JMM&amp;并发三大特性(二)</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>1、并发编程之深入理解JMM&amp;并发三大特性(一)</title>
+    <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/"/>
+    <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/</url>
+    
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    
+    
+    <categories>
+      
+      <category>系统架构</category>
+      
+      <category>架构之并发编程</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>并发编程</tag>
+      
+      <tag>JUC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>13、Hotspot源码初探-实战模拟JVM如何调用Java方法</title>
     <link href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/13%E3%80%81Hotspot%E6%BA%90%E7%A0%81%E5%88%9D%E6%8E%A2-%E5%AE%9E%E6%88%98%E6%A8%A1%E6%8B%9FJVM%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8Java%E6%96%B9%E6%B3%95/"/>
     <url>/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/13%E3%80%81Hotspot%E6%BA%90%E7%A0%81%E5%88%9D%E6%8E%A2-%E5%AE%9E%E6%88%98%E6%A8%A1%E6%8B%9FJVM%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8Java%E6%96%B9%E6%B3%95/</url>
@@ -762,7 +1255,7 @@
     <link href="/2023/06/12/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/5%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/"/>
     <url>/2023/06/12/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/5%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/</url>
     
-    <content type="html"><![CDATA[<h1 id="分页查询优化"><a href="#分页查询优化" class="headerlink" title="分页查询优化"></a><strong>分页查询优化</strong></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs mysql">示例表：<br>CREATE TABLE `employees` (<br>  `id` int(11) NOT NULL AUTO_INCREMENT,<br>  `name` varchar(24) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;姓名&#x27;,<br>  `age` int(11) NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;年龄&#x27;,<br>  `position` varchar(20) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;职位&#x27;,<br>  `hire_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;入职时间&#x27;,<br>  PRIMARY KEY (`id`),<br>  KEY `idx_name_age_position` (`name`,`age`,`position`) USING BTREE<br>) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT=&#x27;员工记录表&#x27;;<br></code></pre></td></tr></table></figure><p>​          </p><p>很多时候我们业务系统实现分页功能可能会用如下sql实现</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; select * from employees limit 10000,10;         <br></code></pre></td></tr></table></figure><p>​     </p><p>表示从表 employees 中取出从 10001 行开始的 10 行记录。看似只查询了 10 条记录，实际这条 SQL 是先读取 10010 条记录，然后抛弃前 10000 条记录，然后读到后面 10 条想要的数据。因此要查询一张大表比较靠后的数据，执行效率是非常低的。</p><h1 id="gt-gt-常见的分页场景优化技巧："><a href="#gt-gt-常见的分页场景优化技巧：" class="headerlink" title="&gt;&gt;常见的分页场景优化技巧："></a><strong>&gt;&gt;常见的分页场景优化技巧：</strong></h1><h2 id="1、根据自增且连续的主键排序的分页查询"><a href="#1、根据自增且连续的主键排序的分页查询" class="headerlink" title="1、根据自增且连续的主键排序的分页查询"></a><strong>1、根据自增且连续的主键排序的分页查询</strong></h2><p>首先来看一个根据自增且连续主键排序的分页查询的例子：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; select * from employees limit 90000,5;    <br></code></pre></td></tr></table></figure><p>​          </p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100109" alt="0"></p><p>该 SQL 表示查询从第 90001开始的五行数据，没添加单独 order by，表示通过<strong>主键排序</strong>。我们再看表 employees ，因为主键是自增并且连续的，所以可以改写成按照主键去查询从第 90001开始的五行数据，如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; select * from employees where id &gt; 90000 limit 5;         <br></code></pre></td></tr></table></figure><p>​     </p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100108" alt="0"></p><p>查询的结果是一致的。我们再对比一下执行计划：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; EXPLAIN select * from employees limit 90000,5; <br></code></pre></td></tr></table></figure><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100117" alt="0"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; EXPLAIN select * from employees where id &gt; 90000 limit 5;     <br></code></pre></td></tr></table></figure><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100113" alt="0"></p><p>显然改写后的 SQL 走了索引，而且扫描的行数大大减少，执行效率更高。 </p><p>但是，这条改写的SQL 在很多场景并不实用，因为表中可能某些记录被删后，主键空缺，导致结果不一致，如下图试验所示（先删除一条前面的记录，然后再测试原 SQL 和优化后的 SQL）：</p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100105" alt="0"></p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100103" alt="0"></p><p>两条 SQL 的结果并不一样，因此，如果主键不连续，不能使用上面描述的优化方法。</p><p>另外如果原 SQL 是 order by 非主键的字段，按照上面说的方法改写会导致两条 SQL 的结果不一致。所以这种改写得满足以下两个条件：</p><ul><li>主键自增且连续</li><li>结果是按照主键排序的</li></ul><h2 id="2、根据非主键字段排序的分页查询"><a href="#2、根据非主键字段排序的分页查询" class="headerlink" title="2、根据非主键字段排序的分页查询"></a><strong>2、根据非主键字段排序的分页查询</strong></h2><p>再看一个根据非主键字段排序的分页查询，SQL 如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt;  select * from employees ORDER BY name limit 90000,5;<br></code></pre></td></tr></table></figure><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100110" alt="0"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; EXPLAIN select * from employees ORDER BY name limit 90000,5;<br></code></pre></td></tr></table></figure><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100107" alt="0"></p><p>发现并没有使用 name 字段的索引（key 字段对应的值为 null），具体原因上节课讲过：<strong>扫描整个索引并查找到没索引的行(可能要遍历多个索引树)的成本比扫描全表的成本更高，所以优化器放弃使用索引</strong>。</p><p>知道不走索引的原因，那么怎么优化呢？</p><p>其实关键是<strong>让排序时返回的字段尽可能少</strong>，所以可以让排序和分页操作先查出主键，然后根据主键查到对应的记录，SQL改写如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; select * from employees e inner join (select id from employees order by name limit 90000,5) ed on e.id = ed.id;   <br></code></pre></td></tr></table></figure><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100106" alt="0"></p><p>需要的结果与原 SQL 一致，执行时间减少了一半以上，我们再对比优化前后sql的执行计划：</p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100104" alt="0"></p><p>原 SQL 使用的是 filesort 排序，而优化后的 SQL 使用的是索引排序。</p><h1 id="Join关联查询优化"><a href="#Join关联查询优化" class="headerlink" title="Join关联查询优化"></a><strong>Join关联查询优化</strong></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs mysql">-- 示例表：<br>CREATE TABLE `t1` (<br>  `id` int(11) NOT NULL AUTO_INCREMENT,<br>  `a` int(11) DEFAULT NULL,<br>  `b` int(11) DEFAULT NULL,<br>  PRIMARY KEY (`id`),<br>  KEY `idx_a` (`a`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br><br>create table t2 like t1;<br><br>-- 插入一些示例数据<br>-- 往t1表插入1万行记录<br>drop procedure if exists insert_t1; <br>delimiter ;;<br>create procedure insert_t1()        <br>begin<br>  declare i int;                    <br>  set i=1;                          <br>  while(i&lt;=10000)do                 <br>    insert into t1(a,b) values(i,i);  <br>    set i=i+1;                       <br>  end while;<br>end;;<br>delimiter ;<br>call insert_t1();<br><br>-- 往t2表插入100行记录<br>drop procedure if exists insert_t2; <br>delimiter ;;<br>create procedure insert_t2()        <br>begin<br>  declare i int;                    <br>  set i=1;                          <br>  while(i&lt;=100)do                 <br>    insert into t2(a,b) values(i,i);  <br>    set i=i+1;                       <br>  end while;<br>end;;<br>delimiter ;<br>call insert_t2();<br></code></pre></td></tr></table></figure><h1 id="mysql的表关联常见有两种算法"><a href="#mysql的表关联常见有两种算法" class="headerlink" title="mysql的表关联常见有两种算法"></a><strong>mysql的表关联常见有两种算法</strong></h1><ul><li><p>Nested-Loop Join 算法</p></li><li><p>Block Nested-Loop Join 算法</p></li></ul><h2 id="1、-嵌套循环连接-Nested-Loop-Join-NLJ-算法"><a href="#1、-嵌套循环连接-Nested-Loop-Join-NLJ-算法" class="headerlink" title="1、 嵌套循环连接 Nested-Loop Join(NLJ) 算法"></a><strong>1、</strong> <strong>嵌套循环连接</strong> <strong>Nested-Loop Join(NLJ) 算法</strong></h2><p>一次一行循环地从第一张表（称为<strong>驱动表</strong>）中读取行，在这行数据中取到关联字段，根据关联字段在另一张表（<strong>被驱动表</strong>）里取出满足条件的行，然后取出两张表的结果合集。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt; EXPLAIN select * from t1 inner join t2 on t1.a= t2.a;          <br></code></pre></td></tr></table></figure><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100112" alt="0"></p><p>从执行计划中可以看到这些信息：</p><ul><li>驱动表是 t2，被驱动表是 t1。先执行的就是驱动表(执行计划结果的id如果一样则按从上到下顺序执行sql)；优化器一般会优先选择<strong>小表做驱动表，</strong>用where条件过滤完驱动表，然后再跟被驱动表做关联查询。<strong>所以使用 inner join 时，排在前面的表并不一定就是驱动表。</strong></li><li>当使用left join时，左表是驱动表，右表是被驱动表，当使用right join时，右表时驱动表，左表是被驱动表，当使用join时，mysql会选择数据量比较小的表作为驱动表，大表作为被驱动表。</li><li>使用了 NLJ算法。一般 join 语句中，如果执行计划 Extra 中未出现 <strong>Using join buffer</strong> 则表示使用的 join 算法是 NLJ。</li></ul><p><strong>上面sql的大致流程如下：</strong></p><ol><li>从表 t2 中读取一行数据（如果t2表有查询过滤条件的，用先用条件过滤完，再从过滤结果里取出一行数据）；</li><li>从第 1 步的数据中，取出关联字段 a，到表 t1 中查找；</li><li>取出表 t1 中满足条件的行，跟 t2 中获取到的结果合并，作为结果返回给客户端；</li><li>重复上面 3 步。</li></ol><p>整个过程会读取 t2 表的所有数据(<strong>扫描100行</strong>)，然后遍历这每行数据中字段 a 的值，根据 t2 表中 a 的值索引扫描 t1 表中的对应行(<strong>扫描100次 t1 表的索引，1次扫描可以认为最终只扫描 t1 表一行完整数据，也就是总共 t1 表也扫描了100行</strong>)。因此整个过程扫描了 <strong>200 行</strong>。</p><p>如果被驱动表的关联字段没索引，**使用NLJ算法性能会比较低(下面有详细解释)**，mysql会选择Block Nested-Loop Join算法。</p><h2 id="2、-基于块的嵌套循环连接-Block-Nested-Loop-Join-BNL-算法"><a href="#2、-基于块的嵌套循环连接-Block-Nested-Loop-Join-BNL-算法" class="headerlink" title="2、 基于块的嵌套循环连接 Block Nested-Loop Join(BNL)算法"></a><strong>2、</strong> <strong>基于块的嵌套循环连接</strong> <strong>Block Nested-Loop Join(BNL)算法</strong></h2><p>把<strong>驱动表</strong>的数据读入到 join_buffer 中，然后扫描<strong>被驱动表</strong>，把<strong>被驱动表</strong>每一行取出来跟 join_buffer 中的数据做对比。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql&gt;EXPLAIN select * from t1 inner join t2 on t1.b= t2.b;<br></code></pre></td></tr></table></figure><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100111" alt="0"></p><p>Extra 中 的Using join buffer (Block Nested Loop)说明该关联查询使用的是 BNL 算法。</p><p><strong>上面sql的大致流程如下：</strong></p><ol><li>把 t2 的所有数据放入到 <strong>join_buffer</strong> 中</li><li>把表 t1 中每一行取出来，跟 join_buffer 中的数据做对比</li><li>返回满足 join 条件的数据</li></ol><p>整个过程对表 t1 和 t2 都做了一次全表扫描，因此扫描的总行数为10000(表 t1 的数据总量) + 100(表 t2 的数据总量) &#x3D; <strong>10100</strong>。并且 join_buffer 里的数据是无序的，因此对表 t1 中的每一行，都要做 100 次判断，所以内存中的判断次数是 100 * 10000&#x3D; <strong>100 万次</strong>。</p><p>这个例子里表 t2 才 100 行，要是表 t2 是一个大表，join_buffer 放不下怎么办呢？·</p><p>join_buffer 的大小是由参数 join_buffer_size 设定的，默认值是 256k。如果放不下表 t2 的所有数据话，策略很简单，就是<strong>分段放</strong>。</p><p>比如 t2 表有1000行记录， join_buffer 一次只能放800行数据，那么执行过程就是先往 join_buffer 里放800行记录，然后从 t1 表里取数据跟 join_buffer 中数据对比得到部分结果，然后清空  join_buffer ，再放入 t2 表剩余200行记录，再次从 t1 表里取数据跟 join_buffer 中数据对比。所以就多扫了一次 t1 表。</p><p><strong>被驱动表的关联字段没索引为什么要选择使用 BNL 算法而不使用 Nested-Loop Join 呢？</strong></p><p>如果上面第二条sql使用 Nested-Loop Join，那么扫描行数为 100 * 10000 &#x3D; 100万次，这个是<strong>磁盘扫描</strong>。</p><p>很显然，用BNL磁盘扫描次数少很多，相比于磁盘扫描，BNL的内存计算会快得多。</p><p>因此MySQL对于被驱动表的关联字段没索引的关联查询，一般都会使用 BNL 算法。如果有索引一般选择 NLJ 算法，有索引的情况下 NLJ 算法比 BNL算法性能更高</p><h1 id="对于关联sql的优化"><a href="#对于关联sql的优化" class="headerlink" title="对于关联sql的优化"></a><strong>对于关联sql的优化</strong></h1><ul><li><strong>关联字段加索引</strong>，让mysql做join操作时尽量选择NLJ算法，驱动表因为需要全部查询出来，所以过滤的条件也尽量要走索引，避免全表扫描，总之，能走索引的过滤条件尽量都走索引</li><li><strong>小表驱动大表</strong>，写多表连接sql时如果<strong>明确知道</strong>哪张表是小表可以用straight_join写法固定连接驱动方式，省去mysql优化器自己判断的时间</li></ul><p><strong>straight_join解释：straight_join</strong>功能同join类似，但能让左边的表来驱动右边的表，能改表优化器对于联表查询的执行顺序。</p><p>比如：select * from t2 straight_join t1 on t2.a &#x3D; t1.a; 代表指定mysql选着 t2 表作为驱动表。</p><ul><li><strong>straight_join</strong>只适用于inner join，并不适用于left join，right join。（因为left join，right join已经代表指定了表的执行顺序）</li><li>尽可能让优化器去判断，因为大部分情况下mysql优化器是比人要聪明的。使用<strong>straight_join</strong>一定要慎重，因为部分情况下人为指定的执行顺序并不一定会比优化引擎要靠谱。</li></ul><h1 id="对于小表定义的明确"><a href="#对于小表定义的明确" class="headerlink" title="对于小表定义的明确"></a><strong>对于小表定义的明确</strong></h1><p>在决定哪个表做驱动表的时候，应该是两个表按照各自的条件过滤，<strong>过滤完成之后</strong>，计算参与 join 的各个字段的总数据量，<strong>数据量小的那个表，就是“小表”</strong>，应该作为驱动表。</p><h2 id="in和exsits优化"><a href="#in和exsits优化" class="headerlink" title="in和exsits优化"></a><strong>in和exsits优化</strong></h2><p>原则：<strong>小表驱动大表</strong>，即小的数据集驱动大的数据集</p><p><strong>in：</strong>当B表的数据集小于A表的数据集时，in优于exists </p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select * from A where id in (select id from B)  <br>#等价于：<br>　　for(select id from B)&#123;<br>      select * from A where A.id = B.id<br>    &#125;<br></code></pre></td></tr></table></figure><p>​       </p><p><strong>exists：</strong>当A表的数据集小于B表的数据集时，exists优于in</p><p>　　将主查询A的数据，放到子查询B中做条件验证，根据验证结果（true或false）来决定主查询的数据是否保留</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select * from A where exists (select 1 from B where B.id = A.id)<br>#等价于:<br>    for(select * from A)&#123;<br>      select * from B where B.id = A.id<br>    &#125;<br>    <br>#A表与B表的ID字段应建立索引<br></code></pre></td></tr></table></figure><p>1、EXISTS (subquery)只返回TRUE或FALSE,因此子查询中的SELECT * 也可以用SELECT 1替换,官方说法是实际执行时会忽略SELECT清单,因此没有区别</p><p>2、EXISTS子查询的实际执行过程可能经过了优化而不是我们理解上的逐条对比</p><p>3、EXISTS子查询往往也可以用JOIN来代替，何种最优需要具体问题具体分析</p><h2 id="count-查询优化"><a href="#count-查询优化" class="headerlink" title="count(*)查询优化"></a><strong>count(*)查询优化</strong></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mysql">-- 临时关闭mysql查询缓存，为了查看sql多次执行的真实时间<br>mysql&gt; set global query_cache_size=0;<br>mysql&gt; set global query_cache_type=0;<br><br>mysql&gt; EXPLAIN select count(1) from employees;<br>mysql&gt; EXPLAIN select count(id) from employees;<br>mysql&gt; EXPLAIN select count(name) from employees;<br>mysql&gt; EXPLAIN select count(*) from employees;<br></code></pre></td></tr></table></figure><p><strong>注意：以上4条sql只有根据某个字段count不会统计字段为null值的数据行</strong></p><p><img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100116" alt="0"></p><p><strong>四个sql的执行计划一样，说明这四个sql执行效率应该差不多</strong></p><p><strong>字段有索引：count(*)≈count(1)&gt;count(字段)&gt;count(主键 id)    &#x2F;&#x2F;字段有索引，count(字段)统计走二级索引，二级索引存储数据比主键索引少，所以count(字段)&gt;count(主键 id)</strong> </p><p><strong>字段无索引：count(*)≈count(1)&gt;count(主键 id)&gt;count(字段)    &#x2F;&#x2F;字段没有索引count(字段)统计走不了索引，count(主键 id)还可以走主键索引，所以count(主键 id)&gt;count(字段)</strong></p><p>count(1)跟count(字段)执行过程类似，不过count(1)不需要取出字段统计，就用常量1做统计，count(字段)还需要取出字段，所以理论上count(1)比count(字段)会快一点。</p><p>count(<em>) 是例外，mysql并不会把全部字段取出来，而是专门做了优化，不取值，按行累加，效率很高，所以不需要用count(列名)或count(常量)来替代 count(</em>)。</p><p>为什么对于count(id)，mysql最终选择辅助索引而不是主键聚集索引？因为二级索引相对主键索引存储数据更少，检索性能应该更高，mysql内部做了点优化(应该是在5.7版本才优化)。</p><h1 id="常见优化方法"><a href="#常见优化方法" class="headerlink" title="常见优化方法"></a><strong>常见优化方法</strong></h1><h2 id="1、查询mysql自己维护的总行数"><a href="#1、查询mysql自己维护的总行数" class="headerlink" title="1、查询mysql自己维护的总行数"></a><strong>1、查询mysql自己维护的总行数</strong></h2><p>对于<strong>myisam存储引擎</strong>的表做不带where条件的count查询性能是很高的，因为myisam存储引擎的表的总行数会被mysql存储在磁盘上，查询不需要计算</p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100114" alt="0"></p><p>对于<strong>innodb存储引擎</strong>的表mysql不会存储表的总记录行数(因为有MVCC机制，后面会讲)，查询count需要实时计算</p><h2 id="2、show-table-status"><a href="#2、show-table-status" class="headerlink" title="2、show table status"></a><strong>2、show table status</strong></h2><p>如果只需要知道表总行数的估计值可以用如下sql查询，性能很高</p><p>​    <img src="/4%E3%80%81MySQL%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E6%88%982/100115" alt="0"></p><h2 id="3、将总数维护到Redis里"><a href="#3、将总数维护到Redis里" class="headerlink" title="3、将总数维护到Redis里"></a><strong>3、将总数维护到Redis里</strong></h2><p>插入或删除表数据行的时候同时维护redis里的表总行数key的计数值(用incr或decr命令)，但是这种方式可能不准，很难保证表操作和redis操作的事务一致性</p><h2 id="4、增加数据库计数表"><a href="#4、增加数据库计数表" class="headerlink" title="4、增加数据库计数表"></a><strong>4、增加数据库计数表</strong></h2><p>插入或删除表数据行的时候同时维护计数表，让他们在同一个事务里操作</p><h1 id="阿里巴巴Mysql规范解读"><a href="#阿里巴巴Mysql规范解读" class="headerlink" title="阿里巴巴Mysql规范解读"></a><strong>阿里巴巴Mysql规范解读</strong></h1><p><strong>补充：MySQL数据类型选择</strong></p><p>在MySQL中，选择正确的数据类型，对于性能至关重要。一般应该遵循下面两步：</p><p>（1）确定合适的大类型：数字、字符串、时间、二进制；</p><p>（2）确定具体的类型：有无符号、取值范围、变长定长等。</p><p>在MySQL数据类型设置方面，尽量用更小的数据类型，因为它们通常有更好的性能，花费更少的硬件资源。并且，尽量把字段定义为NOT NULL，避免使用NULL。</p><h2 id="1、数值类型"><a href="#1、数值类型" class="headerlink" title="1、数值类型"></a><strong>1、数值类型</strong></h2><table><thead><tr><th>类型</th><th>大小</th><th>范围（有符号）</th><th>范围（无符号）</th><th>用途</th></tr></thead><tbody><tr><td>TINYINT</td><td>1 字节</td><td>(-128, 127)</td><td>(0, 255)</td><td>小整数值</td></tr><tr><td>SMALLINT</td><td>2 字节</td><td>(-32 768, 32 767)</td><td>(0, 65 535)</td><td>大整数值</td></tr><tr><td>MEDIUMINT</td><td>3 字节</td><td>(-8 388 608, 8 388 607)</td><td>(0, 16 777 215)</td><td>大整数值</td></tr><tr><td>INT或INTEGER</td><td>4 字节</td><td>(-2 147 483 648, 2 147 483 647)</td><td>(0, 4 294 967 295)</td><td>大整数值</td></tr><tr><td>BIGINT</td><td>8 字节</td><td>(-9 233 372 036 854 775 808, 9 223 372 036 854 775 807)</td><td>(0, 18 446 744 073 709 551 615)</td><td>极大整数值</td></tr><tr><td>FLOAT</td><td>4 字节</td><td>(-3.402 823 466 E+38, 1.175 494 351 E-38)，0，(1.175 494 351 E-38，3.402 823 466 351 E+38)</td><td>0, (1.175 494 351 E-38, 3.402 823 466 E+38)</td><td>单精度浮点数值</td></tr><tr><td>DOUBLE</td><td>8 字节</td><td>(1.797 693 134 862 315 7 E+308, 2.225 073 858 507 201 4 E-308), 0, (2.225 073 858 507 201 4 E-308, 1.797 693 134 862 315 7 E+308)</td><td>0, (2.225 073 858 507 201 4 E-308, 1.797 693 134 862 315 7 E+308)</td><td>双精度浮点数值</td></tr><tr><td>DECIMAL</td><td>对DECIMAL(M,D) ，如果M&gt;D，为M+2否则为D+2</td><td>依赖于M和D的值</td><td>依赖于M和D的值</td><td>小数值</td></tr></tbody></table><h2 id="优化建议"><a href="#优化建议" class="headerlink" title="优化建议"></a><strong>优化建议</strong></h2><ol><li>如果整形数据没有负数，如ID号，建议指定为UNSIGNED无符号类型，容量可以扩大一倍。</li><li>建议使用TINYINT代替ENUM、BITENUM、SET。</li><li>避免使用整数的显示宽度(参看文档最后)，也就是说，不要用INT(10)类似的方法指定字段显示宽度，直接用INT。</li><li>DECIMAL最适合保存准确度要求高，而且用于计算的数据，比如价格。但是在使用DECIMAL类型的时候，注意长度设置。</li><li>建议使用整形类型来运算和存储实数，方法是，实数乘以相应的倍数后再操作。</li><li>整数通常是最佳的数据类型，因为它速度快，并且能使用AUTO_INCREMENT。</li></ol><h2 id="2、日期和时间"><a href="#2、日期和时间" class="headerlink" title="2、日期和时间"></a><strong>2、日期和时间</strong></h2><table><thead><tr><th>类型</th><th>大小(字节)</th><th>范围</th><th>格式</th><th>用途</th></tr></thead><tbody><tr><td>DATE</td><td>3</td><td>1000-01-01 到 9999-12-31</td><td>YYYY-MM-DD</td><td>日期值</td></tr><tr><td>TIME</td><td>3</td><td>‘-838:59:59’ 到 ‘838:59:59’</td><td>HH:MM:SS</td><td>时间值或持续时间</td></tr><tr><td>YEAR</td><td>1</td><td>1901 到 2155</td><td>YYYY</td><td>年份值</td></tr><tr><td>DATETIME</td><td>8</td><td>1000-01-01 00:00:00 到 9999-12-31 23:59:59</td><td>YYYY-MM-DD HH:MM:SS</td><td>混合日期和时间值</td></tr><tr><td>TIMESTAMP</td><td>4</td><td>1970-01-01 00:00:00 到 2038-01-19 03:14:07</td><td>YYYYMMDDhhmmss</td><td>混合日期和时间值，时间戳</td></tr></tbody></table><h2 id="优化建议-1"><a href="#优化建议-1" class="headerlink" title="优化建议"></a><strong>优化建议</strong></h2><ol><li>MySQL能存储的最小时间粒度为秒。</li><li>建议用DATE数据类型来保存日期。MySQL中默认的日期格式是yyyy-mm-dd。</li><li>用MySQL的内建类型DATE、TIME、DATETIME来存储时间，而不是使用字符串。</li><li>当数据格式为TIMESTAMP和DATETIME时，可以用CURRENT_TIMESTAMP作为默认（MySQL5.6以后），MySQL会自动返回记录插入的确切时间。</li><li>TIMESTAMP是UTC时间戳，与时区相关。</li><li>DATETIME的存储格式是一个YYYYMMDD HH:MM:SS的整数，与时区无关，你存了什么，读出来就是什么。</li><li>除非有特殊需求，一般的公司建议使用TIMESTAMP，它比DATETIME更节约空间，但是像阿里这样的公司一般会用DATETIME，因为不用考虑TIMESTAMP将来的时间上限问题。</li><li>有时人们把Unix的时间戳保存为整数值，但是这通常没有任何好处，这种格式处理起来不太方便，我们并不推荐它。</li></ol><p><strong>3、字符串</strong></p><table><thead><tr><th>类型</th><th>大小</th><th>用途</th></tr></thead><tbody><tr><td>CHAR</td><td>0-255字节</td><td>定长字符串，char(n)当插入的字符数不足n时(n代表字符数)，插入空格进行补充保存。在进行检索时，尾部的空格会被去掉。</td></tr><tr><td>VARCHAR</td><td>0-65535 字节</td><td>变长字符串，varchar(n)中的n代表最大字符数，插入的字符数不足n时不会补充空格</td></tr><tr><td>TINYBLOB</td><td>0-255字节</td><td>不超过 255 个字符的二进制字符串</td></tr><tr><td>TINYTEXT</td><td>0-255字节</td><td>短文本字符串</td></tr><tr><td>BLOB</td><td>0-65 535字节</td><td>二进制形式的长文本数据</td></tr><tr><td>TEXT</td><td>0-65 535字节</td><td>长文本数据</td></tr><tr><td>MEDIUMBLOB</td><td>0-16 777 215字节</td><td>二进制形式的中等长度文本数据</td></tr><tr><td>MEDIUMTEXT</td><td>0-16 777 215字节</td><td>中等长度文本数据</td></tr><tr><td>LONGBLOB</td><td>0-4 294 967 295字节</td><td>二进制形式的极大文本数据</td></tr><tr><td>LONGTEXT</td><td>0-4 294 967 295字节</td><td>极大文本数据</td></tr></tbody></table><h2 id="优化建议-2"><a href="#优化建议-2" class="headerlink" title="优化建议"></a><strong>优化建议</strong></h2><ol><li>字符串的长度相差较大用VARCHAR；字符串短，且所有值都接近一个长度用CHAR。</li><li>CHAR和VARCHAR适用于包括人名、邮政编码、电话号码和不超过255个字符长度的任意字母数字组合。那些要用来计算的数字不要用VARCHAR类型保存，因为可能会导致一些与计算相关的问题。换句话说，可能影响到计算的准确性和完整性。</li><li>尽量少用BLOB和TEXT，如果实在要用可以考虑将BLOB和TEXT字段单独存一张表，用id关联。</li><li>BLOB系列存储二进制字符串，与字符集无关。TEXT系列存储非二进制字符串，与字符集相关。</li><li>BLOB和TEXT都不能有默认值。</li></ol><p><strong>PS：INT显示宽度</strong></p><p>我们经常会使用命令来创建数据表，而且同时会指定一个长度，如下。但是，这里的长度并非是TINYINT类型存储的最大长度，而是显示的最大长度。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE `user`(    `id` TINYINT(2) UNSIGNED );  <br></code></pre></td></tr></table></figure><p>这里表示user表的id字段的类型是TINYINT，可以存储的最大数值是255。所以，在存储数据时，如果存入值小于等于255，如200，虽然超过2位，但是没有超出TINYINT类型长度，所以可以正常保存；如果存入值大于255，如500，那么MySQL会自动保存为TINYINT类型的最大值255。</p><p>在查询数据时，不管查询结果为何值，都按实际输出。这里TINYINT(2)中2的作用就是，当需要在查询结果前填充0时，命令中加上ZEROFILL就可以实现，如：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">`id` TINYINT(2) UNSIGNED ZEROFILL <br></code></pre></td></tr></table></figure><p>这样，查询结果如果是5，那输出就是05。如果指定TINYINT(5)，那输出就是00005，其实实际存储的值还是5，而且存储的数据不会超过255，只是MySQL输出数据时在前面填充了0。</p><p>换句话说，在MySQL命令中，字段的类型长度TINYINT(2)、INT(11)不会影响数据的插入，只会在使用ZEROFILL时有用，让查询结果前填充0。</p><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
     
     
     <categories>
@@ -849,7 +1342,7 @@
     <link href="/2023/06/12/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/"/>
     <url>/2023/06/12/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</url>
     
-    <content type="html"><![CDATA[<h1 id="Explain工具介绍"><a href="#Explain工具介绍" class="headerlink" title="Explain工具介绍"></a>Explain工具介绍</h1><p>使用EXPLAIN关键字可以模拟优化器执行SQL语句，分析你的查询语句或是结构的性能瓶颈<br>在 select 语句之前增加 explain 关键字，MySQL 会在查询上设置一个标记，执行查询会返回执行计划的信息，而不是<br>执行这条SQL<br>注意：如果 from 中包含子查询，仍会执行该子查询，将结果放入临时表中</p><h2 id="Explain分析示例"><a href="#Explain分析示例" class="headerlink" title="Explain分析示例"></a>Explain分析示例</h2><p>参考官方文档：<a href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">https://dev.mysql.com/doc/refman/5.7/en/explain-output.html</a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs mysql">示例表：<br>DROP TABLE IF EXISTS `actor`;<br>CREATE TABLE `actor` (<br>`id` int(11) NOT NULL,<br>    `name` varchar(45) DEFAULT NULL,<br>    PRIMARY KEY(`id`),<br>    KEY `idx_name` (`name`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf-8;<br><br>INSERT INTO `file` (`id`,`name`) VALUES (3,&#x27;film0&#x27;),(1,&#x27;film1&#x27;),(2,&#x27;film2&#x27;);<br><br>DROP TABLE IF EXISTS `film` ;<br>CREATE TABLE `film` (<br>`id` int(11) NOT NULL AUTO_ INCREMENT ,<br>`name` varchar(10) DEFAULT NULL,<br>PRIMARY KEY (`id`),<br>KEY `idx_name` (`name`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br><br>INSERT INTO `film`(`id`,`name`) VALUES (3,&#x27;fi1mB&#x27;),(1,&#x27;fi1m1&#x27;),(2,&#x27;film2&#x27;); <br><br>DROP TABLE IF EXISTS `film actor`;<br>CREATE TABLE `film_ actor` (<br>`id` int(11) NOT NULL,<br>`film_id` int(11) NOT NULL,<br>`actor_ id` int(11) NOT NULL,<br>`remark` varchar(255) DEFAULT NULL,<br>PRIMARY KEY (`id`),<br>KEY `idx_ film actor_id` (`film_id`, `actor_id`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br><br>INSERT INTO `fi1m_ actor` (`id`,`film_id`,<br>`actor_ id`) VALUES (1,1,1),(2,1,2),(3,2,1);<br></code></pre></td></tr></table></figure><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> extended <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> actor;<br></code></pre></td></tr></table></figure><p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612145725856.png" alt="image-20230612145725856"></p><p>在查询中的每个表会输出一行，如果有两个表通过 join 连接查询，那么会输出两行</p><h2 id="explain-两个变种"><a href="#explain-两个变种" class="headerlink" title="explain 两个变种"></a><strong>explain 两个变种</strong></h2><p>1）<strong>explain extended</strong>：会在 explain 的基础上额外提供一些查询优化的信息。紧随其后通过 show warnings 命令可以得到优化后的查询语句，从而看出优化器优化了什么。额外还有 filtered 列，是一个半分比的值，rows * filtered&#x2F;100 可以估算出将要和 explain 中前一个表进行连接的行数（前一个表指 explain 中的id值比当前表id值小的表）。</p><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> extended <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> film <span class="hljs-keyword">where</span> id = <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure><p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153755294.png" alt="image-20230612153755294"></p><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">mysql&gt; <span class="hljs-built_in">show</span> <span class="hljs-built_in">warnings</span>;<br></code></pre></td></tr></table></figure><p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612153841090.png" alt="image-20230612153841090"></p><p>2）<strong>explain partitions</strong>：相比 explain 多了个 partitions 字段，如果查询是基于分区表的话，会显示查询将访问的分<br>区。</p><h2 id="explain中的列"><a href="#explain中的列" class="headerlink" title="explain中的列"></a>explain中的列</h2><p>接下来我们将展示 explain 中每个列的信息。</p><ol><li><p><strong>id列</strong><br>id列的编号是 select 的序列号，有几个 select 就有几个id，并且id的顺序是按 select 出现的顺序增长的。<br>id列越大执行优先级越高，id相同则从上往下执行，id为NULL最后执行。</p></li><li><p><strong>select_type列</strong><br>select_type 表示对应行是简单还是复杂的查询。</p><ol><li><p>simple：简单查询。查询不包含子查询和union</p><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql">mysql&gt; <span class="hljs-keyword">explain</span> <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> film <span class="hljs-keyword">where</span> id = <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure><p><img src="/2%E3%80%81Explain%E8%AF%A6%E8%A7%A3%E4%B8%8E%E7%B4%A2%E5%BC%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/image-20230612160801603.png" alt="image-20230612160801603"></p></li></ol></li></ol><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
     
     
     <categories>
@@ -2452,7 +2945,7 @@
     <link href="/2022/10/22/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/Git%E6%8F%90%E4%BA%A4%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/"/>
     <url>/2022/10/22/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/Git%E6%8F%90%E4%BA%A4%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/</url>
     
-    <content type="html"><![CDATA[<p>1、打开想要提交或者克隆的项目文件夹</p><p>2、进入该文件夹打开Git Bash Here</p><p>3、初始化用户，告诉git你是谁</p><ul><li><p>git config –global user.name “你的名字或昵称”</p></li><li><p>git config –global user.email “你的邮箱”</p></li></ul><p>4、在该文件夹中执行下面命令，完成初始化</p><ul><li><p>git init</p></li><li><p>git remote add origin &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#103;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#101;&#101;&#x2e;&#99;&#x6f;&#109;">&#103;&#x69;&#x74;&#64;&#103;&#105;&#x74;&#101;&#101;&#x2e;&#99;&#x6f;&#109;</a>:xxx&#x2F;xxx.git</p></li><li><p>如果提交到github上则为： https:&#x2F;&#x2F;&lt;Personal access tokens(自己github上的tokens)&gt;@github.com&#x2F;Kblayt&#x2F;Kblayt.github.io.git</p></li></ul><p>5、若想克隆，只需要执行命令</p><ul><li>git clone &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#x6f;&#x6d;">&#x67;&#105;&#116;&#64;&#x67;&#x69;&#116;&#101;&#x65;&#x2e;&#99;&#x6f;&#x6d;</a>:xxx&#x2F;xxx.git</li></ul><p>6、进入已经初始化好的或者克隆项目的目录然后执行：</p><p>从服务器下更新项目，因为已经clone过，所以不需要再更新</p><ul><li>git pull origin master</li></ul><p>7、做一些修改后执行如下命令完成一次完整的提交</p><ul><li><p>git add .</p></li><li><p>git commit -m “安装教程测试”</p></li><li><p>git push origin master</p></li></ul><p>注意：提交命令有两个，git push origin master（正常提交）和git push origin master -f（强制提交，强制提交可能会把之前的commit注释信息，不会改变修改的代码，慎用），都是提交到master分支 其他常见git命令</p><ul><li><p>查看所有分支 ：git branch -a</p></li><li><p>切换到某一分支：git checkout 分支名称</p></li><li><p>合并分支：git merge 原分支 目标分支</p></li></ul><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+    <content type="html"><![CDATA[<p>1、打开想要提交或者克隆的项目文件夹</p><p>2、进入该文件夹打开Git Bash Here</p><p>3、初始化用户，告诉git你是谁</p><ul><li><p>git config –global user.name “你的名字或昵称”</p></li><li><p>git config –global user.email “你的邮箱”</p></li></ul><p>4、在该文件夹中执行下面命令，完成初始化</p><ul><li><p>git init</p></li><li><p>git remote add origin &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#x74;&#x65;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>:xxx&#x2F;xxx.git</p></li><li><p>如果提交到github上则为： https:&#x2F;&#x2F;&lt;Personal access tokens(自己github上的tokens)&gt;@github.com&#x2F;Kblayt&#x2F;Kblayt.github.io.git</p></li></ul><p>5、若想克隆，只需要执行命令</p><ul><li>git clone &lt;项目地址&gt; &#x2F;&#x2F;注:项目地址形式为:<a href="https://gitee.com/xxx/xxx.git%E6%88%96%E8%80%85">https://gitee.com/xxx/xxx.git或者</a> <a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#101;&#101;&#46;&#99;&#111;&#109;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#101;&#101;&#46;&#99;&#111;&#109;</a>:xxx&#x2F;xxx.git</li></ul><p>6、进入已经初始化好的或者克隆项目的目录然后执行：</p><p>从服务器下更新项目，因为已经clone过，所以不需要再更新</p><ul><li>git pull origin master</li></ul><p>7、做一些修改后执行如下命令完成一次完整的提交</p><ul><li><p>git add .</p></li><li><p>git commit -m “安装教程测试”</p></li><li><p>git push origin master</p></li></ul><p>注意：提交命令有两个，git push origin master（正常提交）和git push origin master -f（强制提交，强制提交可能会把之前的commit注释信息，不会改变修改的代码，慎用），都是提交到master分支 其他常见git命令</p><ul><li><p>查看所有分支 ：git branch -a</p></li><li><p>切换到某一分支：git checkout 分支名称</p></li><li><p>合并分支：git merge 原分支 目标分支</p></li></ul><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
     
     
     <categories>
