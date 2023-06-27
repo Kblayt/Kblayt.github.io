@@ -16,17 +16,25 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="ArrayList： List特点：元素有放入顺序，元素可重复 。 存储结构：底层采用数组来实现的。 源码： 1public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;       2、Cloneable 支持拷贝：实现Cloneable接口，重写clone方法、方法内容默认调用父类的clone方法。 2.1、浅拷贝 ​    基">
+<meta property="og:type" content="article">
 <meta property="og:title" content="3、并发List、Set、ConcurrentHashMap底层原理">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ArrayList： List特点：元素有放入顺序，元素可重复 。 存储结构：底层采用数组来实现的。 源码： 1public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;       2、Cloneable 支持拷贝：实现Cloneable接口，重写clone方法、方法内容默认调用父类的clone方法。 2.1、浅拷贝 ​    基">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1584">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1585">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1583">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1582">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1581">
 <meta property="article:published_time" content="2023-06-16T15:34:35.000Z">
-<meta property="article:modified_time" content="2023-06-16T15:46:27.163Z">
+<meta property="article:modified_time" content="2023-06-25T14:40:00.047Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1584">
   
   
   
@@ -218,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          7.2k 字
         
       </span>
     
@@ -229,7 +237,7 @@
         
         
         
-          1 分钟
+          61 分钟
         
       </span>
     
@@ -272,7 +280,117 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><img src="/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1584" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>ArrayList：</strong></p>
+<p><strong>List特点：</strong>元素有放入顺序，元素可重复 。</p>
+<p><strong>存储结构：</strong>底层采用数组来实现的。</p>
+<p><strong>源码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ArrayList</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractList</span>&lt;E&gt;     <br></code></pre></td></tr></table></figure>
+
+<p><strong>2、Cloneable</strong></p>
+<p>支持拷贝：实现Cloneable接口，重写clone方法、方法内容默认调用父类的clone方法。</p>
+<p><strong>2.1、浅拷贝</strong></p>
+<p>​    基础类型的变量拷贝之后是独立的，不会随着源变量变动而变</p>
+<p>​    String类型拷贝之后也是独立的</p>
+<p>​    引用类型拷贝的是引用地址，拷贝前后的变量引用同一个堆中的对象</p>
+<p>public Object clone() throws CloneNotSupportedException {    </p>
+<p>​		Study s &#x3D; (Study) super.clone();    </p>
+<p>​		return s; </p>
+<p>}</p>
+<p>基本类型、引用类型。</p>
+<p>浅拷贝 基本类型（int类型）是独立的（改了值会生效），引用类型不独立的（同一份数据，string也是同样的）</p>
+<p><strong>2.2、深拷贝</strong></p>
+<p>变量的所有引用类型变量（除了String）都需要实现Cloneable（数组可以直接调用clone方法），clone方法中，引用类型需要各</p>
+<p>​    自调用clone，重新赋值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException &#123;<br>    <span class="hljs-type">Study</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> (Study) <span class="hljs-built_in">super</span>.clone();<br>    s.setScore(<span class="hljs-built_in">this</span>.score.clone());<br>    <span class="hljs-keyword">return</span> s;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>java的传参，基本类型和引用类型传参</p>
+<p>java在方法传递参数时，是将变量复制一份，然后传入方法体去执行。复制的是栈中的内容</p>
+<p>所以基本类型是复制的变量名和值，值变了不影响源变量</p>
+<p>引用类型复制的是变量名和值（引用地址），对象变了，会影响源变量（引用地址是一样的）</p>
+<p>String：是不可变对象，重新赋值时，会在常量表新生成字符串（如果已有，直接取他的引用地址），将新字符串的引用地址赋值给栈中的新变量，因此源变量不会受影响</p>
+<p><strong>3、Serializable</strong></p>
+<p>序列化：将对象状态转换为可保持或传输的格式的过程。与序列化相对的是反序列化，它将流转换为对象。这两个过程结合起来，可以轻松地存储和传输数据，在Java中的这个Serializable接口其实是给jvm看的，通知jvm，我不对这个类做序列化了，你(jvm)帮我序列化就好了。如果我们没有自己声明一个serialVersionUID变量,接口会默认生成一个serialVersionUID，默认的serialVersinUID对于class的细节非常敏感，反序列化时可能会导致InvalidClassException这个异常（每次序列化都会重新计算该值）</p>
+<p>存盘 网络</p>
+<p>序列化 返序列化 </p>
+<p>序列化 对象》二级制 </p>
+<p>二进制 》对象  反序列化 校验 这个serivresionid</p>
+<p><strong>4、AbstractList</strong></p>
+<p>继承了AbstractList ，说明它是一个列表，拥有相应的增，删，查，改等功能。</p>
+<p><strong>5、List</strong></p>
+<p>为什么继承了 AbstractList 还需要 实现List 接口？</p>
+<p>1、在StackOverFlow 中：传送门 得票最高的答案的回答者说他问了当初写这段代码的 Josh Bloch，得知这就是一个写法错误。 I’ve asked Josh Bloch, and he informs me that it was a mistake. He used to think, long ago, that there was some value in it, but he since “saw the light”. Clearly JDK maintainers haven’t considered this to be worth backing out later.</p>
+<p><strong>基本属性：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">serialVersionUID</span> <span class="hljs-operator">=</span> <span class="hljs-number">8683452581122892189L</span>;<span class="hljs-comment">//序列化版本号（类文件签名），如果不写会默认生成，类内容的改变会影响签名变化，导致反序列化失败</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<span class="hljs-comment">//如果实例化时未指定容量，则在初次添加元素时会进行扩容使用此容量作为数组长度</span><br><span class="hljs-comment">//static修饰，所有的未指定容量的实例(也未添加元素)共享此数组，两个空的数组有什么区别呢？ 就是第一次添加元素时知道该 elementData 从空的构造函数还是有参构造函数被初始化的。以便确认如何扩容。空的构造器则初始化为10，有参构造器则按照扩容因子扩容</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Object[] EMPTY_ELEMENTDATA = &#123;&#125;;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;;<br><span class="hljs-keyword">transient</span> Object[] elementData; <span class="hljs-comment">// arrayList真正存放元素的地方，长度大于等于size</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>构造器：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//无参构造器，构造一个容量大小为 10 的空的 list 集合，但构造函数只是给 elementData 赋值了一个空的数组，其实是在第一次添加元素时容量扩大至 10 的。</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">ArrayList</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-built_in">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;<br>&#125;<br><span class="hljs-comment">//当使用无参构造函数时是把 DEFAULTCAPACITY_EMPTY_ELEMENTDATA 赋值给 elementData。 当 initialCapacity 为零时则是把 EMPTY_ELEMENTDATA 赋值给 elementData。 当 initialCapacity 大于零时初始化一个大小为 initialCapacity 的 object 数组并赋值给 elementData。</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">ArrayList</span><span class="hljs-params">(<span class="hljs-type">int</span> initialCapacity)</span> &#123;<br>    <span class="hljs-keyword">if</span> (initialCapacity &gt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">this</span>.elementData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[initialCapacity];<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (initialCapacity == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">this</span>.elementData = EMPTY_ELEMENTDATA;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Illegal Capacity: &quot;</span>+ initialCapacity);<br>    &#125;<br>&#125;<br><span class="hljs-comment">//将 Collection 转化为数组，数组长度赋值给 size。 如果 size 不为零，则判断 elementData 的 class 类型是否为 ArrayList，不是的话则做一次转换。 如果 size 为零，则把 EMPTY_ELEMENTDATA 赋值给 elementData，相当于new ArrayList(0)。</span><br><span class="hljs-keyword">public</span> <span class="hljs-title function_">ArrayList</span><span class="hljs-params">(Collection&lt;? extends E&gt; c)</span> &#123;<br>    Object[] a = c.toArray();<br>    <span class="hljs-keyword">if</span> ((size = a.length) != <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">if</span> (c.getClass() == ArrayList.class) &#123;<br>            elementData = a;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            elementData = Arrays.copyOf(a, size, Object[].class);<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 指向空数组</span><br>        elementData = EMPTY_ELEMENTDATA;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>添加元素–默认尾部添加</strong></p>
+<p>效率比较高</p>
+<p><strong>指定下标添加元素</strong></p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> add(<span class="hljs-built_in">int</span> <span class="hljs-keyword">index</span>, E element) &#123;<br>    rangeCheckForAdd(<span class="hljs-keyword">index</span>);<span class="hljs-comment">//下标越界检查</span><br>    ensureCapacityInternal(size + <span class="hljs-number">1</span>);  <span class="hljs-comment">//同上  判断扩容,记录操作数</span><br>    <span class="hljs-comment">//依次复制插入位置及后面的数组元素，到后面一格，不是移动，因此复制完后，添加的下标位置和下一个位置指向对同一个对象</span><br>    System.arraycopy(elementData, <span class="hljs-keyword">index</span>, elementData, <span class="hljs-keyword">index</span> + <span class="hljs-number">1</span>,<br>                     size - <span class="hljs-keyword">index</span>);<br>    elementData[<span class="hljs-keyword">index</span>] = element;<span class="hljs-comment">//再将元素赋值给该下标</span><br>    size++;<br></code></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度为O(n)，与移动的元素个数正相关</strong></p>
+<p><strong>扩容：</strong></p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">private</span> void grow(int minCapacity) &#123;<br>    int oldCapacity = elementData.length;<span class="hljs-comment">//获取当前数组长度</span><br>    int <span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span> = oldCapacity + (oldCapacity &gt;&gt; <span class="hljs-number">1</span>);<span class="hljs-comment">//默认将扩容至原来容量的 1.5 倍</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span> - minCapacity &lt; <span class="hljs-number">0</span>)<span class="hljs-comment">//如果1.5倍太小的话，则将我们所需的容量大小赋值给newCapacity</span><br>        <span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span> = minCapacity;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span> - MAX_ARRAY_SIZE &gt; <span class="hljs-number">0</span>)<span class="hljs-comment">//如果1.5倍太大或者我们需要的容量太大，那就直接拿 newCapacity = (minCapacity &gt; MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE 来扩容</span><br>        <span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span> = hugeCapacity(minCapacity);<br>    elementData = Arrays.copyOf(elementData, <span class="hljs-keyword">new</span><span class="hljs-type">Capacity</span>);<span class="hljs-comment">//然后将原数组中的数据复制到大小为 newCapacity 的新数组中，并将新数组赋值给 elementData。</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>迭代器 iterator</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">iterator</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Itr</span>();<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Itr</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span>&lt;E&gt; &#123;<br>    <span class="hljs-type">int</span> cursor;       <span class="hljs-comment">// 代表下一个要访问的元素下标</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">lastRet</span> <span class="hljs-operator">=</span> -<span class="hljs-number">1</span>; <span class="hljs-comment">// 代表上一个要访问的元素下标</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">expectedModCount</span> <span class="hljs-operator">=</span> modCount;<span class="hljs-comment">//代表对 ArrayList 修改次数的期望值，初始值为 modCount</span><br>    <span class="hljs-comment">//如果下一个元素的下标等于集合的大小 ，就证明到最后了</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> cursor != size;<br>    &#125;<br>    <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>    <span class="hljs-keyword">public</span> E <span class="hljs-title function_">next</span><span class="hljs-params">()</span> &#123;<br>        checkForComodification();<span class="hljs-comment">//判断expectedModCount和modCount是否相等,ConcurrentModificationException</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> cursor;<br>        <span class="hljs-keyword">if</span> (i &gt;= size)<span class="hljs-comment">//对 cursor 进行判断，看是否超过集合大小和数组长度</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>        Object[] elementData = ArrayList.<span class="hljs-built_in">this</span>.elementData;<br>        <span class="hljs-keyword">if</span> (i &gt;= elementData.length)<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentModificationException</span>();<br>        cursor = i + <span class="hljs-number">1</span>;<span class="hljs-comment">//自增 1。开始时，cursor = 0，lastRet = -1；每调用一次next方法，cursor和lastRet都会自增1。</span><br>        <span class="hljs-keyword">return</span> (E) elementData[lastRet = i];<span class="hljs-comment">//将cursor赋值给lastRet，并返回下标为 lastRet 的元素</span><br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (lastRet &lt; <span class="hljs-number">0</span>)<span class="hljs-comment">//判断 lastRet 的值是否小于 0</span><br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>();<br>        checkForComodification();<span class="hljs-comment">//判断expectedModCount和modCount是否相等,ConcurrentModificationException</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            ArrayList.<span class="hljs-built_in">this</span>.remove(lastRet);<span class="hljs-comment">//直接调用 ArrayList 的 remove 方法删除下标为 lastRet 的元素</span><br>            cursor = lastRet;<span class="hljs-comment">//将 lastRet 赋值给 curso</span><br>            lastRet = -<span class="hljs-number">1</span>;<span class="hljs-comment">//将 lastRet 重新赋值为 -1，并将 modCount 重新赋值给 expectedModCount。</span><br>            expectedModCount = modCount;<br>        &#125; <span class="hljs-keyword">catch</span> (IndexOutOfBoundsException ex) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentModificationException</span>();<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">checkForComodification</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (modCount != expectedModCount)<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentModificationException</span>();<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>remove 方法的弊端。</p>
+<p>1、只能进行remove操作，add、clear 等 Itr 中没有。</p>
+<p>2、调用 remove 之前必须先调用 next。因为 remove 开始就对 lastRet 做了校验。而 lastRet 初始化时为 -1。</p>
+<p>3、next 之后只可以调用一次 remove。因为 remove 会将 lastRet 重新初始化为 -1</p>
+<p><strong>什么是fail-fast？</strong></p>
+<p>fail-fast机制是java集合中的一种错误机制。</p>
+<p>当使用迭代器迭代时，如果发现集合有修改，则快速失败做出响应，抛出ConcurrentModificationException异常。</p>
+<p>这种修改有可能是其它线程的修改，也有可能是当前线程自己的修改导致的，比如迭代的过程中直接调用remove()删除元素等。</p>
+<p>另外，并不是java中所有的集合都有fail-fast的机制。比如，像最终一致性的ConcurrentHashMap、CopyOnWriterArrayList等都是没有fast-fail的。</p>
+<p>fail-fast是怎么实现的：</p>
+<p>ArrayList、HashMap中都有一个属性modcount，每次对集合的修改这个值都会加1，在遍历前记录这个值expert*count中，遍历中检查两者是否一致，如果出现不一致就说明有修改，则抛出ConcurrentModificationException异常。</p>
+<p>底层数组存&#x2F;取元素效率非常的高(get&#x2F;set)，时间复杂度是O(1)，而查找（比如：indexOf，contain），插入和删除元素效率不太高，时间复杂度为O(n)。</p>
+<p>插入&#x2F;删除元素会触发底层数组频繁拷贝，效率不高，还会造成内存空间的浪费，解决方案：linkedList</p>
+<p>查找元素效率不高，解决方案：HashMap（红黑树）</p>
+<p><strong>LinkedList：</strong></p>
+<p><strong>存储结构：</strong>底层采用链表来实现的。</p>
+<p><strong>HashSet（Set）：</strong></p>
+<p><strong>特点：</strong></p>
+<p>元素无放入顺序，元素不可重复（注意：元素虽然无放入顺序，但是元素在set中的位置是有该元素的HashCode决定的，其位置其实是固定的） </p>
+<p><strong>存储结构：</strong></p>
+<p>   底层采用HashMap来实现</p>
+<p><strong>原理讲解：</strong></p>
+<p><strong>源码分析：</strong></p>
+<p><strong>HashMap（Map）:</strong></p>
+<p><strong>特点：</strong></p>
+<p>key，value存储，key可以为null，同样的key会被覆盖掉</p>
+<p><strong>存储结构：</strong></p>
+<p>   底层采用数组、链表、红黑树来实现的。</p>
+<p><strong>原理讲解：</strong></p>
+<p>哈希算法（也叫散列），就是把任意长度值(Key)通过散列算法变换成固定长度的key（地址）通过这个地址进行访问的数据结构它通过把关键码值映射到表中一个。位置来访问记录，以加快查找的速度。</p>
+<p>​    <img src="/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1585" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1583" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>Hashcode：通过字符串算出它的ascii码，进行mod（取模），算出哈希表中的下标</p>
+<p>哈希冲突</p>
+<p>​    <img src="/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1582" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>用链表是来解决数组下标会覆盖的问题，冲突的问题。为什么hashmap 用两个数据结构。两个数据结构。JDK8 红黑树？？？</p>
+<p>因为链表查询的时候链表过长了查询效率非常低，所以需要用红黑树</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * The bin count threshold for using a tree rather than list for a</span><br><span class="hljs-comment"> * bin.  Bins are converted to trees when adding an element to a</span><br><span class="hljs-comment"> * bin with at least this many nodes. The value must be greater</span><br><span class="hljs-comment"> * than 2 and should be at least 8 to mesh with assumptions in</span><br><span class="hljs-comment"> * tree removal about conversion back to plain bins upon</span><br><span class="hljs-comment"> * shrinkage.</span><br><span class="hljs-comment"> */</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>源码分析：</strong></p>
+<p>​    <img src="/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1581" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>ConcurrentHashMap（并发安全map）：</strong></p>
+<p><strong>特点：</strong></p>
+<p>并发安全的HashMap ，比Hashtable效率更高</p>
+<p><strong>存储结构：</strong></p>
+<p>   底层采用数组、链表、红黑树  内部大量采用CAS操作。并发控制使⽤<strong>synchronized 和 CAS 来操作</strong>来实现的。</p>
+<p><strong>原理讲解：</strong></p>
+<p><strong>源码分析：</strong></p>
+<p>初始化方法：</p>
+<p>java.util.concurrent.ConcurrentHashMap#initTable</p>
+<p>是在put方法进行的</p>
+<p>​    transient volatile Node[] table;</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
