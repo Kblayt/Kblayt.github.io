@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="从架构师角度全局理解Mysql性能优化 总论 有道云链接：http:&#x2F;&#x2F;note.youdao.com&#x2F;noteshare?id&#x3D;f1d34fba6f218de1acf9160f45c284af&amp;sub&#x3D;9B48B919EE3C4046BC4CD564AA325A72 MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法： ​     很明显从图上可以看出，越往上走，难">
+    <meta name="description" content="从架构师角度全局理解Mysql性能优化总论MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法： ​     很明显从图上可以看出，越往上走，难度越来越高，收益却是越来越小的。比如硬件和OS调优，需要对硬件和OS有着非常深刻的了解，仅仅就磁盘一项来说，一般非DBA能想到的调整就是SSD盘比用机械硬盘更好，但其实它至少包括了，使用什么样的磁盘阵列（RAID）级别、是否可以分散磁盘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="11、从架构师角度理解MySQL性能优化和索引合并">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="从架构师角度全局理解Mysql性能优化 总论 有道云链接：http:&#x2F;&#x2F;note.youdao.com&#x2F;noteshare?id&#x3D;f1d34fba6f218de1acf9160f45c284af&amp;sub&#x3D;9B48B919EE3C4046BC4CD564AA325A72 MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法： ​     很明显从图上可以看出，越往上走，难">
+<meta property="og:description" content="从架构师角度全局理解Mysql性能优化总论MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法： ​     很明显从图上可以看出，越往上走，难度越来越高，收益却是越来越小的。比如硬件和OS调优，需要对硬件和OS有着非常深刻的了解，仅仅就磁盘一项来说，一般非DBA能想到的调整就是SSD盘比用机械硬盘更好，但其实它至少包括了，使用什么样的磁盘阵列（RAID）级别、是否可以分散磁盘">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2172">
 <meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2168">
@@ -40,8 +40,9 @@
 <meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2180">
 <meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2176">
 <meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2185">
+<meta property="og:image" content="https://kblayt.github.io/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2191">
 <meta property="article:published_time" content="2023-06-16T08:41:17.000Z">
-<meta property="article:modified_time" content="2023-06-26T10:00:55.098Z">
+<meta property="article:modified_time" content="2023-06-28T10:29:47.789Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -237,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          18k 字
         
       </span>
     
@@ -248,7 +249,7 @@
         
         
         
-          110 分钟
+          151 分钟
         
       </span>
     
@@ -291,10 +292,7 @@
             
               <div class="markdown-body">
                 
-                <p><strong>从架构师角度全局理解Mysql性能优化</strong></p>
-<p><strong>总论</strong></p>
-<p>有道云链接：<a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=f1d34fba6f218de1acf9160f45c284af&amp;sub=9B48B919EE3C4046BC4CD564AA325A72">http://note.youdao.com/noteshare?id=f1d34fba6f218de1acf9160f45c284af&amp;sub=9B48B919EE3C4046BC4CD564AA325A72</a></p>
-<p>MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法：</p>
+                <h1 id="从架构师角度全局理解Mysql性能优化"><a href="#从架构师角度全局理解Mysql性能优化" class="headerlink" title="从架构师角度全局理解Mysql性能优化"></a><strong>从架构师角度全局理解Mysql性能优化</strong></h1><h2 id="总论"><a href="#总论" class="headerlink" title="总论"></a><strong>总论</strong></h2><p>MySQL性能优化其实是个很大的课题，在优化上存在着一个调优金字塔的说法：</p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2172" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>很明显从图上可以看出，越往上走，难度越来越高，收益却是越来越小的。比如硬件和OS调优，需要对硬件和OS有着非常深刻的了解，仅仅就磁盘一项来说，一般非DBA能想到的调整就是SSD盘比用机械硬盘更好，但其实它至少包括了，使用什么样的磁盘阵列（RAID）级别、是否可以分散磁盘IO、是否使用裸设备存放数据，使用哪种文件系统（Linux下常见的有ext2、3、4和xfs,zfs等，目前比较推荐的是XFS），操作系统的磁盘调度算法（目前比较推荐deadline，对机械硬盘和SSD都比较合适。从内核2.5开始，默认的I&#x2F;O调度算法是Deadline，之后默认I&#x2F;O调度算法为Anticipatory，直到内核2.6.17为止，从内核2.6.18开始，CFQ成为默认的IO调度算法，但CFQ并不推荐作为数据库服务器的磁盘调度算法）的选择，是否需要调整操作系统文件管理方面等等。</p>
 <p><em>TIPS：裸设备(raw device)，也叫裸分区（原始分区），是一种没有经过格式化，不被Unix通过文件系统来读取的特殊块设备文件。由应用程序负责对它进行读写操作。不经过文件系统的缓冲。它是不被操作系统直接管理的设备。这种设备少了操作系统这一层，I&#x2F;O效率更高。</em></p>
@@ -312,12 +310,9 @@
 <p>最后确定系统、硬件有哪些地方需要优化，系统瓶颈在哪里，哪些系统参数需要调整优化，进程资源限制是否提到足够高；在硬件方面是否需要更换为具有更高I&#x2F;O性能的存储硬件，是否需要升级内存、CPU、网络等。</p>
 <p>如果在设计之初架构就不合理，比如没有进行读写分离，那么后期的MySQL和硬件、系统优化的成本就会很高，并且还不一定能最终解决问题。如果业务性能的瓶颈是由于索引等MySQL层的优化不够导致的，那么即使配置再高性能的I&#x2F;O存储硬件或者CPU也无法支撑业务的全表扫描。</p>
 <p>当然我们本课程重点关注的是MySQL方面的调优，特别是索引。SQL&#x2F;索引调优要求对业务和数据流非常清楚。在阿里巴巴内部，有三分之二的DBA是业务DBA，从业务需求讨论到表结构审核、SQL语句审核、上线、索引更新、版本迭代升级，甚至哪些数据应该放到非关系型数据库中，哪些数据放到数据仓库、搜索引擎或者缓存中，都需要这些DBA跟踪和复审。他们甚至可以称为数据架构师（Data Architecher）。</p>
-<p><strong>查询性能优化</strong></p>
-<p>前面的章节我们知道如何设计最优的库表结构、如何建立最好的索引，这些对于高性能来说是必不可少的。但这些还不够—还需要合理的设计查询。如果查询写得很糟糕，即使库表结构再合理、索引再合适，也无法实现高性能。</p>
-<p><strong>什么是慢查询</strong></p>
-<p>慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过long_query_time参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
-<p><strong>慢查询配置</strong></p>
-<p>我们已经知道慢查询日志可以帮助定位可能存在问题的SQL语句，从而进行SQL语句层面的优化。但是默认值为关闭的，需要我们手动开启。</p>
+<h2 id="查询性能优化"><a href="#查询性能优化" class="headerlink" title="查询性能优化"></a><strong>查询性能优化</strong></h2><p>前面的章节我们知道如何设计最优的库表结构、如何建立最好的索引，这些对于高性能来说是必不可少的。但这些还不够—还需要合理的设计查询。如果查询写得很糟糕，即使库表结构再合理、索引再合适，也无法实现高性能。</p>
+<h3 id="什么是慢查询"><a href="#什么是慢查询" class="headerlink" title="什么是慢查询"></a><strong>什么是慢查询</strong></h3><p>慢查询日志，顾名思义，就是查询花费大量时间的日志，是指mysql记录所有执行超过long_query_time参数设定的时间阈值的SQL语句的日志。该日志能为SQL语句的优化带来很好的帮助。默认情况下，慢查询日志是关闭的，要使用慢查询日志功能，首先要开启慢查询日志功能。</p>
+<h3 id="慢查询配置"><a href="#慢查询配置" class="headerlink" title="慢查询配置"></a><strong>慢查询配置</strong></h3><p>我们已经知道慢查询日志可以帮助定位可能存在问题的SQL语句，从而进行SQL语句层面的优化。但是默认值为关闭的，需要我们手动开启。</p>
 <p><strong>show VARIABLES like ‘slow_query_log’;</strong></p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2175" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>开启：</p>
@@ -335,9 +330,7 @@
 <p>set global log_output&#x3D;’FILE,TABLE’，缺省是输出到文件，我们的配置把慢查询输出到表，不过一般不推荐输出到表。</p>
 <p><strong>show VARIABLES like ‘log_output’;ls</strong> </p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2181" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>慢查询解读分析</strong></p>
-<p><strong>日志格式</strong></p>
-<p>开启慢查询功能以后，会根据我们的配置产生慢查询日志</p>
+<h3 id="慢查询解读分析"><a href="#慢查询解读分析" class="headerlink" title="慢查询解读分析"></a><strong>慢查询解读分析</strong></h3><h4 id="日志格式"><a href="#日志格式" class="headerlink" title="日志格式"></a><strong>日志格式</strong></h4><p>开启慢查询功能以后，会根据我们的配置产生慢查询日志</p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2170" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>从慢查询日志里面摘选一条慢查询日志，数据组成如下</p>
 <p>“Time: 2021-04-05T07:50:53.243703Z”：查询执行时间</p>
@@ -348,10 +341,8 @@
 <p>“Rows_examined”：扫描的数据行数</p>
 <p>“SET timestamp”：这SQL执行的具体时间</p>
 <p>最后一行：执行的SQL语句</p>
-<p><strong>慢查询分析</strong></p>
-<p>慢查询的日志记录非常多，要从里面找寻一条查询慢的日志并不是很容易的事情，一般来说都需要一些工具辅助才能快速定位到需要优化的SQL语句，下面介绍两个慢查询辅助工具</p>
-<p><strong>mysqldumpslow</strong></p>
-<p>常用的慢查询日志分析工具，汇总除查询条件外其他完全相同的SQL，并将分析结果按照参数中所指定的顺序输出。当然它的参数不少，我们常用的也就是那么几个。</p>
+<h4 id="慢查询分析"><a href="#慢查询分析" class="headerlink" title="慢查询分析"></a><strong>慢查询分析</strong></h4><p>慢查询的日志记录非常多，要从里面找寻一条查询慢的日志并不是很容易的事情，一般来说都需要一些工具辅助才能快速定位到需要优化的SQL语句，下面介绍两个慢查询辅助工具</p>
+<h5 id="mysqldumpslow"><a href="#mysqldumpslow" class="headerlink" title="mysqldumpslow"></a><strong>mysqldumpslow</strong></h5><p>常用的慢查询日志分析工具，汇总除查询条件外其他完全相同的SQL，并将分析结果按照参数中所指定的顺序输出。当然它的参数不少，我们常用的也就是那么几个。</p>
 <p><strong>语法：</strong></p>
 <p>mysqldumpslow -s r -t 10 slow-mysql.log</p>
 <p>-s order (c,t,l,r,at,al,ar) </p>
@@ -367,38 +358,30 @@
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2174" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p> <strong>.&#x2F;mysqldumpslow -s t -t 10 &#x2F;home&#x2F;mysql&#x2F;mysql57&#x2F;data&#x2F;iZwz9j203ithc4gu1uvb2wZ-slow.log -g select</strong></p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2171" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>优化SQL查询方法论</strong></p>
-<p>查询性能低下最基本的原因是访问的数据太多。大部分性能低下的查询都可以通过减少访问的数据量的方式进行优化。对于低效的查询，一般通过下面两个步骤来分析总是很有效:</p>
+<h5 id="pt-query-digest"><a href="#pt-query-digest" class="headerlink" title="pt-query-digest"></a>pt-query-digest</h5><p>自行查看</p>
+<h3 id="优化SQL查询方法论"><a href="#优化SQL查询方法论" class="headerlink" title="优化SQL查询方法论"></a><strong>优化SQL查询方法论</strong></h3><p>查询性能低下最基本的原因是访问的数据太多。大部分性能低下的查询都可以通过减少访问的数据量的方式进行优化。对于低效的查询，一般通过下面两个步骤来分析总是很有效:</p>
 <p>1．确认应用程序是否在检索大量超过需要的数据。这通常意味着访问了太多的行，但有时候也可能是访问了太多的列。</p>
 <p>2．确认MySQL服务器层是否在分析大量超过需要的数据行。</p>
-<p><strong>业务层-请求了不需要的数据？</strong></p>
-<p>有些查询会请求超过实际需要的数据，然后这些多余的数据会被应用程序丢弃。这会给MySQL服务器带来额外的负担，并增加网络开销，另外也会消耗应用服务器的CPU和内存资源。比如:</p>
-<p><strong>查询不需要的记录</strong></p>
-<p>例如先使用SELECT语句查询大量的结果，然后获取前面的N行后关闭结果集（例如取出100条记录，但是只是在页面上显示前面10条)。</p>
-<p><strong>总是取出全部列</strong></p>
-<p>每次看到SELECT*的时候都需要用怀疑的眼光审视，是不是真的需要返回全部的列？很可能不是必需的。取出全部列，会让优化器无法完成索引覆盖扫描这类优化,还会为服务器带来额外的I&#x2F;O、内存和CPU的消耗。因此，一些DBA是严格禁止SELECT *的写法的，这样做有时候还能避免某些列被修改带来的问题。</p>
+<h4 id="业务层-请求了不需要的数据？"><a href="#业务层-请求了不需要的数据？" class="headerlink" title="业务层-请求了不需要的数据？"></a><strong>业务层-请求了不需要的数据？</strong></h4><p>有些查询会请求超过实际需要的数据，然后这些多余的数据会被应用程序丢弃。这会给MySQL服务器带来额外的负担，并增加网络开销，另外也会消耗应用服务器的CPU和内存资源。比如:</p>
+<h5 id="查询不需要的记录"><a href="#查询不需要的记录" class="headerlink" title="查询不需要的记录"></a><strong>查询不需要的记录</strong></h5><p>例如先使用SELECT语句查询大量的结果，然后获取前面的N行后关闭结果集（例如取出100条记录，但是只是在页面上显示前面10条)。</p>
+<h5 id="总是取出全部列"><a href="#总是取出全部列" class="headerlink" title="总是取出全部列"></a><strong>总是取出全部列</strong></h5><p>每次看到SELECT*的时候都需要用怀疑的眼光审视，是不是真的需要返回全部的列？很可能不是必需的。取出全部列，会让优化器无法完成索引覆盖扫描这类优化,还会为服务器带来额外的I&#x2F;O、内存和CPU的消耗。因此，一些DBA是严格禁止SELECT *的写法的，这样做有时候还能避免某些列被修改带来的问题。</p>
 <p>什么时候应该允许查询返回超过需要的数据？如果这种有点浪费数据库资源的方式可以简化开发，因为能提高相同代码片段的复用性，如果清楚这样做的性能影响，那么这种做法也是值得考虑的。</p>
 <p>或者如果应用程序使用了某种缓存机制，或者有其他考虑，获取超过需要的数据也可能有其好处，但不要忘记这样做的代价是什么。获取并缓存所有的列的查询，相比多个独立的只获取部分列的查询可能就更有好处。</p>
-<p><strong>重复查询相同的数据</strong></p>
-<p>不断地重复执行相同的查询，然后每次都返回完全相同的数据。比较好的方案是，当初次查询的时候将这个数据缓存起来，需要的时候从缓存中取出，这样性能显然会更好。</p>
-<p><strong>执行层-是否在扫描额外的记录</strong></p>
-<p>在确定查询只返回需要的数据以后，接下来应该看看查询为了返回结果是否扫描了过多的数据。对于MySQL，最简单的衡量查询开销的三个指标如下:</p>
+<h5 id="重复查询相同的数据"><a href="#重复查询相同的数据" class="headerlink" title="重复查询相同的数据"></a><strong>重复查询相同的数据</strong></h5><p>不断地重复执行相同的查询，然后每次都返回完全相同的数据。比较好的方案是，当初次查询的时候将这个数据缓存起来，需要的时候从缓存中取出，这样性能显然会更好。</p>
+<h4 id="执行层-是否在扫描额外的记录"><a href="#执行层-是否在扫描额外的记录" class="headerlink" title="执行层-是否在扫描额外的记录"></a><strong>执行层-是否在扫描额外的记录</strong></h4><p>在确定查询只返回需要的数据以后，接下来应该看看查询为了返回结果是否扫描了过多的数据。对于MySQL，最简单的衡量查询开销的三个指标如下:</p>
 <p><strong>响应时间、扫描的行数、返回的行数</strong></p>
 <p>这三个指标都会记录到MySQL的慢日志中，所以检查慢日志记录是找出扫描行数过多的查询的好办法。</p>
-<p><strong>响应时间</strong></p>
-<p>响应时间是两个部分之和:服务时间和排队时间。</p>
+<h5 id="响应时间"><a href="#响应时间" class="headerlink" title="响应时间"></a><strong>响应时间</strong></h5><p>响应时间是两个部分之和:服务时间和排队时间。</p>
 <p>服务时间是指数据库处理这个查询真正花了多长时间。</p>
 <p>排队时间是指服务器因为等待某些资源而没有真正执行查询的时间—-可能是等I&#x2F;O操作完成，也可能是等待行锁，等等。</p>
 <p>当你看到一个查询的响应时间的时候，首先需要问问自己，这个响应时间是否是一个合理的值。从我们的前面课程中，我们知道如何分析一个SQL查询需要哪些索引以及它的执行计划是什么,然后计算大概需要读取多少个页面和记录数，是能够大致分析出当前响应时间是不是一个合理的值。</p>
-<p><strong>扫描的行数和返回的行数</strong></p>
-<p>分析查询时，查看该查询扫描的行数是非常有帮助的。这在一定程度上能够说明该查询找到需要的数据的效率高不高。</p>
+<h5 id="扫描的行数和返回的行数"><a href="#扫描的行数和返回的行数" class="headerlink" title="扫描的行数和返回的行数"></a><strong>扫描的行数和返回的行数</strong></h5><p>分析查询时，查看该查询扫描的行数是非常有帮助的。这在一定程度上能够说明该查询找到需要的数据的效率高不高。</p>
 <p>理想情况下扫描的行数和返回的行数应该是相同的。但实际情况中这种“美事”并不多。</p>
 <p>例如不正确的使用Limit，在系统中需要进行分页操作的时候，我们通常会使用LIMIT加上偏移量的办法实现，同时加上合适的ORDER BY子句。</p>
 <p>在偏移量非常大的时候，SQL语句就变成了类似<strong>select * from order_exp limit 10000,10;</strong></p>
 <p>这样的查询，这时MySQL需要查询10010条记录然后只返回最后10条，前面10 000条记录都将被抛弃，这样的代价非常高。在第四期MySQL《05-VIP-Mysql索引优化实战二》中专门讲过“分页查询优化”，请自行参考。</p>
 <p>又或者在做一个关联查询时，服务器必须要扫描多行才能生成结果集中的一行。扫描的行数对返回的行数的比率通常很小，一般在1:1和10:1之间，不过有时候这个值也可能非常非常大。</p>
-<p><strong>扫描的行数和访问类型</strong></p>
-<p>在评估查询开销的时候，需要考虑一下从表中找到某一行数据的成本。MySQL有好几种访问方式可以查找并返回一行结果。有些访问方式可能需要扫描很多行才能返回一行结果，也有些访问方式可能无须扫描就能返回结果。</p>
+<h5 id="扫描的行数和访问类型"><a href="#扫描的行数和访问类型" class="headerlink" title="扫描的行数和访问类型"></a><strong>扫描的行数和访问类型</strong></h5><p>在评估查询开销的时候，需要考虑一下从表中找到某一行数据的成本。MySQL有好几种访问方式可以查找并返回一行结果。有些访问方式可能需要扫描很多行才能返回一行结果，也有些访问方式可能无须扫描就能返回结果。</p>
 <p>在EXPLAIN语句中的type列反应了访问类型。访问类型有很多种，从全表扫描到索引扫描、范围扫描、唯一索引查询、常数引用等，速度是从慢到快，扫描的行数也是从小到大。对其中相关的扫描表、扫描索引、范围访问和单值访问的概念要非常熟悉。</p>
 <p>如果查询没有办法找到合适的访问类型，那么解决的最好办法通常就是增加一个合适的索引，为什么索引对于查询优化如此重要了。索引让 MySQL以最高效、扫描行数最少的方式找到需要的记录。</p>
 <p>对于我们在SQL语句中常见的WHERE条件，一般 MySQL能够使用如下三种方式应用WHERE条件，从效率和扫描行数多少来评价的话，从好到坏依次为:</p>
@@ -410,30 +393,23 @@
 <p>1、使用索引覆盖扫描，把所有需要用的列都放到索引中，这样存储引擎无须回表获取对应行就可以返回结果了（在前面的章节中我们已经讨论过了)。</p>
 <p>2、改变库表结构。例如使用单独的汇总表。</p>
 <p>3、重写这个复杂的查询，让 MySQL优化器能够以更优化的方式执行这个查询。</p>
-<p><strong>重构SQL查询的方法论</strong></p>
-<p>在优化有问题的查询时，目标应该是找到一个更优的方法获得实际需要的结果——而不一定总是需要从MySQL获取一模一样的结果集。有时候，可以将查询转换一种写法让其返回一样的结果,但是性能更好。但也可以通过修改应用代码,用另一种方式完成查询，最终达到一样的目的。</p>
-<p><strong>一个复杂查询还是多个简单查询</strong></p>
-<p>设计查询的时候一个需要考虑的重要问题是，是否需要将一个复杂的查询分成多个简单的查询。在传统实现中，总是强调需要数据库层完成尽可能多的工作，这样做的逻辑在于以前总是认为网络通信、查询解析和优化是一件代价很高的事情。但是这样的想法对于MySQL并不适用，MySQL 从设计上让连接和断开连接都很轻量级，在返回一个小的查询结果方面很高效。现代的网络速度比以前要快很多，无论是带宽还是延迟，即使是一个千兆网卡也能轻松满足每秒超过2000次的查询。</p>
+<h3 id="重构SQL查询的方法论"><a href="#重构SQL查询的方法论" class="headerlink" title="重构SQL查询的方法论"></a><strong>重构SQL查询的方法论</strong></h3><p>在优化有问题的查询时，目标应该是找到一个更优的方法获得实际需要的结果——而不一定总是需要从MySQL获取一模一样的结果集。有时候，可以将查询转换一种写法让其返回一样的结果,但是性能更好。但也可以通过修改应用代码,用另一种方式完成查询，最终达到一样的目的。</p>
+<h4 id="一个复杂查询还是多个简单查询"><a href="#一个复杂查询还是多个简单查询" class="headerlink" title="一个复杂查询还是多个简单查询"></a><strong>一个复杂查询还是多个简单查询</strong></h4><p>设计查询的时候一个需要考虑的重要问题是，是否需要将一个复杂的查询分成多个简单的查询。在传统实现中，总是强调需要数据库层完成尽可能多的工作，这样做的逻辑在于以前总是认为网络通信、查询解析和优化是一件代价很高的事情。但是这样的想法对于MySQL并不适用，MySQL 从设计上让连接和断开连接都很轻量级，在返回一个小的查询结果方面很高效。现代的网络速度比以前要快很多，无论是带宽还是延迟，即使是一个千兆网卡也能轻松满足每秒超过2000次的查询。</p>
 <p>所以有时候，可以将一个复杂的大查询分解为多个小查询会效率更高。</p>
 <p>不过，在应用设计的时候，如果一个查询能够胜任时还写成多个独立查询是不明智的。例如，应用对一个数据表做10次独立的查询来返回10行数据，每个查询返回一条结果，查询10次。</p>
-<p><strong>切分查询</strong></p>
-<p>有时候对于一个大查询我们需要“分而治之”，将大查询切分成小查询，每个查询功能完全一样，只完成一小部分，每次只返回一小部分查询结果。</p>
+<h4 id="切分查询"><a href="#切分查询" class="headerlink" title="切分查询"></a><strong>切分查询</strong></h4><p>有时候对于一个大查询我们需要“分而治之”，将大查询切分成小查询，每个查询功能完全一样，只完成一小部分，每次只返回一小部分查询结果。</p>
 <p>删除旧的数据就是一个很好的例子。定期地清除大量数据时，如果用一个大的语句一次性完成的话，则可能需要一次锁住很多数据、占满整个事务日志、耗尽系统资源、阻塞很多小的但重要的查询。将一个大的DELETE语句切分成多个较小的查询可以尽可能小地影响MySQL性能，同时还可以减少MySQL复制的延迟。</p>
 <p>一般来说，将每个SQL所处理的记录控制在5000到10000是个比较好的权衡值。</p>
-<p><strong>分解关联查询</strong></p>
-<p>很多高性能的应用都会对关联查询进行分解。简单地，可以对每一个表进行一次单表查询，然后将结果在应用程序中进行关联。到底为什么要这样做?乍一看，这样做并没有什么好处，原本一条查询，这里却变成多条查询，返回的结果又是一模一样的。事实上，用分解关联查询的方式重构查询有如下的优势:</p>
+<h4 id="分解关联查询"><a href="#分解关联查询" class="headerlink" title="分解关联查询"></a><strong>分解关联查询</strong></h4><p>很多高性能的应用都会对关联查询进行分解。简单地，可以对每一个表进行一次单表查询，然后将结果在应用程序中进行关联。到底为什么要这样做?乍一看，这样做并没有什么好处，原本一条查询，这里却变成多条查询，返回的结果又是一模一样的。事实上，用分解关联查询的方式重构查询有如下的优势:</p>
 <p><strong>让缓存的效率更高。</strong>许多应用程序可以方便地缓存单表查询对应的结果对象。将查询分解后，执行单个查询<strong>可以减少锁的竞争</strong>。</p>
 <p>在应用层做关联，可以更容易对数据库进行拆分，<strong>更容易做到高性能和可扩展</strong>。查询本身效率也可能会有所提升。</p>
 <p>可以<strong>减少冗余记录的查询</strong>。在应用层做关联查询，意味着对于某条记录应用只需要查询一次,而在数据库中做关联查询,则可能需要重复地访问一部分数据。从这点看，这样的重构还可能会减少网络和内存的消耗。</p>
 <p>更进一步，这样做相当于<strong>在应用中实现了哈希关联</strong>，而不是使用MySQL的嵌套循环关联。某些场景哈希关联的效率要高很多。</p>
 <p>在很多场景下，通过重构查询将关联放到应用程序中将会更加高效，这样的场景有很多，比如:当应用能够方便地缓存单个查询的结果的时候、当可以将数据分布到不同的MySQL服务器上的时候、当能够使用IN()的方式代替关联查询的时候、当查询中使用同一个数据表的时候。</p>
-<p><strong>从MySQL执行全流程考虑性能优化</strong></p>
-<p><strong>为什么查询速度会慢</strong></p>
-<p>如果把查询看作是一个任务，那么它由一系列子任务组成，每个子任务都会消耗一定的时间。如果要优化查询，实际上要优化其子任务，要么消除其中一些子任务，要么减少子任务的执行次数，要么让子任务运行得更快。</p>
+<h3 id="从MySQL执行全流程考虑性能优化"><a href="#从MySQL执行全流程考虑性能优化" class="headerlink" title="从MySQL执行全流程考虑性能优化"></a><strong>从MySQL执行全流程考虑性能优化</strong></h3><h4 id="为什么查询速度会慢"><a href="#为什么查询速度会慢" class="headerlink" title="为什么查询速度会慢"></a><strong>为什么查询速度会慢</strong></h4><p>如果把查询看作是一个任务，那么它由一系列子任务组成，每个子任务都会消耗一定的时间。如果要优化查询，实际上要优化其子任务，要么消除其中一些子任务，要么减少子任务的执行次数，要么让子任务运行得更快。</p>
 <p>在完成这些子任务的时候，查询需要在不同的地方花费时间，包括网络，CPU计算，生成统计信息和执行计划、锁等待（互斥等待）等操作，尤其是向底层存储引擎检索数据的调用操作,这些调用需要在内存操作,CPU操作和内存不足时导致的IO操作上消耗时间。根据存储引擎不同，可能还会产生大量的上下文切换以及系统调用。</p>
 <p>优化查询的目的就是减少和消除这些操作所花费的时间。</p>
-<p><strong>查询执行的流程再回顾</strong></p>
-<p>当希望MySQL 能够以更高的性能运行查询时，最好的办法就是弄清楚MySQL是如何优化和执行查询的。一旦理解这一点，很多查询优化工作实际上就是遵循一些原则让优化器能够按照预想的合理的方式运行。</p>
+<h4 id="查询执行的流程再回顾"><a href="#查询执行的流程再回顾" class="headerlink" title="查询执行的流程再回顾"></a><strong>查询执行的流程再回顾</strong></h4><p>当希望MySQL 能够以更高的性能运行查询时，最好的办法就是弄清楚MySQL是如何优化和执行查询的。一旦理解这一点，很多查询优化工作实际上就是遵循一些原则让优化器能够按照预想的合理的方式运行。</p>
 <p>换句话说，是时候回头看看我们前面讨论的内容了:MySQL执行一个查询的过程。根据下图，我们可以看到当向MySQL发送一个请求的时候，MySQL 到底做了些什么:</p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2167" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>1.客户端发送一条查询给服务器。</p>
@@ -443,8 +419,7 @@
 <p>5．将结果返回给客户端。</p>
 <p>所以MySQL查询的生命周期大致可以按照顺序来看:从客户端，到服务器，然后在服务器上进行解析，生成执行计划，执行，并返回结果给客户端。其中“执行”可以认为是整个生命周期中最重要的阶段，这其中包括了大量为了检索数据到存储引擎的调用以及调用后的数据处理，包括排序、分组等。</p>
 <p>上面的每一步都比想象的复杂，查询优化器固然是其中特别复杂也特别难理解的部分。但是其他部分就对查询的性能毫无影响？</p>
-<p><strong>MySQL客户端&#x2F;服务器通信</strong></p>
-<p>一般来说，不需要去理解MySQL通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL客户端和服务器之间的通信协议是“半双工”的，这意味着，在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生。所以，我们无法也无须将一个消息切成小块独立来发送。</p>
+<h4 id="MySQL客户端-x2F-服务器通信"><a href="#MySQL客户端-x2F-服务器通信" class="headerlink" title="MySQL客户端&#x2F;服务器通信"></a><strong>MySQL客户端&#x2F;服务器通信</strong></h4><p>一般来说，不需要去理解MySQL通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL客户端和服务器之间的通信协议是“半双工”的，这意味着，在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生。所以，我们无法也无须将一个消息切成小块独立来发送。</p>
 <p>这种协议让 MySQL通信简单快速，但是也从很多地方限制了MySQL。一个明显的限制是，这意味着没法进行流量控制。一旦一端开始发生消息，另一端要接收完整个消息才能响应它。这就像来回抛球的游戏﹔在任何时刻，只有一个人能控制球，而且只有控制球的人才能将球抛回去（发送消息)。</p>
 <p>客户端用一个单独的数据包将查询传给服务器。这也是为什么当查询的语句很长的时候，参数max_allowed_packet就特别重要了。一旦客户端发送了请求，它能做的事情就只是等待结果了。</p>
 <p>相反的，一般服务器响应给用户的数据通常很多，由多个数据包组成。当服务器开始响应客户端请求时，客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这种情况下，客户端若接收完整的结果，然后取前面几条需要的结果，或者接收完几条结果后就“粗暴”地断开连接，都不是好主意。这也是在必要的时候一定要在查询中加上LIMIT限制的原因。</p>
@@ -465,31 +440,25 @@
 <p>ps.setFetchDirection(ResultSet.FETCH_REVERSE);</p>
 <p>rs &#x3D; ps.executeQuery();</p>
 <p>while (rs.next()) {……实际的业务处理}</p>
-<p><strong>生命周期中的查询优化处理</strong></p>
-<p>查询的生命周期的下一步是将一个SQL转换成一个执行计划，MySQL再依照这个执行计划和存储引擎进行交互。这包括多个子阶段:解析SQL、预处理、优化SQL执行计划。这个过程中任何错误（例如语法错误）都可能终止查询。在实际执行中，这几部分可能一起执行也可能单独执行。</p>
+<h4 id="生命周期中的查询优化处理"><a href="#生命周期中的查询优化处理" class="headerlink" title="生命周期中的查询优化处理"></a><strong>生命周期中的查询优化处理</strong></h4><p>查询的生命周期的下一步是将一个SQL转换成一个执行计划，MySQL再依照这个执行计划和存储引擎进行交互。这包括多个子阶段:解析SQL、预处理、优化SQL执行计划。这个过程中任何错误（例如语法错误）都可能终止查询。在实际执行中，这几部分可能一起执行也可能单独执行。</p>
 <p>我们通过前面的学习，可以看到MySQL的查询优化器是一个非常复杂的部件，它使用了很多优化策略来生成一个最优的执行计划。优化策略可以简单地分为两种，一种是静态优化，一种是动态优化。静态优化可以直接对解析树进行分析，并完成优化。例如，优化器可以通过一些简单的代数变换将WHERE条件转换成另一种等价形式。静态优化不依赖于特别的数值，如WHERE条件中带入的一些常数等。静态优化在第一次完成后就一直有效，即使使用不同的参数重复执行查询也不会发生变化。可以认为这是一种“编译时优化”。</p>
 <p>相反，动态优化则和查询的上下文有关，也可能和很多其他因素有关，例如WHERE条件中的取值、索引中条目对应的数据行数等。这需要在每次查询的时候都重新评估，可以认为这是“运行时优化”。</p>
 <p>优化器是相当复杂性和智能的。建议大家“不要自以为比优化器更聪明”。如果没有必要，不要去干扰优化器的工作，让优化器按照它的方式工作。尽量按照优化器的提示去优化我们的表、索引和SQL语句，比如写查询，或者重新设计更优的库表结构，或者添加更合适的索引。但是请尽可能的保持SQL语句的简洁，SQL语句变得很复杂的情况下，请相信我，维护会成为一个地狱。而带来的最终的收益微乎其微。</p>
 <p>当然，虽然优化器已经很智能了，但是有时候也无法给出最优的结果。有时候你可能比优化器更了解数据，例如，由于应用逻辑使得某些条件总是成立﹔还有时，优化器缺少某种功能特性，如哈希索引﹔再如前面提到的，从优化器的执行成本角度评估出来的最优执行计划，实际运行中可能比其他的执行计划更慢。</p>
 <p>如果能够确认优化器给出的不是最佳选择，并且清楚优化背后的原理，那么也可以帮助优化器做进一步的优化。</p>
 <p>当出现不理想的SQL查询时，我们就需要知道查询优化器是如何工作的，以便有针对性的进行改进，不管是SQL语句本身还是表结构相关，比如索引。这个时候请仔细耐心的对慢查询进行分析。</p>
-<p><strong>查询执行引擎</strong></p>
-<p>在解析和优化阶段，MySQL将生成查询对应的执行计划，MySQL的查询执行引擎则根据这个执行计划来完成整个查询。相对于查询优化阶段，查询执行阶段不是那么复杂：MySQL 只是简单地根据执行计划给出的指令逐步执行。</p>
-<p><strong>返回结果给客户端</strong></p>
-<p>查询执行的最后一个阶段是将结果返回给客户端。即使查询不需要返回结果集给客户端，MySQL仍然会返回这个查询的一些信息，如该查询影响到的行数。</p>
+<h4 id="查询执行引擎"><a href="#查询执行引擎" class="headerlink" title="查询执行引擎"></a><strong>查询执行引擎</strong></h4><p>在解析和优化阶段，MySQL将生成查询对应的执行计划，MySQL的查询执行引擎则根据这个执行计划来完成整个查询。相对于查询优化阶段，查询执行阶段不是那么复杂：MySQL 只是简单地根据执行计划给出的指令逐步执行。</p>
+<h4 id="返回结果给客户端"><a href="#返回结果给客户端" class="headerlink" title="返回结果给客户端"></a><strong>返回结果给客户端</strong></h4><p>查询执行的最后一个阶段是将结果返回给客户端。即使查询不需要返回结果集给客户端，MySQL仍然会返回这个查询的一些信息，如该查询影响到的行数。</p>
 <p>如果查询可以被缓存，那么MySQL在这个阶段也会将结果存放到查询缓存中。</p>
 <p>MySQL将结果集返回客户端是一个增量、逐步返回的过程。一旦服务器开始生成第一条结果时，MySQL就可以开始向客户端逐步返回结果集了。</p>
 <p>这一点从MySQL的源码sql_union.cc中其实可以看得很清楚：</p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2169" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>这样处理有两个好处﹔服务器端无须存储太多的结果，也就不会因为要返回太多结果而消耗太多内存。另外，这样的处理也让 MySQL客户端第一时间获得返回的结果。结果集中的每一行都会以一个满足MySQL客户端&#x2F;服务器通信协议的封包发送，再通过TCP协议进行传输，在TCP传输的过程中，可能对MySQL的封包进行缓存然后批量传输。</p>
-<p><strong>查询状态</strong></p>
-<p>对于一个MySQL连接，或者说一个线程，任何时刻都有一个状态，该状态表示了MySQL当前正在做什么。在一个查询的生命周期中，状态会变化很多次。</p>
-<p><strong>通过show profile分析SQL</strong></p>
-<p>通过上面的描述可知，当我们通过应用程序访问MySQL服务时，有时候性能不一定全部卡在语句的执行上。当然通过慢查询日志定位那些执行效率较低的SQL语句时候我们常用的手段，但是：</p>
+<h4 id="查询状态"><a href="#查询状态" class="headerlink" title="查询状态"></a><strong>查询状态</strong></h4><p>对于一个MySQL连接，或者说一个线程，任何时刻都有一个状态，该状态表示了MySQL当前正在做什么。在一个查询的生命周期中，状态会变化很多次。</p>
+<h4 id="通过show-profile分析SQL"><a href="#通过show-profile分析SQL" class="headerlink" title="通过show profile分析SQL"></a><strong>通过show profile分析SQL</strong></h4><p>通过上面的描述可知，当我们通过应用程序访问MySQL服务时，有时候性能不一定全部卡在语句的执行上。当然通过慢查询日志定位那些执行效率较低的SQL语句时候我们常用的手段，但是：</p>
 <p>一、慢查询日志在查询结束以后才记录，在应用反映执行效率出现问题的时候查询未必执行完成；</p>
 <p>二、有时候问题的产生不一定是语句的执行，有可能是其他原因导致的。慢查询日志并不能定位问题。</p>
-<p><strong>show processlist</strong></p>
-<p>这个时候通过**show processlist;**查看线程状态非常有用,这可以让我们很快地了解当前MySQL在进行的线程,包括线程的状态、是否锁表等，可以实时地查看SQL 的执行情况，同时对一些锁表操作进行优化。在一个繁忙的服务器上，可能会看到大量的不正常的状态，例如statistics正占用大量的时间。这通常表示，某个地方有异常了。线程常见的状态有很多，比如</p>
+<h5 id="show-processlist"><a href="#show-processlist" class="headerlink" title="show processlist"></a><strong>show processlist</strong></h5><p>这个时候通过**show processlist;**查看线程状态非常有用,这可以让我们很快地了解当前MySQL在进行的线程,包括线程的状态、是否锁表等，可以实时地查看SQL 的执行情况，同时对一些锁表操作进行优化。在一个繁忙的服务器上，可能会看到大量的不正常的状态，例如statistics正占用大量的时间。这通常表示，某个地方有异常了。线程常见的状态有很多，比如</p>
 <p>statistics</p>
 <p>The server is calculating statistics to develop a query execution plan. If a thread is in this state for a long time, the server is probably disk-bound performing other work.</p>
 <p>服务器正在计算统计信息以研究一个查询执行计划。如果线程长时间处于此状态，则服务器可能是磁盘绑定执行其他工作。</p>
@@ -501,8 +470,7 @@
 <p>线程正在读取和处理 SELECT 语句的行，并将数据发送到客户端。由于在此状态期间发生的操作往往会执行大量磁盘访问（读取），因此它通常是给定查询生命周期中运行时间最长的状态。</p>
 <p>其余的可以参考：</p>
 <p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/general-thread-states.html">https://dev.mysql.com/doc/refman/8.0/en/general-thread-states.html</a></p>
-<p><strong>通过show profile分析</strong></p>
-<p>对于每个线程到底时间花在哪里，可以通过show profile来分析。</p>
+<h5 id="通过show-profile分析"><a href="#通过show-profile分析" class="headerlink" title="通过show profile分析"></a><strong>通过show profile分析</strong></h5><p>对于每个线程到底时间花在哪里，可以通过show profile来分析。</p>
 <p>1、首先检查当前MySQL是否支持profile</p>
 <p><strong>select @@have_profiling;</strong></p>
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2182" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -524,6 +492,68 @@
 <p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2185" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>能够发现Sending data状态下，时间主要消耗在 CPU上了。</p>
 <p>所以show profile能够在做SQL优化时帮助我们了解时间都耗费到哪里去了，同时如果MySQL源码感兴趣，还可以通过show profile source for query查看SQL解析执行过程中每个步骤对应的源码的文件、函数名以及具体的源文件行数。</p>
+<h1 id="Mysql执行原理之索引合并详解"><a href="#Mysql执行原理之索引合并详解" class="headerlink" title="Mysql执行原理之索引合并详解"></a><strong>Mysql执行原理之索引合并详解</strong></h1><p>我们前边说过MySQL在一般情况下执行一个查询时最多只会用到单个二级索引，但存在有特殊情况，在这些特殊情况下也可能在一个查询中使用到多个二级索引，MySQL中这种使用到多个索引来完成一次查询的执行方法称之为：索引合并&#x2F;index merge，在前面的成本计算中我们说到过这个概念：“我们需要分别分析单独使用这些索引执行查询的成本，最后还要分析是否可能使用到索引合并”。</p>
+<p>其实optimizer trace输出的文本中就有这个片段：</p>
+<p>​    <img src="/11%E3%80%81%E4%BB%8E%E6%9E%B6%E6%9E%84%E5%B8%88%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3MySQL%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%92%8C%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6/2191" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>具体的索引合并算法有下边三种。</p>
+<h2 id="Intersection合并"><a href="#Intersection合并" class="headerlink" title="Intersection合并"></a><strong>Intersection合并</strong></h2><p>Intersection翻译过来的意思是交集。这里是说某个查询可以使用多个二级索引，将从多个二级索引中查询到的结果取交集，比方说下边这个查询：</p>
+<p>SELECT * FROM order_exp WHERE order_no &#x3D; ‘a’ AND expire_time &#x3D; ‘b’;</p>
+<p>假设这个查询使用Intersection合并的方式执行的话，那这个过程就是这样的：</p>
+<p>从idx_order_no二级索引对应的B+树中取出order_no&#x3D; ‘a’的相关记录。</p>
+<p>从idx_insert_time二级索引对应的B+树中取出insert_time&#x3D; ‘b’的相关记录。</p>
+<p>二级索引的记录都是由索引列 + 主键构成的，所以我们可以计算出这两个结果集中id值的交集。</p>
+<p>按照上一步生成的id值列表进行回表操作，也就是从聚簇索引中把指定id值的完整用户记录取出来，返回给用户。</p>
+<p>为啥不直接使用idx_order_no或者idx_insert_time只根据某个搜索条件去读取一个二级索引，然后回表后再过滤另外一个搜索条件呢？这里要分析一下两种查询执行方式之间需要的成本代价。</p>
+<p><strong>只读取一个二级索引的成本：</strong></p>
+<p>按照某个搜索条件读取一个二级索引，根据从该二级索引得到的主键值进行回表操作，然后再过滤其他的搜索条件</p>
+<p><strong>读取多个二级索引之后取交集成本：</strong></p>
+<p>按照不同的搜索条件分别读取不同的二级索引，将从多个二级索引得到的主键值取交集，然后进行回表操作。</p>
+<p>虽然读取多个二级索引比读取一个二级索引消耗性能，但是大部分情况下读取二级索引的操作是顺序I&#x2F;O，而回表操作是随机I&#x2F;O，所以如果只读取一个二级索引时需要回表的记录数特别多，而读取多个二级索引之后取交集的记录数非常少，当节省的因为回表而造成的性能损耗比访问多个二级索引带来的性能损耗更高时，读取多个二级索引后取交集比只读取一个二级索引的成本更低。</p>
+<p>MySQL在某些特定的情况下才可能会使用到Intersection索引合并，哪些情况呢？</p>
+<h3 id="情况一：等值匹配"><a href="#情况一：等值匹配" class="headerlink" title="情况一：等值匹配"></a><strong>情况一：等值匹配</strong></h3><p>二级索引列是等值匹配的情况，对于联合索引来说，在联合索引中的每个列都必须等值匹配，不能出现只匹配部分列的情况。</p>
+<p>而下边这两个查询就不能进行Intersection索引合并：</p>
+<p>SELECT * FROM order_exp WHERE order_no&gt; ‘a’ AND insert_time &#x3D; ‘a’ AND order_status &#x3D; ‘b’ AND expire_time &#x3D; ‘c’;</p>
+<p>SELECT * FROM order_exp WHERE order_no &#x3D; ‘a’ AND insert_time &#x3D; ‘a’;</p>
+<p>第一个查询是因为对order_no进行了范围匹配，第二个查询是因为联合索引u_idx_day_status中的order_status和expire_time列并没有出现在搜索条件中，所以这两个查询不能进行Intersection索引合并。</p>
+<h3 id="情况二：主键列可以是范围匹配"><a href="#情况二：主键列可以是范围匹配" class="headerlink" title="情况二：主键列可以是范围匹配"></a><strong>情况二：主键列可以是范围匹配</strong></h3><p>比方说下边这个查询可能用到主键和u_idx_day_status进行Intersection索引合并的操作：</p>
+<p>SELECT * FROM order_exp WHERE id &gt; 100 AND insert_time &#x3D; ‘a’;</p>
+<p>对于InnoDB的二级索引来说，记录先是按照索引列进行排序，如果该二级索引是一个联合索引，那么会按照联合索引中的各个列依次排序。而二级索引的用户记录是由索引列 + 主键构成的，二级索引列的值相同的记录可能会有好多条，这些索引列的值相同的记录又是按照主键的值进行排序的。</p>
+<p>所以重点来了，之所以在二级索引列都是等值匹配的情况下才可能使用Intersection索引合并，是因为只有在这种情况下根据二级索引查询出的结果集是按照主键值排序的。</p>
+<p>Intersection索引合并会把从多个二级索引中查询出的主键值求交集，如果从各个二级索引中查询的到的结果集本身就是已经按照主键排好序的，那么求交集的过程就很容易。</p>
+<p>假设某个查询使用Intersection索引合并的方式从idx_order_no和idx_expire_time这两个二级索引中获取到的主键值分别是：</p>
+<p>从idx_order_no中获取到已经排好序的主键值：1、3、5</p>
+<p>从idx_expire_time中获取到已经排好序的主键值：2、3、4</p>
+<p>那么求交集的过程就是这样：逐个取出这两个结果集中最小的主键值，如果两个值相等，则加入最后的交集结果中，否则丢弃当前较小的主键值，再取该丢弃的主键值所在结果集的后一个主键值来比较，直到某个结果集中的主键值用完了，时间复杂度是O(n)。</p>
+<p>但是如果从各个二级索引中查询出的结果集并不是按照主键排序的话，那就要先把结果集中的主键值排序完再来做上边的那个过程，就比较耗时了。</p>
+<p> 按照有序的主键值去回表取记录有个专有名词，叫：Rowid Ordered Retrieval，简称<strong>ROR</strong>。</p>
+<p>另外，不仅是多个二级索引之间可以采用Intersection索引合并，索引合并也可以有聚簇索引参加，也就是我们上边写的情况二：在搜索条件中有主键的范围匹配的情况下也可以使用Intersection索引合并索引合并。为啥主键这就可以范围匹配了？还是得回到应用场景里：</p>
+<p>SELECT * FROM order_exp WHERE id &gt; 100 AND order_no &#x3D; ‘a’;</p>
+<p>假设这个查询可以采用Intersection索引合并，我们理所当然的以为这个查询会分别按照id &gt; 100这个条件从聚簇索引中获取一些记录，在通过order_no&#x3D; ‘a’这个条件从idx_order_no二级索引中获取一些记录，然后再求交集，其实这样就把问题复杂化了，没必要从聚簇索引中获取一次记录。别忘了二级索引的记录中都带有主键值的，所以可以在从idx_order_no中获取到的主键值上直接运用条件id &gt; 100过滤就行了，这样多简单。所以涉及主键的搜索条件只不过是为了从别的二级索引得到的结果集中过滤记录罢了，是不是等值匹配不重要。</p>
+<p>当然，上边说的情况一和情况二只是发生Intersection索引合并的必要条件，不是充分条件。也就是说即使情况一、情况二成立，也不一定发生Intersection索引合并，这得看优化器的心情。优化器只有在单独根据搜索条件从某个二级索引中获取的记录数太多，导致回表开销太大，而通过Intersection索引合并后需要回表的记录数大大减少时才会使用Intersection索引合并。</p>
+<h2 id="Union合并"><a href="#Union合并" class="headerlink" title="Union合并"></a><strong>Union合并</strong></h2><p>我们在写查询语句时经常想把既符合某个搜索条件的记录取出来，也把符合另外的某个搜索条件的记录取出来，我们说这些不同的搜索条件之间是OR关系。有时候OR关系的不同搜索条件会使用到不同的索引，比方说这样：</p>
+<p>SELECT * FROM order_exp WHERE order_no &#x3D; ‘a’ OR expire_time &#x3D; ‘b’</p>
+<p>Intersection是交集的意思，这适用于使用不同索引的搜索条件之间使用AND连接起来的情况；Union是并集的意思，适用于使用不同索引的搜索条件之间使用OR连接起来的情况。与Intersection索引合并类似，MySQL在某些特定的情况下才可能会使用到Union索引合并：</p>
+<h3 id="情况一：等值匹配-1"><a href="#情况一：等值匹配-1" class="headerlink" title="情况一：等值匹配"></a><strong>情况一：等值匹配</strong></h3><p>分析同Intersection合并</p>
+<h3 id="情况二：主键列可以是范围匹配-1"><a href="#情况二：主键列可以是范围匹配-1" class="headerlink" title="情况二：主键列可以是范围匹配"></a><strong>情况二：主键列可以是范围匹配</strong></h3><p>分析同Intersection合并</p>
+<h3 id="情况三：使用Intersection索引合并的搜索条件"><a href="#情况三：使用Intersection索引合并的搜索条件" class="headerlink" title="情况三：使用Intersection索引合并的搜索条件"></a><strong>情况三：使用Intersection索引合并的搜索条件</strong></h3><p>就是搜索条件的某些部分使用Intersection索引合并的方式得到的主键集合和其他方式得到的主键集合取交集，比方说这个查询：</p>
+<p>SELECT * FROM order_exp WHERE insert_time &#x3D; ‘a’ AND order_status &#x3D; ‘b’ AND expire_time &#x3D; ‘c’ OR (order_no &#x3D; ‘a’ AND expire_time &#x3D; ‘b’);</p>
+<p>优化器可能采用这样的方式来执行这个查询：</p>
+<p>先按照搜索条件order_no &#x3D; ‘a’ AND expire_time &#x3D; ‘b’从索引idx_order_no和idx_expire_time中使用Intersection索引合并的方式得到一个主键集合。</p>
+<p>再按照搜索条件 insert_time &#x3D; ‘a’ AND order_status &#x3D; ‘b’ AND expire_time &#x3D; ‘c’从联合索引u_idx_day_status中得到另一个主键集合。</p>
+<p>采用Union索引合并的方式把上述两个主键集合取并集，然后进行回表操作，将结果返回给用户。</p>
+<p>当然，查询条件符合了这些情况也不一定就会采用Union索引合并，也得看优化器的心情。优化器只有在单独根据搜索条件从某个二级索引中获取的记录数比较少，通过Union索引合并后进行访问的代价比全表扫描更小时才会使用Union索引合并。</p>
+<h2 id="Sort-Union合并"><a href="#Sort-Union合并" class="headerlink" title="Sort-Union合并"></a><strong>Sort-Union合并</strong></h2><p>Union索引合并的使用条件太苛刻，必须保证各个二级索引列在进行等值匹配的条件下才可能被用到，比方说下边这个查询就无法使用到Union索引合并：</p>
+<p>SELECT * FROM order_exp WHERE order_no&lt; ‘a’ OR expire_time&gt; ‘z’</p>
+<p>这是因为根据order_no&lt; ‘a’从idx_order_no索引中获取的二级索引记录的主键值不是排好序的，根据expire_time&gt; ‘z’从idx_expire_time索引中获取的二级索引记录的主键值也不是排好序的，但是order_no&lt; ‘a’和expire_time&gt; ‘z’’这两个条件又特别让我们动心，所以我们可以这样：</p>
+<p>先根据order_no&lt; ‘a’条件从idx_order_no二级索引中获取记录，并按照记录的主键值进行排序</p>
+<p>再根据expire_time&gt; ‘z’条件从idx_expire_time二级索引中获取记录，并按照记录的主键值进行排序</p>
+<p>因为上述的两个二级索引主键值都是排好序的，剩下的操作和Union索引合并方式就一样了。</p>
+<p>上述这种先按照二级索引记录的主键值进行排序，之后按照Union索引合并方式执行的方式称之为Sort-Union索引合并，很显然，这种Sort-Union索引合并比单纯的Union索引合并多了一步对二级索引记录的主键值排序的过程。</p>
+<h2 id="联合索引替代Intersection索引合并"><a href="#联合索引替代Intersection索引合并" class="headerlink" title="联合索引替代Intersection索引合并"></a><strong>联合索引替代Intersection索引合并</strong></h2><p>SELECT * FROM order_exp WHERE order_no&#x3D; ‘a’ And expire_time&#x3D; ‘z’;</p>
+<p>这个查询之所以可能使用Intersection索引合并的方式执行，还不是因为idx_order_no和idx_expire_time是两个单独的B+树索引，要是把这两个列搞一个联合索引，那直接使用这个联合索引就把事情搞定了，何必用啥索引合并呢，就像这样：</p>
+<p>ALTER TABLE order_exp drop index idx_order_no, idx_expire_time, </p>
+<p>add index idx_order_no_expire_time(order_no, expire_time);</p>
+<p>这样我们把idx_order_no, idx_expire_time都干掉，再添加一个联合索引idx_order_no_expire_time，使用这个联合索引进行查询简直是又快又好，既不用多读一棵B+树，也不用合并结果。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>

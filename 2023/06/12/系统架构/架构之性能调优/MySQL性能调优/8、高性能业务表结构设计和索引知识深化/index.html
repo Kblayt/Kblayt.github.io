@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="课程学习须知 课程章节安排  本课程是在MySQL课程上做的一个升级和加深，会更加关注于MySQL内核执行和底层原理，所以请在学习掌握了第四期MySQL课程后再学习本课程，而且在第四期MySQL课程中已经讲述过的内容在本课程中不再重复讲述。同时： 1、一个知识点如果大部分同学明白，不会重复讲解，未明白的同学请看视频、笔记、请教同学或加老师QQ。 2、以上为本课的章节安排，不是课时安排，如果一章内容">
+    <meta name="description" content="学习安排  本课程是在MySQL课程上做的一个升级和加深，会更加关注于MySQL内核执行和底层原理，所以请在学习掌握了第四期MySQL课程后再学习本课程，而且在第四期MySQL课程中已经讲述过的内容在本课程中不再重复讲述。同时： 1、一个知识点如果大部分同学明白，不会重复讲解，未明白的同学请看视频、笔记、请教同学或加老师QQ。 2、以上为本课的章节安排，不是课时安排，如果一章内容在一次课内未讲完，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="8、高性能业务表结构设计和索引知识深化">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/12/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="课程学习须知 课程章节安排  本课程是在MySQL课程上做的一个升级和加深，会更加关注于MySQL内核执行和底层原理，所以请在学习掌握了第四期MySQL课程后再学习本课程，而且在第四期MySQL课程中已经讲述过的内容在本课程中不再重复讲述。同时： 1、一个知识点如果大部分同学明白，不会重复讲解，未明白的同学请看视频、笔记、请教同学或加老师QQ。 2、以上为本课的章节安排，不是课时安排，如果一章内容">
+<meta property="og:description" content="学习安排  本课程是在MySQL课程上做的一个升级和加深，会更加关注于MySQL内核执行和底层原理，所以请在学习掌握了第四期MySQL课程后再学习本课程，而且在第四期MySQL课程中已经讲述过的内容在本课程中不再重复讲述。同时： 1、一个知识点如果大部分同学明白，不会重复讲解，未明白的同学请看视频、笔记、请教同学或加老师QQ。 2、以上为本课的章节安排，不是课时安排，如果一章内容在一次课内未讲完，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/image-20230617142035268.png">
 <meta property="og:image" content="https://kblayt.github.io/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/2100-1686982804655112">
@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://kblayt.github.io/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/2113-1686982804656172">
 <meta property="og:image" content="https://kblayt.github.io/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/2115-1686982804656174">
 <meta property="article:published_time" content="2023-06-12T01:38:57.000Z">
-<meta property="article:modified_time" content="2023-06-18T12:56:07.351Z">
+<meta property="article:modified_time" content="2023-06-28T08:02:02.090Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -307,8 +307,7 @@
             
               <div class="markdown-body">
                 
-                <p><strong>课程学习须知</strong></p>
-<p>课程章节安排</p>
+                <p>学习安排</p>
 <p><img src="/8%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%9A%E5%8A%A1%E8%A1%A8%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%92%8C%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86%E6%B7%B1%E5%8C%96/image-20230617142035268.png" srcset="/img/loading.gif" lazyload alt="image-20230617142035268"></p>
 <p>本课程是在MySQL课程上做的一个升级和加深，会更加关注于MySQL内核执行和底层原理，所以请在学习掌握了第四期MySQL课程后再学习本课程，而且在第四期MySQL课程中已经讲述过的内容在本课程中不再重复讲述。同时：</p>
 <p>1、一个知识点如果大部分同学明白，不会重复讲解，未明白的同学请看视频、笔记、请教同学或加老师QQ。</p>

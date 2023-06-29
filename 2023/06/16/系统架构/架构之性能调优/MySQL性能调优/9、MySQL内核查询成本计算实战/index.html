@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81MySQL%E5%86%85%E6%A0%B8%E6%9F%A5%E8%AF%A2%E6%88%90%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/2151-1686983214137256">
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81MySQL%E5%86%85%E6%A0%B8%E6%9F%A5%E8%AF%A2%E6%88%90%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%AE%9E%E6%88%98/2134-1686983214137258">
 <meta property="article:published_time" content="2023-06-16T08:40:32.000Z">
-<meta property="article:modified_time" content="2023-06-26T16:01:04.672Z">
+<meta property="article:modified_time" content="2023-06-27T11:51:24.395Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -537,8 +537,8 @@
 <h1 id="连接查询的成本"><a href="#连接查询的成本" class="headerlink" title="连接查询的成本"></a><strong>连接查询的成本</strong></h1><h2 id="连接查询的概念"><a href="#连接查询的概念" class="headerlink" title="连接查询的概念"></a><strong>连接查询的概念</strong></h2><p>下面的课程中可能牵涉连接查询中诸如“驱动表”之类的概念请参考《5、Mysql索引优化实战2》。</p>
 <h2 id="Condition-filtering介绍"><a href="#Condition-filtering介绍" class="headerlink" title="Condition filtering介绍"></a><strong>Condition filtering介绍</strong></h2><p>连接查询至少是要有两个表的，课程的讲述中可能使用order_exp表的派生表s1、s2和order_exp2。</p>
 <p>我们前边说过，MySQL中连接查询采用的是嵌套循环连接算法，驱动表会被访问一次，被驱动表可能会被访问多次，所以对于两表连接查询来说，它的查询成本由下边两个部分构成：</p>
-<p><strong>单次查询驱动表的成本</strong></p>
-<p><strong>多次查询被驱动表的成本（具体查询多少次取决于对驱动表查询的结果集中有多少条记录）</strong></p>
+<p>1、<strong>单次查询驱动表的成本</strong></p>
+<p><strong>2、多次查询被驱动表的成本（具体查询多少次取决于对驱动表查询的结果集中有多少条记录）</strong></p>
 <p>对驱动表进行查询后得到的记录条数称之为驱动表的<strong>扇出</strong>（英文名：fanout）。很显然驱动表的扇出值越小，对被驱动表的查询次数也就越少，连接查询的总成本也就越低。当查询优化器想计算整个连接查询所使用的成本时，就需要计算出驱动表的扇出值，有的时候扇出值的计算是很容易的，比如下边这两个查询：</p>
 <p>查询一：</p>
 <p>SELECT * FROM order_exp AS s1 INNER JOIN order_exp2 AS s2;</p>
@@ -845,7 +845,7 @@
 <p>步骤一：更新innodb_table_stats表。</p>
 <p>步骤二：让MySQL查询优化器重新加载我们更改过的数据。</p>
 <p>更新完innodb_table_stats只是单纯的修改了一个表的数据，需要让MySQL查询优化器重新加载我们更改过的数据，运行下边的命令就可以了：</p>
-<p>FLUSH TABLE order_exp;</p>
+<p>FLUSH TABLE order_exp; </p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
