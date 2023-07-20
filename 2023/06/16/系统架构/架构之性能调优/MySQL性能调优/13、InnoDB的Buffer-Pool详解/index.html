@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="InnoDB引擎底层存储和缓存原理 到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。 InnoDB记录存储结构和索引页结构 Inno">
+    <meta name="description" content="InnoDB引擎底层存储和缓存原理到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。 InnoDB记录存储结构和索引页结构InnoDB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="13、InnoDB引擎底层存储和缓存原理">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="InnoDB引擎底层存储和缓存原理 到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。 InnoDB记录存储结构和索引页结构 Inno">
+<meta property="og:description" content="InnoDB引擎底层存储和缓存原理到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。 InnoDB记录存储结构和索引页结构InnoDB">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/2243-168759856882338">
 <meta property="og:image" content="https://kblayt.github.io/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/2233-168759856882339">
@@ -52,7 +52,7 @@
 <meta property="og:image" content="https://kblayt.github.io/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/2254-168759856882464">
 <meta property="og:image" content="https://kblayt.github.io/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/2227-168759856882465">
 <meta property="article:published_time" content="2023-06-16T08:42:38.000Z">
-<meta property="article:modified_time" content="2023-06-24T09:23:00.299Z">
+<meta property="article:modified_time" content="2023-07-19T06:11:33.617Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -302,14 +302,11 @@
             
               <div class="markdown-body">
                 
-                <p><strong>InnoDB引擎底层存储和缓存原理</strong></p>
-<p>到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。</p>
-<p><strong>InnoDB记录存储结构和索引页结构</strong></p>
-<p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的。而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？</p>
+                <h1 id="InnoDB引擎底层存储和缓存原理"><a href="#InnoDB引擎底层存储和缓存原理" class="headerlink" title="InnoDB引擎底层存储和缓存原理"></a><strong>InnoDB引擎底层存储和缓存原理</strong></h1><p>到目前为止，MySQL对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？MySQL是以什么方式来访问的这些数据？这些问题我们统统不知道。要搞明白查询优化背后的原理，就必须深入MySQL的底层去一探究竟，而且事务、锁等的原理也要求我们必须深入底层。</p>
+<h2 id="InnoDB记录存储结构和索引页结构"><a href="#InnoDB记录存储结构和索引页结构" class="headerlink" title="InnoDB记录存储结构和索引页结构"></a><strong>InnoDB记录存储结构和索引页结构</strong></h2><p>InnoDB是一个将表中的数据存储到磁盘上的存储引擎，所以即使关机后重启我们的数据还是存在的。而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，InnoDB存储引擎需要一条一条的把记录从磁盘上读出来么？</p>
 <p>InnoDB采取的方式是：将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为 16 KB。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。</p>
 <p>我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为行格式或者记录格式。InnoDB存储引擎设计了4种不同类型的行格式，分别是Compact、Redundant、Dynamic和Compressed行格式。</p>
-<p><strong>行格式</strong></p>
-<p>我们可以在创建或修改表的语句中指定行格式：</p>
+<h3 id="行格式"><a href="#行格式" class="headerlink" title="行格式"></a><strong>行格式</strong></h3><p>我们可以在创建或修改表的语句中指定行格式：</p>
 <p>CREATE TABLE 表名 (列的信息) ROW_FORMAT&#x3D;行格式名称</p>
 <p><strong>COMPACT</strong></p>
 <p>​    <img src="/13%E3%80%81InnoDB%E7%9A%84Buffer-Pool%E8%AF%A6%E8%A7%A3/2243-168759856882338" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -335,8 +332,7 @@
 <p>Redundant行格式是MySQL5.0之前用的一种行格式，不予深究。</p>
 <p><strong>Dynamic和Compressed行格式</strong></p>
 <p>MySQL5.7的默认行格式就是Dynamic，Dynamic和Compressed行格式和Compact行格式挺像，只不过在处理行溢出数据时有所不同。Compressed行格式和Dynamic不同的一点是，Compressed行格式会采用压缩算法对页面进行压缩，以节省空间。</p>
-<p><strong>数据溢出</strong></p>
-<p>如果我们定义一个表，表中只有一个VARCHAR字段，如下：</p>
+<h3 id="数据溢出"><a href="#数据溢出" class="headerlink" title="数据溢出"></a><strong>数据溢出</strong></h3><p>如果我们定义一个表，表中只有一个VARCHAR字段，如下：</p>
 <p>CREATE TABLE test_varchar( c VARCHAR(60000) )</p>
 <p>然后往这个字段插入60000个字符，会发生什么？</p>
 <p>前边说过，MySQL中磁盘和内存交互的基本单位是页，也就是说MySQL是以页为基本单位来管理存储空间的，我们的记录都会被分配到某个页中存储。而一个页的大小一般是16KB，也就是16384字节，而一个VARCHAR(M)类型的列就最多可以存储65532个字节，这样就可能造成一个页存放不了一条记录的情况。</p>
@@ -737,8 +733,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/" title="12、MySQL查询优化规则详解InnoDB记录存储结构">
-                        <span class="hidden-mobile">12、MySQL查询优化规则详解InnoDB记录存储结构</span>
+                      <a href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/" title="">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1549">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1555">
 <meta property="article:published_time" content="2023-06-16T15:33:57.000Z">
-<meta property="article:modified_time" content="2023-06-25T14:32:07.205Z">
+<meta property="article:modified_time" content="2023-06-29T09:44:33.025Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
@@ -296,17 +296,14 @@
 </ul>
 <p>这块如何学？</p>
 <p>这部分理解并发的三大特性，JMM工作内存和主内存关系，知道多线程之间如何通信的，掌握volatile能保证可见性和有序性，CAS就可以了，后续JVM层面和硬件层面的分析，基础比较薄弱的同学听不懂可以先跳过，从后面的Java锁机制课程听起，掌握常用的并发工具类，并发容器之后再来看JMM这块。并发专题不可避免的会涉及到计算机组成原理和操作系统知识。</p>
-<p><strong>并发和并行</strong></p>
-<p>目标都是最大化CPU的使用率</p>
+<h1 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a><strong>并发和并行</strong></h1><p>目标都是最大化CPU的使用率</p>
 <p>**并行(parallel)**：指在同一时刻，有多条指令在多个处理器上同时执行。所以无论从微观还是从宏观来看，二者都是一起执行的。</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1548" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p> **并发(concurrency)**：指在同一时刻只能有一条指令执行，但多个进程指令被快速的轮换执行，使得在宏观上具有多个进程同时执行的效果，但在微观上并不是同时执行的，只是把时间分成若干段，使多个进程快速交替的执行。 </p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1545" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>并行在多处理器系统中存在，而并发可以在单处理器和多处理器系统中都存在，并发能够在单处理器系统中存在是因为并发是并行的假象，并行要求程序能够同时执行多个操作，而并发只是要求程序假装同时执行多个操作（每个小时间片执行一个操作，多个操作快速切换执行） </p>
-<p><strong>并发三大特性</strong></p>
-<p>并发编程Bug的源头：可见性、原子性和有序性问题</p>
-<p><strong>可见性</strong> </p>
-<p>当一个线程修改了共享变量的值，其他线程能够看到修改的值。Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值这种依赖主内存作为传递媒介的方法来实现可见性的。</p>
+<h2 id="并发三大特性"><a href="#并发三大特性" class="headerlink" title="并发三大特性"></a><strong>并发三大特性</strong></h2><p>并发编程Bug的源头：可见性、原子性和有序性问题</p>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a><strong>可见性</strong></h3><p><font color='red'>当一个线程修改了共享变量的值，其他线程能够看到修改的值。</font>Java 内存模型是通过在变量修改后将新值同步回主内存，在变量读取前从主内存刷新变量值这种依赖主内存作为传递媒介的方法来实现可见性的。</p>
 <p><strong>如何保证可见性</strong></p>
 <ul>
 <li>通过 volatile 关键字保证可见性。</li>
@@ -315,8 +312,7 @@
 <li>通过 Lock保证可见性。</li>
 <li>通过 final 关键字保证可见性</li>
 </ul>
-<p><strong>有序性</strong></p>
-<p>即程序执行的顺序按照代码的先后顺序执行。JVM 存在指令重排，所以存在有序性问题。</p>
+<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a><strong>有序性</strong></h3><p>即程序执行的顺序按照代码的先后顺序执行。JVM 存在指令重排，所以存在有序性问题。</p>
 <p><strong>如何保证有序性</strong></p>
 <ul>
 <li><p>通过 volatile 关键字保证可见性。</p>
@@ -328,8 +324,7 @@
 <li><p>通过 Lock保证有序性。</p>
 </li>
 </ul>
-<p><strong>原子性</strong></p>
-<p>一个或多个操作，要么全部执行且在执行过程中不被任何因素打断，要么全部不执行。在 Java 中，对基本数据类型的变量的读取和赋值操作是原子性操作（64位处理器）。不采取任何的原子性保障措施的自增操作并不是原子性的。</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a><strong>原子性</strong></h3><p>一个或多个操作，要么全部执行且在执行过程中不被任何因素打断，要么全部不执行。在 Java 中，对基本数据类型的变量的读取和赋值操作是原子性操作（64位处理器）。不采取任何的原子性保障措施的自增操作并不是原子性的。</p>
 <p><strong>如何保证原子性</strong></p>
 <ul>
 <li>通过 synchronized 关键字保证原子性。</li>
@@ -338,20 +333,16 @@
 </ul>
 <p>思考：在 32 位的机器上对 long 型变量进行加减操作是否存在并发隐患？</p>
 <p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.7">https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.7</a></p>
-<p><strong>可见性问题深入分析</strong></p>
-<p>我们通过下面的Java小程序来分析Java的多线程可见性的问题</p>
+<h1 id="可见性问题深入分析"><a href="#可见性问题深入分析" class="headerlink" title="可见性问题深入分析"></a><strong>可见性问题深入分析</strong></h1><p>我们通过下面的Java小程序来分析Java的多线程可见性的问题</p>
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @author Fox</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp</span><br><span class="hljs-comment"> */</span><br><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> VisibilityTest &#123;<br><br>    private <span class="hljs-type">boolean</span> flag = <span class="hljs-keyword">true</span>;<br><br>    <span class="hljs-built_in">public</span> <span class="hljs-type">void</span> <span class="hljs-keyword">refresh</span>() &#123;<br>        flag = <span class="hljs-keyword">false</span>;<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName() + &quot;修改flag&quot;);<br>    &#125;<br><br>    <span class="hljs-built_in">public</span> <span class="hljs-type">void</span> <span class="hljs-keyword">load</span>() &#123;<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName() + &quot;开始执行.....&quot;);<br>        <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (flag) &#123;<br>            i++;<br>            //TODO  业务逻辑<br><br>        &#125;<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(Thread.currentThread().getName() + &quot;跳出循环: i=&quot; + i);<br>    &#125;<br><br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) throws InterruptedException &#123;<br>        VisibilityTest test = <span class="hljs-built_in">new</span> VisibilityTest();<br><br>        // 线程threadA模拟数据加载场景<br>        Thread threadA = <span class="hljs-built_in">new</span> Thread(() -&gt; test.<span class="hljs-keyword">load</span>(), &quot;threadA&quot;);<br>        threadA.<span class="hljs-keyword">start</span>();<br><br>        // 让threadA执行一会儿<br>        Thread.sleep(<span class="hljs-number">1000</span>);<br>        // 线程threadB通过flag控制threadA的执行时间<br>        Thread threadB = <span class="hljs-built_in">new</span> Thread(() -&gt; test.<span class="hljs-keyword">refresh</span>(), &quot;threadB&quot;);<br>        threadB.<span class="hljs-keyword">start</span>();<br><br>    &#125;<br><br><br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> shortWait(long <span class="hljs-type">interval</span>) &#123;<br>        long start = <span class="hljs-keyword">System</span>.nanoTime();<br>        long <span class="hljs-keyword">end</span>;<br>        <span class="hljs-keyword">do</span> &#123;<br>            end = <span class="hljs-keyword">System</span>.nanoTime();<br>        &#125; <span class="hljs-keyword">while</span> (<span class="hljs-keyword">start</span> + <span class="hljs-type">interval</span> &gt;= <span class="hljs-keyword">end</span>);<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p>思考：上面例子中为什么多线程对共享变量的操作存在可见性问题？</p>
-<p><strong>Java内存模型（JMM）</strong></p>
-<p><strong>JMM定义</strong></p>
-<p>Java虚拟机规范中定义了Java内存模型（Java Memory Model，JMM），用于屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的并发效果，JMM规范了Java虚拟机与计算机内存是如何协同工作的：规定了一个线程如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。JMM描述的是一种抽象的概念，一组规则，通过这组规则控制程序中各个变量在共享数据区域和私有数据区域的访问方式，JMM是围绕原子性、有序性、可见性展开的。</p>
+<h1 id="Java内存模型（JMM）"><a href="#Java内存模型（JMM）" class="headerlink" title="Java内存模型（JMM）"></a><strong>Java内存模型（JMM）</strong></h1><h2 id="JMM定义"><a href="#JMM定义" class="headerlink" title="JMM定义"></a><strong>JMM定义</strong></h2><p>Java虚拟机规范中定义了Java内存模型（Java Memory Model，JMM），用于屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的并发效果，JMM规范了Java虚拟机与计算机内存是如何协同工作的：<font color='red'>规定了一个线程如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。</font>JMM描述的是一种抽象的概念，一组规则，通过这组规则控制程序中各个变量在共享数据区域和私有数据区域的访问方式，<font color='red'>JMM是围绕原子性、有序性、可见性展开的</font>。</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1542" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>JMM与硬件内存架构的关系</strong></p>
 <p>Java内存模型与硬件内存架构之间存在差异。硬件内存架构没有区分线程栈和堆。对于硬件，所有的线程栈和堆都分布在主内存中。部分线程栈和堆可能有时候会出现在CPU缓存中和CPU内部的寄存器中。如下图所示，Java内存模型和计算机硬件内存架构是一个交叉关系：</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1551" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>内存交互操作</strong></p>
-<p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步到主内存之间的实现细节，Java内存模型定义了以下八种操作来完成：</p>
+<h2 id="内存交互操作"><a href="#内存交互操作" class="headerlink" title="内存交互操作"></a><strong>内存交互操作</strong></h2><p>关于主内存与工作内存之间的具体交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步到主内存之间的实现细节，Java内存模型定义了以下八种操作来完成：</p>
 <ul>
 <li>lock（锁定）：作用于主内存的变量，把一个变量标识为一条线程独占状态。</li>
 <li>unlock（解锁）：作用于主内存变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定。</li>
@@ -375,8 +366,7 @@
 <li>如果一个变量事先没有被lock操作锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定的变量。</li>
 <li>对一个变量执行unlock操作之前，必须先把此变量同步到主内存中（执行store和write操作）。</li>
 </ul>
-<p><strong>JMM的内存可见性保证</strong></p>
-<p>按程序类型，Java程序的内存可见性保证可以分为下列3类：</p>
+<h2 id="JMM的内存可见性保证"><a href="#JMM的内存可见性保证" class="headerlink" title="JMM的内存可见性保证"></a><strong>JMM的内存可见性保证</strong></h2><p>按程序类型，Java程序的内存可见性保证可以分为下列3类：</p>
 <ul>
 <li>单线程程序。单线程程序不会出现内存可见性问题。编译器、runtime和处理器会共同确保单线程程序的执行结果与该程序在顺序一致性模型中的执行结果相同。</li>
 <li>正确同步的多线程程序。正确同步的多线程程序的执行将具有顺序一致性（程序的执行结果与该程序在顺序一致性内存模型中的执行结果相同）。这是JMM关注的重点，JMM通过限制编译器和处理器的重排序来为程序员提供内存可见性保证。</li>
@@ -387,9 +377,7 @@
 <p>2）顺序一致性模型保证所有线程只能看到一致的操作执行顺序，而JMM不保证所有线程能看到一致的操作执行顺序。</p>
 <p>3）顺序一致性模型保证对所有的内存读&#x2F;写操作都具有原子性，而JMM不保证对64位的long型和double型变量的写操作具有原子性（32位处理器）。</p>
 <p>JVM在32位处理器上运行时，可能会把一个64位long&#x2F;double型变量的写操作拆分为两个32位的写操作来执行。这两个32位的写操作可能会被分配到不同的总线事务中执行，此时对这个64位变量的写操作将不具有原子性。从JSR-133内存模型开始（即从JDK5开始），仅仅只允许把一个64位long&#x2F;double型变量的写操作拆分为两个32位的写操作来执行，任意的读操作在JSR-133中都必须具有原子性</p>
-<p><strong>volatile的内存语义</strong></p>
-<p><strong>volatile的特性</strong></p>
-<ul>
+<h2 id="volatile的内存语义"><a href="#volatile的内存语义" class="headerlink" title="volatile的内存语义"></a><strong>volatile的内存语义</strong></h2><h3 id="volatile的特性"><a href="#volatile的特性" class="headerlink" title="volatile的特性"></a><strong>volatile的特性</strong></h3><ul>
 <li>可见性：对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。</li>
 <li>原子性：对任意单个volatile变量的读&#x2F;写具有原子性，但类似于volatile++这种复合操作不具有原子性（基于这点，我们通过会认为volatile不具备原子性）。volatile仅仅保证对单个volatile变量的读&#x2F;写具有原子性，而锁的互斥执行的特性可以确保对整个临界区代码的执行具有原子性。</li>
 </ul>
@@ -398,18 +386,15 @@
 <li>有序性：对volatile修饰的变量的读写操作前后加上各种特定的内存屏障来禁止指令重排序来保障有序性。</li>
 </ul>
 <p>在JSR-133之前的旧Java内存模型中，虽然不允许volatile变量之间重排序，但旧的Java内存模型允许volatile变量与普通变量重排序。为了提供一种比锁更轻量级的线程之间通信的机制，JSR-133专家组决定增强volatile的内存语义：严格限制编译器和处理器对volatile变量与普通变量的重排序，确保volatile的写-读和锁的释放-获取具有相同的内存语义。</p>
-<p><strong>volatile写-读的内存语义</strong></p>
-<ul>
+<h3 id="volatile写-读的内存语义"><a href="#volatile写-读的内存语义" class="headerlink" title="volatile写-读的内存语义"></a><strong>volatile写-读的内存语义</strong></h3><ul>
 <li>当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。</li>
 <li>当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。</li>
 </ul>
-<p><strong>volatile可见性实现原理</strong></p>
-<p><strong>JMM内存交互层面实现</strong></p>
+<h3 id="volatile可见性实现原理"><a href="#volatile可见性实现原理" class="headerlink" title="volatile可见性实现原理"></a><strong>volatile可见性实现原理</strong></h3><p><strong>JMM内存交互层面实现</strong></p>
 <p>volatile修饰的变量的read、load、use操作和assign、store、write必须是连续的，即修改后必须立即同步回主内存，使用时必须从主内存刷新，由此保证volatile变量操作对多线程的可见性。</p>
 <p><strong>硬件层面实现</strong></p>
 <p>通过lock前缀指令，会锁定变量缓存行区域并写回主内存，这个操作称为“缓存锁定”，缓存一致性机制会阻止同时修改被两个以上处理器缓存的内存区域数据。一个处理器的缓存回写到内存会导致其他处理器的缓存无效。</p>
-<p><strong>volatile在hotspot的实现</strong></p>
-<p><strong>字节码解释器实现</strong></p>
+<h3 id="volatile在hotspot的实现"><a href="#volatile在hotspot的实现" class="headerlink" title="volatile在hotspot的实现"></a><strong>volatile在hotspot的实现</strong></h3><p><strong>字节码解释器实现</strong></p>
 <p>JVM中的字节码解释器(bytecodeInterpreter)，用C++实现了JVM指令，其优点是实现相对简单且容易理解，缺点是执行慢。</p>
 <p>bytecodeInterpreter.cpp</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1547" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -428,17 +413,14 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">OrderAccess::storeload</span><span class="hljs-params">()</span>  </span>&#123; <span class="hljs-built_in">fence</span>(); &#125;<br><span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">OrderAccess::fence</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">if</span> (os::<span class="hljs-built_in">is_MP</span>()) &#123;<br>    <span class="hljs-comment">// always use locked addl since mfence is sometimes expensive</span><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> AMD64</span><br>    <span class="hljs-function">__asm__ <span class="hljs-title">volatile</span> <span class="hljs-params">(<span class="hljs-string">&quot;lock; addl $0,0(%%rsp)&quot;</span> : : : <span class="hljs-string">&quot;cc&quot;</span>, <span class="hljs-string">&quot;memory&quot;</span>)</span></span>;<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>    <span class="hljs-function">__asm__ <span class="hljs-title">volatile</span> <span class="hljs-params">(<span class="hljs-string">&quot;lock; addl $0,0(%%esp)&quot;</span> : : : <span class="hljs-string">&quot;cc&quot;</span>, <span class="hljs-string">&quot;memory&quot;</span>)</span></span>;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>  &#125;<br></code></pre></td></tr></table></figure>
 
 <p>x86处理器中利用lock实现类似内存屏障的效果。</p>
-<p><strong>lock前缀指令的作用</strong></p>
-<p>\1. 确保后续指令执行的原子性。在Pentium及之前的处理器中，带有lock前缀的指令在执行期间会锁住总线，使得其它处理器暂时无法通过总线访问内存，很显然，这个开销很大。在新的处理器中，Intel使用缓存锁定来保证指令执行的原子性，缓存锁定将大大降低lock前缀指令的执行开销。</p>
+<h3 id="lock前缀指令的作用"><a href="#lock前缀指令的作用" class="headerlink" title="lock前缀指令的作用"></a><strong>lock前缀指令的作用</strong></h3><p>\1. 确保后续指令执行的原子性。在Pentium及之前的处理器中，带有lock前缀的指令在执行期间会锁住总线，使得其它处理器暂时无法通过总线访问内存，很显然，这个开销很大。在新的处理器中，Intel使用缓存锁定来保证指令执行的原子性，缓存锁定将大大降低lock前缀指令的执行开销。</p>
 <p>\2. LOCK前缀指令具有类似于内存屏障的功能，禁止该指令与前面和后面的读写指令重排序。</p>
 <p>\3. LOCK前缀指令会等待它之前所有的指令完成、并且所有缓冲的写操作写回内存(也就是将store buffer中的内容写入内存)之后才开始执行，并且根据缓存一致性协议，刷新store buffer的操作会导致其他cache中的副本失效。</p>
-<p><strong>汇编层面volatile的实现</strong></p>
-<p>添加下面的jvm参数查看之前可见性Demo的汇编指令</p>
+<h3 id="汇编层面volatile的实现"><a href="#汇编层面volatile的实现" class="headerlink" title="汇编层面volatile的实现"></a><strong>汇编层面volatile的实现</strong></h3><p>添加下面的jvm参数查看之前可见性Demo的汇编指令</p>
 <p>​                -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp              </p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1541" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>验证了可见性使用了<strong>lock前缀指令</strong></p>
-<p><strong>从硬件层面分析Lock前缀指令</strong></p>
-<p>《64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf》中有如下描述：</p>
+<h3 id="从硬件层面分析Lock前缀指令"><a href="#从硬件层面分析Lock前缀指令" class="headerlink" title="从硬件层面分析Lock前缀指令"></a><strong>从硬件层面分析Lock前缀指令</strong></h3><p>《64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf》中有如下描述：</p>
 <blockquote>
 <p>The 32-bit IA-32 processors support locked atomic operations on locations in system memory. These operations are typically used to manage shared data structures (such as semaphores, segment descriptors, system segments, or page tables) in which two or more processors may try simultaneously to modify the same field or flag. The processor uses three interdependent mechanisms for carrying out locked atomic operations: </p>
 <p>• Guaranteed atomic operations </p>
@@ -451,20 +433,16 @@
 <li>总线锁定，使用LOCK#信号和LOCK指令前缀</li>
 <li>缓存一致性协议，确保原子操作可以在缓存的数据结构上执行(缓存锁);这种机制出现在Pentium 4、Intel Xeon和P6系列处理器中</li>
 </ul>
-<p><strong>CPU缓存架构剖析</strong></p>
-<p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=fbe82b30b77ce9180b48c7440781bb08&sub=BAF658EE1CE84267BDA2E6896C7C0695">笔记</a></p>
-<p><strong>有序性问题深入分析</strong></p>
-<p>思考：下面的Java程序中x和y的最终结果是什么？</p>
+<h3 id="CPU缓存架构剖析"><a href="#CPU缓存架构剖析" class="headerlink" title="CPU缓存架构剖析"></a><strong>CPU缓存架构剖析</strong></h3><p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=fbe82b30b77ce9180b48c7440781bb08&sub=BAF658EE1CE84267BDA2E6896C7C0695">笔记</a></p>
+<h2 id="有序性问题深入分析"><a href="#有序性问题深入分析" class="headerlink" title="有序性问题深入分析"></a><strong>有序性问题深入分析</strong></h2><p>思考：下面的Java程序中x和y的最终结果是什么？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ReOrderTest</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, y = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span>  <span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException&#123;<br>        <span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            i++;<br>            x = <span class="hljs-number">0</span>;<br>            y = <span class="hljs-number">0</span>;<br>            a = <span class="hljs-number">0</span>;<br>            b = <span class="hljs-number">0</span>;<br><br>            <span class="hljs-comment">/**</span><br><span class="hljs-comment">             *  x,y:</span><br><span class="hljs-comment">             */</span><br>            <span class="hljs-type">Thread</span> <span class="hljs-variable">thread1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                    shortWait(<span class="hljs-number">20000</span>);<br>                    a = <span class="hljs-number">1</span>;<br>                    x = b;<br><br>                &#125;<br>            &#125;);<br>            <span class="hljs-type">Thread</span> <span class="hljs-variable">thread2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                    b = <span class="hljs-number">1</span>;<br>                    y = a;<br>                &#125;<br>            &#125;);<br><br>            thread1.start();<br>            thread2.start();<br>            thread1.join();<br>            thread2.join();<br><br>            System.out.println(<span class="hljs-string">&quot;第&quot;</span> + i + <span class="hljs-string">&quot;次（&quot;</span> + x + <span class="hljs-string">&quot;,&quot;</span> + y + <span class="hljs-string">&quot;)&quot;</span>);<br><br>            <span class="hljs-keyword">if</span> (x==<span class="hljs-number">0</span>&amp;&amp;y==<span class="hljs-number">0</span>)&#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br><br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">shortWait</span><span class="hljs-params">(<span class="hljs-type">long</span> interval)</span>&#123;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">start</span> <span class="hljs-operator">=</span> System.nanoTime();<br>        <span class="hljs-type">long</span> end;<br>        <span class="hljs-keyword">do</span>&#123;<br>            end = System.nanoTime();<br>        &#125;<span class="hljs-keyword">while</span>(start + interval &gt;= end);<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p>​         </p>
-<p><strong>指令重排序</strong></p>
-<p>Java语言规范规定JVM线程内部维持顺序化语义。即只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码顺序不一致，此过程叫指令的重排序。</p>
+<h3 id="指令重排序"><a href="#指令重排序" class="headerlink" title="指令重排序"></a><strong>指令重排序</strong></h3><p>Java语言规范规定JVM线程内部维持顺序化语义。即只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码顺序不一致，此过程叫指令的重排序。</p>
 <p>指令重排序的意义：JVM能根据处理器特性（CPU多级缓存系统、多核处理器等）适当的对机器指令进行重排序，使机器指令能更符合CPU的执行特性，最大限度的发挥机器性能。</p>
 <p>在编译器与CPU处理器中都能执行指令重排优化操作</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1546" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>volatile重排序规则</strong></p>
-<p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1544" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="volatile重排序规则"><a href="#volatile重排序规则" class="headerlink" title="volatile重排序规则"></a><strong>volatile重排序规则</strong></h3><p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1544" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>volatile禁止重排序场景：</p>
 <p>\1. 第二个操作是volatile写，不管第一个操作是什么都不会重排序</p>
 <p>\2. 第一个操作是volatile读，不管第二个操作是什么都不会重排序</p>
@@ -475,8 +453,7 @@
 <p>\3. 在每个volatile读操作的后面插入一个LoadLoad屏障</p>
 <p>\4. 在每个volatile读操作的后面插入一个LoadStore屏障</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1543" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>JSR133规范</strong></p>
-<p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1549" srcset="/img/loading.gif" lazyload alt="The JSR-133 Cookbook.html"></p>
+<h3 id="JSR133规范"><a href="#JSR133规范" class="headerlink" title="JSR133规范"></a><strong>JSR133规范</strong></h3><p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1549" srcset="/img/loading.gif" lazyload alt="The JSR-133 Cookbook.html"></p>
 <p>x86处理器不会对读-读、读-写和写-写操作做重排序, 会省略掉这3种操作类型对应的内存屏障。仅会对写-读操作做重排序，所以volatile写-读操作只需要在volatile写后插入StoreLoad屏障</p>
 <p>​    <img src="/1%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%B8%80/1555" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>JVM层面的内存屏障</strong></p>
@@ -486,8 +463,7 @@
 <p><strong>StoreStore屏障</strong>：（指令Store1; StoreStore; Store2），在Store2及后续写入操作执行前，保证Store1的写入操作对其它处理器可见。</p>
 <p><strong>StoreLoad屏障</strong>：（指令Store1; StoreLoad; Load2），在Load2及后续所有读取操作执行前，保证Store1的写入对所有处理器可见。它的开销是四种屏障中最大的。在大多数处理器的实现中，这个屏障是个万能屏障，兼具其它三种内存屏障的功能</p>
 <p>由于x86只有store load可能会重排序，所以只有JSR的StoreLoad屏障对应它的mfence或lock前缀指令，其他屏障对应空操作</p>
-<p><strong>硬件层内存屏障</strong></p>
-<p>硬件层提供了一系列的内存屏障 memory barrier &#x2F; memory fence(Intel的提法)来提供一致性的能力。拿X86平台来说，有几种主要的内存屏障：</p>
+<h3 id="硬件层内存屏障"><a href="#硬件层内存屏障" class="headerlink" title="硬件层内存屏障"></a><strong>硬件层内存屏障</strong></h3><p>硬件层提供了一系列的内存屏障 memory barrier &#x2F; memory fence(Intel的提法)来提供一致性的能力。拿X86平台来说，有几种主要的内存屏障：</p>
 <ol>
 <li><p>lfence，是一种Load Barrier 读屏障</p>
 </li>

@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Mysql内核查询优化规则详解 在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的">
+    <meta name="description" content="Mysql内核查询优化规则详解在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的优">
 <meta property="og:type" content="article">
-<meta property="og:title" content="12、MySQL查询优化规则详解InnoDB记录存储结构">
+<meta property="og:title" content="Hexo">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/MySQL%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Mysql内核查询优化规则详解 在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的">
+<meta property="og:description" content="Mysql内核查询优化规则详解在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的优">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2264">
 <meta property="og:image" content="https://kblayt.github.io/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2263">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://kblayt.github.io/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2258">
 <meta property="og:image" content="https://kblayt.github.io/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2259">
 <meta property="article:published_time" content="2023-06-16T08:41:42.000Z">
-<meta property="article:modified_time" content="2023-06-28T10:29:50.564Z">
+<meta property="article:modified_time" content="2023-07-19T05:57:28.029Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MySQL性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -41,7 +41,7 @@
   
   
   
-  <title>12、MySQL查询优化规则详解InnoDB记录存储结构 - Hexo</title>
+  <title>Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -206,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="12、MySQL查询优化规则详解InnoDB记录存储结构"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -278,41 +278,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">12、MySQL查询优化规则详解InnoDB记录存储结构</h1>
+            <h1 style="display: none"></h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>Mysql内核查询优化规则详解</strong></p>
-<p>在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的优化时间。</p>
-<p><strong>条件化简</strong></p>
-<p>我们编写的查询语句的搜索条件本质上是一个表达式，这些表达式可能比较繁杂，或者不能高效的执行，MySQL的查询优化器会为我们简化这些表达式。</p>
-<p><strong>移除不必要的括号</strong></p>
-<p>有时候表达式里有许多无用的括号，比如这样：</p>
+                <h1 id="Mysql内核查询优化规则详解"><a href="#Mysql内核查询优化规则详解" class="headerlink" title="Mysql内核查询优化规则详解"></a><strong>Mysql内核查询优化规则详解</strong></h1><p>在前面的课程中我们看到当我们把SQL语句交给MySQL执行后，MySQL在执行的过程中会有很多的优化措施，比如索引条件下推，回表中的MRR、索引合并等等。但是在执行之前，MySQL会依据一些规则，竭尽全力的把我们的SQL语句进行转换，以期可以达到成某种可以更高效执行的形式，这个过程也可以被称作查询重写或者查询优化，很多时候这些优化可以由我们自行完成以减少MySQL的优化时间。</p>
+<h2 id="条件化简"><a href="#条件化简" class="headerlink" title="条件化简"></a><strong>条件化简</strong></h2><p>我们编写的查询语句的搜索条件本质上是一个表达式，这些表达式可能比较繁杂，或者不能高效的执行，MySQL的查询优化器会为我们简化这些表达式。</p>
+<h2 id="移除不必要的括号"><a href="#移除不必要的括号" class="headerlink" title="移除不必要的括号"></a><strong>移除不必要的括号</strong></h2><p>有时候表达式里有许多无用的括号，比如这样：</p>
 <p>((a &#x3D; 5 AND b &#x3D; c) OR ((a &gt; c) AND (c &lt; 5)))</p>
 <p>优化器会把那些用不到的括号给干掉，就是这样：</p>
 <p>(a &#x3D; 5 and b &#x3D; c) OR (a &gt; c AND c &lt; 5)</p>
-<p><strong>常量传递（constant_propagation）</strong></p>
-<p>有时候某个表达式是某个列和某个常量做等值匹配，比如这样：</p>
+<h2 id="常量传递（constant-propagation）"><a href="#常量传递（constant-propagation）" class="headerlink" title="常量传递（constant_propagation）"></a><strong>常量传递（constant_propagation）</strong></h2><p>有时候某个表达式是某个列和某个常量做等值匹配，比如这样：</p>
 <p>a &#x3D; 5</p>
 <p>当这个表达式和其他涉及列a的表达式使用AND连接起来时，可以将其他表达式中的a的值替换为5，比如这样：</p>
 <p>a &#x3D; 5 AND b &gt; a</p>
 <p>就可以被转换为：</p>
 <p>a &#x3D; 5 AND b &gt; 5</p>
-<p>等值传递（equality_propagation）</p>
-<p>有时候多个列之间存在等值匹配的关系，比如这样：</p>
+<h2 id="等值传递（equality-propagation）"><a href="#等值传递（equality-propagation）" class="headerlink" title="等值传递（equality_propagation）"></a>等值传递（equality_propagation）</h2><p>有时候多个列之间存在等值匹配的关系，比如这样：</p>
 <p>a &#x3D; b and b &#x3D; c and c &#x3D; 5</p>
 <p>这个表达式可以被简化为：</p>
 <p>a &#x3D; 5 and b &#x3D; 5 and c &#x3D; 5</p>
-<p><strong>移除没用的条件（trivial_condition_removal）</strong></p>
-<p>对于一些明显永远为TRUE或者FALSE的表达式，优化器会移除掉它们，比如这个表达式：</p>
+<h2 id="移除没用的条件（trivial-condition-removal）"><a href="#移除没用的条件（trivial-condition-removal）" class="headerlink" title="移除没用的条件（trivial_condition_removal）"></a><strong>移除没用的条件（trivial_condition_removal）</strong></h2><p>对于一些明显永远为TRUE或者FALSE的表达式，优化器会移除掉它们，比如这个表达式：</p>
 <p>(a &lt; 1 and b &#x3D; b) OR (a &#x3D; 6 OR 5 !&#x3D; 5)</p>
 <p>很明显，b &#x3D; b这个表达式永远为TRUE，5 !&#x3D; 5这个表达式永远为FALSE，所以简化后的表达式就是这样的：</p>
 <p>(a &lt; 1 and TRUE) OR (a &#x3D; 6 OR FALSE)</p>
 <p>可以继续被简化为</p>
 <p>a &lt; 1 OR a &#x3D; 6</p>
-<p><strong>表达式计算</strong></p>
-<p>在查询开始执行之前，如果表达式中只包含常量的话，它的值会被先计算出来，比如这个：</p>
+<h2 id="表达式计算"><a href="#表达式计算" class="headerlink" title="表达式计算"></a><strong>表达式计算</strong></h2><p>在查询开始执行之前，如果表达式中只包含常量的话，它的值会被先计算出来，比如这个：</p>
 <p>a &#x3D; 5 + 1</p>
 <p>因为5 + 1这个表达式只包含常量，所以就会被化简成：</p>
 <p>a &#x3D; 6</p>
@@ -321,8 +314,7 @@
 <p>或者：</p>
 <p>-a &lt; -8</p>
 <p>优化器是不会尝试对这些表达式进行化简的。我们前边说过只有搜索条件中索引列和常数使用某些运算符连接起来才可能使用到索引，所以如果可以的话，最好让索引列以单独的形式出现在表达式中。</p>
-<p><strong>常量表检测</strong></p>
-<p>MySQL觉得下边这种查询运行的特别快：</p>
+<h2 id="常量表检测"><a href="#常量表检测" class="headerlink" title="常量表检测"></a><strong>常量表检测</strong></h2><p>MySQL觉得下边这种查询运行的特别快：</p>
 <p>使用主键等值匹配或者唯一二级索引列等值匹配作为搜索条件来查询某个表。</p>
 <p>MySQL觉得这两种查询花费的时间特别少，少到可以忽略，所以也把通过这两种方式查询的表称之为常量表（英文名：constant tables）。优化器在分析一个查询语句时，先首先执行常量表查询，然后把查询中涉及到该表的条件全部替换成常数，最后再分析其余表的查询成本，比方说这个查询语句：</p>
 <p>SELECT * FROM table1 INNER JOIN table2</p>
@@ -330,8 +322,7 @@
 <p>​    WHERE table1.primary_key &#x3D; 1;</p>
 <p>很明显，这个查询可以使用主键和常量值的等值匹配来查询table1表，也就是在这个查询中table1表相当于常量表，在分析对table2表的查询成本之前，就会执行对table1表的查询，并把查询中涉及table1表的条件都替换掉，也就是上边的语句会被转换成这样：</p>
 <p>SELECT table1表记录的各个字段的常量值, table2.* FROM table1 INNER JOIN table2 ON table1表column1列的常量值 &#x3D; table2.column2;</p>
-<p><strong>外连接消除</strong></p>
-<p>我们知道，内连接的驱动表和被驱动表的位置可以相互转换，而左（外）连接和右（外）连接的驱动表和被驱动表是固定的。这就导致内连接可能通过优化表的连接顺序来降低整体的查询成本，而外连接却无法优化表的连接顺序。</p>
+<h2 id="外连接消除"><a href="#外连接消除" class="headerlink" title="外连接消除"></a><strong>外连接消除</strong></h2><p>我们知道，内连接的驱动表和被驱动表的位置可以相互转换，<strong>而左（外）连接和右（外）连接的驱动表和被驱动表是固定的</strong>。这就导致内连接可能通过优化表的连接顺序来降低整体的查询成本，而外连接却无法优化表的连接顺序。</p>
 <p>我们之前说过，外连接和内连接的本质区别就是：对于外连接的驱动表的记录来说，如果无法在被驱动表中找到匹配ON子句中的过滤条件的记录，那么该记录仍然会被加入到结果集中，对应的被驱动表记录的各个字段使用NULL值填充；而内连接的驱动表的记录如果无法在被驱动表中找到匹配ON子句中的过滤条件的记录，那么该记录会被舍弃。查询效果就是这样：</p>
 <p><strong>SELECT * FROM e1 INNER JOIN e2 ON e1.m1 &#x3D; e2.m2;</strong></p>
 <p>​    <img src="/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2264" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -345,86 +336,64 @@
 <p><strong>SELECT * FROM e1 LEFT JOIN e2 ON e1.m1 &#x3D; e2.m2 WHERE e2.m2 &#x3D; 2;</strong></p>
 <p>在这个例子中，我们在WHERE子句中指定了被驱动表e2的m2列等于2，也就相当于间接的指定了m2列不为NULL值，所以上边的这个左（外）连接查询其实和下边这个内连接查询是等价的：</p>
 <p><strong>SELECT * FROM e1 INNER JOIN e2 ON e1.m1 &#x3D; e2.m2 WHERE e2.m2 &#x3D; 2;</strong></p>
-<p>我们把这种在外连接查询中，指定的WHERE子句中包含被驱动表中的列不为NULL值的条件称之为空值拒绝（英文名：reject-NULL）。在被驱动表的WHERE子句符合空值拒绝的条件后，外连接和内连接可以相互转换。这种转换带来的好处就是查询优化器可以通过评估表的不同连接顺序的成本，选出成本最低的那种连接顺序来执行查询。</p>
-<p><strong>子查询MySQL内部优化规则</strong></p>
-<p><strong>子查询语法</strong></p>
-<p>在一个查询语句A里的某个位置也可以有另一个查询语句B，这个出现在A语句的某个位置中的查询B就被称为子查询，A也被称之为外层查询。子查询可以在一个外层查询的各种位置出现，比如：</p>
-<p><strong>SELECT子句中</strong></p>
-<p>也就是我们平时说的查询列表中，比如这样：</p>
+<p>我们把这种在外连接查询中，指定的WHERE子句中包含被驱动表中的列不为NULL值的条件称之为空值拒绝（<strong>英文名：reject-NULL</strong>）。在被驱动表的WHERE子句符合空值拒绝的条件后，外连接和内连接可以相互转换。这种转换带来的好处就是查询优化器可以通过评估表的不同连接顺序的成本，选出成本最低的那种连接顺序来执行查询。</p>
+<h1 id="子查询MySQL内部优化规则"><a href="#子查询MySQL内部优化规则" class="headerlink" title="子查询MySQL内部优化规则"></a><strong>子查询MySQL内部优化规则</strong></h1><h2 id="子查询语法"><a href="#子查询语法" class="headerlink" title="子查询语法"></a><strong>子查询语法</strong></h2><p>在一个查询语句A里的某个位置也可以有另一个查询语句B，这个出现在A语句的某个位置中的查询B就被称为子查询，A也被称之为外层查询。子查询可以在一个外层查询的各种位置出现，比如：</p>
+<h3 id="SELECT子句中"><a href="#SELECT子句中" class="headerlink" title="SELECT子句中"></a><strong>SELECT子句中</strong></h3><p>也就是我们平时说的查询列表中，比如这样：</p>
 <p><strong>SELECT (SELECT m1 FROM e1 LIMIT 1);</strong></p>
 <p>其中的(SELECT m1 FROM e1 LIMIT 1)就是子查询。</p>
-<p><strong>FROM子句中</strong></p>
-<p>比如：</p>
+<h3 id="FROM子句中"><a href="#FROM子句中" class="headerlink" title="FROM子句中"></a><strong>FROM子句中</strong></h3><p>比如：</p>
 <p><strong>SELECT m, n FROM (SELECT m2 + 1 AS m, n2 AS n FROM e2 WHERE m2 &gt; 2) AS t;</strong></p>
 <p>这个例子中的子查询是：(SELECT m2 + 1 AS m, n2 AS n FROM e2 WHERE m2 &gt; 2)，这里可以把子查询的查询结果当作是一个表，子查询后边的AS t表明这个子查询的结果就相当于一个名称为t的表，这个名叫t的表的列就是子查询结果中的列，比如例子中表t就有两个列：m列和n列。这个放在FROM子句中的子查询本质上相当于一个表，但又和我们平常使用的表有点儿不一样，MySQL把这种由子查询结果集组成的表称之为<strong>派生表</strong>。</p>
-<p><strong>WHERE或ON子句中</strong></p>
-<p>把子查询放在外层查询的WHERE子句或者ON子句中可能是我们最常用的一种使用子查询的方式了，比如这样：</p>
+<h3 id="WHERE或ON子句中"><a href="#WHERE或ON子句中" class="headerlink" title="WHERE或ON子句中"></a><strong>WHERE或ON子句中</strong></h3><p>把子查询放在外层查询的WHERE子句或者ON子句中可能是我们最常用的一种使用子查询的方式了，比如这样：</p>
 <p><strong>SELECT * FROM e1 WHERE m1 IN (SELECT m2 FROM e2);</strong></p>
 <p>这个查询表明我们想要将(SELECT m2 FROM e2)这个子查询的结果作为外层查询的IN语句参数，整个查询语句的意思就是我们想找e1表中的某些记录，这些记录的m1列的值能在e2表的m2列找到匹配的值。</p>
-<p><strong>ORDER BY子句、GROUP BY子句中</strong></p>
-<p>虽然语法支持，但没啥意义。</p>
-<p><strong>按返回的结果集区分子查询</strong></p>
-<p>因为子查询本身也算是一个查询，所以可以按照它们返回的不同结果集类型而把这些子查询分为不同的类型：</p>
-<p><strong>标量子查询</strong></p>
-<p>那些只返回一个单一值的子查询称之为标量子查询，比如这样：</p>
+<h3 id="ORDER-BY子句、GROUP-BY子句中"><a href="#ORDER-BY子句、GROUP-BY子句中" class="headerlink" title="ORDER BY子句、GROUP BY子句中"></a><strong>ORDER BY子句、GROUP BY子句中</strong></h3><p>虽然语法支持，但没啥意义。</p>
+<h2 id="按返回的结果集区分子查询"><a href="#按返回的结果集区分子查询" class="headerlink" title="按返回的结果集区分子查询"></a><strong>按返回的结果集区分子查询</strong></h2><p>因为子查询本身也算是一个查询，所以可以按照它们返回的不同结果集类型而把这些子查询分为不同的类型：</p>
+<h3 id="标量子查询"><a href="#标量子查询" class="headerlink" title="标量子查询"></a><strong>标量子查询</strong></h3><p>那些只返回一个单一值的子查询称之为标量子查询，比如这样：</p>
 <p>SELECT (SELECT m1 FROM e1 LIMIT 1);</p>
 <p>或者这样：</p>
 <p>SELECT * FROM e1 WHERE m1 &#x3D; (SELECT MIN(m2) FROM e2);</p>
 <p>SELECT * FROM e1 WHERE m1 &lt; (SELECT MIN(m2) FROM e2);</p>
 <p>这两个查询语句中的子查询都返回一个单一的值，也就是一个标量。这些标量子查询可以作为一个单一值或者表达式的一部分出现在查询语句的各个地方。</p>
-<p><strong>行子查询</strong></p>
-<p>顾名思义，就是返回一条记录的子查询，不过这条记录需要包含多个列（只包含一个列就成了标量子查询了）。比如这样：</p>
+<h3 id="行子查询"><a href="#行子查询" class="headerlink" title="行子查询"></a><strong>行子查询</strong></h3><p>顾名思义，就是返回一条记录的子查询，不过这条记录需要包含多个列（只包含一个列就成了标量子查询了）。比如这样：</p>
 <p>SELECT * FROM e1 WHERE (m1, n1) &#x3D; (SELECT m2, n2 FROM e2 LIMIT 1);</p>
 <p>其中的(SELECT m2, n2 FROM e2 LIMIT 1)就是一个行子查询，整条语句的含义就是要从e1表中找一些记录，这些记录的m1和n1列分别等于子查询结果中的m2和n2列。</p>
-<p><strong>列子查询</strong></p>
-<p>列子查询自然就是查询出一个列的数据，不过这个列的数据需要包含多条记录（只包含一条记录就成了标量子查询了）。比如这样：</p>
+<h3 id="列子查询"><a href="#列子查询" class="headerlink" title="列子查询"></a><strong>列子查询</strong></h3><p>列子查询自然就是查询出一个列的数据，不过这个列的数据需要包含多条记录（只包含一条记录就成了标量子查询了）。比如这样：</p>
 <p>SELECT * FROM e1 WHERE m1 IN (SELECT m2 FROM e2);</p>
 <p>其中的(SELECT m2 FROM e2)就是一个列子查询，表明查询出e2表的m2列的值作为外层查询IN语句的参数。</p>
-<p><strong>表子查询</strong></p>
-<p>顾名思义，就是子查询的结果既包含很多条记录，又包含很多个列，比如这样：</p>
+<h3 id="表子查询"><a href="#表子查询" class="headerlink" title="表子查询"></a><strong>表子查询</strong></h3><p>顾名思义，就是子查询的结果既包含很多条记录，又包含很多个列，比如这样：</p>
 <p>SELECT * FROM e1 WHERE (m1, n1) IN (SELECT m2, n2 FROM e2);</p>
 <p>其中的(SELECT m2, n2 FROM e2)就是一个表子查询，这里需要和行子查询对比一下，行子查询中我们用了LIMIT 1来保证子查询的结果只有一条记录，表子查询中不需要这个限制。</p>
-<p><strong>按与外层查询关系来区分子查询</strong></p>
-<p><strong>不相关子查询</strong></p>
-<p>如果子查询可以单独运行出结果，而不依赖于外层查询的值，我们就可以把这个子查询称之为不相关子查询。我们前边介绍的那些子查询全部都可以看作不相关子查询。</p>
-<p><strong>相关子查询</strong></p>
-<p>如果子查询的执行需要依赖于外层查询的值，我们就可以把这个子查询称之为相关子查询。比如：</p>
+<h2 id="按与外层查询关系来区分子查询"><a href="#按与外层查询关系来区分子查询" class="headerlink" title="按与外层查询关系来区分子查询"></a><strong>按与外层查询关系来区分子查询</strong></h2><h3 id="不相关子查询"><a href="#不相关子查询" class="headerlink" title="不相关子查询"></a><strong>不相关子查询</strong></h3><p>如果子查询可以单独运行出结果，而不依赖于外层查询的值，我们就可以把这个子查询称之为不相关子查询。我们前边介绍的那些子查询全部都可以看作不相关子查询。</p>
+<h3 id="相关子查询"><a href="#相关子查询" class="headerlink" title="相关子查询"></a><strong>相关子查询</strong></h3><p>如果子查询的执行需要依赖于外层查询的值，我们就可以把这个子查询称之为相关子查询。比如：</p>
 <p>SELECT * FROM e1 WHERE m1 IN (SELECT m2 FROM e2 WHERE n1 &#x3D; n2);</p>
 <p>例子中的子查询是(SELECT m2 FROM e2 WHERE n1 &#x3D; n2)，可是这个查询中有一个搜索条件是n1 &#x3D; n2，别忘了n1是表e1的列，也就是外层查询的列，也就是说子查询的执行需要依赖于外层查询的值，所以这个子查询就是一个相关子查询。</p>
-<p><strong>[NOT] IN&#x2F;ANY&#x2F;SOME&#x2F;ALL子查询</strong></p>
-<p>对于列子查询和表子查询来说，它们的结果集中包含很多条记录，这些记录相当于是一个集合，所以就不能单纯的和另外一个操作数使用操作符来组成布尔表达式了，MySQL通过下面的语法来支持某个操作数和一个集合组成一个布尔表达式：</p>
-<p><strong>IN或者NOT IN</strong></p>
-<p>具体的语法形式如下：</p>
+<h3 id="NOT-IN-x2F-ANY-x2F-SOME-x2F-ALL子查询"><a href="#NOT-IN-x2F-ANY-x2F-SOME-x2F-ALL子查询" class="headerlink" title="[NOT] IN&#x2F;ANY&#x2F;SOME&#x2F;ALL子查询"></a><strong>[NOT] IN&#x2F;ANY&#x2F;SOME&#x2F;ALL子查询</strong></h3><p>对于列子查询和表子查询来说，它们的结果集中包含很多条记录，这些记录相当于是一个集合，所以就不能单纯的和另外一个操作数使用操作符来组成布尔表达式了，MySQL通过下面的语法来支持某个操作数和一个集合组成一个布尔表达式：</p>
+<h4 id="IN或者NOT-IN"><a href="#IN或者NOT-IN" class="headerlink" title="IN或者NOT IN"></a><strong>IN或者NOT IN</strong></h4><p>具体的语法形式如下：</p>
 <p>操作数 [NOT] IN (子查询)</p>
 <p>这个布尔表达式的意思是用来判断某个操作数在不在由子查询结果集组成的集合中，比如下边的查询的意思是找出e1表中的某些记录，这些记录存在于子查询的结果集中：</p>
 <p>SELECT * FROM e1 WHERE (m1, n1) IN (SELECT m2, n2 FROM e2);</p>
-<p><strong>ANY&#x2F;SOME（ANY和SOME是同义词）</strong></p>
-<p>具体的语法形式如下：</p>
+<h4 id="ANY-x2F-SOME（ANY和SOME是同义词）"><a href="#ANY-x2F-SOME（ANY和SOME是同义词）" class="headerlink" title="ANY&#x2F;SOME（ANY和SOME是同义词）"></a><strong>ANY&#x2F;SOME（ANY和SOME是同义词）</strong></h4><p>具体的语法形式如下：</p>
 <p>操作数 比较符 ANY&#x2F;SOME(子查询)</p>
 <p>这个布尔表达式的意思是只要子查询结果集中存在某个值和给定的操作数做比较操作，比较结果为TRUE，那么整个表达式的结果就为TRUE，否则整个表达式的结果就为FALSE。比方说下边这个查询：</p>
 <p>SELECT * FROM e1 WHERE m1 &gt; ANY(SELECT m2 FROM e2);</p>
 <p>这个查询的意思就是对于e1表的某条记录的m1列的值来说，如果子查询(SELECT m2 FROM e2)的结果集中存在一个小于m1列的值，那么整个布尔表达式的值就是TRUE，否则为FALSE，也就是说只要m1列的值大于子查询结果集中最小的值，整个表达式的结果就是TRUE，所以上边的查询本质上等价于这个查询：</p>
 <p>SELECT * FROM e1 WHERE m1 &gt; (SELECT MIN(m2) FROM e2);</p>
 <p>另外，&#x3D;ANY相当于判断子查询结果集中是否存在某个值和给定的操作数相等，它的含义和IN是相同的。</p>
-<p><strong>ALL</strong></p>
-<p>具体的语法形式如下：</p>
+<h4 id="ALL"><a href="#ALL" class="headerlink" title="ALL"></a><strong>ALL</strong></h4><p>具体的语法形式如下：</p>
 <p>操作数 比较操作 ALL(子查询)</p>
 <p>这个布尔表达式的意思是子查询结果集中所有的值和给定的操作数做比较操作比较结果为TRUE，那么整个表达式的结果就为TRUE，否则整个表达式的结果就为FALSE。比方说下边这个查询：</p>
 <p>SELECT * FROM e1 WHERE m1 &gt; ALL(SELECT m2 FROM e2);</p>
 <p>这个查询的意思就是对于e1表的某条记录的m1列的值来说，如果子查询(SELECT m2 FROM e2)的结果集中的所有值都小于m1列的值，那么整个布尔表达式的值就是TRUE，否则为FALSE，也就是说只要m1列的值大于子查询结果集中最大的值，整个表达式的结果就是TRUE，所以上边的查询本质上等价于这个查询：</p>
 <p>SELECT * FROM e1 WHERE m1 &gt; (SELECT MAX(m2) FROM e2);</p>
-<p><strong>EXISTS子查询</strong></p>
-<p>有的时候我们仅仅需要判断子查询的结果集中是否有记录，而不在乎它的记录具体是个啥，可以使用把EXISTS或者NOT EXISTS放在子查询语句前边，就像这样：</p>
+<h3 id="EXISTS子查询"><a href="#EXISTS子查询" class="headerlink" title="EXISTS子查询"></a><strong>EXISTS子查询</strong></h3><p>有的时候我们仅仅需要判断子查询的结果集中是否有记录，而不在乎它的记录具体是个啥，可以使用把EXISTS或者NOT EXISTS放在子查询语句前边，就像这样：</p>
 <p>SELECT * FROM e1 WHERE EXISTS (SELECT 1 FROM e2);</p>
 <p>对于子查询(SELECT 1 FROM e2)来说，我们并不关心这个子查询最后到底查询出的结果是什么，所以查询列表里填*、某个列名，或者其他啥东西都无所谓，我们真正关心的是子查询的结果集中是否存在记录。也就是说只要(SELECT 1 FROM e2)这个查询中有记录，那么整个EXISTS表达式的结果就为TRUE。</p>
-<p><strong>子查询语法注意事项</strong></p>
-<p>子查询必须用小括号扩起来。</p>
+<h3 id="子查询语法注意事项"><a href="#子查询语法注意事项" class="headerlink" title="子查询语法注意事项"></a><strong>子查询语法注意事项</strong></h3><p>子查询必须用小括号扩起来。</p>
 <p>在SELECT子句中的子查询必须是标量子查询，如果子查询结果集中有多个列或者多个行，都不允许放在SELECT子句中，在想要得到标量子查询或者行子查询，但又不能保证子查询的结果集只有一条记录时，应该使用LIMIT 1语句来限制记录数量。</p>
 <p>对于[NOT] IN&#x2F;ANY&#x2F;SOME&#x2F;ALL子查询来说，子查询中不允许有LIMIT语句，而且这类子查询中ORDER BY子句、DISTINCT语句、没有聚集函数以及HAVING子句的GROUP BY子句没有什么意义。因为子查询的结果其实就相当于一个集合，集合里的值排不排序等一点儿都不重要。</p>
 <p>不允许在一条语句中增删改某个表的记录时同时还对该表进行子查询。</p>
-<p><strong>子查询在MySQL中是怎么执行的</strong></p>
-<p><strong>想象子查询的执行方式</strong></p>
-<p>想象中子查询的执行方式是这样的：</p>
+<h2 id="子查询在MySQL中是怎么执行的"><a href="#子查询在MySQL中是怎么执行的" class="headerlink" title="子查询在MySQL中是怎么执行的"></a><strong>子查询在MySQL中是怎么执行的</strong></h2><h3 id="想象子查询的执行方式"><a href="#想象子查询的执行方式" class="headerlink" title="想象子查询的执行方式"></a><strong>想象子查询的执行方式</strong></h3><p>想象中子查询的执行方式是这样的：</p>
 <p>如果该子查询是不相关子查询，比如下边这个查询：</p>
 <p>SELECT * FROM s1 WHERE order_note IN (SELECT order_note FROM s2);</p>
 <p>先单独执行(SELECT order_note FROM s2)这个子查询。然后在将上一步子查询得到的结果当作外层查询的参数再执行外层查询SELECT * FROM s1 WHERE order_note IN (…)。</p>
@@ -434,8 +403,7 @@
 <p>最后根据子查询的查询结果来检测外层查询WHERE子句的条件是否成立，如果成立，就把外层查询的那条记录加入到结果集，否则就丢弃。</p>
 <p>再次执行第一步，获取第二条外层查询中的记录，依次类推。</p>
 <p>但真的是这样吗？其实MySQL用了一系列的办法来优化子查询的执行，下边我们来看看各种不同类型的子查询具体是怎么执行的。</p>
-<p><strong>标量子查询、行子查询的执行方式</strong></p>
-<p>对于<strong>不相关标量子查询或者行子查询</strong>来说，它们的执行方式很简单，比方说下边这个查询语句：</p>
+<h3 id="标量子查询、行子查询的执行方式"><a href="#标量子查询、行子查询的执行方式" class="headerlink" title="标量子查询、行子查询的执行方式"></a><strong>标量子查询、行子查询的执行方式</strong></h3><p>对于<strong>不相关标量子查询或者行子查询</strong>来说，它们的执行方式很简单，比方说下边这个查询语句：</p>
 <p>SELECT * FROM s1 WHERE order_note &#x3D; (SELECT order_note FROM s2 WHERE key3 &#x3D; ‘a’ LIMIT 1);</p>
 <p>它的执行方式和我们前面想象的一样：先单独执行(SELECT order_note FROM s2 WHERE key3 &#x3D; ‘a’ LIMIT 1)这个子查询。然后在将上一步子查询得到的结果当作外层查询的参数再执行外层查询SELECT * FROM s1 WHERE order_note&#x3D; …。</p>
 <p>也就是说，对于包含不相关的标量子查询或者行子查询的查询语句来说，MySQL会分别独立的执行外层查询和子查询，就当作两个单表查询就好了。</p>
@@ -448,9 +416,7 @@
 <p>最后根据子查询的查询结果来检测外层查询WHERE子句的条件是否成立，如果成立，就把外层查询的那条记录加入到结果集，否则就丢弃。</p>
 <p>再次执行第一步，获取第二条外层查询中的记录，依次类推。</p>
 <p>也就是说对于两种使用标量子查询以及行子查询的场景中，MySQL优化器的执行方式并没有什么新鲜的。</p>
-<p><strong>MySQL对IN子查询的优化</strong></p>
-<p><strong>物化表</strong></p>
-<p>对于不相关的IN子查询，比如这样：</p>
+<h2 id="MySQL对IN子查询的优化"><a href="#MySQL对IN子查询的优化" class="headerlink" title="MySQL对IN子查询的优化"></a><strong>MySQL对IN子查询的优化</strong></h2><h3 id="物化表"><a href="#物化表" class="headerlink" title="物化表"></a><strong>物化表</strong></h3><p>对于不相关的IN子查询，比如这样：</p>
 <p>SELECT * FROM s1 WHERE order_note IN (SELECT order_note FROM s2 WHERE order_no &#x3D; ‘a’);</p>
 <p>我们最开始的感觉就是这种不相关的IN子查询和不相关的标量子查询或者行子查询是一样一样的，都是把外层查询和子查询当作两个独立的单表查询来对待。但是MySQL为了优化IN子查询下了很大力气，所以整个执行过程并不像我们想象的那么简单。</p>
 <p>对于不相关的IN子查询来说，如果子查询的结果集中的记录条数很少，那么把子查询和外层查询分别看成两个单独的单表查询效率很高，但是如果单独执行子查询后的结果集太多的话，就会导致这些问题：</p>
@@ -468,8 +434,7 @@
 <p>一般情况下子查询结果集不会大的离谱，所以会为它建立基于内存的使用Memory存储引擎的临时表，而且会为该表建立哈希索引。</p>
 <p>如果子查询的结果集非常大，超过了系统变量tmp_table_size或者max_heap_table_size，临时表会转而使用基于磁盘的存储引擎来保存结果集中的记录，索引类型也对应转变为B+树索引。</p>
 <p>MySQL把这个将子查询结果集中的记录保存到临时表的过程称之为<strong>物化</strong>（英文名：Materialize）。为了方便起见，我们就把那个存储子查询结果集的临时表称之为物化表。正因为物化表中的记录都建立了索引（基于内存的物化表有哈希索引，基于磁盘的有B+树索引），通过索引执行IN语句判断某个操作数在不在子查询结果集中变得非常快，从而提升了子查询语句的性能。</p>
-<p><strong>物化表转连接</strong></p>
-<p>事情到这就完了？我们还得重新审视一下最开始的那个查询语句：</p>
+<h3 id="物化表转连接"><a href="#物化表转连接" class="headerlink" title="物化表转连接"></a><strong>物化表转连接</strong></h3><p>事情到这就完了？我们还得重新审视一下最开始的那个查询语句：</p>
 <p>SELECT * FROM s1 WHERE order_note IN (SELECT order_note FROM s2 WHERE order_no &#x3D; ‘a’);</p>
 <p>当我们把子查询进行物化之后，假设子查询物化表的名称为materialized_table，该物化表存储的子查询结果集的列为m_val，那么这个查询</p>
 <p>就相当于表s1和子查询物化表materialized_table进行内连接：</p>
@@ -484,8 +449,7 @@
 <p>扫描物化表时的成本</p>
 <p>物化表中的记录数量 × 通过order_note&#x3D; xxx对s1表进行单表访问的成本（如果order_note列上建立了索引，这个步骤还是非常快的）。</p>
 <p>MySQL查询优化器会通过运算来选择上述成本更低的方案来执行查询。</p>
-<p><strong>将子查询转换为semi-join</strong></p>
-<p>将子查询进行物化之后再执行查询都会有建立临时表的成本，能不能不进行物化操作直接把子查询转换为连接呢？让我们重新审视一下上边的查询语句：</p>
+<h3 id="将子查询转换为semi-join"><a href="#将子查询转换为semi-join" class="headerlink" title="将子查询转换为semi-join"></a><strong>将子查询转换为semi-join</strong></h3><p>将子查询进行物化之后再执行查询都会有建立临时表的成本，能不能不进行物化操作直接把子查询转换为连接呢？让我们重新审视一下上边的查询语句：</p>
 <p>SELECT * FROM s1 WHERE order_note IN (SELECT order_note FROM s2 WHERE order_no &#x3D; ‘a’);</p>
 <p>我们可以把这个查询理解成：对于s1表中的某条记录，如果我们能在s2表（准确的说是执行完WHERE s2.order_no&#x3D; ‘a’之后的结果集）中找到一条或多条记录，这些记录的order_note的值等于s1表记录的order_note列的值，那么该条s1表的记录就会被加入到最终的结果集。这个过程其实和把s1和s2两个表连接起来的效果很像：</p>
 <p>SELECT s1.* FROM s1 INNER JOIN s2 </p>
@@ -501,8 +465,7 @@
 <p>​    ON s1.order_note &#x3D; s2.order_note </p>
 <p>​    WHERE order_no&#x3D; ‘a’;</p>
 <p>注意： semi-join只是在MySQL内部采用的一种执行子查询的方式，MySQL并没有提供面向用户的semi-join语法。</p>
-<p><strong>semi-join实例</strong></p>
-<p>现在有三个表：商品表goods、订单表goods_order、订单详情表goods_order_detail。三个表中的数据有两种方式导入：</p>
+<h4 id="semi-join实例"><a href="#semi-join实例" class="headerlink" title="semi-join实例"></a><strong>semi-join实例</strong></h4><p>现在有三个表：商品表goods、订单表goods_order、订单详情表goods_order_detail。三个表中的数据有两种方式导入：</p>
 <p>1、执行goods_stru.sql、goods_order_stru.sql、goods_order_detail_stru.sql建立原始表，然后执行存储过程create_goods产生原始数据，再执行存储过程randon_detail进行数据更新；</p>
 <p>2、执行SQL脚本goods_all.sql、 goods_order_all.sql、 goods_order_detail_all.sql，同时导入表结构和数据。</p>
 <p>三个表目前都没有索引：</p>
@@ -518,10 +481,8 @@
 <p>&#x2F;* select#1 *&#x2F; select <code>mysqladv</code>.<code>o</code>.<code>id</code> AS <code>id</code>,<code>mysqladv</code>.<code>o</code>.<code>order_no</code> AS <code>order_no</code> from <code>mysqladv</code>.<code>goods_order</code> <code>o</code> semi join (<code>mysqladv</code>.<code>goods_order_detail</code> <code>od</code>) where ((<code>mysqladv</code>.<code>o</code>.<code>id</code> &#x3D; &#96;&#96;.<code>order_id</code>) and (<code>mysqladv</code>.<code>od</code>.<code>price</code> &#x3D; 0) and (<code>mysqladv</code>.<code>od</code>.<code>goods_id</code> &#x3D; 666)) </p>
 <p>​    <img src="/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2258" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>可以看到MySQL将这个子查询改造为了半连接semi join。</p>
-<p><strong>半连接的实现方法概述</strong></p>
-<p>怎么实现这种所谓的半连接呢？MySQL准备了好几种办法，比如Table pullout （子查询中的表上拉）、DuplicateWeedout execution strategy （重复值消除）、LooseScan execution strategy （松散扫描）、Semi-join Materializationa半连接物化、FirstMatch execution strategy （首次匹配）等等。</p>
-<p><strong>Table pullout （子查询中的表上拉）</strong></p>
-<p>当子查询的查询列表处只有主键或者唯一索引列时，可以直接把子查询中的表上拉到外层查询的FROM子句中，并把子查询中的搜索条件合并到外层查询的搜索条件中，比如假设s2中存在这个一个key2列，列上有唯一性索引：</p>
+<h4 id="半连接的实现方法概述"><a href="#半连接的实现方法概述" class="headerlink" title="半连接的实现方法概述"></a><strong>半连接的实现方法概述</strong></h4><p>怎么实现这种所谓的半连接呢？MySQL准备了好几种办法，比如Table pullout （子查询中的表上拉）、DuplicateWeedout execution strategy （重复值消除）、LooseScan execution strategy （松散扫描）、Semi-join Materializationa半连接物化、FirstMatch execution strategy （首次匹配）等等。</p>
+<h5 id="Table-pullout-（子查询中的表上拉）"><a href="#Table-pullout-（子查询中的表上拉）" class="headerlink" title="Table pullout （子查询中的表上拉）"></a><strong>Table pullout （子查询中的表上拉）</strong></h5><p>当子查询的查询列表处只有主键或者唯一索引列时，可以直接把子查询中的表上拉到外层查询的FROM子句中，并把子查询中的搜索条件合并到外层查询的搜索条件中，比如假设s2中存在这个一个key2列，列上有唯一性索引：</p>
 <p>SELECT * FROM s1 </p>
 <p>​    WHERE key2 IN (SELECT key2 FROM s2 WHERE key3 &#x3D; ‘a’);</p>
 <p>由于key2列是s2表的一个唯一性二级索引列，所以我们可以直接把s2表上拉到外层查询的FROM子句中，并且把子查询中的搜索条件合并到外层查询的搜索条件中，上拉之后的查询就是这样的：</p>
@@ -530,8 +491,7 @@
 <p>​    WHERE s2.key3 &#x3D; ‘a’;</p>
 <p>为啥当子查询的查询列表处只有主键或者唯一索引列时，就可以直接将子查询转换为连接查询呢？因为主键或者唯一索引列中的数据本身就是不重复的嘛！所以对于同一条s1表中的记录，你不可能找到两条以上的符合s1.key2 &#x3D; s2.key2的记录。</p>
 <p>至于其他的，重复值消除、松散扫描等等我们就不更深入的讨论了，感兴趣的同学可以自行研究。</p>
-<p><strong>不能转为semi-join查询的子查询优化</strong></p>
-<p>注意，并不是所有包含IN子查询的查询语句都可以转换为semi-join，对于不能转换的，MySQL有这几种方法：</p>
+<h4 id="不能转为semi-join查询的子查询优化"><a href="#不能转为semi-join查询的子查询优化" class="headerlink" title="不能转为semi-join查询的子查询优化"></a><strong>不能转为semi-join查询的子查询优化</strong></h4><p>注意，并不是所有包含IN子查询的查询语句都可以转换为semi-join，对于不能转换的，MySQL有这几种方法：</p>
 <p>1、对于不相关子查询来说，会尝试把它们物化之后再参与查询</p>
 <p>比如我们上边提到的这个查询：</p>
 <p>SELECT * FROM s1 WHERE order_note NOT IN (SELECT order_note FROM s2 WHERE order_no&#x3D; ‘a’)</p>
@@ -553,20 +513,17 @@
 <p>​    <img src="/12%E3%80%81MySQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3InnoDB%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84/2259" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>需要注意的是，如果IN子查询不满足转换为semi-join的条件，又不能转换为物化表或者转换为物化表的成本太大，那么它就会被转换为EXISTS查询。</p>
 <p>在MySQL5.5以及之前的版本没有引进semi-join和物化的方式优化子查询时，优化器都会把IN子查询转换为EXISTS子查询，所以很多技术书籍或者博客都是建议大家把子查询转为连接，不过随着MySQL的发展，最近的版本中引入了非常多的子查询优化策略，内部的转换工作优化器会为大家自动实现。</p>
-<p><strong>IN子查询小结</strong></p>
-<p>如果IN子查询符合转换为semi-join的条件，查询优化器会优先把该子查询转换为semi-join，然后从前面所说的5种执行半连接的策略（既子查询中的表上拉、重复值消除等等）中选择成本最低的那种执行策略来执行子查询。</p>
+<h3 id="IN子查询小结"><a href="#IN子查询小结" class="headerlink" title="IN子查询小结"></a><strong>IN子查询小结</strong></h3><p>如果IN子查询符合转换为semi-join的条件，查询优化器会优先把该子查询转换为semi-join，然后从前面所说的5种执行半连接的策略（既子查询中的表上拉、重复值消除等等）中选择成本最低的那种执行策略来执行子查询。</p>
 <p>如果IN子查询不符合转换为semi-join的条件，那么查询优化器会从下边两种策略中找出一种成本更低的方式执行子查询：</p>
 <p>先将子查询物化之后再执行查询</p>
 <p>执行IN to EXISTS转换。</p>
-<p><strong>ANY&#x2F;ALL子查询优化</strong></p>
-<p>如果ANY&#x2F;ALL子查询是不相关子查询的话，它们在很多场合都能转换成我们熟悉的方式去执行，比方说：</p>
+<h3 id="ANY-x2F-ALL子查询优化"><a href="#ANY-x2F-ALL子查询优化" class="headerlink" title="ANY&#x2F;ALL子查询优化"></a><strong>ANY&#x2F;ALL子查询优化</strong></h3><p>如果ANY&#x2F;ALL子查询是不相关子查询的话，它们在很多场合都能转换成我们熟悉的方式去执行，比方说：</p>
 <p>原始表达式	转换为</p>
 <p>&lt; ANY (SELECT inner_expr …)	&lt; (SELECT MAX(inner_expr) …)</p>
 <p>&gt; ANY (SELECT inner_expr …)	&gt; (SELECT MIN(inner_expr) …)</p>
 <p>&lt; ALL (SELECT inner_expr …)	&lt; (SELECT MIN(inner_expr) …)</p>
 <p>&gt; ALL (SELECT inner_expr …)	&gt; (SELECT MAX(inner_expr) …)</p>
-<p><strong>[NOT] EXISTS子查询的执行</strong></p>
-<p>如果[NOT] EXISTS子查询是不相关子查询，可以先执行子查询，得出该[NOT] EXISTS子查询的结果是TRUE还是FALSE，并重写原先的查询语句，比如对这个查询来说：</p>
+<h3 id="NOT-EXISTS子查询的执行"><a href="#NOT-EXISTS子查询的执行" class="headerlink" title="[NOT] EXISTS子查询的执行"></a><strong>[NOT] EXISTS子查询的执行</strong></h3><p>如果[NOT] EXISTS子查询是不相关子查询，可以先执行子查询，得出该[NOT] EXISTS子查询的结果是TRUE还是FALSE，并重写原先的查询语句，比如对这个查询来说：</p>
 <p>SELECT * FROM s1 WHERE EXISTS (SELECT 1 FROM s2 WHERE expire_time&#x3D; ‘a’)        OR order_no&gt; ‘2021-03-22 18:28:28’0;</p>
 <p>因为这个语句里的子查询是不相关子查询，所以优化器会首先执行该子查询，假设该EXISTS子查询的结果为TRUE，那么接着优化器会重写查询为：</p>
 <p>SELECT * FROM s1 WHERE TRUE OR  order_no&gt; ‘2021-03-22 18:28:28’0;</p>
@@ -635,7 +592,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>12、MySQL查询优化规则详解InnoDB记录存储结构</div>
+      <div></div>
       <div>https://kblayt.github.io/2023/06/16/系统架构/架构之性能调优/MySQL性能调优/12、MySQL查询优化规则详解InnoDB记录存储结构/</div>
     </div>
     <div class="license-meta">
