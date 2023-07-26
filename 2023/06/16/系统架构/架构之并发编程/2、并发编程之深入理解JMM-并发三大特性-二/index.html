@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1571">
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1570">
 <meta property="article:published_time" content="2023-06-16T15:34:09.000Z">
-<meta property="article:modified_time" content="2023-06-25T14:36:35.735Z">
+<meta property="article:modified_time" content="2023-07-24T07:27:39.628Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
@@ -292,20 +292,17 @@
 <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">double pi <span class="hljs-operator">=</span> <span class="hljs-number">3.14</span><span class="hljs-comment">; // A</span><br>double r <span class="hljs-operator">=</span> <span class="hljs-number">1.0</span><span class="hljs-comment">; // B</span><br>double area <span class="hljs-operator">=</span> pi * r * r<span class="hljs-comment">; // C</span><br></code></pre></td></tr></table></figure>
 
 <p>A和C之间存在数据依赖关系，同时B和C之间也存在数据依赖关系。因此在最终执行的指令序列中，C不能被重排序到A和B的前面（C排到A和B的前面，程序的结果将会被改变）。但A和B之间没有数据依赖关系，编译器和处理器可以重排序A和B之间的执行顺序。 </p>
-<p><strong>happens-before</strong></p>
-<p>从JDK 5 开始，JMM使用happens-before的概念来阐述多线程之间的内存可见性。在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在happens-before关系。 happens-before和JMM关系如下图：</p>
+<h1 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a><strong>happens-before</strong></h1><p>从JDK 5 开始，JMM使用happens-before的概念来阐述多线程之间的内存可见性。在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须存在happens-before关系。 happens-before和JMM关系如下图：</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/27098" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>happens-before原则非常重要，它是判断数据是否存在竞争、线程是否安全的主要依据，依靠这个原则，我们解决在并发环境下两操作之间是否可能存在冲突的所有问题。下面我们就一个简单的例子稍微了解下happens-before ：</p>
 <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span><span class="hljs-comment">;       //线程A执行</span><br><span class="hljs-attribute">j</span> <span class="hljs-operator">=</span> i <span class="hljs-comment">;      //线程B执行</span><br></code></pre></td></tr></table></figure>
 
 <p>j 是否等于1呢？假定线程A的操作（i &#x3D; 1）happens-before线程B的操作（j &#x3D; i）,那么可以确定线程B执行后j &#x3D; 1 一定成立，如果他们不存在happens-before原则，那么j &#x3D; 1 不一定成立。这就是happens-before原则的威力。</p>
-<p><strong>happens-before原则定义如下：</strong></p>
-<ol>
+<h2 id="happens-before原则定义如下："><a href="#happens-before原则定义如下：" class="headerlink" title="happens-before原则定义如下："></a><strong>happens-before原则定义如下：</strong></h2><ol>
 <li>如果一个操作happens-before另一个操作，那么第一个操作的执行结果将对第二个操作可见，而且第一个操作的执行顺序排在第二个操作之前。 </li>
 <li>两个操作之间存在happens-before关系，并不意味着一定要按照happens-before原则制定的顺序来执行。如果重排序之后的执行结果与按照happens-before关系来执行的结果一致，那么这种重排序并不非法。</li>
 </ol>
-<p><strong>下面是happens-before原则规则：</strong></p>
-<ol>
+<h2 id="下面是happens-before原则规则："><a href="#下面是happens-before原则规则：" class="headerlink" title="下面是happens-before原则规则："></a><strong>下面是happens-before原则规则：</strong></h2><ol>
 <li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作；</li>
 <li>锁定规则：一个unLock操作先行发生于后面对同一个锁的lock操作；</li>
 <li>volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作；</li>
@@ -344,47 +341,36 @@
 </ul>
 <p>所以我们无法通过happens-before原则推导出线程A happens-before线程B，虽然可以确认在时间上线程A优先于线程B指定，但是就是无法确认线程B获得的结果是什么，所以这段代码不是线程安全的。那么怎么修复这段代码呢？满足规则2、3任一即可。</p>
 <p><strong>happens-before原则是JMM中非常重要的原则，它是判断数据是否存在竞争、线程是否安全的主要依据，保证了多线程环境下的可见性。</strong></p>
-<h1 id="CPU高速缓存架构-amp-缓存一致性协议详解"><a href="#CPU高速缓存架构-amp-缓存一致性协议详解" class="headerlink" title="CPU高速缓存架构&amp;缓存一致性协议详解"></a>CPU高速缓存架构&amp;缓存一致性协议详解</h1><p><strong>CPU高速缓存（Cache Memory）</strong></p>
-<p><strong>CPU高速缓存</strong></p>
-<p>CPU缓存即高速缓冲存储器，是位于CPU与主内存间的一种容量较小但速度很高的存储器。由于CPU的速度远高于主内存，CPU直接从内存中存取数据要等待一定时间周期，Cache中保存着CPU刚用过或循环使用的一部分数据，当CPU再次使用该部分数据时可从Cache中直接调用,减少CPU的等待时间，提高了系统的效率。</p>
+<h1 id="CPU高速缓存架构-amp-缓存一致性协议详解"><a href="#CPU高速缓存架构-amp-缓存一致性协议详解" class="headerlink" title="CPU高速缓存架构&amp;缓存一致性协议详解"></a>CPU高速缓存架构&amp;缓存一致性协议详解</h1><h2 id="CPU高速缓存（Cache-Memory）"><a href="#CPU高速缓存（Cache-Memory）" class="headerlink" title="CPU高速缓存（Cache Memory）"></a><strong>CPU高速缓存（Cache Memory）</strong></h2><h3 id="CPU高速缓存"><a href="#CPU高速缓存" class="headerlink" title="CPU高速缓存"></a><strong>CPU高速缓存</strong></h3><p>CPU缓存即高速缓冲存储器，是位于CPU与主内存间的一种容量较小但速度很高的存储器。由于CPU的速度远高于主内存，CPU直接从内存中存取数据要等待一定时间周期，Cache中保存着CPU刚用过或循环使用的一部分数据，当CPU再次使用该部分数据时可从Cache中直接调用,减少CPU的等待时间，提高了系统的效率。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1564" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>在CPU访问存储设备时，无论是存取数据抑或存取指令，都趋于聚集在一片连续的区域中，这就是局部性原理。</strong></p>
-<blockquote>
+<h3 id="在CPU访问存储设备时，无论是存取数据抑或存取指令，都趋于聚集在一片连续的区域中，这就是局部性原理。"><a href="#在CPU访问存储设备时，无论是存取数据抑或存取指令，都趋于聚集在一片连续的区域中，这就是局部性原理。" class="headerlink" title="在CPU访问存储设备时，无论是存取数据抑或存取指令，都趋于聚集在一片连续的区域中，这就是局部性原理。"></a><strong>在CPU访问存储设备时，无论是存取数据抑或存取指令，都趋于聚集在一片连续的区域中，这就是局部性原理。</strong></h3><blockquote>
 <p><strong>时间局部性（Temporal Locality）</strong>：如果一个信息项正在被访问，那么在近期它很可能还会被再次访问。</p>
 <p>比如循环、递归、方法的反复调用等。</p>
 <p><strong>空间局部性（Spatial Locality）</strong>：如果一个存储器的位置被引用，那么将来他附近的位置也会被引用。</p>
 <p>比如顺序执行的代码、连续创建的两个对象、数组等。</p>
 </blockquote>
-<p><strong>多CPU多核缓存架构</strong></p>
-<blockquote>
+<h4 id="多CPU多核缓存架构"><a href="#多CPU多核缓存架构" class="headerlink" title="多CPU多核缓存架构"></a><strong>多CPU多核缓存架构</strong></h4><blockquote>
 <p><strong>物理CPU：</strong>物理CPU就是插在主机上的真实的CPU硬件，在Linux下可以数不同的physical id 来确认主机的物理CPU个数。 </p>
 <p><strong>核心数</strong>：我们常常会听说多核处理器，其中的核指的就是核心数。在Linux下可以通过cores来确认主机的物理CPU的核心数。</p>
 <p><strong>逻辑CPU</strong>：逻辑CPU跟超线程技术有联系，假如物理CPU不支持超线程的，那么逻辑CPU的数量等于核心数的数量；如果物理CPU支持超线程，那么逻辑CPU的数目是核心数数目的两倍。在Linux下可以通过 processors 的数目来确认逻辑CPU的数量。</p>
 </blockquote>
 <p>现代CPU为了提升执行效率，减少CPU与内存的交互，一般在CPU上集成了多级缓存架构，常见的为三级缓存结构。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1565" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>缓存一致性（<strong><strong>Cache coherence</strong></strong>）</strong></p>
+<p><strong>缓存一致性（Cache coherence）</strong></p>
 <p>计算机体系结构中，缓存一致性是共享资源数据的一致性，这些数据最终存储在多个本地缓存中。当系统中的客户机维护公共内存资源的缓存时，可能会出现数据不一致的问题，这在多处理系统中的cpu中尤其如此。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1569" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>在共享内存多处理器系统中，每个处理器都有一个单独的缓存内存，共享数据可能有多个副本:一个副本在主内存中，一个副本在请求它的每个处理器的本地缓存中。当数据的一个副本发生更改时，其他副本必须反映该更改。缓存一致性是确保共享操作数(数据)值的变化能够及时地在整个系统中传播的规程。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1572" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>缓存一致性的要求</strong></p>
-<p><strong>写传播（<strong><strong>Write Propagation</strong></strong>）</strong></p>
-<p>对任何缓存中的数据的更改都必须传播到对等缓存中的其他副本(该缓存行的副本)。</p>
-<p><strong>事务串行化（<strong><strong>Transaction Serialization</strong></strong>）</strong></p>
-<p>对单个内存位置的读&#x2F;写必须被所有处理器以相同的顺序看到。理论上，一致性可以在加载&#x2F;存储粒度上执行。然而，在实践中，它通常在缓存块的粒度上执行。</p>
-<p><strong>一致性机制（<strong><strong>Coherence mechanisms</strong></strong>）</strong></p>
-<p>确保一致性的两种最常见的机制是窥探机制（snooping ）和基于目录的机制（directory-based），这两种机制各有优缺点。如果有足够的带宽可用，基于协议的窥探往往会更快，因为所有事务都是所有处理器看到的请求&#x2F;响应。其缺点是窥探是不可扩展的。每个请求都必须广播到系统中的所有节点，这意味着随着系统变大，(逻辑或物理)总线的大小及其提供的带宽也必须增加。另一方面，目录往往有更长的延迟(3跳 请求&#x2F;转发&#x2F;响应)，但使用更少的带宽，因为消息是点对点的，而不是广播的。由于这个原因，许多较大的系统(&gt;64处理器)使用这种类型的缓存一致性。</p>
-<p><strong>总线仲裁机制</strong></p>
-<p>在计算机中，数据通过总线在处理器和内存之间传递。每次处理器和内存之间的数据传递都是通过一系列步骤来完成的，这一系列步骤称之为总线事务（Bus Transaction）。总线事务包括读事务（Read Transaction）和写事务（WriteTransaction）。读事务从内存传送数据到处理器，写事务从处理器传送数据到内存，每个事务会读&#x2F;写内存中一个或多个物理上连续的字。这里的关键是，总线会同步试图并发使用总线的事务。在一个处理器执行总线事务期间，总线会禁止其他的处理器和I&#x2F;O设备执行内存的读&#x2F;写。</p>
+<h3 id="缓存一致性的要求"><a href="#缓存一致性的要求" class="headerlink" title="缓存一致性的要求"></a><strong>缓存一致性的要求</strong></h3><h4 id="写传播（Write-Propagation）"><a href="#写传播（Write-Propagation）" class="headerlink" title="写传播（Write Propagation）"></a><strong>写传播（<strong><strong>Write Propagation</strong></strong>）</strong></h4><p>对任何缓存中的数据的更改都必须传播到对等缓存中的其他副本(该缓存行的副本)。</p>
+<h4 id="事务串行化（Transaction-Serialization）"><a href="#事务串行化（Transaction-Serialization）" class="headerlink" title="事务串行化（Transaction Serialization）"></a><strong>事务串行化（<strong><strong>Transaction Serialization</strong></strong>）</strong></h4><p>对单个内存位置的读&#x2F;写必须被所有处理器以相同的顺序看到。理论上，一致性可以在加载&#x2F;存储粒度上执行。然而，在实践中，它通常在缓存块的粒度上执行。</p>
+<h4 id="一致性机制（Coherence-mechanisms）"><a href="#一致性机制（Coherence-mechanisms）" class="headerlink" title="一致性机制（Coherence mechanisms）"></a><strong>一致性机制（<strong><strong>Coherence mechanisms</strong></strong>）</strong></h4><p>确保一致性的两种最常见的机制是<font color='red'>窥探机制（snooping ）和基于目录的机制（directory-based）</font>，这两种机制各有优缺点。如果有足够的带宽可用，基于协议的窥探往往会更快，因为所有事务都是所有处理器看到的请求&#x2F;响应。其缺点是窥探是不可扩展的。每个请求都必须广播到系统中的所有节点，这意味着随着系统变大，(逻辑或物理)总线的大小及其提供的带宽也必须增加。另一方面，目录往往有更长的延迟(3跳 请求&#x2F;转发&#x2F;响应)，但使用更少的带宽，因为消息是点对点的，而不是广播的。由于这个原因，许多较大的系统(&gt;64处理器)使用这种类型的缓存一致性。</p>
+<h3 id="总线仲裁机制"><a href="#总线仲裁机制" class="headerlink" title="总线仲裁机制"></a><strong>总线仲裁机制</strong></h3><p>在计算机中，数据通过总线在处理器和内存之间传递。每次处理器和内存之间的数据传递都是通过一系列步骤来完成的，这一系列步骤称之为总线事务（Bus Transaction）。总线事务包括读事务（Read Transaction）和写事务（WriteTransaction）。读事务从内存传送数据到处理器，写事务从处理器传送数据到内存，每个事务会读&#x2F;写内存中一个或多个物理上连续的字。这里的关键是，总线会同步试图并发使用总线的事务。在一个处理器执行总线事务期间，总线会禁止其他的处理器和I&#x2F;O设备执行内存的读&#x2F;写。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1563" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>假设处理器A，B和C同时向总线发起总线事务，这时总线仲裁（Bus Arbitration）会对竞争做出裁决，这里假设总线在仲裁后判定处理器A在竞争中获胜（总线仲裁会确保所有处理器都能公平的访问内存）。此时处理器A继续它的总线事务，而其他两个处理器则要等待处理器A的总线事务完成后才能再次执行内存访问。假设在处理器A执行总线事务期间（不管这个总线事务是读事务还是写事务），处理器D向总线发起了总线事务，此时处理器D的请求会被总线禁止。</p>
 <p>总线的这种工作机制可以把所有处理器对内存的访问以串行化的方式来执行。在任意时间点，最多只能有一个处理器可以访问内存。这个特性确保了单个总线事务之中的内存读&#x2F;写操作具有原子性。</p>
 <p>原子操作是指不可被中断的一个或者一组操作。处理器会自动保证基本的内存操作的原子性，也就是一个处理器从内存中读取或者写入一个字节时，其他处理器是不能访问这个字节的内存地址。最新的处理器能自动保证单处理器对同一个缓存行里进行16&#x2F;32&#x2F;64位的操作是原子的，但是复杂的内存操作处理器是不能自动保证其原子性的，比如跨总线宽度、跨多个缓存行和跨页表的访问。处理器提供总线锁定和缓存锁定两个机制来保证复杂内存操作的原子性。</p>
-<p><strong>总线锁定</strong></p>
-<p>总线锁定就是使用处理器提供的一个 LOCK＃信号，当其中一个处理器在总线上输出此信号时，其它处理器的请求将被阻塞住，那么该处理器可以独占共享内存。</p>
-<p><strong>缓存锁定</strong></p>
-<p>由于总线锁定阻止了被阻塞处理器和所有内存之间的通信，而输出LOCK#信号的CPU可能只需要锁住特定的一块内存区域，因此总线锁定开销较大。</p>
+<h4 id="总线锁定"><a href="#总线锁定" class="headerlink" title="总线锁定"></a><strong>总线锁定</strong></h4><p>总线锁定就是使用处理器提供的一个 LOCK＃信号，当其中一个处理器在总线上输出此信号时，其它处理器的请求将被阻塞住，那么该处理器可以独占共享内存。</p>
+<h4 id="缓存锁定"><a href="#缓存锁定" class="headerlink" title="缓存锁定"></a><strong>缓存锁定</strong></h4><p>由于总线锁定阻止了被阻塞处理器和所有内存之间的通信，而输出LOCK#信号的CPU可能只需要锁住特定的一块内存区域，因此总线锁定开销较大。</p>
 <p>缓存锁定是指内存区域如果被缓存在处理器的缓存行中，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不会在总线上声言LOCK＃信号（总线锁定信号），而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，因为缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</p>
 <p>缓存锁定不能使用的特殊情况：</p>
 <ul>
@@ -404,18 +390,14 @@
 <li>总线锁定，使用LOCK#信号和LOCK指令前缀</li>
 <li>缓存一致性协议，确保原子操作可以在缓存的数据结构上执行(缓存锁);这种机制出现在Pentium 4、Intel Xeon和P6系列处理器中</li>
 </ul>
-<p><strong>总线窥探(Bus Snooping)</strong></p>
-<p>总线窥探(Bus snooping)是缓存中的一致性控制器(snoopy cache)监视或窥探总线事务的一种方案，其目标是在分布式共享内存系统中维护缓存一致性。包含一致性控制器(snooper)的缓存称为snoopy缓存。该方案由Ravishankar和Goodman于1983年提出。</p>
-<p><strong>工作原理</strong></p>
-<p>当特定数据被多个缓存共享时，处理器修改了共享数据的值，更改必须传播到所有其他具有该数据副本的缓存中。这种更改传播可以防止系统违反缓存一致性。数据变更的通知可以通过总线窥探来完成。所有的窥探者都在监视总线上的每一个事务。如果一个修改共享缓存块的事务出现在总线上，所有的窥探者都会检查他们的缓存是否有共享块的相同副本。如果缓存中有共享块的副本，则相应的窥探者执行一个动作以确保缓存一致性。这个动作可以是刷新缓存块或使缓存块失效。它还涉及到缓存块状态的改变，这取决于缓存一致性协议（cache coherence protocol）。</p>
-<p><strong>窥探协议类型</strong></p>
-<p>根据管理写操作的本地副本的方式，有两种窥探协议:</p>
+<h3 id="总线窥探-Bus-Snooping"><a href="#总线窥探-Bus-Snooping" class="headerlink" title="总线窥探(Bus Snooping)"></a><strong>总线窥探(Bus Snooping)</strong></h3><p>总线窥探(Bus snooping)是缓存中的一致性控制器(snoopy cache)监视或窥探总线事务的一种方案，其目标是在分布式共享内存系统中维护缓存一致性。包含一致性控制器(snooper)的缓存称为snoopy缓存。该方案由Ravishankar和Goodman于1983年提出。</p>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a><strong>工作原理</strong></h4><p>当特定数据被多个缓存共享时，处理器修改了共享数据的值，更改必须传播到所有其他具有该数据副本的缓存中。这种更改传播可以防止系统违反缓存一致性。数据变更的通知可以通过总线窥探来完成。所有的窥探者都在监视总线上的每一个事务。如果一个修改共享缓存块的事务出现在总线上，所有的窥探者都会检查他们的缓存是否有共享块的相同副本。如果缓存中有共享块的副本，则相应的窥探者执行一个动作以确保缓存一致性。这个动作可以是刷新缓存块或使缓存块失效。它还涉及到缓存块状态的改变，这取决于缓存一致性协议（cache coherence protocol）。</p>
+<h4 id="窥探协议类型"><a href="#窥探协议类型" class="headerlink" title="窥探协议类型"></a><strong>窥探协议类型</strong></h4><p>根据管理写操作的本地副本的方式，有两种窥探协议:</p>
 <p><strong>Write-invalidate</strong></p>
 <p>当处理器写入一个共享缓存块时，其他缓存中的所有共享副本都会通过总线窥探失效。这种方法确保处理器只能读写一个数据的一个副本。其他缓存中的所有其他副本都无效。这是最常用的窥探协议。MSI、MESI、MOSI、MOESI和MESIF协议属于该类型。</p>
 <p><strong>Write-update</strong></p>
 <p>当处理器写入一个共享缓存块时，其他缓存的所有共享副本都会通过总线窥探更新。这个方法将写数据广播到总线上的所有缓存中。它比write-invalidate协议引起更大的总线流量。这就是为什么这种方法不常见。Dragon和firefly协议属于此类别。</p>
-<p><strong>一致性协议（Coherence protocol）</strong></p>
-<p>一致性协议在多处理器系统中应用于高速缓存一致性。为了保持一致性，人们设计了各种模型和协议，如MSI、MESI(又名Illinois)、MOSI、MOESI、MERSI、MESIF、write-once、Synapse、Berkeley、Firefly和Dragon协议。</p>
+<h3 id="一致性协议（Coherence-protocol）"><a href="#一致性协议（Coherence-protocol）" class="headerlink" title="一致性协议（Coherence protocol）"></a><strong>一致性协议（Coherence protocol）</strong></h3><p>一致性协议在多处理器系统中应用于高速缓存一致性。为了保持一致性，人们设计了各种模型和协议，如MSI、MESI(又名Illinois)、MOSI、MOESI、MERSI、MESIF、write-once、Synapse、Berkeley、Firefly和Dragon协议。</p>
 <ul>
 <li>MSI protocol, the basic protocol from which the MESI protocol is derived.</li>
 <li>Write-once (cache coherency), an early form of the MESI protocol.</li>
@@ -427,8 +409,7 @@
 <li>Dragon protocol</li>
 <li>Firefly protocol</li>
 </ul>
-<p><strong>MESI协议</strong></p>
-<p><strong>MESI协议</strong>是一个基于写失效的缓存一致性协议，是支持回写（write-back）缓存的最常用协议。也称作<strong>伊利诺伊协议</strong> (Illinois protocol，因为是在伊利诺伊大学厄巴纳-香槟分校被发明的)。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。与MSI协议相比，MESI协议减少了主存的事务数量。这极大改善了性能。</p>
+<h4 id="MESI协议"><a href="#MESI协议" class="headerlink" title="MESI协议"></a><strong>MESI协议</strong></h4><p><strong>MESI协议</strong>是一个基于写失效的缓存一致性协议，是支持回写（write-back）缓存的最常用协议。也称作<strong>伊利诺伊协议</strong> (Illinois protocol，因为是在伊利诺伊大学厄巴纳-香槟分校被发明的)。与写通过（write through）缓存相比，回写缓冲能节约大量带宽。总是有“脏”（dirty）状态表示缓存中的数据与主存中不同。MESI协议要求在缓存不命中（miss）且数据块在另一个缓存时，允许缓存到缓存的数据复制。与MSI协议相比，MESI协议减少了主存的事务数量。这极大改善了性能。</p>
 <p><strong>状态</strong></p>
 <p>缓存行有4种不同的状态:</p>
 <p><strong>已修改Modified (M)</strong></p>
@@ -443,16 +424,13 @@
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1568" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>当块标记为 M (已修改), 在其他缓存中的数据副本被标记为I(无效).</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1567" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>伪共享的问题</strong></p>
-<p>如果多个核的线程在操作同一个缓存行中的不同变量数据，那么就会出现频繁的缓存失效，即使在代码层面看这两个线程操作的数据之间完全没有关系。这种不合理的资源竞争情况就是伪共享（False Sharing）。</p>
+<h3 id="伪共享的问题"><a href="#伪共享的问题" class="headerlink" title="伪共享的问题"></a><strong>伪共享的问题</strong></h3><p>如果多个核的线程在操作同一个缓存行中的不同变量数据，那么就会出现频繁的缓存失效，即使在代码层面看这两个线程操作的数据之间完全没有关系。这种不合理的资源竞争情况就是伪共享（False Sharing）。</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1566" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>linux下查看Cache Line大小</strong></p>
-<p>Cache Line大小是64Byte</p>
+<h4 id="linux下查看Cache-Line大小"><a href="#linux下查看Cache-Line大小" class="headerlink" title="linux下查看Cache Line大小"></a><strong>linux下查看Cache Line大小</strong></h4><p>Cache Line大小是64Byte</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1571" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>或者执行 cat &#x2F;proc&#x2F;cpuinfo  命令</p>
 <p>​    <img src="/2%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JMM-%E5%B9%B6%E5%8F%91%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7-%E4%BA%8C/1570" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>避免伪共享方案</strong> </p>
-<p><strong>1.缓存行填充</strong></p>
+<h4 id="避免伪共享方案"><a href="#避免伪共享方案" class="headerlink" title="避免伪共享方案"></a><strong>避免伪共享方案</strong></h4><p><strong>1.缓存行填充</strong></p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs smali">class Pointer &#123;<br>    volatile<span class="hljs-built_in"> long </span>x;<br>    //避免伪共享： 缓存行填充<br>   <span class="hljs-built_in"> long </span>p1, p2, p3, p4, p5, p6, p7;<br>    volatile<span class="hljs-built_in"> long </span>y;<br></code></pre></td></tr></table></figure>
 
 <p><strong>2.使用 @sun.misc.Contended 注解（java8）</strong></p>

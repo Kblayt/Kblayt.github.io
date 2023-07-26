@@ -23,6 +23,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="什么是 CASCAS（Compare And Swap，比较并交换），通常指的是这样一种原子操作：针对一个变量，首先比较它的内存值与某个期望值是否相同，如果相同，就给它赋一个新值。 CAS 的逻辑用伪代码描述如下： 12if (value &#x3D;&#x3D; expectedValue) &amp;#123;    value &#x3D; newValue;  以上伪代码描述了一个由比较和赋值两阶段组成的复合操作，CAS 可以">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/image-20230726105926136.png">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1642">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1643">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1641">
@@ -41,12 +42,12 @@
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1655">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1653">
 <meta property="article:published_time" content="2023-06-16T15:35:52.000Z">
-<meta property="article:modified_time" content="2023-06-26T07:48:10.803Z">
+<meta property="article:modified_time" content="2023-07-26T02:59:47.368Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1642">
+<meta name="twitter:image" content="https://kblayt.github.io/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/image-20230726105926136.png">
   
   
   
@@ -299,8 +300,8 @@
 <p>以上伪代码描述了一个由比较和赋值两阶段组成的复合操作，CAS 可以看作是它们合并后的整体——一个不可分割的原子操作，并且其原子性是直接在硬件层面得到保障的。</p>
 <p>CAS可以看做是乐观锁（对比数据库的悲观、乐观锁）的一种实现方式，Java原子类中的递增操作就通过CAS自旋实现的。</p>
 <p>CAS是一种无锁算法，在不使用锁（没有线程被阻塞）的情况下实现多线程之间的变量同步。</p>
-<p><strong>CAS应用</strong></p>
-<p>在 Java 中，CAS 操作是由 Unsafe 类提供支持的，该类定义了三种针对不同类型变量的 CAS 操作，如图</p>
+<p><img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/image-20230726105926136.png" srcset="/img/loading.gif" lazyload alt="image-20230726105926136"></p>
+<h2 id="CAS应用"><a href="#CAS应用" class="headerlink" title="CAS应用"></a><strong>CAS应用</strong></h2><p>在 Java 中，CAS 操作是由 Unsafe 类提供支持的，该类定义了三种针对不同类型变量的 CAS 操作，如图</p>
 <p>​    <img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1642" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>它们都是 native 方法，由 Java 虚拟机提供具体实现，这意味着不同的 Java 虚拟机对它们的实现可能会略有不同。</p>
 <p>以 compareAndSwapInt 为例，Unsafe 的 compareAndSwapInt 方法接收 4 个参数，分别是：对象实例、内存偏移量、字段期望值、字段新值。该方法会针对指定对象实例中的相应偏移量的字段执行 CAS 操作。</p>
@@ -309,8 +310,7 @@
 <p>测试</p>
 <p>针对 entity.x 的 3 次 CAS 操作，分别试图将它从 0 改成 3、从 3 改成 5、从 3 改成 8。执行结果如下：</p>
 <p>​    <img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1643" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>CAS源码分析</strong></p>
-<p>Hotspot 虚拟机对compareAndSwapInt 方法的实现如下：</p>
+<h2 id="CAS源码分析"><a href="#CAS源码分析" class="headerlink" title="CAS源码分析"></a><strong>CAS源码分析</strong></h2><p>Hotspot 虚拟机对compareAndSwapInt 方法的实现如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#unsafe.cpp</span><br><span class="hljs-built_in">UNSAFE_ENTRY</span>(jboolean, <span class="hljs-built_in">Unsafe_CompareAndSwapInt</span>(JNIEnv *env, jobject unsafe, jobject obj, jlong offset, jint e, jint x))<br>  <span class="hljs-built_in">UnsafeWrapper</span>(<span class="hljs-string">&quot;Unsafe_CompareAndSwapInt&quot;</span>);<br>  oop p = JNIHandles::<span class="hljs-built_in">resolve</span>(obj);<br>  <span class="hljs-comment">// 根据偏移量，计算value的地址</span><br>  jint* addr = (jint *) <span class="hljs-built_in">index_oop_from_field_offset_long</span>(p, offset);<br>  <span class="hljs-comment">// Atomic::cmpxchg(x, addr, e) cas逻辑 x:要交换的值   e:要比较的值</span><br>  <span class="hljs-comment">//cas成功，返回期望值e，等于e,此方法返回true </span><br>  <span class="hljs-comment">//cas失败，返回内存中的value值，不等于e，此方法返回false</span><br>  <span class="hljs-keyword">return</span> (jint)(Atomic::<span class="hljs-built_in">cmpxchg</span>(x, addr, e)) == e;<br></code></pre></td></tr></table></figure>
 
 <p>核心逻辑在Atomic::cmpxchg方法中，这个根据不同操作系统和不同CPU会有不同的实现。这里我们以linux_64x的为例，查看Atomic::cmpxchg的实现</p>
@@ -326,25 +326,21 @@
 </blockquote>
 <p>现代处理器指令集架构基本上都会提供 CAS 指令，例如 x86 和 IA-64 架构中的 cmpxchgl 指令和 comxchgq 指令，sparc 架构中的 cas 指令和 casx 指令。</p>
 <p>不管是 Hotspot 中的 Atomic::cmpxchg 方法，还是 Java 中的 compareAndSwapInt 方法，它们本质上都是对相应平台的 CAS 指令的一层简单封装。CAS 指令作为一种硬件原语，有着天然的原子性，这也正是 CAS 的价值所在。</p>
-<p><strong>CAS缺陷</strong></p>
-<p>CAS 虽然高效地解决了原子操作，但是还是存在一些缺陷的，主要表现在三个方面：</p>
+<h2 id="CAS缺陷"><a href="#CAS缺陷" class="headerlink" title="CAS缺陷"></a><strong>CAS缺陷</strong></h2><p>CAS 虽然高效地解决了原子操作，但是还是存在一些缺陷的，主要表现在三个方面：</p>
 <ul>
 <li>自旋 CAS 长时间地不成功，则会给 CPU 带来非常大的开销</li>
 <li>只能保证一个共享变量原子操作</li>
 <li>ABA 问题</li>
 </ul>
-<p><strong>ABA问题及其解决方案</strong></p>
-<p>CAS算法实现一个重要前提需要取出内存中某时刻的数据，而在下时刻比较并替换，那么在这个时间差类会导致数据的变化。</p>
-<p><strong>什么是ABA问题</strong></p>
-<p>当有多个线程对一个原子类进行操作的时候，某个线程在短时间内将原子类的值A修改为B，又马上将其修改为A，此时其他线程不感知，还是会修改成功。</p>
+<h2 id="ABA问题及其解决方案"><a href="#ABA问题及其解决方案" class="headerlink" title="ABA问题及其解决方案"></a><strong>ABA问题及其解决方案</strong></h2><p>CAS算法实现一个重要前提需要取出内存中某时刻的数据，而在下时刻比较并替换，那么在这个时间差类会导致数据的变化。</p>
+<h3 id="什么是ABA问题"><a href="#什么是ABA问题" class="headerlink" title="什么是ABA问题"></a><strong>什么是ABA问题</strong></h3><p>当有多个线程对一个原子类进行操作的时候，某个线程在短时间内将原子类的值A修改为B，又马上将其修改为A，此时其他线程不感知，还是会修改成功。</p>
 <p>​    <img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1641" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>测试</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ABATest</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">atomicInteger</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>(<span class="hljs-number">1</span>);<br><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> atomicInteger.get();<br>            log.debug(<span class="hljs-string">&quot;Thread1 read value: &quot;</span> + value);<br><br>            <span class="hljs-comment">// 阻塞1s</span><br>            LockSupport.parkNanos(<span class="hljs-number">1000000000L</span>);<br><br>            <span class="hljs-comment">// Thread1通过CAS修改value值为3</span><br>            <span class="hljs-keyword">if</span> (atomicInteger.compareAndSet(value, <span class="hljs-number">3</span>)) &#123;<br>                log.debug(<span class="hljs-string">&quot;Thread1 update from &quot;</span> + value + <span class="hljs-string">&quot; to 3&quot;</span>);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                log.debug(<span class="hljs-string">&quot;Thread1 update fail!&quot;</span>);<br>            &#125;<br>        &#125;,<span class="hljs-string">&quot;Thread1&quot;</span>).start();<br><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(()-&gt;&#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> atomicInteger.get();<br>            log.debug(<span class="hljs-string">&quot;Thread2 read value: &quot;</span> + value);<br>            <span class="hljs-comment">// Thread2通过CAS修改value值为2</span><br>            <span class="hljs-keyword">if</span> (atomicInteger.compareAndSet(value, <span class="hljs-number">2</span>)) &#123;<br>                log.debug(<span class="hljs-string">&quot;Thread2 update from &quot;</span> + value + <span class="hljs-string">&quot; to 2&quot;</span>);<br><br>                <span class="hljs-comment">// do something</span><br>                value = atomicInteger.get();<br>                log.debug(<span class="hljs-string">&quot;Thread2 read value: &quot;</span> + value);<br>                <span class="hljs-comment">// Thread2通过CAS修改value值为1</span><br>                <span class="hljs-keyword">if</span> (atomicInteger.compareAndSet(value, <span class="hljs-number">1</span>)) &#123;<br>                    log.debug(<span class="hljs-string">&quot;Thread2 update from &quot;</span> + value + <span class="hljs-string">&quot; to 1&quot;</span>);<br>                &#125;<br>            &#125;<br>        &#125;,<span class="hljs-string">&quot;Thread2&quot;</span>).start();<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p>Thread1不清楚Thread2对value的操作，误以为value&#x3D;1没有修改过</p>
 <p>​    <img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1640" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>ABA问题的解决方案</strong></p>
-<p>数据库有个锁称为乐观锁，是一种基于数据版本实现数据同步的机制，每次修改一次数据，版本就会进行累加。</p>
+<h3 id="ABA问题的解决方案"><a href="#ABA问题的解决方案" class="headerlink" title="ABA问题的解决方案"></a><strong>ABA问题的解决方案</strong></h3><p>数据库有个锁称为乐观锁，是一种基于数据版本实现数据同步的机制，每次修改一次数据，版本就会进行累加。</p>
 <p>同样，Java也提供了相应的原子引用类AtomicStampedReference</p>
 <p>​    <img src="/6%E3%80%81%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B9%8BCAS-Atomic%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E8%AF%A6%E6%83%85/1639" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>reference即我们实际存储的变量，stamp是版本，每次修改可以通过+1保证版本唯一性。这样就可以保证每次修改后的版本也会往上递增。</p>
