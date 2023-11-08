@@ -58,7 +58,7 @@
 <meta property="og:image" content="https://kblayt.github.io/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1693">
 <meta property="og:image" content="https://kblayt.github.io/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1692">
 <meta property="article:published_time" content="2023-06-16T15:36:15.000Z">
-<meta property="article:modified_time" content="2023-07-27T01:48:55.202Z">
+<meta property="article:modified_time" content="2023-11-07T12:33:39.484Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
@@ -313,8 +313,8 @@
 <h1 id="Java共享内存模型带来的线程安全问题"><a href="#Java共享内存模型带来的线程安全问题" class="headerlink" title="Java共享内存模型带来的线程安全问题"></a><strong>Java共享内存模型带来的线程安全问题</strong></h1><p>思考： 两个线程对初始值为 0 的静态变量一个做自增，一个做自减，各做 5000 次，结果是 0 吗？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SyncDemo</span> &#123;<br>   <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">counter</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">increment</span><span class="hljs-params">()</span> &#123;<br>        counter++;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">decrement</span><span class="hljs-params">()</span> &#123;<br>        counter--;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException &#123;<br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">t1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5000</span>; i++) &#123;<br>                increment();<br>            &#125;<br>        &#125;, <span class="hljs-string">&quot;t1&quot;</span>);<br>        <span class="hljs-type">Thread</span> <span class="hljs-variable">t2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5000</span>; i++) &#123;<br>                decrement();<br>            &#125;<br>        &#125;, <span class="hljs-string">&quot;t2&quot;</span>);<br>        t1.start();<br>        t2.start();<br>        t1.join();<br>        t2.join();<br><br>        <span class="hljs-comment">//思考： counter=？</span><br>        log.info(<span class="hljs-string">&quot;&#123;&#125;&quot;</span>, counter);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a><strong>问题分析</strong></h2><p>以上的结果可能是正数、负数、零。为什么呢？因为 Java 中对静态变量的自增，自减并不是原子操作。</p>
-<p>我们可以查看 i++和 i–（i 为静态变量）的 JVM 字节码指令 （ 可以在idea中安装一个jclasslib插件）</p>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a><strong>问题分析</strong></h2><p>以上的结果可能是正数、负数、零。为什么呢？因为 Java 中对静态变量的自增，自减并<strong>不是原子操作</strong>。</p>
+<p>我们可以查看 i++和 i–（i 为静态变量）的 JVM 字节码指令 （ <strong>可以在idea中安装一个jclasslib插件）</strong></p>
 <h3 id="i-的JVM-字节码指令"><a href="#i-的JVM-字节码指令" class="headerlink" title="i++的JVM 字节码指令"></a><strong>i++的JVM 字节码指令</strong></h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">getstatic i <span class="hljs-regexp">//</span> 获取静态变量i的值 <br>iconst_1 <span class="hljs-regexp">//</span> 将int常量<span class="hljs-number">1</span>压入操作数栈<br>iadd <span class="hljs-regexp">//</span> 自增 <br></code></pre></td></tr></table></figure>
 
 <h3 id="i–的JVM-字节码指令"><a href="#i–的JVM-字节码指令" class="headerlink" title="i–的JVM 字节码指令"></a><strong>i–的JVM 字节码指令</strong></h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">getstatic i <span class="hljs-regexp">//</span> 获取静态变量i的值 <br>iconst_1 <span class="hljs-regexp">//</span> 将int常量<span class="hljs-number">1</span>压入操作数栈<br>isub <span class="hljs-regexp">//</span> 自减 <br></code></pre></td></tr></table></figure>
@@ -323,24 +323,16 @@
 <p>但多线程下这 8 行代码可能交错运行：</p>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1706" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="临界区（-Critical-Section）"><a href="#临界区（-Critical-Section）" class="headerlink" title="临界区（ Critical Section）"></a><strong>临界区（ Critical Section）</strong></h2><ul>
-<li><p>一个程序运行多个线程本身是没有问题的</p>
-</li>
-<li><p>问题出在多个线程访问共享资源 </p>
-</li>
-<li><ul>
-<li><ul>
+<li>一个程序运行多个线程本身是没有问题的</li>
+<li>问题出在多个线程访问共享资源 </li>
 <li>多个线程读共享资源其实也没有问题 </li>
-<li>在多个线程对共享资源读写操作时发生指令交错，就会出现问题</li>
+<li><font color='red'>在多个线程对共享资源读写操作时发生<strong>指令交错</strong>，就会出现问题</font></li>
 </ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区，其共享资源为临界资源</p>
+<p><font color='red'>一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区，其共享资源为临界资源</font></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//临界资源</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">counter</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">increment</span><span class="hljs-params">()</span> &#123; <span class="hljs-comment">//临界区</span><br>    counter++;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">decrement</span><span class="hljs-params">()</span> &#123;<span class="hljs-comment">//临界区</span><br>    counter--;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>​         </p>
-<h2 id="竞态条件（-Race-Condition-）"><a href="#竞态条件（-Race-Condition-）" class="headerlink" title="竞态条件（ Race Condition ）"></a><strong>竞态条件（ Race Condition ）</strong></h2><p>多个线程在临界区内执行，由于代码的执行序列不同而导致结果无法预测，称之为发生了竞态条件</p>
+<h2 id="竞态条件（-Race-Condition-）"><a href="#竞态条件（-Race-Condition-）" class="headerlink" title="竞态条件（ Race Condition ）"></a><strong>竞态条件（ Race Condition ）</strong></h2><p><font color='red'>多个线程在临界区内执行，由于代码的执行序列不同而导致结果无法预测，称之为发生了竞态条件</font></p>
 <p>为了避免临界区的竞态条件发生，有多种手段可以达到目的：</p>
 <ul>
 <li>阻塞式的解决方案：synchronized，Lock </li>
@@ -350,7 +342,7 @@
 <p>虽然 java 中互斥和同步都可以采用 synchronized 关键字来完成，但它们还是有区别的： </p>
 <p>互斥是保证临界区的竞态条件发生，同一时刻只能有一个线程执行临界区代码 </p>
 <p>同步是由于线程执行的先后、顺序不同、需要一个线程等待其它线程运行到某个点</p>
-<h1 id="synchronized的使用"><a href="#synchronized的使用" class="headerlink" title="synchronized的使用"></a><strong>synchronized的使用</strong></h1><p>synchronized 同步块是 Java 提供的一种原子性内置锁，Java 中的每个对象都可以把它当作一个同步锁来使用，这些 Java 内置的使用者看不到的锁被称为内置锁，也叫作监视器锁。</p>
+<h1 id="synchronized的使用"><a href="#synchronized的使用" class="headerlink" title="synchronized的使用"></a><strong>synchronized的使用</strong></h1><p><font color='red'>synchronized 同步块是 Java 提供的一种原子性内置锁</font>，Java 中的每个对象都可以把它当作一个同步锁来使用，这些 Java 内置的使用者看不到的锁被称为内置锁，也叫作监视器锁。</p>
 <h2 id="加锁方式"><a href="#加锁方式" class="headerlink" title="加锁方式"></a><strong>加锁方式</strong></h2><p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1695" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="解决之前的共享问题"><a href="#解决之前的共享问题" class="headerlink" title="解决之前的共享问题"></a><strong>解决之前的共享问题</strong></h2><p>方式一</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">increment</span><span class="hljs-params">()</span> &#123;<br>    counter++;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">decrement</span><span class="hljs-params">()</span> &#123;<br>    counter--;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -361,29 +353,27 @@
 <p>synchronized 实际是用对象锁保证了临界区内代码的原子性</p>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1707" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;synchronized高级篇&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</strong></p>
-<h1 id="synchronized底层原理"><a href="#synchronized底层原理" class="headerlink" title="synchronized底层原理"></a><strong>synchronized底层原理</strong></h1><p>synchronized是JVM内置锁，基于<strong>Monitor</strong>机制实现，依赖底层操作系统的互斥原语Mutex（互斥量），它是一个重量级锁，性能较低。当然，JVM内置锁在1.5之后版本做了重大的优化，如锁粗化（Lock Coarsening）、锁消除（Lock Elimination）、轻量级锁（Lightweight Locking）、偏向锁（Biased Locking）、自适应自旋（Adaptive Spinning）等技术来减少锁操作的开销，内置锁的并发性能已经基本与Lock持平。</p>
+<h1 id="synchronized底层原理"><a href="#synchronized底层原理" class="headerlink" title="synchronized底层原理"></a><strong>synchronized底层原理</strong></h1><p><font color='red'>synchronized是JVM内置锁</font>，基于<font color='red'><strong>Monitor</strong></font>机制实现，依赖底层操作系统的互斥原语<font color='red'>Mutex</font>（互斥量），它是一个重量级锁，性能较低。当然，<font color='red'>JVM内置锁在1.5之后版本做了重大的优化</font>，如锁粗化（Lock Coarsening）、锁消除（Lock Elimination）、轻量级锁（Lightweight Locking）、偏向锁（Biased Locking）、自适应自旋（Adaptive Spinning）等技术来减少锁操作的开销，内置锁的并发性能已经基本与Lock持平。</p>
 <blockquote>
 <p>The Java® Language Specification</p>
 <p>Each object is associated with a monitor (§17.1), which is used by synchronized methods (§8.4.3) and the synchronized statement (§14.19) to provide control over concurrent access to state by multiple threads (§17 (Threads and Locks)).</p>
 <p>The Java® Virtual Machine Specification</p>
 <p>The Java Virtual Machine supports synchronization of both methods and sequences of instructions within a method by a single synchronization construct: the monitor.</p>
 </blockquote>
-<p>Java虚拟机通过一个同步结构支持方法和方法中的指令序列的同步：monitor。</p>
-<p>同步方法是通过方法中的access_flags中设置ACC_SYNCHRONIZED标志来实现；同步代码块是通过monitorenter和monitorexit来实现。两个指令的执行是JVM通过调用操作系统的互斥原语mutex来实现，被阻塞的线程会被挂起、等待重新调度，会导致“用户态和内核态”两个态之间来回切换，对性能有较大影响。</p>
+<p><font color='red'>Java虚拟机通过一个同步结构支持方法和方法中的指令序列的同步：monitor。</font></p>
+<p>同步方法是通过方法中的access_flags中设置<font color='red'>ACC_SYNCHRONIZED</font>标志来实现；同步代码块是通过<font color='red'>monitorenter和monitorexit</font>来实现。<font color='red'>两个指令的执行是JVM通过调用操作系统的互斥原语mutex来实现，被阻塞的线程会被挂起、等待重新调度，会导致“用户态和内核态”两个态之间来回切换，对性能有较大影响。</font></p>
 <h2 id="查看synchronized的字节码指令序列"><a href="#查看synchronized的字节码指令序列" class="headerlink" title="查看synchronized的字节码指令序列"></a><strong>查看synchronized的字节码指令序列</strong></h2><p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1691" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>Method access and property flags：</p>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1698" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1683" srcset="/img/loading.gif" lazyload alt="0"></p>
-<h2 id="Monitor（管程-x2F-监视器）"><a href="#Monitor（管程-x2F-监视器）" class="headerlink" title="Monitor（管程&#x2F;监视器）"></a><strong>Monitor（管程&#x2F;监视器）</strong></h2><p>Monitor，直译为“监视器”，而操作系统领域一般翻译为“管程”。管程是指管理共享变量以及对共享变量操作的过程，让它们支持并发。在Java 1.5之前，Java语言提供的唯一并发语言就是管程，Java 1.5之后提供的SDK并发包也是以管程为基础的。除了Java之外，C&#x2F;C++、C#等高级语言也都是支持管程的。synchronized关键字和wait()、notify()、notifyAll()这三个方法是Java中实现管程技术的组成部分。</p>
+<h2 id="Monitor（管程-x2F-监视器）"><a href="#Monitor（管程-x2F-监视器）" class="headerlink" title="Monitor（管程&#x2F;监视器）"></a><strong>Monitor（管程&#x2F;监视器）</strong></h2><p>Monitor，直译为“监视器”，而操作系统领域一般翻译为“管程”。<font color="red">管程是指管理共享变量以及对共享变量操作的过程，让它们支持并发。</font>在Java 1.5之前，Java语言提供的唯一并发语言就是管程，Java 1.5之后提供的SDK并发包也是以管程为基础的。除了Java之外，C&#x2F;C++、C#等高级语言也都是支持管程的。synchronized关键字和wait()、notify()、notifyAll()这三个方法是Java中实现管程技术的组成部分。</p>
 <h3 id="MESA模型"><a href="#MESA模型" class="headerlink" title="MESA模型"></a><strong>MESA模型</strong></h3><p>在管程的发展史上，先后出现过三种不同的管程模型，分别是Hasen模型、Hoare模型和MESA模型。现在正在广泛使用的是MESA模型。下面我们便介绍MESA模型：</p>
-<p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1701" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1701" srcset="/img/loading.gif" lazyload></p>
 <p>管程中引入了条件变量的概念，而且每个条件变量都对应有一个等待队列。条件变量和等待队列的作用是解决线程之间的同步问题。</p>
 <p><strong>wait()的正确使用姿势</strong></p>
 <p>对于MESA管程来说，有一个编程范式：</p>
-<p>​                </p>
 <figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">while</span>(条件不满足) &#123;  <br>	wait();   <br>&#125;      <br></code></pre></td></tr></table></figure>
 
-<p>​     </p>
 <p>唤醒的时间和获取到锁继续执行的时间是不一致的，被唤醒的线程再次执行时可能条件又不满足了，所以循环检验条件。MESA模型的wait()方法还有一个超时参数，为了避免线程进入等待队列永久阻塞。</p>
 <p><strong>notify()和notifyAll()分别何时使用</strong></p>
 <p>满足以下三个条件时，可以使用notify()，其余情况尽量使用notifyAll()：</p>
@@ -400,13 +390,13 @@
 
 <p>​           </p>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1705" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p>在获取锁时，是将当前线程插入到cxq的头部，而释放锁时，默认策略（QMode&#x3D;0）是：如果EntryList为空，则将cxq中的元素按原有顺序插入到EntryList，并唤醒第一个线程，也就是当EntryList为空时，是后来的线程先获取锁。_EntryList不为空，直接从_EntryList中唤醒线程。</p>
-<p>思考：synchronized加锁加在对象上，锁对象是如何记录锁状态的？</p>
-<h2 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a><strong>对象的内存布局</strong></h2><p>Hotspot虚拟机中，对象在内存中存储的布局可以分为三块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</p>
+<p><font color='red'>在获取锁时，是将当前线程插入到cxq的头部，而释放锁时，默认策略（QMode&#x3D;0）是：如果EntryList为空，则将cxq中的元素按原有顺序插入到EntryList，并唤醒第一个线程，也就是当EntryList为空时，是后来的线程先获取锁。_EntryList不为空，直接从_EntryList中唤醒线程。</font></p>
+<p>思考：<font color='red'>synchronized加锁加在对象上，锁对象是如何记录锁状态的？</font></p>
+<h2 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a><strong>对象的内存布局</strong></h2><p><font color='red'>Hotspot虚拟机中，对象在内存中存储的布局可以分为三块区域：对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）。</font></p>
 <ul>
 <li>对象头：比如 hash码，对象所属的年代，对象锁，锁状态标志，偏向锁（线程）ID，偏向时间，数组长度（数组对象才有）等。</li>
 <li>实例数据：存放类的属性数据信息，包括父类的属性信息；</li>
-<li>对齐填充：由于虚拟机要求 <strong>对象起始地址必须是8字节的整数倍</strong>。填充数据不是必须存在的，仅仅是为了字节对齐。</li>
+<li>对齐填充：由于虚拟机要求 <font color='red'><strong>对象起始地址必须是8字节的整数倍</strong></font>。填充数据不是必须存在的，仅仅是为了字节对齐。</li>
 </ul>
 <p>​    <img src="/7%E3%80%81%E5%B9%B6%E5%8F%91%E9%94%81%E6%9C%BA%E5%88%B6%E4%B9%8B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronized/1704" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="对象头详解"><a href="#对象头详解" class="headerlink" title="对象头详解"></a><strong>对象头详解</strong></h3><p>HotSpot虚拟机的对象头包括：</p>

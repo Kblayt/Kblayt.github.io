@@ -223,6 +223,142 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/7%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8B)/" target="_self">
+          7、Spring之依赖注入源码解析(下)
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/7%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8B)/" target="_self">
+        <div>
+          上节课我们讲了Spring中的自动注入(byName,byType)和@Autowired注解的工作原理以及源码分析，那么今天这节课，我们来分析还没讲完的，剩下的核心的方法： 123@NullableObject resolveDependency(DependencyDescriptor descriptor, @Nullable String requestingBeanName,		@Nul
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-06-10 15:25" pubdate>
+              2023-06-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/" target="_self">
+          6、Spring之依赖注入源码解析
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/" target="_self">
+        <div>
+          依赖注入底层原理流程图： Spring中到底有几种依赖注入的方式？首先分两种：  手动注入 自动注入  手动注入在XML中定义Bean时，就是手动注入，因为是程序员手动给某个属性指定了值。 123&lt;bean name=&quot;userService&quot; class=&quot;com.luban.service.UserService&quot;&gt;	&lt;property
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-06-10 15:24" pubdate>
+              2023-06-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/5%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E9%94%80%E6%AF%81%E8%BF%87%E7%A8%8B)/" target="_self">
           5、Spring之Bean生命周期源码解析(Bean的销毁过程)
         </a>
@@ -707,128 +843,6 @@
               <a href="/tags/Kubernetes/">#Kubernetes</a>
             
               <a href="/tags/K8S/">#K8S</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/05/10/%E4%B8%AD%E9%97%B4%E4%BB%B6/Jenkins/" target="_self">
-          Jenkins
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/10/%E4%B8%AD%E9%97%B4%E4%BB%B6/Jenkins/" target="_self">
-        <div>
-          
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-05-10 20:46" pubdate>
-              2023-05-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Jenkins/">#Jenkins</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/04/24/%E8%BD%AF%E8%80%83%E4%B8%AD%E7%BA%A7%E7%AC%94%E8%AE%B0/" target="_self">
-          软考中级笔记
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/24/%E8%BD%AF%E8%80%83%E4%B8%AD%E7%BA%A7%E7%AC%94%E8%AE%B0/" target="_self">
-        <div>
-          
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-24 18:48" pubdate>
-              2023-04-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BD%AF%E8%80%83%E4%B8%AD%E7%BA%A7/" class="category-chain-item">软考中级</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%BD%AF%E8%80%83/">#软考</a>
             
           </div>
         
