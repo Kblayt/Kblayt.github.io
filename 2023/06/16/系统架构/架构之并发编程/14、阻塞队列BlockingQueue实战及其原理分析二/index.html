@@ -16,13 +16,15 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="如何选择适合的阻塞队列线程池对于阻塞队列的选择线程池有很多种，不同种类的线程池会根据自己的特点，来选择适合自己的阻塞队列。  FixedThreadPool（SingleThreadExecutor 同理）选取的是 LinkedBlockingQueue CachedThreadPool 选取的是 SynchronousQueue ScheduledThreadPool（SingleThreadS">
+<meta property="og:type" content="article">
 <meta property="og:title" content="14、阻塞队列BlockingQueue实战及其原理分析二">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14%E3%80%81%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97BlockingQueue%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E4%BA%8C/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="如何选择适合的阻塞队列线程池对于阻塞队列的选择线程池有很多种，不同种类的线程池会根据自己的特点，来选择适合自己的阻塞队列。  FixedThreadPool（SingleThreadExecutor 同理）选取的是 LinkedBlockingQueue CachedThreadPool 选取的是 SynchronousQueue ScheduledThreadPool（SingleThreadS">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-06-16T15:39:39.000Z">
-<meta property="article:modified_time" content="2023-07-27T12:21:47.733Z">
+<meta property="article:modified_time" content="2023-11-10T03:41:11.400Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
@@ -218,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          1.2k 字
         
       </span>
     
@@ -229,7 +231,7 @@
         
         
         
-          1 分钟
+          11 分钟
         
       </span>
     
@@ -272,7 +274,24 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <h1 id="如何选择适合的阻塞队列"><a href="#如何选择适合的阻塞队列" class="headerlink" title="如何选择适合的阻塞队列"></a><strong>如何选择适合的阻塞队列</strong></h1><h2 id="线程池对于阻塞队列的选择"><a href="#线程池对于阻塞队列的选择" class="headerlink" title="线程池对于阻塞队列的选择"></a><strong>线程池对于阻塞队列的选择</strong></h2><p>线程池有很多种，不同种类的线程池会根据自己的特点，来选择适合自己的阻塞队列。</p>
+<ul>
+<li>FixedThreadPool（SingleThreadExecutor 同理）选取的是 LinkedBlockingQueue</li>
+<li>CachedThreadPool 选取的是 SynchronousQueue</li>
+<li>ScheduledThreadPool（SingleThreadScheduledExecutor同理）选取的是延迟队列</li>
+</ul>
+<h2 id="选择策略"><a href="#选择策略" class="headerlink" title="选择策略"></a><strong>选择策略</strong></h2><p>通常我们可以从以下 5 个角度考虑，来选择合适的阻塞队列：</p>
+<p><strong>功能</strong></p>
+<p>第 1 个需要考虑的就是功能层面，比如是否需要阻塞队列帮我们排序，如优先级排序、延迟执行等。如果有这个需要，我们就必须选择类似于 PriorityBlockingQueue 之类的有排序能力的阻塞队列。</p>
+<p><strong>容量</strong></p>
+<p>第 2 个需要考虑的是容量，或者说是否有存储的要求，还是只需要“直接传递”。在考虑这一点的时候，我们知道前面介绍的那几种阻塞队列，有的是容量固定的，如 ArrayBlockingQueue；有的默认是容量无限的，如 LinkedBlockingQueue；而有的里面没有任何容量，如 SynchronousQueue；而对于 DelayQueue 而言，它的容量固定就是 Integer.MAX_VALUE。所以不同阻塞队列的容量是千差万别的，我们需要根据任务数量来推算出合适的容量，从而去选取合适的 BlockingQueue。</p>
+<p><strong>能否扩容</strong></p>
+<p>第 3 个需要考虑的是能否扩容。因为有时我们并不能在初始的时候很好的准确估计队列的大小，因为业务可能有高峰期、低谷期。如果一开始就固定一个容量，可能无法应对所有的情况，也是不合适的，有可能需要动态扩容。如果我们需要动态扩容的话，那么就不能选择 ArrayBlockingQueue ，因为它的容量在创建时就确定了，无法扩容。相反，PriorityBlockingQueue 即使在指定了初始容量之后，后续如果有需要，也可以自动扩容。所以我们可以根据是否需要扩容来选取合适的队列。</p>
+<p><strong>内存结构</strong></p>
+<p>第 4 个需要考虑的点就是内存结构。我们分析过 ArrayBlockingQueue 的源码，看到了它的内部结构是“数组”的形式。和它不同的是，LinkedBlockingQueue 的内部是用链表实现的，所以这里就需要我们考虑到，ArrayBlockingQueue 没有链表所需要的“节点”，空间利用率更高。所以如果我们对性能有要求可以从内存的结构角度去考虑这个问题。</p>
+<p><strong>性能</strong></p>
+<p>第 5 点就是从性能的角度去考虑。比如 LinkedBlockingQueue 由于拥有两把锁，它的操作粒度更细，在并发程度高的时候，相对于只有一把锁的 ArrayBlockingQueue 性能会更好。另外，SynchronousQueue 性能往往优于其他实现，因为它只需要“直接传递”，而不需要存储的过程。如果我们的场景需要直接传递的话，可以优先考虑 SynchronousQueue。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
