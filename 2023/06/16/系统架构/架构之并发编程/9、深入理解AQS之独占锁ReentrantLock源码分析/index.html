@@ -23,18 +23,19 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="AQS原理分析什么是AQSjava.util.concurrent包中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这些行为的抽象就是基于AbstractQueuedSynchronizer（简称AQS）实现的，AQS是一个抽象同步框架，可以用来实现一个依赖状态的同步器。 JDK中提供的大多数的同步器如Lock, Latch, Barrier等，都是基">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715">
-<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1716">
-<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1714">
-<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1718">
-<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1802">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715.png">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1716.png">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1714.png">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1718.png">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1802.png">
+<meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/image-20231112134518771.png">
 <meta property="article:published_time" content="2023-06-16T15:37:30.000Z">
-<meta property="article:modified_time" content="2023-07-27T02:03:03.433Z">
+<meta property="article:modified_time" content="2023-11-12T05:45:19.615Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715">
+<meta name="twitter:image" content="https://kblayt.github.io/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715.png">
   
   
   
@@ -280,13 +281,13 @@
             
               <div class="markdown-body">
                 
-                <h1 id="AQS原理分析"><a href="#AQS原理分析" class="headerlink" title="AQS原理分析"></a><strong>AQS原理分析</strong></h1><h2 id="什么是AQS"><a href="#什么是AQS" class="headerlink" title="什么是AQS"></a><strong>什么是AQS</strong></h2><p>java.util.concurrent包中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这些行为的抽象就是基于AbstractQueuedSynchronizer（简称AQS）实现的，AQS是一个抽象同步框架，可以用来实现一个依赖状态的同步器。</p>
+                <h1 id="AQS原理分析"><a href="#AQS原理分析" class="headerlink" title="AQS原理分析"></a><strong>AQS原理分析</strong></h1><h2 id="什么是AQS"><a href="#什么是AQS" class="headerlink" title="什么是AQS"></a><strong>什么是AQS</strong></h2><p>java.util.concurrent包中的大多数同步器实现都是围绕着共同的基础行为，比如等待队列、条件队列、独占获取、共享获取等，而这些行为的抽象就是基于<font color='red'>AbstractQueuedSynchronizer（简称AQS）</font>实现的，AQS是一个抽象同步框架，可以用来实现一个依赖状态的同步器。</p>
 <p>JDK中提供的大多数的同步器如Lock, Latch, Barrier等，都是基于AQS框架来实现的</p>
 <ul>
 <li>一般是通过一个内部类Sync继承 AQS</li>
 <li>将同步器所有调用都映射到Sync对应的方法</li>
 </ul>
-<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1715.png" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>AQS具备的特性：</p>
 <ul>
 <li>阻塞等待队列</li>
@@ -295,7 +296,7 @@
 <li>可重入</li>
 <li>允许中断</li>
 </ul>
-<p>AQS内部维护属性volatile int state </p>
+<p>AQS内部维护属性<font color='red'>volatile int state</font> </p>
 <ul>
 <li>state表示资源的可用状态</li>
 </ul>
@@ -312,8 +313,8 @@
 </ul>
 <p>AQS定义两种队列</p>
 <ul>
-<li>同步等待队列： 主要用于维护获取锁失败时入队的线程</li>
-<li>条件等待队列： 调用await()的时候会释放锁，然后线程会加入到条件队列，调用signal()唤醒的时候会把条件队列中的线程节点移动到同步队列中，等待再次获得锁</li>
+<li>同步等待队列： <font color='red'>主要用于维护获取锁失败时入队的线程</font></li>
+<li>条件等待队列：<font color='red'> 调用await()的时候会释放锁，然后线程会加入到条件队列，调用signal()唤醒的时候会把条件队列中的线程节点移动到同步队列中，等待再次获得锁</font></li>
 </ul>
 <p>AQS 定义了5个队列中节点状态：</p>
 <ol>
@@ -323,28 +324,28 @@
 <li>CONDITION，值为-2，表示当前节点在等待condition，也就是在condition队列中；</li>
 <li>PROPAGATE，值为-3，表示当前场景下后续的acquireShared能够得以执行；</li>
 </ol>
-<p>不同的自定义同步器竞争共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源state的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS已经在顶层实现好了。自定义同步器实现时主要实现以下几种方法：</p>
+<p>不同的自定义同步器竞争共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源state的获取与释放方式即可，至于具体线程等待队列的维护（如获取资源失败入队&#x2F;唤醒出队等），AQS已经在顶层实现好了。<font color='red'>自定义同步器实现时主要实现以下几种方法：</font></p>
 <ul>
 <li>isHeldExclusively()：该线程是否正在独占资源。只有用到condition才需要去实现它。</li>
-<li>tryAcquire(int)：独占方式。尝试获取资源，成功则返回true，失败则返回false。</li>
-<li>tryRelease(int)：独占方式。尝试释放资源，成功则返回true，失败则返回false。</li>
-<li>tryAcquireShared(int)：共享方式。尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。</li>
-<li>tryReleaseShared(int)：共享方式。尝试释放资源，如果释放后允许唤醒后续等待结点返回true，否则返回false。</li>
+<li><font color='red'>tryAcquire(int)：独占方式。</font>尝试获取资源，成功则返回true，失败则返回false。</li>
+<li><font color='red'>tryRelease(int)：独占方式。</font>尝试释放资源，成功则返回true，失败则返回false。</li>
+<li><font color='red'>tryAcquireShared(int)：共享方式。</font>尝试获取资源。负数表示失败；0表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。</li>
+<li><font color='red'>tryReleaseShared(int)：共享方式。</font>尝试释放资源，如果释放后允许唤醒后续等待结点返回true，否则返回false。</li>
 </ul>
-<h2 id="同步等待队列"><a href="#同步等待队列" class="headerlink" title="同步等待队列"></a><strong>同步等待队列</strong></h2><p>AQS当中的同步等待队列也称CLH队列，CLH队列是Craig、Landin、Hagersten三人发明的一种基于双向链表数据结构的队列，是FIFO先进先出线程等待队列，Java中的CLH队列是原CLH队列的一个变种,线程由原自旋机制改为阻塞机制。</p>
+<h2 id="同步等待队列"><a href="#同步等待队列" class="headerlink" title="同步等待队列"></a><strong>同步等待队列</strong></h2><p>AQS当中的同步等待队列也称CLH队列，CLH队列是Craig、Landin、Hagersten三人发明的一种<font color='red'>基于双向链表数据结构的队列，是FIFO先进先出线程等待队列，</font>Java中的CLH队列是原CLH队列的一个变种,线程由原自旋机制改为阻塞机制。</p>
 <p>AQS 依赖CLH同步队列来完成同步状态的管理：</p>
 <ul>
 <li>当前线程如果获取同步状态失败时，AQS则会将当前线程已经等待状态等信息构造成一个节点（Node）并将其加入到CLH同步队列，同时会阻塞当前线程</li>
 <li>当同步状态释放时，会把首节点唤醒（公平锁），使其再次尝试获取同步状态。</li>
-<li>通过signal或signalAll将条件队列中的节点转移到同步队列。（由条件队列转化为同步队列）</li>
+<li>通过signal或signalAll将条件队列中的节点转移到同步队列。（<font color='red'>由条件队列转化为同步队列</font>）</li>
 </ul>
-<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1716" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1716.png" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="条件等待队列"><a href="#条件等待队列" class="headerlink" title="条件等待队列"></a><strong>条件等待队列</strong></h2><p>AQS中条件队列是使用单向列表保存的，用nextWaiter来连接:</p>
 <ul>
 <li>调用await方法阻塞线程；</li>
-<li>当前线程存在于同步队列的头结点，调用await方法进行阻塞（从同步队列转化到条件队列）</li>
+<li>当前线程存在于同步队列的头结点，调用await方法进行阻塞（<font color='red'>从同步队列转化到条件队列</font>）</li>
 </ul>
-<h2 id="Condition接口详解"><a href="#Condition接口详解" class="headerlink" title="Condition接口详解"></a><strong>Condition接口详解</strong></h2><p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1714" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h2 id="Condition接口详解"><a href="#Condition接口详解" class="headerlink" title="Condition接口详解"></a><strong>Condition接口详解</strong></h2><p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1714.png" srcset="/img/loading.gif" lazyload alt="0"></p>
 <ol>
 <li>调用Condition#await方法会释放当前持有的锁，然后阻塞当前线程，同时向Condition队列尾部添加一个节点，所以调用Condition#await方法的时候必须持有锁。</li>
 <li>调用Condition#signal方法会将Condition队列的首节点移动到阻塞队列尾部，然后唤醒因调用Condition#await方法而阻塞的线程(唤醒之后这个线程就可以去竞争锁了)，所以调用Condition#signal方法的时候必须持有锁，持有锁的线程唤醒被因调用Condition#await方法而阻塞的线程。</li>
@@ -352,7 +353,7 @@
 <h3 id="等待唤醒机制之await-x2F-signal测试"><a href="#等待唤醒机制之await-x2F-signal测试" class="headerlink" title="等待唤醒机制之await&#x2F;signal测试"></a><strong>等待唤醒机制之await&#x2F;signal测试</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Slf4j</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ConditionTest</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br><br>        <span class="hljs-type">Lock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReentrantLock</span>();<br>        <span class="hljs-type">Condition</span> <span class="hljs-variable">condition</span> <span class="hljs-operator">=</span> lock.newCondition();<br><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            lock.lock();<br>            <span class="hljs-keyword">try</span> &#123;<br>                log.debug(Thread.currentThread().getName() + <span class="hljs-string">&quot; 开始处理任务&quot;</span>);<br>                condition.await();<br>                log.debug(Thread.currentThread().getName() + <span class="hljs-string">&quot; 结束处理任务&quot;</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125; <span class="hljs-keyword">finally</span> &#123;<br>                lock.unlock();<br>            &#125;<br>        &#125;).start();<br><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>            lock.lock();<br>            <span class="hljs-keyword">try</span> &#123;<br>                log.debug(Thread.currentThread().getName() + <span class="hljs-string">&quot; 开始处理任务&quot;</span>);<br><br>                Thread.sleep(<span class="hljs-number">2000</span>);<br>                condition.signal();<br>                log.debug(Thread.currentThread().getName() + <span class="hljs-string">&quot; 结束处理任务&quot;</span>);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                e.printStackTrace();<br>            &#125; <span class="hljs-keyword">finally</span> &#123;<br>                lock.unlock();<br>            &#125;<br>        &#125;).start();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>​      </p>
-<h1 id="ReentrantLock详解"><a href="#ReentrantLock详解" class="headerlink" title="ReentrantLock详解"></a><strong>ReentrantLock详解</strong></h1><p>ReentrantLock是一种基于AQS框架的应用实现，是JDK中的一种线程并发访问的同步手段，它的功能类似于synchronized是一种互斥锁，可以保证线程安全。</p>
+<h1 id="ReentrantLock详解"><a href="#ReentrantLock详解" class="headerlink" title="ReentrantLock详解"></a><strong>ReentrantLock详解</strong></h1><p><font color="red">ReentrantLock是一种基于AQS框架的应用实现</font>，是JDK中的一种线程并发访问的同步手段，它的功能类似于synchronized<font color="red">是一种互斥锁，可以保证线程安全。</font></p>
 <p>相对于 synchronized， ReentrantLock具备如下特点：</p>
 <ul>
 <li>可中断 </li>
@@ -361,7 +362,7 @@
 <li>支持多个条件变量</li>
 <li>与 synchronized 一样，都支持可重入</li>
 </ul>
-<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1718" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1718.png" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>顺便总结了几点synchronized和ReentrantLock的区别：</p>
 <ul>
 <li>synchronized是JVM层次的锁实现，ReentrantLock是JDK层次的锁实现；</li>
@@ -403,12 +404,13 @@
 <p>​          </p>
 <h2 id="ReentrantLock源码分析"><a href="#ReentrantLock源码分析" class="headerlink" title="ReentrantLock源码分析"></a><strong>ReentrantLock源码分析</strong></h2><p>关注点： </p>
 <ol>
-<li>ReentrantLock加锁解锁的逻辑</li>
-<li>公平和非公平，可重入锁的实现</li>
-<li>线程竞争锁失败入队阻塞逻辑和获取锁的线程释放锁唤醒阻塞线程竞争锁的逻辑实现 （ 设计的精髓：并发场景下入队和出队操作）</li>
+<li><font color='red'>ReentrantLock加锁解锁的逻辑</font></li>
+<li><font color='red'>公平和非公平，可重入锁的实现</font></li>
+<li><font color='red'>线程竞争锁失败入队阻塞逻辑和获取锁的线程释放锁唤醒阻塞线程竞争锁的逻辑实现 （ 设计的精髓：并发场景下入队和出队操作）</font></li>
 </ol>
 <p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/6191f070079129330ada1209">https://www.processon.com/view/link/6191f070079129330ada1209</a></p>
-<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1802" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/1802.png" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><img src="/9%E3%80%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3AQS%E4%B9%8B%E7%8B%AC%E5%8D%A0%E9%94%81ReentrantLock%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/image-20231112134518771.png" srcset="/img/loading.gif" lazyload alt="image-20231112134518771"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>

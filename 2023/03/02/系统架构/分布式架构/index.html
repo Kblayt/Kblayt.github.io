@@ -23,21 +23,21 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="要理解分布式系统，主要需要明白一下2个方面：  分布式系统一定是由多个节点组成的系统。其中，节点指的是计算机服务器，而且这些节点一般不是孤立的，而是互通的。 这些连通的节点上部署了我们的节点，并且相互的操作会有协同。  不同的业务模块部署在不同的服务器上或者同一个业务模块分拆多个子业务，部署在不同的服务器上，解决高并发的问题，提供可扩展性以及高可用性，业务中使用分布式的场景主要有分布式存储以及分布">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp">
-<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp">
+<meta property="og:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp">
 <meta property="article:published_time" content="2023-03-02T02:16:14.000Z">
-<meta property="article:modified_time" content="2023-05-31T02:45:03.613Z">
+<meta property="article:modified_time" content="2023-11-10T03:47:30.371Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="分布式">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
+<meta name="twitter:image" content="https://kblayt.github.io/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png">
   
   
   
@@ -307,7 +307,7 @@
 <p>最典型的是： zookeeper &#x2F; etcd</p>
 <p>经典的CAP&#x2F;BASE理论</p>
 <p><strong>CAP理论</strong></p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png" srcset="/img/loading.gif" lazyload alt="CAP理论"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/20210916125034.png" srcset="/img/loading.gif" lazyload alt="CAP理论"></p>
 <p>1998年，加州大学的计算机科学家 Eric Brewer 提出，分布式系统有三个指标。</p>
 <ul>
 <li>Consistency</li>
@@ -319,20 +319,20 @@
 <p>1、分区容错 （Partition-tolerance）</p>
 <p>先看 Partition tolerance，中文叫做”分区容错”。</p>
 <p>大多数分布式系统都分布在多个子网络。每个子网络就叫做一个区（partition）。分区容错的意思是，区间通信可能失败。比如，一台服务器放在中国，另一台服务器放在美国，这就是两个区，它们之间可能无法通信。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8ff16b034b62b5092d159a920f8aa226_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>上图中，G1 和 G2 是两台跨区的服务器。G1 向 G2 发送一条消息，G2 可能无法收到。系统设计的时候，必须考虑到这种情况。</p>
 <p>一般来说，分区容错无法避免，因此可以认为 CAP 的 P 总是成立。CAP 定理告诉我们，剩下的 C 和 A 无法同时做到。</p>
 <p>2、一致性（Consistency）</p>
 <p>Consistency 中文叫做”一致性”。意思是，写操作之后的读操作，必须返回该值。举例来说，某条记录是 v0，用户向 G1 发起一个写操作，将其改为 v1。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-d534c2d294701d340343ecc68034d218_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>接下来，用户的读操作就会得到 v1。这就叫一致性。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-032d7fac4aa7fe3fddf888f5d482b464_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>问题是，用户有可能向 G2 发起读操作，由于 G2 的值没有发生变化，因此返回的是 v0。G1 和 G2 读操作的结果不一致，这就不满足一致性了。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-8a1a4743d6eb4a2bc1447dafa1da1ace_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>为了让 G2 也能变为 v1，就要在 G1 写操作的时候，让 G1 向 G2 发送一条消息，要求 G2 也改成 v1。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-b461a588b8e11f5374971e15668d5d03_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>这样的话，用户向 G2 发起读操作，也能得到 v1。</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-64a08fc33176af5b8a09821306091965_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>3、可用性（Availability）</p>
 <p>Availability 中文叫做”可用性”，意思是只要收到用户的请求，服务器就必须给出回应。</p>
 <p>用户可以选择向 G1 或 G2 发起读操作。不管是哪台服务器，只要收到请求，就必须告诉用户，到底是 v0 还是 v1，否则就不满足可用性。</p>
@@ -353,7 +353,7 @@
 <p>集群：复制模式，每台机器做一样的事。</p>
 <p>分布式：两台机器分工合作，每台机器做的不一样。</p>
 <p>常见的分布式系统</p>
-<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/v2-e7fc4b1bec180e4d65230035e7444bb5_720w.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>

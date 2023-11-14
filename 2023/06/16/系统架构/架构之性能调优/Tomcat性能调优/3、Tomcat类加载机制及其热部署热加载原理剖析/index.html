@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="课前须知：  关于类加载机制JVM专题（jvm第一节）会用更深入的讲解，本节课重心是理解双亲委派机制，以及Tomcat是如何打破双亲委派机制的 结合Tomcat热加载和热部署的实现，理解java后台线程的应用 本节课后半段会补充上节课的知识（Tomcat线程模型），先学上节课，再来学这部分  Tomcat类加载机制JVM类加载器Java中有 3 个类加载器，另外你也可以自定义类加载器  Boots">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3、Tomcat类加载机制及其热部署热加载原理剖析">
+<meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/Tomcat%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="课前须知：  关于类加载机制JVM专题（jvm第一节）会用更深入的讲解，本节课重心是理解双亲委派机制，以及Tomcat是如何打破双亲委派机制的 结合Tomcat热加载和热部署的实现，理解java后台线程的应用 本节课后半段会补充上节课的知识（Tomcat线程模型），先学上节课，再来学这部分  Tomcat类加载机制JVM类加载器Java中有 3 个类加载器，另外你也可以自定义类加载器  Boots">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38688">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38705">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38733">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38615">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38634">
+<meta property="article:published_time" content="2023-06-16T08:46:22.000Z">
+<meta property="article:modified_time" content="2023-11-11T14:23:07.474Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="Tomcat性能调优">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38688">
+  
+  
+  
+  <title>3、Tomcat类加载机制及其热部署热加载原理剖析 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="3、Tomcat类加载机制及其热部署热加载原理剖析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-16 16:46" pubdate>
+          2023年6月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          58 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">3、Tomcat类加载机制及其热部署热加载原理剖析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>课前须知：</p>
+<ol>
+<li>关于类加载机制JVM专题（jvm第一节）会用更深入的讲解，本节课重心是理解双亲委派机制，以及Tomcat是如何打破双亲委派机制的</li>
+<li>结合Tomcat热加载和热部署的实现，理解java后台线程的应用</li>
+<li>本节课后半段会补充上节课的知识（Tomcat线程模型），先学上节课，再来学这部分</li>
+</ol>
+<h1 id="Tomcat类加载机制"><a href="#Tomcat类加载机制" class="headerlink" title="Tomcat类加载机制"></a><strong>Tomcat类加载机制</strong></h1><h2 id="JVM类加载器"><a href="#JVM类加载器" class="headerlink" title="JVM类加载器"></a><strong>JVM类加载器</strong></h2><p>Java中有 3 个类加载器，另外你也可以自定义类加载器</p>
+<ul>
+<li>BootstrapClassLoader 是启动类加载器，由 C 语言实现，用来加载 JVM 启动时所需要的核心类，比如rt.jar。</li>
+<li>ExtClassLoader 是扩展类加载器，用来加载\jre\lib\ext目录下 JAR 包。扩展加载器的 #getParent() 方法返回 null ，但实际上扩展类加载器的父类加载器就是启动类加载器。</li>
+<li>AppClassLoader 是系统类加载器，用来加载 classpath 下的类，应用程序默认用它来加载类。程序可以通过 #getSystemClassLoader() 来获取系统类加载器。</li>
+<li>自定义类加载器，用来加载自定义路径下的类。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassLoaderDemo</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// BootstrapClassLoader</span><br>        System.out.println(ReentrantLock.class.getClassLoader());<br>        <span class="hljs-comment">// ExtClassLoader</span><br>        System.out.println(ZipInfo.class.getClassLoader());<br>        <span class="hljs-comment">// AppClassLoader</span><br>        System.out.println(ClassLoaderDemo.class.getClassLoader());<br><br>        <span class="hljs-comment">// AppClassLoader</span><br>        System.out.println(ClassLoader.getSystemClassLoader());<br>        <span class="hljs-comment">// ExtClassLoader</span><br>        System.out.println(ClassLoader.getSystemClassLoader().getParent());<br>        <span class="hljs-comment">// BootstrapClassLoader</span><br>        System.out.println(ClassLoader.getSystemClassLoader().getParent().getParent());<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a><strong>双亲委派机制</strong></h2><p>加载某个类时会先委托父加载器寻找目标类，找不到再 委托上层父加载器加载，如果所有父加载器在自己的加载类路径下都找不到目标类，则在自己的类加载路径中查找并载入目标类。这就是双亲委派机制。</p>
+<p>​    <img src="/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38688" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="ClassLoader-loadClass加载过程"><a href="#ClassLoader-loadClass加载过程" class="headerlink" title="ClassLoader#loadClass加载过程"></a><strong>ClassLoader#loadClass加载过程</strong></h3><p>​    <img src="/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38705" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>思考：为什么要设计双亲委派机制？ </p>
+<ul>
+<li>沙箱安全机制：自己写的java.lang.String.class类不会被加载，这样便可以防止核心 API库被随意篡改 </li>
+<li>避免类的重复加载：当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次，保证被加载类的唯一性</li>
+</ul>
+<h2 id="Tomcat-的类加载机制"><a href="#Tomcat-的类加载机制" class="headerlink" title="Tomcat 的类加载机制"></a><strong>Tomcat 的类加载机制</strong></h2><p>Tomcat 作为 Servlet 容器，它负责加载我们的 Servlet 类，此外它还负责加载 Servlet 所依赖的 JAR 包。并且 Tomcat 本身也是也是一个 Java 程序，因此它需要加载自己的类和依赖的 JAR 包。 </p>
+<p>思考： Tomcat是如何隔离Web应用的？</p>
+<p>Tomcat 自定义了一个类加载器 WebAppClassLoader， 并且给每个 Web 应用创建一个类加载器实例，每个 Context 容器负责创建和维护一个 WebAppClassLoader 加载器实例。其实现的原理就是不同的类加载器实例加载的类被认为是不同的类，即使它们的类名相同（不同类加载器实例加载的类是互相隔离的）。</p>
+<p>Tomcat 的自定义类加载器 WebAppClassLoader 打破了双亲委托机制，它首先自己尝试去加载某个类，如果找不到再代理给父类加载器，其目的是优先加载 Web 应用自己定义的类。具体实现就是重写 ClassLoader 的两个方法：findClass 和 loadClass。</p>
+<p>在 findClass 方法里，主要有三个步骤：</p>
+<ol>
+<li>先在 Web 应用本地目录下查找要加载的类。</li>
+<li>如果没有找到，交给父加载器去查找，它的父加载器就是上面提到的系统类加载器 AppClassLoader。</li>
+<li>如何父加载器也没找到这个类，抛出 ClassNotFound 异常。</li>
+</ol>
+<p>loadClass 方法稍微复杂一点，主要有六个步骤：</p>
+<ol>
+<li>先在本地 Cache 查找该类是否已经加载过，也就是说 Tomcat 的类加载器是否已经加载过这个类。</li>
+<li>如果 Tomcat 类加载器没有加载过这个类，再看看系统类加载器是否加载过。</li>
+<li>如果都没有，就让ExtClassLoader去加载，这一步比较关键，目的防止 Web 应用自己的类覆盖 JRE 的核心类。因为 Tomcat 需要打破双亲委托机制，假如 Web 应用里自定义了一个叫 Object 的类，如果先加载这个 Object 类，就会覆盖 JRE 里面的那个 Object 类，这就是为什么 Tomcat 的类加载器会优先尝试用 ExtClassLoader 去加载，因为 ExtClassLoader 会委托给 BootstrapClassLoader 去加载，BootstrapClassLoader 发现自己已经加载了 Object 类，直接返回给 Tomcat 的类加载器，这样 Tomcat 的类加载器就不会去加载 Web 应用下的 Object 类了，也就避免了覆盖 JRE 核心类的问题。</li>
+<li>如果 ExtClassLoader 加载器加载失败，也就是说 JRE 核心类中没有这类，那么就在本地 Web 应用目录下查找并加载。</li>
+<li>如果本地目录下没有这个类，说明不是 Web 应用自己定义的类，那么由系统类加载器去加载。这里请你注意，Web 应用是通过Class.forName调用交给系统类加载器的，因为Class.forName的默认加载器就是系统类加载器。</li>
+<li>如果上述加载过程全部失败，抛出 ClassNotFound 异常。</li>
+</ol>
+<h3 id="Tomcat类加载器的层次结构"><a href="#Tomcat类加载器的层次结构" class="headerlink" title="Tomcat类加载器的层次结构"></a><strong>Tomcat类加载器的层次结构</strong></h3><p>Tomcat 拥有不同的自定义类加载器，以实现对各种资源库的控制。 Tomcat 主要用类加载器解决以下 4 个问题：</p>
+<ul>
+<li>同一个 Web 服务器里，各个 Web 项目之间各自使用的 Java 类库要互相隔离。</li>
+<li>同一个 Web 服务器里，各个 Web 项目之间可以提供共享的 Java 类库 。</li>
+<li>为了使服务器不受 Web 项目的影响，应该使服务器的类库与应用程序的类库互相独立。</li>
+<li>对于支持 JSP 的 Web 服务器，应该支持热插拔（ HotSwap ）功能 。</li>
+</ul>
+<p>Tomcat提供了四组目录供用户存放第三方类库：</p>
+<ul>
+<li>放置在&#x2F;common目录中：类库可被Tomcat和所有的 Web应用程序共同使用。</li>
+<li>放置在&#x2F;server目录中：类库可被Tomcat使用，对所有的Web应用程序都不可见。</li>
+<li>放置在&#x2F;shared目录中：类库可被所有的Web应用程序共同使用，但对 Tomcat自己不可见。</li>
+<li>放置在&#x2F;WebApp&#x2F;WEB-INF目录中：类库仅仅可以被此Web应用程序使用，对 Tomcat和其他Web应用程序都不可见。</li>
+</ul>
+<p>Tomcat自定义了多个类加载器，CommonClassLoader、CatalinaClassLoader、SharedClassLoader和WebappClassLoader则是Tomcat自己定义的类加载器，它们分别加载&#x2F;common&#x2F;、&#x2F;server&#x2F;、&#x2F;shared&#x2F;和&#x2F;WebApp&#x2F;WEB-INF&#x2F;中的Java类库。其中WebApp类加载器和Jsp类加载器通常会存在多个实例，每一个Web应用程序对应一个WebApp类加载器，每一个JSP文件对应一个Jsp类加载器。</p>
+<ul>
+<li><strong>CommonClassLoader</strong> : Tomcat 通用类加载器, 加载的资源可被 Tomcat 和 所有的 Web 应用程序共同获取</li>
+<li><strong>CatalinaClassLoader</strong> : Tomcat 类加载器, 加载的资源只能被 Tomcat 获取(但所有 WebappClassLoader 不能获取到 catalinaLoader 加载的类)</li>
+<li><strong>SharedClassLoader</strong> : Tomcat 各个Context的父加载器, 这个类是所有 WebappClassLoader 的父类, sharedLoader 所加载的类将被所有的 WebappClassLoader 共享获取</li>
+<li><strong>WebappClassLoader</strong>  : 每个Context 对应一个 WebappClassloader, 主要用于加载 WEB-INF&#x2F;lib 与 WEB-INF&#x2F;classes 下面的资源</li>
+</ul>
+<p>​    <img src="/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38733" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>线程上下文加载器</strong></p>
+<p>在 JVM 的实现中有一条隐含的规则，默认情况下，如果一个类由类加载器 A 加载，那么这个类的依赖类也是由相同的类加载器加载。比如 Spring 作为一个 Bean 工厂，它需要创建业务类的实例，并且在创建业务类实例之前需要加载这些类。</p>
+<p>思考：如果spring作为共享第三方jar包，交给SharedClassLoader加载，但是业务类在web目录下，不在SharedClassLoader的加载路径下，那spring如何加载web应用目录下的业务bean呢？</p>
+<p> Tomcat 为每个 Web 应用创建一个 WebAppClassLoarder 类加载器，并在启动 Web 应用的线程里设置线程上下文加载器，这样 Spring 在启动时就将线程上下文加载器取出来，用来加载 Bean。</p>
+<p>线程上下文加载器是一种类加载器传递机制，因为这个类加载器保存在线程私有数据里，只要是同一个线程，一旦设置了线程上下文加载器，在线程后续执行过程中就能把这个类加载器取出来用。</p>
+<p>​                Thread.currentThread().getContextClassLoader()              </p>
+<p>线程上下文加载器不仅仅可以用在 Tomcat 和 Spring 类加载的场景里，核心框架类需要加载具体实现类时都可以用到它，比如我们熟悉的 JDBC 就是通过上下文类加载器来加载不同的数据库驱动的</p>
+<h1 id="Tomcat热加载和热部署"><a href="#Tomcat热加载和热部署" class="headerlink" title="Tomcat热加载和热部署"></a><strong>Tomcat热加载和热部署</strong></h1><p>在项目开发过程中，经常要改动Java&#x2F;JSP 文件，但是又不想重新启动Tomcat，有两种方式:热加载和热部署。热部署表示重新部署应⽤，它的执⾏主体是Host。 热加载表示重新加载class，它的执⾏主体是Context。</p>
+<ul>
+<li>热加载：在server.xml -&gt; context 标签中 设置 reloadable&#x3D;”true”</li>
+</ul>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf">&lt;Context docBase<span class="hljs-operator">=</span><span class="hljs-string">&quot;D:\mvc&quot;</span> path<span class="hljs-operator">=</span><span class="hljs-string">&quot;/mvc&quot;</span>  reloadable<span class="hljs-operator">=</span><span class="hljs-string">&quot;true&quot;</span> /&gt;          <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>热部署：在server.xml -&gt; Host标签中 设置 autoDeploy&#x3D;”true”</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;Host <span class="hljs-attribute">name</span>=<span class="hljs-string">&quot;localhost&quot;</span>  <span class="hljs-attribute">appBase</span>=<span class="hljs-string">&quot;webapps&quot;</span>      <span class="hljs-attribute">unpackWARs</span>=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attribute">autoDeploy</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;    <br></code></pre></td></tr></table></figure>
+
+<p>它们的区别是：</p>
+<ul>
+<li>热加载的实现方式是 Web 容器启动一个后台线程，定期检测类文件的变化，如果有变化，就重新加载类，在这个过程中不会清空 Session ，一般用在开发环境。</li>
+<li>热部署原理类似，也是由后台线程定时检测 Web 应用的变化，但它会重新加载整个 Web 应用。这种方式会清空 Session，比热加载更加干净、彻底，一般用在生产环境。</li>
+</ul>
+<p>思考：Tomcat 是如何用后台线程来实现热加载和热部署的？</p>
+<h2 id="Tomcat开启后台线程执行周期性任务"><a href="#Tomcat开启后台线程执行周期性任务" class="headerlink" title="Tomcat开启后台线程执行周期性任务"></a><strong>Tomcat开启后台线程执行周期性任务</strong></h2><p>Tomcat 通过开启后台线程ContainerBase.ContainerBackgroundProcessor，使得各个层次的容器组件都有机会完成一些周期性任务。我们在实际工作中，往往也需要执行一些周期性的任务，比如监控程序周期性拉取系统的健康状态，就可以借鉴这种设计。</p>
+<p>Tomcat9 是通过ScheduledThreadPoolExecutor来开启后台线程的，它除了具有线程池的功能，还能够执行周期性的任务。</p>
+<p>​    <img src="/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38615" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>此后台线程会调用当前容器的 backgroundProcess 方法，以及递归调用子孙的 backgroundProcess 方法，backgroundProcess 方法会触发容器的周期性任务。</p>
+<p>​    <img src="/3%E3%80%81Tomcat%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E5%8F%8A%E5%85%B6%E7%83%AD%E9%83%A8%E7%BD%B2%E7%83%AD%E5%8A%A0%E8%BD%BD%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90/38634" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>有了 ContainerBase 中的后台线程和 backgroundProcess 方法，各种子容器和通用组件不需要各自弄一个后台线程来处理周期性任务，这样的设计显得优雅和整洁。</p>
+<h3 id="Tomcat热加载实现原理"><a href="#Tomcat热加载实现原理" class="headerlink" title="Tomcat热加载实现原理"></a><strong>Tomcat热加载实现原理</strong></h3><p>有了 ContainerBase 的周期性任务处理“框架”，作为具体容器子类，只需要实现自己的周期性任务就行。而 Tomcat 的热加载，就是在 Context 容器中实现的。Context 容器的 backgroundProcess 方法是这样实现的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//  StandardContext#backgroundProcess </span><br><br><span class="hljs-comment">//WebappLoader 周期性的检查 WEB-INF/classes 和 WEB-INF/lib 目录下的类文件 // 热加载 </span><br><span class="hljs-type">Loader</span> <span class="hljs-variable">loader</span> <span class="hljs-operator">=</span> getLoader(); <br><span class="hljs-keyword">if</span> (loader != <span class="hljs-literal">null</span>) &#123;    <br>	loader.backgroundProcess();         <br>&#125;              <br></code></pre></td></tr></table></figure>
+
+<p>WebappLoader 实现热加载的逻辑：它主要是调用了 Context 容器的 reload 方法，先stop Context容器，再start Context容器。具体的实现：</p>
+<ol>
+<li>停止和销毁 Context 容器及其所有子容器，子容器其实就是 Wrapper，也就是说 Wrapper 里面 Servlet 实例也被销毁了。</li>
+<li>停止和销毁 Context 容器关联的 Listener 和 Filter。</li>
+<li>停止和销毁 Context 下的 Pipeline 和各种 Valve。</li>
+<li>停止和销毁 Context 的类加载器，以及类加载器加载的类文件资源。</li>
+<li>启动 Context 容器，在这个过程中会重新创建前面四步被销毁的资源。</li>
+</ol>
+<p>在这个过程中，类加载器发挥着关键作用。一个 Context 容器对应一个类加载器，类加载器在销毁的过程中会把它加载的所有类也全部销毁。Context 容器在启动过程中，会创建一个新的类加载器来加载新的类文件。</p>
+<h3 id="Tomcat热部署实现原理"><a href="#Tomcat热部署实现原理" class="headerlink" title="Tomcat热部署实现原理"></a><strong>Tomcat热部署实现原理</strong></h3><p>热部署跟热加载的本质区别是，热部署会重新部署 Web 应用，原来的 Context 对象会整个被销毁掉，因此这个 Context 所关联的一切资源都会被销毁，包括 Session。</p>
+<p>Host 容器并没有在 backgroundProcess 方法中实现周期性检测的任务，而是通过监听器 HostConfig 来实现的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// HostConfig#lifecycleEvent</span><br><span class="hljs-comment">// 周期性任务</span><br><span class="hljs-keyword">if</span> (event.getType().equals(Lifecycle.PERIODIC_EVENT)) &#123;<br>    check();<br>&#125;<br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">check</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">if</span> (host.getAutoDeploy()) &#123;<br>        <span class="hljs-comment">// Check for resources modification to trigger redeployment</span><br>        DeployedApplication[] apps = deployed.values().toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">DeployedApplication</span>[<span class="hljs-number">0</span>]);<br>        <span class="hljs-keyword">for</span> (DeployedApplication app : apps) &#123;<br>            <span class="hljs-keyword">if</span> (tryAddServiced(app.name)) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 检查 Web 应用目录是否有变化</span><br>                    checkResources(app, <span class="hljs-literal">false</span>);<br>                &#125; <span class="hljs-keyword">finally</span> &#123;<br>                    removeServiced(app.name);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// Check for old versions of applications that can now be undeployed</span><br>        <span class="hljs-keyword">if</span> (host.getUndeployOldVersions()) &#123;<br>            checkUndeploy();<br>        &#125;<br><br>        <span class="hljs-comment">// Hotdeploy applications</span><br>        <span class="hljs-comment">//热部署</span><br>        deployApps();<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>HostConfig 会检查 webapps 目录下的所有 Web 应用：</p>
+<ul>
+<li>如果原来 Web 应用目录被删掉了，就把相应 Context 容器整个销毁掉。</li>
+<li>是否有新的 Web 应用目录放进来了，或者有新的 WAR 包放进来了，就部署相应的 Web 应用。</li>
+</ul>
+<p>因此 HostConfig 做的事情都是比较“宏观”的，它不会去检查具体类文件或者资源文件是否有变化，而是检查 Web 应用目录级别的变化。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="category-chain-item">架构之性能调优</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/Tomcat%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" class="category-chain-item">Tomcat性能调优</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Tomcat%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">#Tomcat性能调优</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>3、Tomcat类加载机制及其热部署热加载原理剖析</div>
+      <div>https://kblayt.github.io/2023/06/16/系统架构/架构之性能调优/Tomcat性能调优/3、Tomcat类加载机制及其热部署热加载原理剖析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/1%E3%80%81%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%BA%A7%E5%88%AB%E5%BD%BB%E5%BA%95%E5%89%96%E6%9E%90JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="1、从JDK源码级别彻底剖析JVM类加载机制">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">1、从JDK源码级别彻底剖析JVM类加载机制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/Tomcat%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81Tomcat%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%88%86%E6%9E%90%E5%8F%8A%E5%85%B6%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="2、Tomcat线程模型分析及其性能调优">
+                        <span class="hidden-mobile">2、Tomcat线程模型分析及其性能调优</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
