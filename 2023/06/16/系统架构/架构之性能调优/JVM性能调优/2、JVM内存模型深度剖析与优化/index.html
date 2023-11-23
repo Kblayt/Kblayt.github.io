@@ -16,16 +16,24 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="JDK体系结构  ​     Java语言的跨平台特性  ​     JVM整体结构及内存模型  ​     补充一个问题： 在minor gc过程中对象挪动后，引用如何修改？ 对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象复制到s1或老年代，最后扫描完了">
+<meta property="og:type" content="article">
 <meta property="og:title" content="2、JVM内存模型深度剖析与优化">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="JDK体系结构  ​     Java语言的跨平台特性  ​     JVM整体结构及内存模型  ​     补充一个问题： 在minor gc过程中对象挪动后，引用如何修改？ 对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象复制到s1或老年代，最后扫描完了">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94563">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94569">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/95302">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/77391">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94575">
 <meta property="article:published_time" content="2023-06-16T08:48:42.000Z">
-<meta property="article:modified_time" content="2023-11-14T07:39:06.253Z">
+<meta property="article:modified_time" content="2023-11-23T05:00:37.363Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94563">
   
   
   
@@ -217,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.1k 字
         
       </span>
     
@@ -228,7 +236,7 @@
         
         
         
-          1 分钟
+          18 分钟
         
       </span>
     
@@ -271,7 +279,47 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>JDK体系结构</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94563" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>Java语言的跨平台特性</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94569" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>JVM整体结构及内存模型</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/95302" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>补充一个问题：</strong></p>
+<p><strong>在minor gc过程中对象挪动后，引用如何修改？</strong></p>
+<p>对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象<strong>复制</strong>到s1或老年代，最后扫描完了将s0区域的对象分配指针移动到区域的起始位置即可，s0区域之前对象并不直接清理，当有新对象分配了，原有区域里的对象也就被清除了。</p>
+<p>minor gc在根扫描过程中会记录所有被扫描到的对象引用(在年轻代这些引用很少，因为大部分都是垃圾对象不会扫描到)，如果引用的对象被复制到新地址了，最后会一并更新引用指向新地址。</p>
+<p>这里面内部算法比较复杂，感兴趣可以参考R大的这篇文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/42181722/answer/145085437">https://www.zhihu.com/question/42181722/answer/145085437</a></p>
+<p><a target="_blank" rel="noopener" href="https://hllvm-group.iteye.com/group/topic/39376#post-257329">https://hllvm-group.iteye.com/group/topic/39376#post-257329</a></p>
+<p><strong>二、JVM内存参数设置</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/77391" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>Spring Boot程序的JVM参数设置格式(Tomcat启动直接加在bin目录下catalina.sh文件里)：</p>
+<p>​                java -Xms2048M -Xmx2048M -Xmn1024M -Xss512K -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -jar microservice-eureka-server.jar              </p>
+<p>-Xss：每个线程的栈大小</p>
+<p>-Xms：设置堆的初始可用大小，默认物理内存的1&#x2F;64 </p>
+<p>-Xmx：设置堆的最大可用大小，默认物理内存的1&#x2F;4</p>
+<p>-Xmn：新生代大小</p>
+<p>-XX:NewRatio：默认2表示新生代占年老代的1&#x2F;2，占整个堆内存的1&#x2F;3。</p>
+<p>-XX:SurvivorRatio：默认8表示一个survivor区占用1&#x2F;8的Eden内存，即1&#x2F;10的新生代内存。</p>
+<p>关于元空间的JVM参数有两个：-XX:MetaspaceSize&#x3D;N和 -XX:MaxMetaspaceSize&#x3D;N</p>
+<p><strong>-XX：MaxMetaspaceSize</strong>： 设置元空间最大值， 默认是-1， 即不限制， 或者说只受限于本地内存大小。</p>
+<p><strong>-XX：MetaspaceSize</strong>： 指定元空间触发Fullgc的初始阈值(元空间无固定初始大小)， 以字节为单位，默认是21M左右，达到该值就会触发full gc进行类型卸载， 同时收集器会对该值进行调整： 如果释放了大量的空间， 就适当降低该值； 如果释放了很少的空间， 那么在不超过-XX：MaxMetaspaceSize（如果设置了的话） 的情况下， 适当提高该值。这个跟早期jdk版本的**-XX:PermSize**参数意思不一样，-<strong>XX:PermSize</strong>代表永久代的初始容量。</p>
+<p>由于调整元空间的大小需要Full GC，这是非常昂贵的操作，如果应用在启动的时候发生大量Full GC，通常都是由于永久代或元空间发生了大小调整，基于这种情况，一般建议在JVM参数中将MetaspaceSize和MaxMetaspaceSize设置成一样的值，并设置得比初始值要大，对于8G物理内存的机器来说，一般我会将这两个值都设置为256M。</p>
+<p><strong>StackOverflowError</strong>示例：</p>
+<p>​                &#x2F;&#x2F; JVM设置 -Xss128k(默认1M) public class StackOverflowTest {        static int count &#x3D; 0;        static void redo() {        count++;        redo();    }     public static void main(String[] args) {        try {            redo();        } catch (Throwable t) {            t.printStackTrace();            System.out.println(count);        }    } } 运行结果： java.lang.StackOverflowError at com.tuling.jvm.StackOverflowTest.redo(StackOverflowTest.java:12) at com.tuling.jvm.StackOverflowTest.redo(StackOverflowTest.java:13) at com.tuling.jvm.StackOverflowTest.redo(StackOverflowTest.java:13)   ……              </p>
+<p><strong>结论：</strong></p>
+<p>-Xss设置越小count值越小，说明一个线程栈里能分配的栈帧就越少，但是对JVM整体来说能开启的线程数会更多</p>
+<p><strong>JVM内存参数大小该如何设置？</strong></p>
+<p>JVM参数大小设置并没有固定标准，需要根据实际项目情况分析，给大家举个例子</p>
+<p><strong>日均百万级订单交易系统如何设置JVM参数</strong></p>
+<p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94575" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>结论：****通过上面这些内容介绍，大家应该对JVM优化有些概念了，就是尽可能让对象都在新生代里分配和回收，尽量别让太多对象频繁进入老年代，避免频繁对老年代进行垃圾回收，同时给系统充足的内存大小，避免新生代频繁的进行垃圾回收。</strong></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             

@@ -231,7 +231,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/" target="_self">
         <div>
-          
+          垃圾收集算法  ​     分代收集理论 当前虚拟机的垃圾收集都采用分代收集算法，这种算法没有什么新的思想，只是根据对象存活周期的不同将内存分为几块。一般将java堆分为新生代和老年代，这样我们就可以根据各个年代的特点选择合适的垃圾收集算法。 比如在新生代中，每次收集都会有大量对象(近99%)死去，所以可以选择复制算法，只需要付出少量对象的复制成本就可以完成每次垃圾收集。而老年代的对象存活几率是比
         </div>
       </a>
 
@@ -306,7 +306,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/4%E3%80%81%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/" target="_self">
         <div>
-          
+          一:源代码 1234567891011121314151617package com.tuling.smlz.jvm.classbyatecode;/** * Created by smlz on 2019/11/5. */public class TulingByteCode &#123;    private String userName;    public String getUserN
         </div>
       </a>
 
@@ -381,7 +381,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/" target="_self">
         <div>
-          
+          对象的创建 对象创建的主要流程: ​     1.类加载检查  虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。  new指令对应到语言层面上讲是，new关键词、对象克隆、对象序列化等。 2.分配内存  在类加载检查通过后，接下来虚拟机将为新生对象分配内存
         </div>
       </a>
 
@@ -456,7 +456,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/" target="_self">
         <div>
-          
+          JDK体系结构  ​     Java语言的跨平台特性  ​     JVM整体结构及内存模型  ​     补充一个问题： 在minor gc过程中对象挪动后，引用如何修改？ 对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象复制到s1或老年代，最后扫描完了
         </div>
       </a>
 
@@ -531,7 +531,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/1%E3%80%81%E4%BB%8EJDK%E6%BA%90%E7%A0%81%E7%BA%A7%E5%88%AB%E5%BD%BB%E5%BA%95%E5%89%96%E6%9E%90JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" target="_self">
         <div>
-          
+          类加载运行全过程 当我们用java命令运行某个类的main函数启动程序时，首先需要通过类加载器把主类加载到JVM。 1234567891011121314151617public class Math &#123;    public static final int initData = 666;    public static User user = new User();    publi
         </div>
       </a>
 
