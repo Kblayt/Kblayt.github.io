@@ -16,16 +16,25 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="Redis持久化  RDB快照（snapshot） 在默认情况下， Redis 将内存数据库快照保存在名字为 dump.rdb 的二进制文件中。 你可以对 Redis 进行设置， 让它在“ N 秒内数据集至少有 M 个改动”这一条件被满足时， 自动保存一次数据集。 比如说， 以下设置会让 Redis 在满足“ 60 秒内有至少有 1000 个键被改动”这一条件时， 自动保存一次数据集： **# s">
+<meta property="og:type" content="article">
 <meta property="og:title" content="2、Redis持久化、主从与烧饼架构详解">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/18/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/Redis/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redis持久化  RDB快照（snapshot） 在默认情况下， Redis 将内存数据库快照保存在名字为 dump.rdb 的二进制文件中。 你可以对 Redis 进行设置， 让它在“ N 秒内数据集至少有 M 个改动”这一条件被满足时， 自动保存一次数据集。 比如说， 以下设置会让 Redis 在满足“ 60 秒内有至少有 1000 个键被改动”这一条件时， 自动保存一次数据集： **# s">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102679">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/80584">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102424">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102426">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102435">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/80634">
 <meta property="article:published_time" content="2023-06-18T13:26:05.000Z">
-<meta property="article:modified_time" content="2023-11-14T07:37:47.751Z">
+<meta property="article:modified_time" content="2023-11-25T13:16:50.526Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102679">
   
   
   
@@ -217,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          16k 字
         
       </span>
     
@@ -228,7 +237,7 @@
         
         
         
-          1 分钟
+          138 分钟
         
       </span>
     
@@ -271,7 +280,450 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>Redis持久化</strong></p>
+<hr>
+<p><strong>RDB快照（snapshot）</strong></p>
+<p>在默认情况下， Redis 将内存数据库快照保存在名字为 dump.rdb 的二进制文件中。</p>
+<p>你可以对 Redis 进行设置， 让它在“ N 秒内数据集至少有 M 个改动”这一条件被满足时， 自动保存一次数据集。</p>
+<p>比如说， 以下设置会让 Redis 在满足“ 60 秒内有至少有 1000 个键被改动”这一条件时， 自动保存一次数据集：</p>
+<p>**# save 60 1000    &#x2F;&#x2F;**关闭RDB只需要将所有的save保存策略注释掉即可</p>
+<p>还可以手动执行命令生成RDB快照，进入redis客户端执行命令<strong>save</strong>或<strong>bgsave</strong>可以生成dump.rdb文件，每次命令执行都会将所有redis内存快照到一个新的rdb文件里，并覆盖原有rdb快照文件。</p>
+<p><strong>bgsave的写时复制(COW)机制</strong></p>
+<p>Redis 借助操作系统提供的写时复制技术（Copy-On-Write, COW），在生成快照的同时，依然可以正常处理写命令。简单来说，bgsave 子进程是由主线程 fork 生成的，可以共享主线程的所有内存数据。bgsave 子进程运行后，开始读取主线程的内存数据，并把它们写入 RDB 文件。此时，如果主线程对这些数据也都是读操作，那么，主线程和 bgsave 子进程相互不影响。但是，如果主线程要修改一块数据，那么，这块数据就会被复制一份，生成该数据的副本。然后，bgsave 子进程会把这个副本数据写入 RDB 文件，而在这个过程中，主线程仍然可以直接修改原来的数据。</p>
+<p><strong>save与bgsave对比：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>save</strong></th>
+<th><strong>bgsave</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IO类型</td>
+<td>同步</td>
+<td>异步</td>
+</tr>
+<tr>
+<td>是否阻塞redis其它命令</td>
+<td>是</td>
+<td>否(在生成子进程执行调用fork函数时会有短暂阻塞)</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td>O(n)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>不会消耗额外内存</td>
+<td>不阻塞客户端命令</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>阻塞客户端命令</td>
+<td>需要fork子进程，消耗内存</td>
+</tr>
+</tbody></table>
+<p><strong>配置自动生成rdb文件后台使用的是bgsave方式。</strong></p>
+<p><strong>AOF（append-only file）</strong></p>
+<p>快照功能并不是非常耐久（durable）： 如果 Redis 因为某些原因而造成故障停机， 那么服务器将丢失最近写入、且仍未保存到快照中的那些数据。从 1.1 版本开始， Redis 增加了一种完全耐久的持久化方式： AOF 持久化，将<strong>修改的</strong>每一条指令记录进文件appendonly.aof中(先写入os cache，每隔一段时间fsync到磁盘)</p>
+<p>比如执行命令<strong>“set zhuge 666”</strong>，aof文件里会记录如下数据</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-number">*3</span><br><span class="hljs-variable">$3</span><br><span class="hljs-built_in">set</span><br><span class="hljs-variable">$5</span><br>zhuge<br><span class="hljs-variable">$3</span><br>666<br></code></pre></td></tr></table></figure>
+
+<p>这是一种resp协议格式数据，星号后面的数字代表命令有多少个参数，$号后面的数字代表这个参数有几个字符</p>
+<p>注意，如果执行带过期时间的set命令，aof文件里记录的是并不是执行的原始命令，而是记录key过期的<strong>时间戳</strong></p>
+<p>比如执行<strong>“set tuling 888 ex 1000”</strong>，对应aof文件里记录如下</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-number">*3</span><br><span class="hljs-variable">$3</span><br><span class="hljs-built_in">set</span><br><span class="hljs-variable">$6</span><br>tuling<br><span class="hljs-variable">$3</span><br>888<br><span class="hljs-number">*3</span><br><span class="hljs-variable">$9</span><br>PEXPIREAT<br><span class="hljs-variable">$6</span><br>tuling<br><span class="hljs-variable">$13</span><br>1604249786301<br></code></pre></td></tr></table></figure>
+
+<p>​             </p>
+<p>你可以通过修改配置文件来打开 AOF 功能：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">appendonly <span class="hljs-built_in">yes</span></span><br></code></pre></td></tr></table></figure>
+
+<p>​        </p>
+<p>从现在开始， 每当 Redis 执行一个改变数据集的命令时（比如 <a target="_blank" rel="noopener" href="http://redisdoc.com/string/set.html#set">SET</a>）， 这个命令就会被追加到 AOF 文件的末尾。</p>
+<p>这样的话， 当 Redis 重新启动时， 程序就可以通过重新执行 AOF 文件中的命令来达到重建数据集的目的。</p>
+<p>你可以配置 Redis 多久才将数据 fsync 到磁盘一次。</p>
+<p>有三个选项：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">appendfsync</span> always：每次有新命令追加到 AOF 文件时就执行一次 fsync ，非常慢，也非常安全。<br>appendfsync everysec：每秒 fsync 一次，足够快，并且在故障时只会丢失 <span class="hljs-number">1</span> 秒钟的数据。<br>appendfsync <span class="hljs-literal">no</span>：从不 fsync ，将数据交给操作系统来处理。更快，也更不安全的选择。<br></code></pre></td></tr></table></figure>
+
+<p>​            </p>
+<p>推荐（并且也是默认）的措施为每秒 fsync 一次， 这种 fsync 策略可以兼顾速度和安全性。</p>
+<p><strong>AOF重写</strong></p>
+<p>AOF文件里可能有太多没用指令，所以AOF会定期根据<strong>内存的最新数据</strong>生成aof文件</p>
+<p>例如，执行了如下几条命令：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-number">127.0.0.1:6379</span>&gt; incr readcount<br>(integer) <span class="hljs-number">1</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; incr readcount<br>(integer) <span class="hljs-number">2</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; incr readcount<br>(integer) <span class="hljs-number">3</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; incr readcount<br>(integer) <span class="hljs-number">4</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; incr readcount<br>(integer) <span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p>重写后AOF文件里变成</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-number">*3</span><br><span class="hljs-variable">$3</span><br><span class="hljs-built_in">SET</span><br><span class="hljs-variable">$2</span><br>readcount<br><span class="hljs-variable">$1</span><br>5<br></code></pre></td></tr></table></figure>
+
+<p>​           </p>
+<p>如下两个配置可以控制AOF自动重写频率</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta"># auto-aof-rewrite-min-size 64mb   <span class="hljs-comment">//aof文件至少要达到64M才会自动重写，文件太小恢复速度本来就很快，重写的意义不大</span></span><br><span class="hljs-meta"># auto-aof-rewrite-percentage 100  <span class="hljs-comment">//aof文件自上一次重写后文件大小增长了100%则再次触发重写</span></span><br></code></pre></td></tr></table></figure>
+
+<p>当然AOF还可以手动重写，进入redis客户端执行命令<strong>bgrewriteaof</strong>重写AOF</p>
+<p>注意，<strong>AOF重写redis会fork出一个子进程去做(与bgsave命令类似)，不会对redis正常命令处理有太多影响</strong></p>
+<p><strong>RDB 和 AOF ，我应该用哪一个？</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>RDB</strong></th>
+<th><strong>AOF</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启动优先级</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>体积</td>
+<td>小</td>
+<td>大</td>
+</tr>
+<tr>
+<td>恢复速度</td>
+<td>快</td>
+<td>慢</td>
+</tr>
+<tr>
+<td>数据安全性</td>
+<td>容易丢数据</td>
+<td>根据策略决定</td>
+</tr>
+</tbody></table>
+<p>生产环境可以都启用，redis启动时如果既有rdb文件又有aof文件则优先选择aof文件恢复数据，因为aof一般来说数据更全一点。</p>
+<p><strong>Redis 4.0 混合持久化</strong></p>
+<p>重启 Redis 时，我们很少使用 RDB来恢复内存状态，因为会丢失大量数据。我们通常使用 AOF 日志重放，但是重放 AOF 日志性能相对 RDB来说要慢很多，这样在 Redis 实例很大的情况下，启动需要花费很长的时间。 Redis 4.0 为了解决这个问题，带来了一个新的持久化选项——混合持久化。</p>
+<p>通过如下配置可以开启混合持久化(<strong>必须先开启aof</strong>)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">aof-use-rdb-preamble <span class="hljs-built_in">yes</span></span> <br></code></pre></td></tr></table></figure>
+
+<p>如果开启了混合持久化，<strong>AOF在重写时</strong>，不再是单纯将内存数据转换为RESP命令写入AOF文件，而是将重写<strong>这一刻之前</strong>的内存做RDB快照处理，并且将RDB快照内容和<strong>增量的</strong>AOF修改内存数据的命令存在一起，都写入新的AOF文件，新的文件一开始不叫appendonly.aof，等到重写完新的AOF文件才会进行改名，覆盖原有的AOF文件，完成新旧两个AOF文件的替换。</p>
+<p>于是在 Redis 重启的时候，可以先加载 RDB 的内容，然后再重放增量 AOF 日志就可以完全替代之前的 AOF 全量文件重放，因此重启效率大幅得到提升。</p>
+<p>混合持久化AOF文件结构如下</p>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102679" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p> <strong>Redis数据备份策略：</strong></p>
+<ol>
+<li>写crontab定时调度脚本，每小时都copy一份rdb或aof的备份到一个目录中去，仅仅保留最近48小时的备份</li>
+<li>每天都保留一份当日的数据备份到一个目录中去，可以保留最近1个月的备份</li>
+<li>每次copy备份的时候，都把太旧的备份给删了</li>
+<li>每天晚上将当前机器上的备份复制一份到其他机器上，以防机器损坏</li>
+</ol>
+<p><strong>Redis主从架构</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/80584" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>redis主从架构搭建，配置从节点步骤：</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1</span>、复制一份redis.conf文件<br><br><span class="hljs-attribute">2</span>、将相关配置修改为如下值：<br><span class="hljs-attribute">port</span> <span class="hljs-number">6380</span><br><span class="hljs-attribute">pidfile</span> /var/run/redis_6380.pid  # 把pid进程号写入pidfile配置的文件<br><span class="hljs-attribute">logfile</span> <span class="hljs-string">&quot;6380.log&quot;</span><br><span class="hljs-attribute">dir</span> /usr/local/redis-<span class="hljs-number">5</span>.<span class="hljs-number">0</span>.<span class="hljs-number">3</span>/data/<span class="hljs-number">6380</span>  # 指定数据存放目录<br><span class="hljs-comment"># 需要注释掉bind</span><br><span class="hljs-comment"># bind 127.0.0.1（bind绑定的是自己机器网卡的ip，如果有多块网卡可以配多个ip，代表允许客户端通过机器的哪些网卡ip去访问，内网一般可以不配置bind，注释掉即可）</span><br><br><span class="hljs-attribute">3</span>、配置主从复制<br><span class="hljs-attribute">replicaof</span> <span class="hljs-number">192.168.0.60</span> <span class="hljs-number">6379</span>   # 从本机<span class="hljs-number">6379</span>的redis实例复制数据，Redis <span class="hljs-number">5</span>.<span class="hljs-number">0</span>之前使用slaveof<br><span class="hljs-attribute">replica</span>-read-only yes  # 配置从节点只读<br><br><span class="hljs-attribute">4</span>、启动从节点<br><span class="hljs-attribute">redis</span>-server redis.conf   # redis.conf文件务必用你复制并修改了之后的redis.conf文件<br><br><span class="hljs-attribute">5</span>、连接从节点<br><span class="hljs-attribute">redis</span>-cli -p <span class="hljs-number">6380</span><br><br><span class="hljs-attribute">6</span>、测试在<span class="hljs-number">6379</span>实例上写数据，<span class="hljs-number">6380</span>实例是否能及时同步新修改数据<br><br><span class="hljs-attribute">7</span>、可以自己再配置一个<span class="hljs-number">6381</span>的从节点<br></code></pre></td></tr></table></figure>
+
+<p><strong>Redis主从工作原理</strong></p>
+<p>如果你为master配置了一个slave，不管这个slave是否是第一次连接上Master，它都会发送一个<strong>PSYNC</strong>命令给master请求复制数据。</p>
+<p>master收到PSYNC命令后，会在后台进行数据持久化通过bgsave生成最新的rdb快照文件，持久化期间，master会继续接收客户端的请求，它会把这些可能修改数据集的请求缓存在内存中。当持久化进行完毕以后，master会把这份rdb文件数据集发送给slave，slave会把接收到的数据进行持久化生成rdb，然后再加载到内存中。然后，master再将之前缓存在内存中的命令发送给slave。</p>
+<p>当master与slave之间的连接由于某些原因而断开时，slave能够自动重连Master，如果master收到了多个slave并发连接请求，它只会进行一次持久化，而不是一个连接一次，然后再把这一份持久化的数据发送给多个并发连接的slave。</p>
+<p><strong>主从复制(全量复制)流程图：</strong></p>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102424" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>数据部分复制</strong></p>
+<p>当master和slave断开重连后，一般都会对整份数据进行复制。但从redis2.8版本开始，redis改用可以支持部分数据复制的命令PSYNC去master同步数据，slave与master能够在网络连接断开重连后只进行部分数据复制(<strong>断点续传</strong>)。</p>
+<p>master会在其内存中创建一个复制数据用的缓存队列，缓存最近一段时间的数据，master和它所有的slave都维护了复制的数据下标offset和master的进程id，因此，当网络连接断开后，slave会请求master继续进行未完成的复制，从所记录的数据下标开始。如果master进程id变化了，或者从节点数据下标offset太旧，已经不在master的缓存队列里了，那么将会进行一次全量数据的复制。</p>
+<p><strong>主从复制(部分复制，断点续传)流程图：</strong></p>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102426" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>如果有很多从节点，为了缓解<strong>主从复制风暴</strong>(多个从节点同时复制主节点导致主节点压力过大)，可以做如下架构，让部分从节点与从节点(与主节点同步)同步数据</p>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/102435" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>Jedis连接代码示例：</strong></p>
+<p>1、引入相关依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>redis.clients<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jedis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.9.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>访问代码：</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> JedisSingleTest &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(String[] args) throws IOException &#123;<br><br>        JedisPoolConfig jedisPoolConfig <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> JedisPoolConfig();<br>        jedisPoolConfig.setMaxTotal(<span class="hljs-number">20</span>);<br>        jedisPoolConfig.setMaxIdle(<span class="hljs-number">10</span>);<br>        jedisPoolConfig.setMinIdle(<span class="hljs-number">5</span>);<br><br>        <span class="hljs-comment">// timeout，这里既是连接超时又是读写超时，从Jedis 2.8开始有区分connectionTimeout和soTimeout的构造函数</span><br>        JedisPool jedisPool <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> JedisPool(jedisPoolConfig, <span class="hljs-string">&quot;192.168.0.60&quot;</span>, <span class="hljs-number">6379</span>, <span class="hljs-number">3000</span>, <span class="hljs-literal">null</span>);<br><br>        Jedis jedis <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//从redis连接池里拿出一个连接执行命令</span><br>            jedis <span class="hljs-operator">=</span> jedisPool.getResource();<br><br>            System.out.println(jedis.<span class="hljs-built_in">set</span>(<span class="hljs-string">&quot;single&quot;</span>, <span class="hljs-string">&quot;zhuge&quot;</span>));<br>            System.out.println(jedis.<span class="hljs-built_in">get</span>(<span class="hljs-string">&quot;single&quot;</span>));<br><br>            <span class="hljs-comment">//管道示例</span><br>            <span class="hljs-comment">//管道的命令执行方式：cat redis.txt | redis-cli -h 127.0.0.1 -a password - p 6379 --pipe</span><br>            <span class="hljs-operator">/*</span>Pipeline pl <span class="hljs-operator">=</span> jedis.pipelined();<br>            <span class="hljs-keyword">for</span> (int i <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i <span class="hljs-operator">&lt;</span> <span class="hljs-number">10</span>; i<span class="hljs-operator">++</span>) &#123;<br>                pl.incr(<span class="hljs-string">&quot;pipelineKey&quot;</span>);<br>                pl.<span class="hljs-built_in">set</span>(<span class="hljs-string">&quot;zhuge&quot;</span> <span class="hljs-operator">+</span> i, <span class="hljs-string">&quot;zhuge&quot;</span>);<br>            &#125;<br>            List<span class="hljs-operator">&lt;</span>Object<span class="hljs-operator">&gt;</span> results <span class="hljs-operator">=</span> pl.syncAndReturnAll();<br>            System.out.println(results);<span class="hljs-operator">*/</span><br><br>            <span class="hljs-comment">//lua脚本模拟一个商品减库存的原子操作</span><br>            <span class="hljs-comment">//lua脚本命令执行方式：redis-cli --eval /tmp/test.lua , 10</span><br>            <span class="hljs-operator">/*</span>jedis.<span class="hljs-built_in">set</span>(<span class="hljs-string">&quot;product_count_10016&quot;</span>, <span class="hljs-string">&quot;15&quot;</span>);  <span class="hljs-comment">//初始化商品10016的库存</span><br>            String script <span class="hljs-operator">=</span> <span class="hljs-string">&quot; local count = redis.call(&#x27;get&#x27;, KEYS[1]) &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot; local a = tonumber(count) &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot; local b = tonumber(ARGV[1]) &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot; if a &gt;= b then &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot;   redis.call(&#x27;set&#x27;, KEYS[1], a-b) &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot;   return 1 &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot; end &quot;</span> <span class="hljs-operator">+</span><br>                            <span class="hljs-string">&quot; return 0 &quot;</span>;<br>            Object obj <span class="hljs-operator">=</span> jedis.eval(script, Arrays.asList(<span class="hljs-string">&quot;product_count_10016&quot;</span>), Arrays.asList(<span class="hljs-string">&quot;10&quot;</span>));<br>            System.out.println(obj);<span class="hljs-operator">*/</span><br><br>        &#125; catch (Exception e) &#123;<br>            e.printStackTrace();<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-comment">//注意这里不是关闭连接，在JedisPool模式下，Jedis会被归还给资源池。</span><br>            <span class="hljs-keyword">if</span> (jedis <span class="hljs-operator">!=</span> <span class="hljs-literal">null</span>)<br>                jedis.close();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>顺带讲下redis管道与调用lua脚本，代码示例上面已经给出：</strong></p>
+<p><strong>管道（Pipeline）</strong></p>
+<p>客户端可以一次性发送多个请求而不用等待服务器的响应，待所有命令都发送完后再一次性读取服务的响应，这样可以极大的降低多条命令执行的网络传输开销，管道执行多条命令的网络开销实际上只相当于一次命令执行的网络开销。需要注意到是用pipeline方式打包命令发送，redis必须在<strong>处理完所有命令前先缓存起所有命令的处理结果</strong>。打包的命令越多，缓存消耗内存也越多。所以并不是打包的命令越多越好。</p>
+<p>pipeline中发送的每个command都会被server立即执行，如果执行失败，将会在此后的响应中得到信息；也就是pipeline并不是表达“所有command都一起成功”的语义，管道中前面命令失败，后面命令不会有影响，继续执行。</p>
+<p>详细代码示例见上面jedis连接示例：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs stata">Pipeline <span class="hljs-keyword">pl</span> = jedis.pipelined();<br><span class="hljs-keyword">for</span> (int i = 0; i &lt; 10; i++) &#123;<br>    <span class="hljs-keyword">pl</span>.incr(<span class="hljs-string">&quot;pipelineKey&quot;</span>);<br>    <span class="hljs-keyword">pl</span>.<span class="hljs-keyword">set</span>(<span class="hljs-string">&quot;zhuge&quot;</span> + i, <span class="hljs-string">&quot;zhuge&quot;</span>);<br>    <span class="hljs-comment">//模拟管道报错</span><br>    <span class="hljs-comment">// pl.setbit(&quot;zhuge&quot;, -1, true);</span><br>&#125;<br><span class="hljs-keyword">List</span>&lt;Object&gt; results = <span class="hljs-keyword">pl</span>.syncAndReturnAll();<br>System.<span class="hljs-keyword">out</span>.println(results);<br></code></pre></td></tr></table></figure>
+
+<p><strong>Redis Lua脚本(放在后面Redis高并发分布式锁实战课里详细讲)</strong></p>
+<p>Redis在2.6推出了脚本功能，允许开发者使用Lua语言编写脚本传到Redis中执行。使用脚本的好处如下:</p>
+<p>1、<strong>减少网络开销</strong>：本来5次网络请求的操作，可以用一个请求完成，原先5次请求的逻辑放在redis服务器上完成。使用脚本，减少了网络往返时延。<strong>这点跟管道类似</strong>。</p>
+<p>2、<strong>原子操作</strong>：Redis会将整个脚本作为一个整体执行，中间不会被其他命令插入。<strong>管道不是原子的，不过redis的批量操作命令(类似mset)是原子的。</strong></p>
+<p>3、<strong>替代redis的事务功能</strong>：redis自带的事务功能很鸡肋，而redis的lua脚本几乎实现了常规的事务功能，官方推荐如果要使用redis的事务功能可以用redis lua替代。</p>
+<p><strong>官网文档上有这样一段话：</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">A Redis script <span class="hljs-keyword">is</span> transactional <span class="hljs-keyword">by</span> definition, so everything you can <span class="hljs-keyword">do</span> <span class="hljs-keyword">with</span> a Redis <span class="hljs-keyword">transaction</span>, you can <span class="hljs-keyword">also</span> <span class="hljs-keyword">do</span> <span class="hljs-keyword">with</span> a script, <br><span class="hljs-keyword">and</span> usually the script will be <span class="hljs-keyword">both</span> simpler <span class="hljs-keyword">and</span> faster.<br></code></pre></td></tr></table></figure>
+
+<p>从Redis2.6.0版本开始，通过内置的Lua解释器，可以使用EVAL命令对Lua脚本进行求值。EVAL命令的格式如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">EVAL script numkeys key <span class="hljs-selector-attr">[key ...]</span> arg <span class="hljs-selector-attr">[arg ...]</span>　<br></code></pre></td></tr></table></figure>
+
+<p>script参数是一段Lua脚本程序，它会被运行在Redis服务器上下文中，这段脚本<strong>不必(也不应该)定义为一个Lua函数</strong>。numkeys参数用于指定键名参数的个数。键名参数 key [key …] 从EVAL的第三个参数开始算起，表示在脚本中所用到的那些Redis键(key)，这些键名参数可以在 Lua中通过全局变量KEYS数组，用1为基址的形式访问( KEYS[1] ， KEYS[2] ，以此类推)。</p>
+<p>在命令的最后，那些不是键名参数的附加参数 arg [arg …] ，可以在Lua中通过全局变量<strong>ARGV</strong>数组访问，访问的形式和KEYS变量类似( ARGV[1] 、 ARGV[2] ，诸如此类)。例如</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">127</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>:<span class="hljs-number">6379</span>&gt; eval <span class="hljs-string">&quot;return &#123;KEYS[1],KEYS[2],ARGV[1],ARGV[2]&#125;&quot;</span> <span class="hljs-number">2</span> key1 key2 first second<br><span class="hljs-attribute">1</span>) <span class="hljs-string">&quot;key1&quot;</span><br><span class="hljs-attribute">2</span>) <span class="hljs-string">&quot;key2&quot;</span><br><span class="hljs-attribute">3</span>) <span class="hljs-string">&quot;first&quot;</span><br><span class="hljs-attribute">4</span>) <span class="hljs-string">&quot;second&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>​         </p>
+<p>其中 “return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}” 是被求值的Lua脚本，数字2指定了键名参数的数量， key1和key2是键名参数，分别使用 KEYS[1] 和 KEYS[2] 访问，而最后的 first 和 second 则是附加参数，可以通过 ARGV[1] 和 ARGV[2] 访问它们。</p>
+<p>在 Lua 脚本中，可以使用**redis.call()**函数来执行Redis命令</p>
+<p>Jedis调用示例详见上面jedis连接示例：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br>jedis.set(<span class="hljs-string">&quot;product_stock_10016&quot;</span>, <span class="hljs-string">&quot;15&quot;</span>);  <span class="hljs-comment">//初始化商品10016的库存</span><br>String script = <span class="hljs-string">&quot; local count = redis.call(&#x27;get&#x27;, KEYS[1]) &quot;</span> +<br>                <span class="hljs-string">&quot; local a = tonumber(count) &quot;</span> +<br>                <span class="hljs-string">&quot; local b = tonumber(ARGV[1]) &quot;</span> +<br>                <span class="hljs-string">&quot; if a &gt;= b then &quot;</span> +<br>                <span class="hljs-string">&quot;   redis.call(&#x27;set&#x27;, KEYS[1], a-b) &quot;</span> +<br>                <span class="hljs-string">&quot;   return 1 &quot;</span> +<br>                <span class="hljs-string">&quot; end &quot;</span> +<br>                <span class="hljs-string">&quot; return 0 &quot;</span>;<br>Object obj = jedis.eval(script, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">as</span><span class="hljs-constructor">List(<span class="hljs-string">&quot;product_stock_10016&quot;</span>)</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Arrays</span>.</span></span><span class="hljs-keyword">as</span><span class="hljs-constructor">List(<span class="hljs-string">&quot;10&quot;</span>)</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(obj);<br></code></pre></td></tr></table></figure>
+
+<p>​           </p>
+<p><strong>注意，不要在Lua脚本中出现死循环和耗时的运算，否则redis会阻塞，将不接受其他的命令， 所以使用时要注意不能出现死循环、耗时的运算。redis是单进程、单线程执行脚本。管道不会阻塞redis。</strong></p>
+<p><strong>Redis哨兵高可用架构</strong></p>
+<hr>
+<p>​    <img src="/2%E3%80%81Redis%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E%E4%B8%8E%E7%83%A7%E9%A5%BC%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3/80634" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>sentinel哨兵是特殊的redis服务，不提供读写服务，主要用来监控redis实例节点。</p>
+<p>哨兵架构下client端第一次从哨兵找出redis的主节点，后续就直接访问redis的主节点，不会每次都通过sentinel代理访问redis的主节点，当redis的主节点发生变化，哨兵会第一时间感知到，并且将新的redis主节点通知给client端(这里面redis的client端一般都实现了订阅功能，订阅sentinel发布的节点变动消息)</p>
+<p><strong>redis哨兵架构搭建步骤：</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-number">1</span>、复制一份sentinel.<span class="hljs-keyword">conf</span>文件<br><span class="hljs-keyword">cp</span> sentinel.<span class="hljs-keyword">conf</span> sentinel-<span class="hljs-number">26379</span>.<span class="hljs-keyword">conf</span><br><br><span class="hljs-number">2</span>、将相关配置修改为如下值：<br>port <span class="hljs-number">26379</span><br>daemonize yes<br>pidfile <span class="hljs-string">&quot;/var/run/redis-sentinel-26379.pid&quot;</span><br>logfile <span class="hljs-string">&quot;26379.log&quot;</span><br>dir <span class="hljs-string">&quot;/usr/local/redis-5.0.3/data&quot;</span><br># sentinel monitor <span class="hljs-symbol">&lt;master-redis-name&gt;</span> <span class="hljs-symbol">&lt;master-redis-ip&gt;</span> <span class="hljs-symbol">&lt;master-redis-port&gt;</span> <span class="hljs-symbol">&lt;quorum&gt;</span><br># quorum是一个数字，指明当有多少个sentinel认为一个master失效时(值一般为：sentinel总数/<span class="hljs-number">2</span> + <span class="hljs-number">1</span>)，master才算真正失效<br>sentinel monitor mymaster <span class="hljs-number">192.168</span>.<span class="hljs-number">0.60</span> <span class="hljs-number">6379</span> <span class="hljs-number">2</span>   # mymaster这个名字随便取，客户端访问时会用到<br><br><span class="hljs-number">3</span>、启动sentinel哨兵实例<br>src/redis-sentinel sentinel-<span class="hljs-number">26379</span>.<span class="hljs-keyword">conf</span><br><br><span class="hljs-number">4</span>、查看sentinel的info信息<br>src/redis-cli -<span class="hljs-keyword">p</span> <span class="hljs-number">26379</span><br><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">26379</span>&gt;info<br>可以看到Sentinel的info里已经识别出了redis的主从<br><br><span class="hljs-number">5</span>、可以自己再配置两个sentinel，端口<span class="hljs-number">26380</span>和<span class="hljs-number">26381</span>，注意上述配置文件里的对应数字都要修改<br></code></pre></td></tr></table></figure>
+
+<p>sentinel集群都启动完毕后，会将哨兵集群的元数据信息写入所有sentinel的配置文件里去(追加在文件的最下面)，我们查看下如下配置文件sentinel-26379.conf，如下所示：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">sentinel known-<span class="hljs-keyword">replica</span> mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">6380</span> #代表redis主节点的从节点信息<br>sentinel known-<span class="hljs-keyword">replica</span> mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">6381</span> #代表redis主节点的从节点信息<br>sentinel known-sentinel mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">26380</span> <span class="hljs-number">52</span>d0a5d70c1f90475b4fc03b6ce7c3c56935760f  #代表感知到的其它哨兵节点<br>sentinel known-sentinel mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">26381</span> e9f530d3882f8043f76ebb8e1686438ba8bd5ca6  #代表感知到的其它哨兵节点<br></code></pre></td></tr></table></figure>
+
+<p>当redis主节点如果挂了，哨兵集群会重新选举出新的redis主节点，同时会修改所有sentinel节点配置文件的集群元数据信息，比如6379的redis如果挂了，假设选举出的新主节点是6380，则sentinel文件里的集群元数据信息会变成如下所示：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">sentinel known-<span class="hljs-keyword">replica</span> mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">6379</span> #代表主节点的从节点信息<br>sentinel known-<span class="hljs-keyword">replica</span> mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">6381</span> #代表主节点的从节点信息<br>sentinel known-sentinel mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">26380</span> <span class="hljs-number">52</span>d0a5d70c1f90475b4fc03b6ce7c3c56935760f  #代表感知到的其它哨兵节点<br>sentinel known-sentinel mymaster <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span> <span class="hljs-number">26381</span> e9f530d3882f8043f76ebb8e1686438ba8bd5ca6  #代表感知到的其它哨兵节点<br></code></pre></td></tr></table></figure>
+
+<p>同时还会修改sentinel文件里之前配置的mymaster对应的6379端口，改为6380</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs smali">sentinel<span class="hljs-built_in"> monitor </span>mymaster 192.168.0.60 6380 2   <br></code></pre></td></tr></table></figure>
+
+<p>​           </p>
+<p>当6379的redis实例再次启动时，哨兵集群根据集群元数据信息就可以将6379端口的redis节点作为从节点加入集群</p>
+<p>哨兵的Jedis连接代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JedisSentinelTest</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br><br>        <span class="hljs-type">JedisPoolConfig</span> <span class="hljs-variable">config</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JedisPoolConfig</span>();<br>        config.setMaxTotal(<span class="hljs-number">20</span>);<br>        config.setMaxIdle(<span class="hljs-number">10</span>);<br>        config.setMinIdle(<span class="hljs-number">5</span>);<br><br>        <span class="hljs-type">String</span> <span class="hljs-variable">masterName</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;mymaster&quot;</span>;<br>        Set&lt;String&gt; sentinels = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;String&gt;();<br>        sentinels.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HostAndPort</span>(<span class="hljs-string">&quot;192.168.0.60&quot;</span>,<span class="hljs-number">26379</span>).toString());<br>        sentinels.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HostAndPort</span>(<span class="hljs-string">&quot;192.168.0.60&quot;</span>,<span class="hljs-number">26380</span>).toString());<br>        sentinels.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HostAndPort</span>(<span class="hljs-string">&quot;192.168.0.60&quot;</span>,<span class="hljs-number">26381</span>).toString());<br>        <span class="hljs-comment">//JedisSentinelPool其实本质跟JedisPool类似，都是与redis主节点建立的连接池</span><br>        <span class="hljs-comment">//JedisSentinelPool并不是说与sentinel建立的连接池，而是通过sentinel发现redis主节点并与其建立连接</span><br>        <span class="hljs-type">JedisSentinelPool</span> <span class="hljs-variable">jedisSentinelPool</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JedisSentinelPool</span>(masterName, sentinels, config, <span class="hljs-number">3000</span>, <span class="hljs-literal">null</span>);<br>        <span class="hljs-type">Jedis</span> <span class="hljs-variable">jedis</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            jedis = jedisSentinelPool.getResource();<br>            System.out.println(jedis.set(<span class="hljs-string">&quot;sentinel&quot;</span>, <span class="hljs-string">&quot;zhuge&quot;</span>));<br>            System.out.println(jedis.get(<span class="hljs-string">&quot;sentinel&quot;</span>));<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            e.printStackTrace();<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            <span class="hljs-comment">//注意这里不是关闭连接，在JedisPool模式下，Jedis会被归还给资源池。</span><br>            <span class="hljs-keyword">if</span> (jedis != <span class="hljs-literal">null</span>)<br>                jedis.close();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>哨兵的Spring Boot整合Redis连接代码见示例项目：redis-sentinel-cluster</p>
+<p>1、引入相关依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.commons<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>commons-pool2<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>springboot项目核心配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">port:</span> <span class="hljs-number">8080</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">database:</span> <span class="hljs-number">0</span><br>    <span class="hljs-attr">timeout:</span> <span class="hljs-number">3000</span><br>    <span class="hljs-attr">sentinel:</span>    <span class="hljs-comment">#哨兵模式</span><br>      <span class="hljs-attr">master:</span> <span class="hljs-string">mymaster</span> <span class="hljs-comment">#主服务器所在集群名称</span><br>     <span class="hljs-attr">nodes:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.60</span><span class="hljs-string">:26379,192.168.0.60:26380,192.168.0.60:26381</span><br>   <span class="hljs-attr">lettuce:</span><br>      <span class="hljs-attr">pool:</span><br>        <span class="hljs-attr">max-idle:</span> <span class="hljs-number">50</span><br>        <span class="hljs-attr">min-idle:</span> <span class="hljs-number">10</span><br>        <span class="hljs-attr">max-active:</span> <span class="hljs-number">100</span><br>        <span class="hljs-attr">max-wait:</span> <span class="hljs-number">1000</span><br>    <br></code></pre></td></tr></table></figure>
+
+<p>访问代码：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IndexController</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger logger = LoggerFactory.getLogger(IndexController.class);<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> StringRedisTemplate stringRedisTemplate;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 测试节点挂了哨兵重新选举新的master节点，客户端是否能动态感知到</span><br><span class="hljs-comment">     * 新的master选举出来后，哨兵会把消息发布出去，客户端实际上是实现了一个消息监听机制，</span><br><span class="hljs-comment">     * 当哨兵把新master的消息发布出去，客户端会立马感知到新master的信息，从而动态切换访问的masterip</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> InterruptedException</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">&quot;/test_sentinel&quot;</span>)<br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSentinel</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>)&#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                stringRedisTemplate.opsForValue().set(<span class="hljs-string">&quot;zhuge&quot;</span>+i, i+<span class="hljs-string">&quot;&quot;</span>);<br>                System.out.println(<span class="hljs-string">&quot;设置key：&quot;</span>+ <span class="hljs-string">&quot;zhuge&quot;</span> + i);<br>                i++;<br>                Thread.sleep(<span class="hljs-number">1000</span>);<br>            &#125;<span class="hljs-keyword">catch</span> (Exception e)&#123;<br>                logger.<span class="hljs-keyword">error</span>(<span class="hljs-string">&quot;错误：&quot;</span>, e);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>StringRedisTemplate与RedisTemplate详解</strong></p>
+<p>spring 封装了 RedisTemplate 对象来进行对redis的各种操作，它支持所有的 redis 原生的 api。在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;<br><span class="hljs-keyword">private</span> HashOperations&lt;K, V&gt; hashOps;<br><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;<br><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;<br><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;<br></code></pre></td></tr></table></figure>
+
+<p>RedisTemplate中定义了对5种数据结构操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">redisTemplate.opsForValue();<span class="hljs-comment">//操作字符串</span><br>redisTemplate.opsForHash();<span class="hljs-comment">//操作hash</span><br>redisTemplate.opsForList();<span class="hljs-comment">//操作list</span><br>redisTemplate.opsForSet();<span class="hljs-comment">//操作set</span><br>redisTemplate.opsForZSet();<span class="hljs-comment">//操作有序set</span><br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
+<p>StringRedisTemplate继承自RedisTemplate，也一样拥有上面这些操作。</p>
+<p>StringRedisTemplate默认采用的是String的序列化策略，保存的key和value都是采用此策略序列化保存的。</p>
+<p>RedisTemplate默认采用的是JDK的序列化策略，保存的key和value都是采用此策略序列化保存的。</p>
+<p><strong>Redis客户端命令对应的RedisTemplate中的方法列表：</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>String类型结构</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Redis</td>
+<td>RedisTemplate rt</td>
+</tr>
+<tr>
+<td>set key value</td>
+<td>rt.opsForValue().set(“key”,”value”)</td>
+</tr>
+<tr>
+<td>get key</td>
+<td>rt.opsForValue().get(“key”)</td>
+</tr>
+<tr>
+<td>del key</td>
+<td>rt.delete(“key”)</td>
+</tr>
+<tr>
+<td>strlen key</td>
+<td>rt.opsForValue().size(“key”)</td>
+</tr>
+<tr>
+<td>getset key value</td>
+<td>rt.opsForValue().getAndSet(“key”,”value”)</td>
+</tr>
+<tr>
+<td>getrange key start end</td>
+<td>rt.opsForValue().get(“key”,start,end)</td>
+</tr>
+<tr>
+<td>append key value</td>
+<td>rt.opsForValue().append(“key”,”value”)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Hash结构</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>hmset key field1 value1 field2 value2…</td>
+<td>rt.opsForHash().putAll(“key”,map) &#x2F;&#x2F;map是一个集合对象</td>
+</tr>
+<tr>
+<td>hset key field value</td>
+<td>rt.opsForHash().put(“key”,”field”,”value”)</td>
+</tr>
+<tr>
+<td>hexists key field</td>
+<td>rt.opsForHash().hasKey(“key”,”field”)</td>
+</tr>
+<tr>
+<td>hgetall key</td>
+<td>rt.opsForHash().entries(“key”) &#x2F;&#x2F;返回Map对象</td>
+</tr>
+<tr>
+<td>hvals key</td>
+<td>rt.opsForHash().values(“key”) &#x2F;&#x2F;返回List对象</td>
+</tr>
+<tr>
+<td>hkeys key</td>
+<td>rt.opsForHash().keys(“key”) &#x2F;&#x2F;返回List对象</td>
+</tr>
+<tr>
+<td>hmget key field1 field2…</td>
+<td>rt.opsForHash().multiGet(“key”,keyList)</td>
+</tr>
+<tr>
+<td>hsetnx key field value</td>
+<td>rt.opsForHash().putIfAbsent(“key”,”field”,”value”</td>
+</tr>
+<tr>
+<td>hdel key field1 field2</td>
+<td>rt.opsForHash().delete(“key”,”field1”,”field2”)</td>
+</tr>
+<tr>
+<td>hget key field</td>
+<td>rt.opsForHash().get(“key”,”field”)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>List结构</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>lpush list node1 node2 node3…</td>
+<td>rt.opsForList().leftPush(“list”,”node”)</td>
+</tr>
+<tr>
+<td>rt.opsForList().leftPushAll(“list”,list) &#x2F;&#x2F;list是集合对象</td>
+<td></td>
+</tr>
+<tr>
+<td>rpush list node1 node2 node3…</td>
+<td>rt.opsForList().rightPush(“list”,”node”)</td>
+</tr>
+<tr>
+<td>rt.opsForList().rightPushAll(“list”,list) &#x2F;&#x2F;list是集合对象</td>
+<td></td>
+</tr>
+<tr>
+<td>lindex key index</td>
+<td>rt.opsForList().index(“list”, index)</td>
+</tr>
+<tr>
+<td>llen key</td>
+<td>rt.opsForList().size(“key”)</td>
+</tr>
+<tr>
+<td>lpop key</td>
+<td>rt.opsForList().leftPop(“key”)</td>
+</tr>
+<tr>
+<td>rpop key</td>
+<td>rt.opsForList().rightPop(“key”)</td>
+</tr>
+<tr>
+<td>lpushx list node</td>
+<td>rt.opsForList().leftPushIfPresent(“list”,”node”)</td>
+</tr>
+<tr>
+<td>rpushx list node</td>
+<td>rt.opsForList().rightPushIfPresent(“list”,”node”)</td>
+</tr>
+<tr>
+<td>lrange list start end</td>
+<td>rt.opsForList().range(“list”,start,end)</td>
+</tr>
+<tr>
+<td>lrem list count value</td>
+<td>rt.opsForList().remove(“list”,count,”value”)</td>
+</tr>
+<tr>
+<td>lset key index value</td>
+<td>rt.opsForList().set(“list”,index,”value”)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Set结构</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>sadd key member1 member2…</td>
+<td>rt.boundSetOps(“key”).add(“member1”,”member2”,…)</td>
+</tr>
+<tr>
+<td>rt.opsForSet().add(“key”, set) &#x2F;&#x2F;set是一个集合对象</td>
+<td></td>
+</tr>
+<tr>
+<td>scard key</td>
+<td>rt.opsForSet().size(“key”)</td>
+</tr>
+<tr>
+<td>sidff key1 key2</td>
+<td>rt.opsForSet().difference(“key1”,”key2”) &#x2F;&#x2F;返回一个集合对象</td>
+</tr>
+<tr>
+<td>sinter key1 key2</td>
+<td>rt.opsForSet().intersect(“key1”,”key2”)&#x2F;&#x2F;同上</td>
+</tr>
+<tr>
+<td>sunion key1 key2</td>
+<td>rt.opsForSet().union(“key1”,”key2”)&#x2F;&#x2F;同上</td>
+</tr>
+<tr>
+<td>sdiffstore des key1 key2</td>
+<td>rt.opsForSet().differenceAndStore(“key1”,”key2”,”des”)</td>
+</tr>
+<tr>
+<td>sinter des key1 key2</td>
+<td>rt.opsForSet().intersectAndStore(“key1”,”key2”,”des”)</td>
+</tr>
+<tr>
+<td>sunionstore des key1 key2</td>
+<td>rt.opsForSet().unionAndStore(“key1”,”key2”,”des”)</td>
+</tr>
+<tr>
+<td>sismember key member</td>
+<td>rt.opsForSet().isMember(“key”,”member”)</td>
+</tr>
+<tr>
+<td>smembers key</td>
+<td>rt.opsForSet().members(“key”)</td>
+</tr>
+<tr>
+<td>spop key</td>
+<td>rt.opsForSet().pop(“key”)</td>
+</tr>
+<tr>
+<td>srandmember key count</td>
+<td>rt.opsForSet().randomMember(“key”,count)</td>
+</tr>
+<tr>
+<td>srem key member1 member2…</td>
+<td>rt.opsForSet().remove(“key”,”member1”,”member2”,…)</td>
+</tr>
+</tbody></table>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             

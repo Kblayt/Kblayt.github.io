@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="JDK体系结构  ​     Java语言的跨平台特性  ​     JVM整体结构及内存模型  ​     补充一个问题： 在minor gc过程中对象挪动后，引用如何修改？ 对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象复制到s1或老年代，最后扫描完了">
+    <meta name="description" content="JDK体系结构 ​     Java语言的跨平台特性 ​     JVM整体结构及内存模型 ​      堆：堆是用于存储对象实例的区域，而且它是在JVM启动时创建的，被所有线程共享。 栈：每个线程都有一个私有的Java虚拟机栈（Java Virtual Machine Stack），每个Java虚拟机栈都由一系列帧（Frame）组成，每个帧对应着一个方法的调用。在多线程的情况下，每个线程都有自己">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2、JVM内存模型深度剖析与优化">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="JDK体系结构  ​     Java语言的跨平台特性  ​     JVM整体结构及内存模型  ​     补充一个问题： 在minor gc过程中对象挪动后，引用如何修改？ 对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象复制到s1或老年代，最后扫描完了">
+<meta property="og:description" content="JDK体系结构 ​     Java语言的跨平台特性 ​     JVM整体结构及内存模型 ​      堆：堆是用于存储对象实例的区域，而且它是在JVM启动时创建的，被所有线程共享。 栈：每个线程都有一个私有的Java虚拟机栈（Java Virtual Machine Stack），每个Java虚拟机栈都由一系列帧（Frame）组成，每个帧对应着一个方法的调用。在多线程的情况下，每个线程都有自己">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94563">
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94569">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/77391">
 <meta property="og:image" content="https://kblayt.github.io/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94575">
 <meta property="article:published_time" content="2023-06-16T08:48:42.000Z">
-<meta property="article:modified_time" content="2023-11-23T05:00:37.363Z">
+<meta property="article:modified_time" content="2023-11-26T03:35:41.161Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          2.7k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          18 分钟
+          23 分钟
         
       </span>
     
@@ -279,15 +279,25 @@
             
               <div class="markdown-body">
                 
-                <p><strong>JDK体系结构</strong></p>
-<hr>
+                <h1 id="JDK体系结构"><a href="#JDK体系结构" class="headerlink" title="JDK体系结构"></a><strong>JDK体系结构</strong></h1><hr>
 <p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94563" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>Java语言的跨平台特性</strong></p>
-<hr>
+<h1 id="Java语言的跨平台特性"><a href="#Java语言的跨平台特性" class="headerlink" title="Java语言的跨平台特性"></a><strong>Java语言的跨平台特性</strong></h1><hr>
 <p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/94569" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>JVM整体结构及内存模型</strong></p>
-<hr>
+<h1 id="JVM整体结构及内存模型"><a href="#JVM整体结构及内存模型" class="headerlink" title="JVM整体结构及内存模型"></a><strong>JVM整体结构及内存模型</strong></h1><hr>
 <p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/95302" srcset="/img/loading.gif" lazyload alt="0"></p>
+<ol>
+<li><strong>堆</strong>：堆是用于存储对象实例的区域，而且它是在JVM启动时创建的，被所有线程共享。</li>
+<li><strong>栈</strong>：每个线程都有一个私有的Java虚拟机栈（Java Virtual Machine Stack），每个Java虚拟机栈都由一系列帧（Frame）组成，每个帧对应着一个方法的调用。在多线程的情况下，每个线程都有自己的栈，互不影响。<ol>
+<li><strong>局部变量表</strong>：每个栈帧都私有一个局部变量表，是方法在执行过程中用于存放方法中变量的一块内存空间，是数组结构。（main方法与不同方法不同，main方法局部变量表存放的是所用到的对象在堆中的内存地址）</li>
+<li><strong>操作数栈</strong>：每个栈帧都私有一个操作数栈，是方法在执行过程中操作数临时存放的一块内存空间。</li>
+<li><strong>动态链接</strong>：动态链接主要涉及方法的调用和解析，目的是将符号引用转换为直接引用，使得方法能够正确地被调用。这个过程包括解析阶段，解析阶段就是动态链接的一部分。但这个直接引用可能并不是具体的内存地址。它可能是一个指向方法在方法区中的地址或者是一个偏移量等。</li>
+<li><strong>方法出口</strong>：是用来记录方法调用完成后程序执行的下一条指令的位置。每当一个方法被调用，JVM都会在当前线程的栈帧中保存方法出口。这个方法出口通常是指向调用该方法的指令的下一条指令的地址。</li>
+</ol>
+</li>
+<li><strong>本地方法栈</strong>：</li>
+<li><strong>程序计数器</strong>：每个线程都有一个私有的程序计数器，主要用于标记线程执行的位置，也可以称为当前线程执行的字节码的行号指示器。</li>
+<li><strong>方法区</strong>：</li>
+</ol>
 <p><strong>补充一个问题：</strong></p>
 <p><strong>在minor gc过程中对象挪动后，引用如何修改？</strong></p>
 <p>对象在堆内部挪动的过程其实是复制，原有区域对象还在，一般不直接清理，JVM内部清理过程只是将对象分配指针移动到区域的头位置即可，比如扫描s0区域，扫到gcroot引用的非垃圾对象是将这些对象<strong>复制</strong>到s1或老年代，最后扫描完了将s0区域的对象分配指针移动到区域的起始位置即可，s0区域之前对象并不直接清理，当有新对象分配了，原有区域里的对象也就被清除了。</p>
@@ -295,8 +305,7 @@
 <p>这里面内部算法比较复杂，感兴趣可以参考R大的这篇文章：</p>
 <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/42181722/answer/145085437">https://www.zhihu.com/question/42181722/answer/145085437</a></p>
 <p><a target="_blank" rel="noopener" href="https://hllvm-group.iteye.com/group/topic/39376#post-257329">https://hllvm-group.iteye.com/group/topic/39376#post-257329</a></p>
-<p><strong>二、JVM内存参数设置</strong></p>
-<hr>
+<h1 id="JVM内存参数设置"><a href="#JVM内存参数设置" class="headerlink" title="JVM内存参数设置"></a>JVM内存参数设置</h1><hr>
 <p>​    <img src="/2%E3%80%81JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96/77391" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>Spring Boot程序的JVM参数设置格式(Tomcat启动直接加在bin目录下catalina.sh文件里)：</p>
 <p>​                java -Xms2048M -Xmx2048M -Xmn1024M -Xss512K -XX:MetaspaceSize&#x3D;256M -XX:MaxMetaspaceSize&#x3D;256M -jar microservice-eureka-server.jar              </p>

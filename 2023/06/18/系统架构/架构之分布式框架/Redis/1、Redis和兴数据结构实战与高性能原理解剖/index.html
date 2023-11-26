@@ -16,16 +16,24 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="Redis安装 1234567891011121314151617181920212223242526272829303132333435下载地址：http:&#x2F;&#x2F;redis.io&#x2F;download安装步骤：# 安装gccyum install gcc# 把下载好的redis-5.0.3.tar.gz放在&#x2F;usr&#x2F;local文件夹下，并解压wget http:&#x2F;&#x2F;download.redis.io&#x2F;">
+<meta property="og:type" content="article">
 <meta property="og:title" content="1、Redis和兴数据结构实战与高性能原理解剖">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/18/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/Redis/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redis安装 1234567891011121314151617181920212223242526272829303132333435下载地址：http:&#x2F;&#x2F;redis.io&#x2F;download安装步骤：# 安装gccyum install gcc# 把下载好的redis-5.0.3.tar.gz放在&#x2F;usr&#x2F;local文件夹下，并解压wget http:&#x2F;&#x2F;download.redis.io&#x2F;">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/69701">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80857">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80858">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80856">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80478">
 <meta property="article:published_time" content="2023-06-18T13:25:46.000Z">
-<meta property="article:modified_time" content="2023-11-14T07:37:42.176Z">
+<meta property="article:modified_time" content="2023-11-25T13:11:03.952Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/69701">
   
   
   
@@ -217,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.2k 字
         
       </span>
     
@@ -228,7 +236,7 @@
         
         
         
-          1 分钟
+          19 分钟
         
       </span>
     
@@ -271,7 +279,44 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>Redis安装</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs markdown">下载地址：http://redis.io/download<br>安装步骤：<br><span class="hljs-section"># 安装gcc</span><br>yum install gcc<br><br><span class="hljs-section"># 把下载好的redis-5.0.3.tar.gz放在/usr/local文件夹下，并解压</span><br>wget http://download.redis.io/releases/redis-5.0.3.tar.gz<br>tar -zxvf redis-5.0.3.tar.gz<br>cd redis-5.0.3<br><br><span class="hljs-section"># 进入到解压好的redis-5.0.3目录下，进行编译与安装</span><br>make<br><br><span class="hljs-section"># 修改配置</span><br>daemonize yes  #后台启动<br>protected-mode no  #关闭保护模式，开启的话，只有本机才可以访问redis<br><span class="hljs-section"># 需要注释掉bind</span><br><span class="hljs-section">#bind 127.0.0.1（bind绑定的是自己机器网卡的ip，如果有多块网卡可以配多个ip，代表允许客户端通过机器的哪些网卡ip去访问，内网一般可以不配置bind，注释掉即可）</span><br><br><span class="hljs-section"># 启动服务</span><br>src/redis-server redis.conf<br><br><span class="hljs-section"># 验证启动是否成功 </span><br>ps -ef | grep redis <br><br><span class="hljs-section"># 进入redis客户端 </span><br>src/redis-cli <br><br><span class="hljs-section"># 退出客户端</span><br>quit<br><br><span class="hljs-section"># 退出redis服务： </span><br>（1）pkill redis-server <br>（2）kill 进程号                       <br>（3）src/redis-cli shutdown <br></code></pre></td></tr></table></figure>
+
+<p><strong>Redis的单线程和高性能</strong></p>
+<hr>
+<p><strong>Redis是单线程吗？</strong></p>
+<p>Redis 的单线程主要是指 Redis 的网络 IO 和键值对读写是由一个线程来完成的，这也是 Redis 对外提供键值存储服务的主要流程。但 Redis 的其他功能，比如持久化、异步删除、集群数据同步等，其实是由额外的线程执行的。</p>
+<p><strong>Redis 单线程为什么还能这么快？</strong></p>
+<p>因为它所有的数据都在<strong>内存</strong>中，所有的运算都是内存级别的运算，而且单线程避免了多线程的切换性能损耗问题。正因为 Redis 是单线程，所以要小心使用 Redis 指令，对于那些耗时的指令(比如keys)，一定要谨慎使用，一不小心就可能会导致 Redis 卡顿。 </p>
+<p><strong>Redis 单线程如何处理那么多的并发客户端连接？</strong></p>
+<p>Redis的<strong>IO多路复用</strong>：redis利用epoll来实现IO多路复用，将连接信息和事件放到队列中，依次放到文件事件分派器，事件分派器将事件分发给事件处理器。</p>
+<p>​    <img src="/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/69701" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​                # 查看redis支持的最大连接数，在redis.conf文件中可修改，# maxclients 10000 127.0.0.1:6379&gt; CONFIG GET maxclients   ##1) “maxclients”   ##2) “10000”              </p>
+<p><strong>其他高级命令</strong></p>
+<hr>
+<p><strong>keys：全量遍历键</strong>，用来列出所有满足特定正则字符串规则的key，当redis数据量比较大时，性能比较差，要避免使用</p>
+<p>​    <img src="/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80857" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>scan：渐进式遍历键</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">SCAN <span class="hljs-attribute">cursor</span> <span class="hljs-selector-attr">[MATCH pattern]</span> <span class="hljs-selector-attr">[COUNT count]</span> <br></code></pre></td></tr></table></figure>
+
+<p>scan 参数提供了三个参数，第一个是 cursor 整数值(hash桶的索引值)，第二个是 key 的正则模式，第三个是一次遍历的key的数量(参考值，底层遍历的数量不一定)，并不是符合条件的结果数量。第一次遍历时，cursor 值为 0，然后将返回结果中第一个整数值作为下一次遍历的 cursor。一直遍历到返回的 cursor 值为 0 时结束。</p>
+<p>注意：但是scan并非完美无瑕， 如果在scan的过程中如果有键的变化（增加、 删除、 修改） ，那么遍历效果可能会碰到如下问题： 新增的键可能没有遍历到， 遍历出了重复的键等情况， 也就是说scan并不能保证完整的遍历出来所有的键， 这些是我们在开发时需要考虑的。</p>
+<p>​    <img src="/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80858" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80856" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>Info：查看redis服务运行信息，分为 9 大块，每个块都有非常多的参数，这 9 个块分别是:</strong> </p>
+<p>Server 服务器运行的环境参数 </p>
+<p>Clients 客户端相关信息 </p>
+<p>Memory 服务器运行内存统计数据 </p>
+<p>Persistence 持久化信息 </p>
+<p>Stats 通用统计数据 </p>
+<p>Replication 主从复制相关信息 </p>
+<p>CPU CPU 使用情况 </p>
+<p>Cluster 集群信息 </p>
+<p>KeySpace 键值对统计数量信息</p>
+<p>​    <img src="/1%E3%80%81Redis%E5%92%8C%E5%85%B4%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E6%88%98%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E5%8E%9F%E7%90%86%E8%A7%A3%E5%89%96/80478" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java">connected_clients:<span class="hljs-number">2</span>                  # 正在连接的客户端数量<br><br>instantaneous_ops_per_sec:<span class="hljs-number">789</span>        # 每秒执行多少次指令<br><br>used_memory:<span class="hljs-number">929864</span>                   # Redis分配的内存总量(<span class="hljs-type">byte</span>)，包含redis进程内部的开销和数据占用的内存<br>used_memory_human:<span class="hljs-number">908.</span>07K            # Redis分配的内存总量(Kb，human会展示出单位)<br>used_memory_rss_human:<span class="hljs-number">2.</span>28M          # 向操作系统申请的内存大小(Mb)（这个值一般是大于used_memory的，因为Redis的内存分配策略会产生内存碎片）<br>used_memory_peak:<span class="hljs-number">929864</span>              # redis的内存消耗峰值(<span class="hljs-type">byte</span>)<br>used_memory_peak_human:<span class="hljs-number">908.</span>07K       # redis的内存消耗峰值(KB)<br><br>maxmemory:<span class="hljs-number">0</span>                         # 配置中设置的最大可使用内存值(<span class="hljs-type">byte</span>),默认<span class="hljs-number">0</span>,不限制，一般配置为机器物理内存的百分之七八十，需要留一部分给操作系统<br>maxmemory_human:0B                  # 配置中设置的最大可使用内存值<br>maxmemory_policy:noeviction         # 当达到maxmemory时的淘汰策略<br></code></pre></td></tr></table></figure>
+
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
