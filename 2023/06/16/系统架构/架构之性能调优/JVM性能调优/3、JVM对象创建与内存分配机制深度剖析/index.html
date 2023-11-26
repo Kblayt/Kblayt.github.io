@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="对象的创建 对象创建的主要流程: ​     1.类加载检查  虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。  new指令对应到语言层面上讲是，new关键词、对象克隆、对象序列化等。 2.分配内存  在类加载检查通过后，接下来虚拟机将为新生对象分配内存">
+    <meta name="description" content="对象的创建对象创建的主要流程: ​     1.类加载检查  虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。  new指令对应到语言层面上讲是，new关键词、对象克隆、对象序列化等。 2.分配内存  在类加载检查通过后，接下来虚拟机将为新生对象分配内存。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="3、JVM对象创建与内存分配机制深度剖析">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="对象的创建 对象创建的主要流程: ​     1.类加载检查  虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。  new指令对应到语言层面上讲是，new关键词、对象克隆、对象序列化等。 2.分配内存  在类加载检查通过后，接下来虚拟机将为新生对象分配内存">
+<meta property="og:description" content="对象的创建对象创建的主要流程: ​     1.类加载检查  虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。  new指令对应到语言层面上讲是，new关键词、对象克隆、对象序列化等。 2.分配内存  在类加载检查通过后，接下来虚拟机将为新生对象分配内存。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123315">
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123316">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123319">
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123320">
 <meta property="article:published_time" content="2023-06-16T08:49:07.000Z">
-<meta property="article:modified_time" content="2023-11-23T05:04:33.688Z">
+<meta property="article:modified_time" content="2023-11-26T12:19:19.726Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -280,8 +280,7 @@
             
               <div class="markdown-body">
                 
-                <p><strong>对象的创建</strong></p>
-<p>对象创建的主要流程:</p>
+                <h1 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a><strong>对象的创建</strong></h1><p>对象创建的主要流程:</p>
 <p>​    <img src="/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123315" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>1.类加载检查</strong></p>
 <p> 虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。</p>
@@ -341,9 +340,7 @@
 <p>4.堆内存小于4G时，不需要启用指针压缩，jvm会直接去除高32位地址，即使用低虚拟地址空间</p>
 <p>5.堆内存大于32G时，压缩指针会失效，会强制使用64位(即8字节)来对java对象寻址，这就会出现1的问题，所以堆内存不要大于32G为好</p>
 <p><strong>关于对齐填充：</strong>对于大部分处理器，对象以8字节整数倍来对齐填充都是最高效的存取方式。</p>
-<p><strong>对象内存分配</strong></p>
-<p><strong>对象内存分配流程图</strong></p>
-<p>​    <img src="/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123318" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h1 id="对象内存分配"><a href="#对象内存分配" class="headerlink" title="对象内存分配"></a><strong>对象内存分配</strong></h1><h2 id="对象内存分配流程图"><a href="#对象内存分配流程图" class="headerlink" title="对象内存分配流程图"></a><strong>对象内存分配流程图</strong></h2><p>​    <img src="/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123318" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>对象栈上分配</strong></p>
 <p>我们通过JVM内存分配可以知道JAVA中的对象都是在堆上进行分配，当对象没有被引用的时候，需要依靠GC进行回收内存，如果对象数量较多的时候，会给GC带来较大压力，也间接影响了应用的性能。为了减少临时对象在堆内分配的数量，JVM通过<strong>逃逸分析</strong>确定该对象不会被外部访问。如果不会逃逸可以将该对象在<strong>栈上分配</strong>内存，这样该对象所占用的内存空间就可以随栈帧出栈而销毁，就减轻了垃圾回收的压力。</p>
 <p><strong>对象逃逸分析</strong>：就是分析对象动态作用域，当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他地方中。</p>
@@ -357,8 +354,7 @@
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 栈上分配，标量替换</span><br><span class="hljs-comment"> * 代码调用了1亿次alloc()，如果是分配到堆上，大概需要1GB以上堆空间，如果堆空间小于该值，必然会触发GC。</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * 使用如下参数不会发生GC</span><br><span class="hljs-comment"> * -Xmx15m -Xms15m -XX:+DoEscapeAnalysis -XX:+PrintGC -XX:+EliminateAllocations</span><br><span class="hljs-comment"> * 使用如下参数都会发生大量GC</span><br><span class="hljs-comment"> * -Xmx15m -Xms15m -XX:-DoEscapeAnalysis -XX:+PrintGC -XX:+EliminateAllocations</span><br><span class="hljs-comment"> * -Xmx15m -Xms15m -XX:+DoEscapeAnalysis -XX:+PrintGC -XX:-EliminateAllocations</span><br><span class="hljs-comment"> */</span><br><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> AllotOnStack &#123;<br><br>    <span class="hljs-built_in">public</span> static <span class="hljs-type">void</span> main(String[] args) &#123;<br>        long start = <span class="hljs-keyword">System</span>.currentTimeMillis();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000000</span>; i++) &#123;<br>            alloc();<br>        &#125;<br>        long end = <span class="hljs-keyword">System</span>.currentTimeMillis();<br>        <span class="hljs-keyword">System</span>.<span class="hljs-keyword">out</span>.println(<span class="hljs-keyword">end</span> - <span class="hljs-keyword">start</span>);<br>    &#125;<br><br>    private static <span class="hljs-type">void</span> alloc() &#123;<br>        <span class="hljs-keyword">User</span> <span class="hljs-keyword">user</span> = <span class="hljs-built_in">new</span> <span class="hljs-keyword">User</span>();<br>        <span class="hljs-keyword">user</span>.setId(<span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">user</span>.setName(&quot;zhuge&quot;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>结论：****栈上分配依赖于逃逸分析和标量替换</strong></p>
-<p><strong>对象在Eden区分配</strong></p>
-<p>大多数情况下，对象在新生代中 Eden 区分配。当 Eden 区没有足够空间进行分配时，虚拟机将发起一次Minor GC。我们来进行实际测试一下。</p>
+<h2 id="对象在Eden区分配"><a href="#对象在Eden区分配" class="headerlink" title="对象在Eden区分配"></a><strong>对象在Eden区分配</strong></h2><p>大多数情况下，对象在新生代中 Eden 区分配。当 Eden 区没有足够空间进行分配时，虚拟机将发起一次Minor GC。我们来进行实际测试一下。</p>
 <p>在测试之前我们先来看看 <strong>Minor GC和Full GC 有什么不同呢？</strong></p>
 <ul>
 <li><strong>Minor GC&#x2F;Young GC</strong>：指发生新生代的的垃圾收集动作，Minor GC非常频繁，回收速度一般也比较快。</li>
@@ -394,8 +390,7 @@
 <p>如果上一步结果是小于或者之前说的参数没有设置，那么就会触发一次Full gc，对老年代和年轻代一起回收一次垃圾，如果回收完还是没有足够空间存放新的对象就会发生”OOM”</p>
 <p>当然，如果minor gc之后剩余存活的需要挪动到老年代的对象大小还是大于老年代可用空间，那么也会触发full gc，full gc完之后如果还是没有空间放minor gc之后的存活对象，则也会发生“OOM”</p>
 <p>​    <img src="/3%E3%80%81JVM%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/123319" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>对象内存回收</strong></p>
-<p>堆中几乎放着所有的对象实例，对堆垃圾回收前的第一步就是要判断哪些对象已经死亡（即不能再被任何途径使用的对象）。</p>
+<h1 id="对象内存回收"><a href="#对象内存回收" class="headerlink" title="对象内存回收"></a><strong>对象内存回收</strong></h1><p>堆中几乎放着所有的对象实例，对堆垃圾回收前的第一步就是要判断哪些对象已经死亡（即不能再被任何途径使用的对象）。</p>
 <p><strong>引用计数法</strong></p>
 <p>给对象中添加一个引用计数器，每当有一个地方引用它，计数器就加1；当引用失效，计数器就减1；任何时候计数器为0的对象就是不可能再被使用的。</p>
 <p><strong>这个方法实现简单，效率高，但是目前主流的虚拟机中并没有选择这个算法来管理内存，其最主要的原因是它很难解决对象之间相互循环引用的问题。</strong> 所谓对象之间的相互引用问题，如下面代码所示：除了对象objA 和 objB 相互引用着对方之外，这两个对象之间再无任何引用。但是他们因为互相引用对方，导致它们的引用计数器都不为0，于是引用计数算法无法通知 GC 回收器回收他们。</p>
