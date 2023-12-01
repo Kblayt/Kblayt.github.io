@@ -16,16 +16,44 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="JVM的语言无关性 跨语言（语言无关性）：JVM只识别字节码，所以JVM其实跟语言是解耦的，也就是没有直接关联，JVM运行不是翻译Java文件，而是识别class文件，这个一般称之为字节码。还有像Groovy 、Kotlin、Scala等等语言，它们其实也是编译成字节码，所以它们也可以在JVM上面跑，这个就是JVM的跨语言特征。Java的跨语言性一定程度上奠定了非常强大的java语言生态圈。 ​">
+<meta property="og:type" content="article">
 <meta property="og:title" content="10、让Java性能提升的JIT深度剖析">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="JVM的语言无关性 跨语言（语言无关性）：JVM只识别字节码，所以JVM其实跟语言是解耦的，也就是没有直接关联，JVM运行不是翻译Java文件，而是识别class文件，这个一般称之为字节码。还有像Groovy 、Kotlin、Scala等等语言，它们其实也是编译成字节码，所以它们也可以在JVM上面跑，这个就是JVM的跨语言特征。Java的跨语言性一定程度上奠定了非常强大的java语言生态圈。 ​">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2444">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2436">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2461">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2440">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2442">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2441">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2438">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2450">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2448">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2457">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2447">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2455">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2453">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2459">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2443">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2451">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2445">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2439">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2456">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2454">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2449">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2458">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2466">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2465">
+<meta property="og:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2446">
 <meta property="article:published_time" content="2023-06-16T08:51:33.000Z">
-<meta property="article:modified_time" content="2023-06-16T09:03:17.367Z">
+<meta property="article:modified_time" content="2023-11-29T14:16:16.542Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2444">
   
   
   
@@ -217,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          3.9k 字
         
       </span>
     
@@ -228,7 +256,7 @@
         
         
         
-          1 分钟
+          33 分钟
         
       </span>
     
@@ -271,7 +299,109 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>JVM的语言无关性</strong></p>
+<p>跨语言（语言无关性）：JVM只识别字节码，所以JVM其实跟语言是解耦的，也就是没有直接关联，JVM运行不是翻译Java文件，而是识别class文件，这个一般称之为字节码。还有像Groovy 、Kotlin、Scala等等语言，它们其实也是编译成字节码，所以它们也可以在JVM上面跑，这个就是JVM的跨语言特征。Java的跨语言性一定程度上奠定了非常强大的java语言生态圈。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2444" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>解释执行与JIT</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2436" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>Java程序在运行的时候，主要就是执行字节码指令，一般这些指令会按照顺序解释执行，这种就是解释执行。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2461" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>但是那些被频繁调用的代码，比如调用次数很高或者在 for 循环里的那些代码,如果按照解释执行，效率是非常低的。（这个就是Java以前被C、C++开发者吐槽慢的原因）</p>
+<p><strong>以上的这些代码称为热点代码。</strong>所以，为了提高热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化。</p>
+<p>完成这个任务的编译器，就称为即时编译器（Just In Time Compiler），简称 JIT 编译器。</p>
+<p><strong>C1、C2与Graal编译器</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2440" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>在JDK1.8中 HotSpot 虚拟机中，内置了两个 JIT，分别为 C1 编译器和 C2 编译器。</p>
+<p><strong>C1编译器</strong></p>
+<p>C1 编译器是一个简单快速的编译器，主要的关注点在于局部性的优化，适用于执行时间较短或对启动性能有要求的程序，例如，GUI 应用对界面启动速度就有一定要求，C1也被称为 Client Compiler。</p>
+<p>C1编译器几乎不会对代码进行优化</p>
+<p><strong>C2编译器</strong></p>
+<p>C2 编译器是为长期运行的服务器端应用程序做性能调优的编译器，适用于执行时间较长或对峰值性能有要求的程序。根据各自的适配性，这种即时编译也被称为Server Compiler。</p>
+<p>但是C2代码已超级复杂，无人能维护！所以才会开发Java编写的Graal编译器取代C2(JDK10开始)</p>
+<p><strong>分层编译</strong></p>
+<p>在 Java7之前，需要根据程序的特性来选择对应的 JIT，虚拟机默认采用解释器和其中一个编译器配合工作。</p>
+<p>Java7及以后引入了分层编译，这种方式综合了 C1 的启动性能优势和 C2 的峰值性能优势，当然我们也可以通过参数强制指定虚拟机的即时编译模式。</p>
+<p><strong>在 Java8 中，默认开启分层编译。</strong></p>
+<p><strong>通过</strong> <strong>java -version</strong> <strong>命令行可以直接查看到当前系统使用的编译模式</strong><strong>(<strong><strong>默认分层编译</strong></strong>)</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2442" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>使用“</strong><strong>-Xint****”参数强制虚拟机运行于只有解释器的编译模式</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2441" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>使用“</strong><strong>-Xcomp****”强制虚拟机运行于只有</strong> <strong>JIT</strong> <strong>的编译模式下</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2438" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>JVM 的执行状态分为了 5 个层次：(不重要、了解即可)</strong></p>
+<p>Ø  第 0 层：程序解释执行，默认开启性能监控功能（Profiling），如果不开启，可触发第二层编译；</p>
+<p>Ø  第 1 层：可称为 C1 编译，将字节码编译为本地代码，进行简单、可靠的优化，不开启 Profiling；</p>
+<p>Ø  第 2 层：也称为 C1 编译，开启Profiling，仅执行带方法调用次数和循环回边执行次数 profiling 的 C1 编译；</p>
+<p>Ø  第 3 层：也称为 C1 编译，执行所有带 Profiling 的 C1 编译；</p>
+<p>Ø  第 4 层：可称为 C2 编译，也是将字节码编译为本地代码，但是会启用一些编译耗时较长的优化，甚至会根据性能监控信息进行一些不可靠的激进优化。</p>
+<p><strong>热点代码</strong></p>
+<p>热点代码，就是那些被频繁调用的代码，比如调用次数很高或者在 for 循环里的那些代码。这些再次编译后的机器码会被缓存起来，以备下次使用，但对于那些执行次数很少的代码来说，这种编译动作就纯属浪费。</p>
+<p>JVM提供了一个参数“-XX:ReservedCodeCacheSize”，用来限制 CodeCache 的大小。也就是说，JIT 编译后的代码都会放在 CodeCache 里。</p>
+<p>如果这个空间不足，JIT 就无法继续编译，编译执行会变成解释执行，性能会降低一个数量级。同时，JIT 编译器会一直尝试去优化代码，从而造成了 CPU 占用上升。</p>
+<p><strong>通过 java -XX:+PrintFlagsFinal –version查询:</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2450" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>热点探测</strong></p>
+<p>在 HotSpot 虚拟机中的热点探测是 JIT 优化的条件，热点探测是基于计数器的热点探测，采用这种方法的虚拟机会为每个方法建立计数器统计方法的执行次数，如果执行次数超过一定的阈值就认为它是“热点方法”</p>
+<p>虚拟机为<strong>每个方法</strong>准备了<strong>两类计数器</strong>：方法调用计数器（Invocation Counter）和回边计数器（Back Edge Counter）。在确定虚拟机运行参数的前提下，这两个计数器都有一个确定的阈值，当计数器超过阈值溢出了，就会触发 JIT 编译。</p>
+<p><strong>方法调用计数器</strong></p>
+<p>用于统计方法被调用的次数，方法调用计数器的默认阈值在客户端模式下是 1500 次，在服务端模式下是 10000 次(我们用的都是服务端，java –version查询)，可通过 -XX: CompileThreshold 来设定</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2448" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>通过 java -XX:+PrintFlagsFinal –version查询</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2457" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>回边计数器</strong></p>
+<p>用于统计一个方法中循环体代码执行的次数，在字节码中遇到控制流向后跳转的指令称为“回边”（Back Edge），该值用于计算是否触发 C1 编译的阈值，在不开启分层编译的情况下，在服务端模式下是<strong>10700</strong>。</p>
+<p>怎么算的呢！参考以下公式（有兴趣可了解）：</p>
+<p>回边计数器阈值 &#x3D;方法调用计数器阈值（CompileThreshold）×（OSR比率（OnStackReplacePercentage）-解释器监控比率（InterpreterProfilePercentage）&#x2F;100</p>
+<p><strong>通过 java -XX:+PrintFlagsFinal –version查询先关参数:</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2447" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2455" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>其中OnStackReplacePercentage默认值为140，InterpreterProfilePercentage默认值为33，如果都取默认值，那Server模式虚拟机回边计数器的阈值为10700.</p>
+<p>回边计数器阈值 &#x3D;10000×（140-33）&#x3D;10700</p>
+<p><strong>编译优化技术</strong></p>
+<p>JIT 编译运用了一些经典的编译优化技术来实现代码的优化，即通过一些例行检查优化，可以智能地编译出运行时的最优性能代码.</p>
+<p><strong>方法内联</strong></p>
+<p>方法内联的优化行为就是把目标方法的代码复制到发起调用的方法之中，避免发生真实的方法调用。</p>
+<p><strong>例如以下方法：</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2453" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>最终会被优化为：</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2459" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>JVM 会自动识别热点方法，并对它们使用方法内联进行优化。</p>
+<p>我们可以通过 -XX:CompileThreshold 来设置热点方法的阈值。</p>
+<p>但要强调一点，热点方法不一定会被 JVM 做内联优化，如果这个方法体太大了，JVM 将不执行内联操作。</p>
+<p>而方法体的大小阈值，我们也可以通过参数设置来优化：</p>
+<p>经常执行的方法，默认情况下，方法体大小小于 325 字节的都会进行内联，我们可以通过 -XX:FreqInlineSize&#x3D;N 来设置大小值；</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2443" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>不是经常执行的方法，默认情况下，方法大小小于 35 字节才会进行内联，我们也可以通过 -XX:MaxInlineSize&#x3D;N 来重置大小值。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2451" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>代码演示</strong></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2445" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>设置 VM 参数：-XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining </p>
+<p>-XX:+PrintCompilation  &#x2F;&#x2F;在控制台打印编译过程信息 -XX:+UnlockDiagnosticVMOptions &#x2F;&#x2F;解锁对JVM进行诊断的选项参数。默认是关闭的，开启后支持一些特定参数对JVM进行诊断 -XX:+PrintInlining &#x2F;&#x2F;将内联方法打印出来</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2439" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>如果循环太少，则不会触发方法内联</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2456" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2454" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>热点方法的优化可以有效提高系统性能，一般我们可以通过以下几种方式来提高方法内联：</strong></p>
+<ul>
+<li>通过设置 JVM 参数来减小热点阈值或增加方法体阈值，以便更多的方法可以进行内联，但这种方法意味着需要占用更多地内存；</li>
+<li>在编程中，避免在一个方法中写大量代码，习惯使用小方法体；</li>
+<li>尽量使用 final、private、static 关键字修饰方法，编码方法因为继承，会需要额外的类型检查。</li>
+</ul>
+<p><strong>锁消除</strong></p>
+<p>在非线程安全的情况下，尽量不要使用线程安全容器，比如 StringBuffer。由于 StringBuffer 中的 append 方法被 Synchronized 关键字修饰，会使用到锁，从而导致性能下降。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2449" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>但实际上，在以下代码测试中，StringBuffer 和 StringBuilder 的性能基本没什么区别。这是因为在局部方法中创建的对象只能被当前线程访问，无法被其它线程访问，这个变量的读写肯定不会有竞争，这个时候 JIT 编译会对这个对象的方法锁进行锁消除。</p>
+<p>下代码测试中，StringBuffer 和 StringBuilder 的性能基本没什么区别。这是因为在局部方法中创建的对象只能被当前线程访问，无法被其它线程访问，这个变量的读写肯定不会有竞争，这个时候 JIT 编译会对这个对象的方法锁进行锁消除。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2458" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2466" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>我们把锁消除关闭—测试发现性能差别有点大</p>
+<p>-XX:+EliminateLocks开启锁消除（jdk1.8默认开启，其它版本未测试）</p>
+<p>-XX:-EliminateLocks 关闭锁消除</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2465" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>标量替换</strong></p>
+<p>逃逸分析证明一个对象不会被外部访问，如果这个对象可以被拆分的话，当程序真正执行的时候可能不创建这个对象，而直接创建它的成员变量来代替。将对象拆分后，可以分配对象的成员变量在栈或寄存器上，原本的对象就无需分配内存空间了。这种编译优化就叫做标量替换（前提是需要开启逃逸分析）。</p>
+<p>​    <img src="/10%E3%80%81%E8%AE%A9Java%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84JIT%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2446" srcset="/img/loading.gif" lazyload alt="0"></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             

@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="G1收集器(-XX:+UseG1GC) G1 (Garbage-First)是一款面向服务器的垃圾收集器,主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征. ​     ​     G1将Java堆划分为多个大小相等的独立区域（Region），JVM目标是不超过2048个Region(JVM源码里TARGET_REGION_NUMBER 定义">
+    <meta name="description" content="G1收集器(-XX:+UseG1GC)G1 (Garbage-First)是一款面向服务器的垃圾收集器,主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征. ​     ​     G1将Java堆划分为多个大小相等的独立区域（Region），JVM目标是不超过2048个Region(JVM源码里TARGET_REGION_NUMBER 定义)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="6、垃圾收集器G1&amp;ZGC详解">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="G1收集器(-XX:+UseG1GC) G1 (Garbage-First)是一款面向服务器的垃圾收集器,主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征. ​     ​     G1将Java堆划分为多个大小相等的独立区域（Region），JVM目标是不超过2048个Region(JVM源码里TARGET_REGION_NUMBER 定义">
+<meta property="og:description" content="G1收集器(-XX:+UseG1GC)G1 (Garbage-First)是一款面向服务器的垃圾收集器,主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征. ​     ​     G1将Java堆划分为多个大小相等的独立区域（Region），JVM目标是不超过2048个Region(JVM源码里TARGET_REGION_NUMBER 定义)">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95353">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95354">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95940">
 <meta property="og:image" content="https://kblayt.github.io/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95881">
 <meta property="article:published_time" content="2023-06-16T08:50:06.000Z">
-<meta property="article:modified_time" content="2023-11-23T13:02:16.150Z">
+<meta property="article:modified_time" content="2023-11-29T14:10:21.738Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -287,8 +287,7 @@
             
               <div class="markdown-body">
                 
-                <p><strong>G1收集器(-XX:+UseG1GC)</strong></p>
-<p><strong>G1 (Garbage-First)是一款面向服务器的垃圾收集器,<strong><strong>主要针对配备多颗处理器及大容量内存的机器</strong></strong>. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征.</strong></p>
+                <h1 id="G1收集器-XX-UseG1GC"><a href="#G1收集器-XX-UseG1GC" class="headerlink" title="G1收集器(-XX:+UseG1GC)"></a><strong>G1收集器(-XX:+UseG1GC)</strong></h1><p><strong>G1 (Garbage-First)是一款面向服务器的垃圾收集器,<strong><strong>主要针对配备多颗处理器及大容量内存的机器</strong></strong>. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征.</strong></p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95353" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95354" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>G1将Java堆划分为多个大小相等的独立区域（<strong>Region</strong>），JVM目标是不超过2048个Region(JVM源码里TARGET_REGION_NUMBER 定义)，实际可以超过该值，但是不推荐。</p>
@@ -321,15 +320,13 @@
 </ul>
 <p>毫无疑问， 可以由用户指定期望的停顿时间是G1收集器很强大的一个功能， 设置不同的期望停顿时间， 可使得G1在不同应用场景中取得关注吞吐量和关注延迟之间的最佳平衡。 不过， 这里设置的“期望值”必须是符合实际的， 不能异想天开， 毕竟G1是要冻结用户线程来复制对象的， 这个停顿时</p>
 <p>间再怎么低也得有个限度。 它默认的停顿目标为两百毫秒， 一般来说， 回收阶段占到几十到一百甚至接近两百毫秒都很正常， 但如果我们把停顿时间调得非常低， 譬如设置为二十毫秒， 很可能出现的结果就是由于停顿目标时间太短， 导致每次选出来的回收集只占堆内存很小的一部分， 收集器收集的速度逐渐跟不上分配器分配的速度， 导致垃圾慢慢堆积。 很可能一开始收集器还能从空闲的堆内存中获得一些喘息的时间， 但应用运行时间一长就不行了， 最终占满堆引发Full GC反而降低性能， 所以通常把期望停顿时间设置为一两百毫秒或者两三百毫秒会是比较合理的。</p>
-<p><strong>G1垃圾收集分类</strong></p>
-<p><strong>YoungGC</strong></p>
+<h2 id="G1垃圾收集分类"><a href="#G1垃圾收集分类" class="headerlink" title="G1垃圾收集分类"></a><strong>G1垃圾收集分类</strong></h2><p><strong>YoungGC</strong></p>
 <p>YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下现在Eden区回收大概要多久时间，如果回收时间远远小于参数 -XX:MaxGCPauseMills 设定的值，那么增加年轻代的region，继续给新对象存放，不会马上做Young GC，直到下一次Eden区放满，G1计算回收时间接近参数 -XX:MaxGCPauseMills 设定的值，那么就会触发Young GC</p>
 <p><strong>MixedGC</strong></p>
 <p>不是FullGC，老年代的堆占有率达到参数(<strong>-XX:InitiatingHeapOccupancyPercent</strong>)设定的值则触发，回收所有的Young和部分Old(根据期望的GC停顿时间确定old区垃圾收集的优先顺序)以及<strong>大对象区</strong>，正常情况G1的垃圾收集是先做MixedGC，主要使用复制算法，需要把各个region中存活的对象拷贝到别的region里去，拷贝过程中如果发现<strong>没有足够的空region</strong>能够承载拷贝对象就会触发一次Full GC</p>
 <p><strong>Full GC</strong></p>
 <p>停止系统程序，然后采用单线程进行标记、清理和压缩整理，好空闲出来一批Region来供下一次MixedGC使用，这个过程是非常耗时的。(Shenandoah优化成多线程收集了)</p>
-<p><strong>G1收集器参数设置</strong> </p>
-<p>  -XX:+UseG1GC:使用G1收集器</p>
+<h2 id="G1收集器参数设置"><a href="#G1收集器参数设置" class="headerlink" title="G1收集器参数设置"></a><strong>G1收集器参数设置</strong></h2><p>  -XX:+UseG1GC:使用G1收集器</p>
 <p>  -XX:ParallelGCThreads:指定GC工作的线程数量</p>
 <p>  -XX:G1HeapRegionSize:指定分区大小(1MB~32MB，且必须是2的N次幂)，默认将整堆划分为2048个分区</p>
 <p>  -XX:MaxGCPauseMillis:目标暂停时间(默认200ms)</p>
@@ -341,28 +338,23 @@
 <p> -XX:G1MixedGCLiveThresholdPercent(默认85%)  region中的存活对象低于这个值时才会回收该region，如果超过这个值，存活对象过多，回收的的意义不大。</p>
 <p>  -XX:G1MixedGCCountTarget:在一次回收过程中指定做几次筛选回收(默认8次)，在最后一个筛选回收阶段可以回收一会，然后暂停回收，恢复系统运行，一会再开始回收，这样可以让系统不至于单次停顿时间过长。</p>
 <p>  -XX:G1HeapWastePercent(默认5%): gc过程中空出来的region是否充足阈值，在混合回收的时候，对Region回收都是基于复制算法进行的，都是把要回收的Region里的存活对象放入其他Region，然后这个Region中的垃圾对象全部清理掉，这样的话在回收过程就会不断空出来新的Region，一旦空闲出来的Region数量达到了堆内存的5%，此时就会立即停止混合回收，意味着本次混合回收就结束了。</p>
-<p><strong>G1垃圾收集器优化建议</strong></p>
-<p>假设参数 -XX:MaxGCPauseMills 设置的值很大，导致系统运行很久才会做年轻代gc，年轻代可能都占用了堆内存的60%了，此时才触发年轻代gc。那么存活下来的对象可能就会很多，此时就会导致Survivor区域放不下那么多的对象，就会进入老年代中。</p>
+<h2 id="G1垃圾收集器优化建议"><a href="#G1垃圾收集器优化建议" class="headerlink" title="G1垃圾收集器优化建议"></a><strong>G1垃圾收集器优化建议</strong></h2><p>假设参数 -XX:MaxGCPauseMills 设置的值很大，导致系统运行很久才会做年轻代gc，年轻代可能都占用了堆内存的60%了，此时才触发年轻代gc。那么存活下来的对象可能就会很多，此时就会导致Survivor区域放不下那么多的对象，就会进入老年代中。</p>
 <p>或者是你年轻代gc过后，存活下来的对象过多，导致进入Survivor区域后触发了动态年龄判定规则，达到了Survivor区域的50%，也会快速导致一些对象进入老年代中。</p>
 <p>所以这里核心还是在于调节 -XX:MaxGCPauseMills 这个参数的值，在保证他的年轻代gc别太频繁的同时，还得考虑每次gc过后的存活对象有多少，避免存活对象太多快速进入老年代，频繁触发mixed gc.</p>
-<p><strong>什么场景适合使用G1</strong></p>
-<ol>
+<h2 id="什么场景适合使用G1"><a href="#什么场景适合使用G1" class="headerlink" title="什么场景适合使用G1"></a><strong>什么场景适合使用G1</strong></h2><ol>
 <li>50%以上的堆被存活对象占用</li>
 <li>对象分配和晋升的速度变化非常大</li>
 <li>垃圾回收时间特别长，超过1秒</li>
 <li>8GB以上的堆内存(建议值)</li>
 <li>停顿时间是500ms以内</li>
 </ol>
-<p><strong>每秒几十万并发的系统如何优化JVM</strong></p>
-<p>Kafka类似的支撑高并发消息系统大家肯定不陌生，对于kafka来说，每秒处理几万甚至几十万消息时很正常的，一般来说部署kafka需要用大内存机器(比如64G)，也就是说可以给年轻代分配个三四十G的内存用来支撑高并发处理，这里就涉及到一个问题了，我们以前常说的对于eden区的young gc是很快的，这种情况下它的执行还会很快吗？很显然，不可能，因为内存太大，处理还是要花不少时间的，假设三四十G内存回收可能最快也要几秒钟，按kafka这个并发量放满三四十G的eden区可能也就一两分钟吧，那么意味着整个系统每运行一两分钟就会因为young gc卡顿几秒钟没法处理新消息，显然是不行的。那么对于这种情况如何优化了，我们可以使用G1收集器，设置 -XX:MaxGCPauseMills 为50ms，假设50ms能够回收三到四个G内存，然后50ms的卡顿其实完全能够接受，用户几乎无感知，那么整个系统就可以在卡顿几乎无感知的情况下一边处理业务一边收集垃圾。</p>
+<h2 id="每秒几十万并发的系统如何优化JVM"><a href="#每秒几十万并发的系统如何优化JVM" class="headerlink" title="每秒几十万并发的系统如何优化JVM"></a><strong>每秒几十万并发的系统如何优化JVM</strong></h2><p>Kafka类似的支撑高并发消息系统大家肯定不陌生，对于kafka来说，每秒处理几万甚至几十万消息时很正常的，一般来说部署kafka需要用大内存机器(比如64G)，也就是说可以给年轻代分配个三四十G的内存用来支撑高并发处理，这里就涉及到一个问题了，我们以前常说的对于eden区的young gc是很快的，这种情况下它的执行还会很快吗？很显然，不可能，因为内存太大，处理还是要花不少时间的，假设三四十G内存回收可能最快也要几秒钟，按kafka这个并发量放满三四十G的eden区可能也就一两分钟吧，那么意味着整个系统每运行一两分钟就会因为young gc卡顿几秒钟没法处理新消息，显然是不行的。那么对于这种情况如何优化了，我们可以使用G1收集器，设置 -XX:MaxGCPauseMills 为50ms，假设50ms能够回收三到四个G内存，然后50ms的卡顿其实完全能够接受，用户几乎无感知，那么整个系统就可以在卡顿几乎无感知的情况下一边处理业务一边收集垃圾。</p>
 <p>G1天生就适合这种大内存机器的JVM运行，可以比较完美的解决大内存垃圾回收时间过长的问题。</p>
-<p><strong>ZGC收集器(-XX:+UseZGC)</strong></p>
-<p>参考文章：<a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/zgc/Main">https://wiki.openjdk.java.net/display/zgc/Main</a></p>
+<h1 id="ZGC收集器-XX-UseZGC"><a href="#ZGC收集器-XX-UseZGC" class="headerlink" title="ZGC收集器(-XX:+UseZGC)"></a><strong>ZGC收集器(-XX:+UseZGC)</strong></h1><p>参考文章：<a target="_blank" rel="noopener" href="https://wiki.openjdk.java.net/display/zgc/Main">https://wiki.openjdk.java.net/display/zgc/Main</a></p>
 <p><a target="_blank" rel="noopener" href="http://cr.openjdk.java.net/~pliden/slides/ZGC-Jfokus-2018.pdf">http://cr.openjdk.java.net/~pliden/slides/ZGC-Jfokus-2018.pdf</a></p>
 <p>ZGC是一款JDK 11中新加入的具有实验性质的低延迟垃圾收集器，ZGC可以说源自于是Azul System公司开发的C4（Concurrent Continuously Compacting Collector） 收集器。</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95908" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>ZGC目标</strong></p>
-<p>如下图所示，ZGC的目标主要有4个：</p>
+<h2 id="ZGC目标"><a href="#ZGC目标" class="headerlink" title="ZGC目标"></a><strong>ZGC目标</strong></h2><p>如下图所示，ZGC的目标主要有4个：</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95916" srcset="/img/loading.gif" lazyload alt="0"></p>
 <ul>
 <li><strong>支持TB量级的堆</strong>。我们生产环境的硬盘还没有上TB呢，这应该可以满足未来十年内，所有JAVA应用的需求了吧。 </li>
@@ -374,8 +366,7 @@
 <p><strong>不分代(暂时)</strong></p>
 <p>单代，即ZGC「没有分代」。我们知道以前的垃圾回收器之所以分代，是因为源于“「大部分对象朝生夕死」”的假设，事实上大部分系统的对象分配行为也确实符合这个假设。</p>
 <p>那么为什么ZGC就不分代呢？因为分代实现起来麻烦，作者就先实现出一个比较简单可用的单代版本，后续会优化。</p>
-<p><strong>ZGC内存布局</strong></p>
-<p>ZGC收集器是一款基于Region内存布局的， 暂时不设分代的， 使用了<strong>读屏障、 颜色指针</strong>等技术来实现可并发的标记-整理算法的， 以低延迟为首要目标的一款垃圾收集器。</p>
+<h2 id="ZGC内存布局"><a href="#ZGC内存布局" class="headerlink" title="ZGC内存布局"></a><strong>ZGC内存布局</strong></h2><p>ZGC收集器是一款基于Region内存布局的， 暂时不设分代的， 使用了<strong>读屏障、 颜色指针</strong>等技术来实现可并发的标记-整理算法的， 以低延迟为首要目标的一款垃圾收集器。</p>
 <p>ZGC的Region可以具有如图3-19所示的大、 中、 小三类容量：</p>
 <ul>
 <li>小型Region（Small Region） ： 容量固定为2MB， 用于放置小于256KB的小对象。</li>
@@ -383,12 +374,10 @@
 <li>大型Region（Large Region） ： 容量不固定， 可以动态变化， 但必须为2MB的整数倍， 用于放置4MB或以上的大对象。 <strong>每个大型Region中只会存放一个大对象</strong>， 这也预示着虽然名字叫作“大型Region”， 但它的实际容量完全有可能小于中型Region， 最小容量可低至4MB。 大型Region在ZGC的实现中是不会被重分配（重分配是ZGC的一种处理动作， 用于复制对象的收集器阶段， 稍后会介绍到）的， 因为复制一个大对象的代价非常高昂。</li>
 </ul>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95873" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>NUMA-aware</strong></p>
-<p>NUMA对应的有UMA，UMA即<strong>Uniform Memory Access Architecture</strong>，NUMA就是Non Uniform Memory Access Architecture。UMA表示内存只有一块，所有CPU都去访问这一块内存，那么就会存在竞争问题（争夺内存总线访问权），有竞争就会有锁，有锁效率就会受到影响，而且CPU核心数越多，竞争就越激烈。NUMA的话每个CPU对应有一块内存，且这块内存在主板上离这个CPU是最近的，每个CPU优先访问这块内存，那效率自然就提高了：</p>
+<h2 id="NUMA-aware"><a href="#NUMA-aware" class="headerlink" title="NUMA-aware"></a><strong>NUMA-aware</strong></h2><p>NUMA对应的有UMA，UMA即<strong>Uniform Memory Access Architecture</strong>，NUMA就是Non Uniform Memory Access Architecture。UMA表示内存只有一块，所有CPU都去访问这一块内存，那么就会存在竞争问题（争夺内存总线访问权），有竞争就会有锁，有锁效率就会受到影响，而且CPU核心数越多，竞争就越激烈。NUMA的话每个CPU对应有一块内存，且这块内存在主板上离这个CPU是最近的，每个CPU优先访问这块内存，那效率自然就提高了：</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95934" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>服务器的NUMA架构在中大型系统上一直非常盛行，也是高性能的解决方案，尤其在系统延迟方面表现都很优秀。ZGC是能自动感知NUMA架构并充分利用NUMA架构特性的。</p>
-<p><strong>ZGC运作过程</strong></p>
-<p>ZGC的运作过程大致可划分为以下四个大的阶段：</p>
+<h2 id="ZGC运作过程"><a href="#ZGC运作过程" class="headerlink" title="ZGC运作过程"></a><strong>ZGC运作过程</strong></h2><p>ZGC的运作过程大致可划分为以下四个大的阶段：</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95977" srcset="/img/loading.gif" lazyload alt="0"></p>
 <ul>
 <li><strong>并发标记（Concurrent Mark）</strong>：与G1一样，并发标记是遍历对象图做可达性分析的阶段，它的初始标记(<strong>Mark Start</strong>)和最终标记(<strong>Mark End</strong>)也会出现短暂的停顿，与G1不同的是， ZGC的标记是在指针上而不是在对象上进行的， 标记阶段会更新<strong>颜色指针</strong>(见下面详解)中的Marked 0、 Marked 1标志位。</li>
@@ -401,8 +390,7 @@
 <ul>
 <li><strong>并发重映射（Concurrent Remap）</strong>：重映射所做的就是修正整个堆中指向重分配集中旧对象的所有引用，但是ZGC中对象引用存在“自愈”功能，所以这个重映射操作并不是很迫切。ZGC很巧妙地把并发重映射阶段要做的工作，合并到了下一次垃圾收集循环中的并发标记阶段里去完成，反正它们都是要遍历所有对象的，这样合并就节省了一次遍历对象图的开销。一旦所有指针都被修正之后， 原来记录新旧对象关系的转发表就可以释放掉了。</li>
 </ul>
-<p><strong>颜色指针</strong></p>
-<p>Colored Pointers，即颜色指针，如下图所示，ZGC的核心设计之一。以前的垃圾回收器的GC信息都保存在对象头中，而ZGC的GC信息保存在指针中。</p>
+<h2 id="颜色指针"><a href="#颜色指针" class="headerlink" title="颜色指针"></a><strong>颜色指针</strong></h2><p>Colored Pointers，即颜色指针，如下图所示，ZGC的核心设计之一。以前的垃圾回收器的GC信息都保存在对象头中，而ZGC的GC信息保存在指针中。</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/96083" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>每个对象有一个64位指针，这64位被分为：</p>
 <ul>
@@ -418,14 +406,12 @@
 <p>GC周期1：使用mark0, 则周期结束所有引用mark标记都会成为01。</p>
 <p>GC周期2：使用mark1, 则期待的mark标记10，所有引用都能被重新标记。</p>
 <p>通过对配置ZGC后对象指针分析我们可知，对象指针必须是64位，那么ZGC就无法支持32位操作系统，同样的也就无法支持压缩指针了（CompressedOops，压缩指针也是32位）。</p>
-<p><strong>颜色指针的三大优势：</strong></p>
-<ol>
+<h2 id="颜色指针的三大优势："><a href="#颜色指针的三大优势：" class="headerlink" title="颜色指针的三大优势："></a><strong>颜色指针的三大优势：</strong></h2><ol>
 <li>一旦某个Region的存活对象被移走之后，这个Region立即就能够被释放和重用掉，而不必等待整个堆中所有指向该Region的引用都被修正后才能清理，这使得理论上只要还有一个空闲Region，ZGC就能完成收集。</li>
 <li>颜色指针可以大幅减少在垃圾收集过程中内存屏障的使用数量，ZGC只使用了读屏障。</li>
 <li>颜色指针具备强大的扩展性，它可以作为一种可扩展的存储结构用来记录更多与对象标记、重定位过程相关的数据，以便日后进一步提高性能。</li>
 </ol>
-<p><strong>读屏障</strong></p>
-<p>之前的GC都是采用Write Barrier，这次ZGC采用了完全不同的方案读屏障，这个是ZGC一个非常重要的特性。</p>
+<h2 id="读屏障"><a href="#读屏障" class="headerlink" title="读屏障"></a><strong>读屏障</strong></h2><p>之前的GC都是采用Write Barrier，这次ZGC采用了完全不同的方案读屏障，这个是ZGC一个非常重要的特性。</p>
 <p>在标记和移动对象的阶段，每次「从堆里对象的引用类型中读取一个指针」的时候，都需要加上一个Load Barriers。</p>
 <p>那么我们该如何理解它呢？看下面的代码，第一行代码我们尝试读取堆中的一个对象引用obj.fieldA并赋给引用o（fieldA也是一个对象时才会加上读屏障）。如果这时候对象在GC时被移动了，接下来JVM就会加上一个读屏障，这个屏障会把读出的指针更新到对象的新地址上，并且把堆里的这个指针“修正”到原本的字段里。这样就算GC把对象移动了，读屏障也会发现并修正指针，于是应用代码就永远都会持有更新后的有效指针，而且不需要STW。</p>
 <p>那么，JVM是如何判断对象被移动过呢？就是利用上面提到的颜色指针，如果指针是Bad Color，那么程序还不能往下执行，需要「slow path」，修正指针；如果指针是Good Color，那么正常往下执行即可：</p>
@@ -436,26 +422,22 @@
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/96085" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>那么，判断对象是Bad Color还是Good Color的依据是什么呢？就是根据上一段提到的Colored Pointers的4个颜色位。当加上读屏障时，根据对象指针中这4位的信息，就能知道当前对象是Bad&#x2F;Good Color了。</p>
 <p><strong>PS：</strong>既然低42位指针可以支持4T内存，那么能否通过预约更多位给对象地址来达到支持更大内存的目的呢？答案肯定是不可以。因为目前主板地址总线最宽只有48bit，4位是颜色位，就只剩44位了，所以受限于目前的硬件，ZGC最大只能支持16T的内存，JDK13就把最大支持堆内存从4T扩大到了16T。</p>
-<p><strong>ZGC存在的问题</strong></p>
-<p>ZGC最大的问题是<strong>浮动垃圾</strong>。ZGC的停顿时间是在10ms以下，但是ZGC的执行时间还是远远大于这个时间的。假如ZGC全过程需要执行10分钟，在这个期间由于对象分配速率很高，将创建大量的新对象，这些对象很难进入当次GC，所以只能在下次GC的时候进行回收，这些只能等到下次GC才能回收的对象就是浮动垃圾。</p>
+<h2 id="ZGC存在的问题"><a href="#ZGC存在的问题" class="headerlink" title="ZGC存在的问题"></a><strong>ZGC存在的问题</strong></h2><p>ZGC最大的问题是<strong>浮动垃圾</strong>。ZGC的停顿时间是在10ms以下，但是ZGC的执行时间还是远远大于这个时间的。假如ZGC全过程需要执行10分钟，在这个期间由于对象分配速率很高，将创建大量的新对象，这些对象很难进入当次GC，所以只能在下次GC的时候进行回收，这些只能等到下次GC才能回收的对象就是浮动垃圾。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">ZGC没有分代概念，每次都需要进行全堆扫描，导致一些“朝生夕死”的对象没能及时的被回收。   <br></code></pre></td></tr></table></figure>
 
 <p>​           </p>
 <p><strong>解决方案</strong></p>
 <p>目前唯一的办法是增大堆的容量，使得程序得到更多的喘息时间，但是这个也是一个治标不治本的方案。如果需要从根本上解决这个问题，还是需要引入分代收集，让新生对象都在一个专门的区域中创建，然后专门针对这个区域进行更频繁、更快的收集。</p>
-<p><strong>ZGC参数设置</strong></p>
-<p>启用ZGC比较简单，设置JVM参数即可：-XX:+UnlockExperimentalVMOptions 「-XX:+UseZGC」。调优也并不难，因为ZGC调优参数并不多，远不像CMS那么复杂。它和G1一样，可以调优的参数都比较少，大部分工作JVM能很好的自动完成。下图所示是ZGC可以调优的参数：</p>
+<h2 id="ZGC参数设置"><a href="#ZGC参数设置" class="headerlink" title="ZGC参数设置"></a><strong>ZGC参数设置</strong></h2><p>启用ZGC比较简单，设置JVM参数即可：-XX:+UnlockExperimentalVMOptions 「-XX:+UseZGC」。调优也并不难，因为ZGC调优参数并不多，远不像CMS那么复杂。它和G1一样，可以调优的参数都比较少，大部分工作JVM能很好的自动完成。下图所示是ZGC可以调优的参数：</p>
 <p>​    <img src="/6%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8G1-ZGC%E8%AF%A6%E8%A7%A3/95940" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>ZGC触发时机</strong></p>
-<p>ZGC目前有4中机制触发GC：</p>
+<h2 id="ZGC触发时机"><a href="#ZGC触发时机" class="headerlink" title="ZGC触发时机"></a><strong>ZGC触发时机</strong></h2><p>ZGC目前有4中机制触发GC：</p>
 <ul>
 <li>定时触发，默认为不使用，可通过ZCollectionInterval参数配置。</li>
 <li>预热触发，最多三次，在堆内存达到10%、20%、30%时触发，主要时统计GC时间，为其他GC机制使用。</li>
 <li>分配速率，基于正态分布统计，计算内存99.9%可能的最大分配速率，以及此速率下内存将要耗尽的时间点，在耗尽之前触发GC（耗尽时间 - 一次GC最大持续时间 - 一次GC检测周期时间）。</li>
 <li>主动触发，（默认开启，可通过ZProactive参数配置） 距上次GC堆内存增长10%，或超过5分钟时，对比距上次GC的间隔时间跟（49 * 一次GC的最大持续时间），超过则触发。</li>
 </ul>
-<p><strong>如何选择垃圾收集器</strong></p>
-<ol>
+<h1 id="如何选择垃圾收集器"><a href="#如何选择垃圾收集器" class="headerlink" title="如何选择垃圾收集器"></a><strong>如何选择垃圾收集器</strong></h1><ol>
 <li>优先调整堆的大小让服务器自己来选择</li>
 <li>如果内存小于100M，使用串行收集器</li>
 <li>如果是单核，并且没有停顿时间的要求，串行或JVM自己选择</li>
