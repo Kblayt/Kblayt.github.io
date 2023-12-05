@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://kblayt.github.io/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/95383">
 <meta property="og:image" content="https://kblayt.github.io/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/95719">
 <meta property="article:published_time" content="2023-06-16T08:49:51.000Z">
-<meta property="article:modified_time" content="2023-12-01T03:31:40.316Z">
+<meta property="article:modified_time" content="2023-12-04T10:14:36.441Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -233,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.3k 字
+          9.2k 字
         
       </span>
     
@@ -244,7 +244,7 @@
         
         
         
-          78 分钟
+          77 分钟
         
       </span>
     
@@ -306,27 +306,27 @@
 <p><strong>如果说收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。</strong></p>
 <p>虽然我们对各个收集器进行比较，但并非为了挑选出一个最好的收集器。因为直到现在为止还没有最好的垃圾收集器出现，更加没有万能的垃圾收集器，<strong>我们能做的就是根据具体应用场景选择适合自己的垃圾收集器</strong>。试想一下：如果有一种四海之内、任何场景下都适用的完美收集器存在，那么我们的Java虚拟机就不会实现那么多不同的垃圾收集器了。</p>
 <h2 id="1-1-Serial收集器-XX-UseSerialGC-XX-UseSerialOldGC"><a href="#1-1-Serial收集器-XX-UseSerialGC-XX-UseSerialOldGC" class="headerlink" title="1.1 Serial收集器(-XX:+UseSerialGC  -XX:+UseSerialOldGC)"></a>1.1 Serial收集器(-XX:+UseSerialGC  -XX:+UseSerialOldGC)</h2><p>Serial（串行）收集器是最基本、历史最悠久的垃圾收集器了。大家看名字就知道这个收集器是一个单线程收集器了。它的 <strong>“单线程”</strong> 的意义不仅仅意味着它只会使用一条垃圾收集线程去完成垃圾收集工作，更重要的是它在进行垃圾收集工作的时候必须暂停其他所有的工作线程（ <strong>“Stop The World”</strong> ），直到它收集结束。</p>
-<p><strong>新生代采用复制算法，老年代采用标记-整理算法。</strong></p>
+<p><strong><font color="red">新生代采用复制算法，老年代采用标记-整理算法。</font></strong></p>
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/95646" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>虚拟机的设计者们当然知道Stop The World带来的不良用户体验，所以在后续的垃圾收集器设计中停顿时间在不断缩短（仍然还有停顿，寻找最优秀的垃圾收集器的过程仍然在继续）。</p>
 <p>但是Serial收集器有没有优于其他垃圾收集器的地方呢？当然有，它<strong>简单而高效（与其他收集器的单线程相比）</strong>。Serial收集器由于没有线程交互的开销，自然可以获得很高的单线程收集效率。</p>
 <p><strong>Serial Old收集器是Serial收集器的老年代版本</strong>，它同样是一个单线程收集器。它主要有两大用途：一种用途是在JDK1.5以及以前的版本中与Parallel Scavenge收集器搭配使用，<strong>另一种用途是作为CMS收集器的后备方案</strong>。</p>
 <h2 id="1-2-Parallel-Scavenge收集器-XX-UseParallelGC-年轻代-XX-UseParallelOldGC-老年代"><a href="#1-2-Parallel-Scavenge收集器-XX-UseParallelGC-年轻代-XX-UseParallelOldGC-老年代" class="headerlink" title="1.2 Parallel Scavenge收集器(-XX:+UseParallelGC(年轻代),-XX:+UseParallelOldGC(老年代))"></a>1.2 Parallel Scavenge收集器(-XX:+UseParallelGC(年轻代),-XX:+UseParallelOldGC(老年代))</h2><p><strong>Parallel</strong>收集器其实<strong>就是Serial收集器的多线程版本</strong>，除了使用多线程进行垃圾收集外，其余行为（控制参数、收集算法、回收策略等等）和Serial收集器类似。默认的收集线程数跟cpu核数相同，当然也可以用参数(-XX:ParallelGCThreads)指定收集线程数，但是一般不推荐修改。</p>
 <p><strong>Parallel Scavenge收集器关注点是吞吐量（高效率的利用CPU）。CMS等垃圾收集器的关注点更多的是用户线程的停顿时间（提高用户体验）。所谓吞吐量就是CPU中用于运行用户代码的时间与CPU总消耗时间的比值。</strong> Parallel Scavenge收集器提供了很多参数供用户找到最合适的停顿时间或最大吞吐量，如果对于收集器运作不太了解的话，可以选择把内存管理优化交给虚拟机去完成也是一个不错的选择。</p>
-<p><strong>新生代采用复制算法，老年代采用标记-整理算法。</strong></p>
+<p><strong><font color="red">新生代采用复制算法，老年代采用标记-整理算法。</font></strong></p>
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/78078" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>Parallel Old收集器是Parallel Scavenge收集器的老年代版本</strong>。使用多线程和“标记-整理”算法。在注重吞吐量以及CPU资源的场合，都可以优先考虑 Parallel Scavenge收集器和Parallel Old收集器(<strong>JDK8默认的新生代和老年代收集器</strong>)。</p>
 <h2 id="1-3-ParNew收集器-XX-UseParNewGC"><a href="#1-3-ParNew收集器-XX-UseParNewGC" class="headerlink" title="1.3 ParNew收集器(-XX:+UseParNewGC)"></a>1.3 ParNew收集器(-XX:+UseParNewGC)</h2><p>ParNew收集器其实<strong>跟Parallel收集器很类似</strong>，区别主要在于它可以和CMS收集器配合使用。</p>
-<p><strong>新生代采用复制算法</strong></p>
+<p><strong><font color="red">新生代采用复制算法</font></strong></p>
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/92873" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>它是许多运行在Server模式下的虚拟机的首要选择，除了Serial收集器外，只有它能与CMS收集器（真正意义上的并发收集器，后面会介绍到）配合工作。</p>
 <h2 id="1-4-CMS收集器-XX-UseConcMarkSweepGC-old"><a href="#1-4-CMS收集器-XX-UseConcMarkSweepGC-old" class="headerlink" title="1.4 CMS收集器(-XX:+UseConcMarkSweepGC(old))"></a>1.4 CMS收集器(-XX:+UseConcMarkSweepGC(old))</h2><p><strong>CMS（Concurrent Mark Sweep）收集器是一种以获取最短回收停顿时间为目标的收集器。它非常符合在注重用户体验的应用上使用，它是HotSpot虚拟机第一款真正意义上的并发收集器，它第一次实现了让垃圾收集线程与用户线程（基本上）同时工作。</strong></p>
-<p>从名字中的<strong>Mark Sweep</strong>这两个词可以看出，CMS收集器是一种 <strong>“标记-清除”算法</strong>实现的，它的运作过程相比于前面几种垃圾收集器来说更加复杂一些。整个过程分为四个步骤：</p>
+<p>从名字中的<strong>Mark Sweep</strong>这两个词可以看出，CMS收集器是一种 <strong>“标记-清除”算法</strong>实现的，它的运作过程相比于前面几种垃圾收集器来说更加复杂一些。整个过程分为五个步骤：</p>
 <ul>
 <li><strong>初始标记：</strong> 暂停所有的其他线程(STW)，并记录下gc roots<strong>直接能引用的对象</strong>，<strong>速度很快</strong>。</li>
-<li><strong>并发标记：</strong> 并发标记阶段就是从GC Roots的直接关联对象开始遍历整个对象图的过程， 这个过程耗时较长但是不需要停顿用户线程， 可以与垃圾收集线程一起并发运行。因为用户程序继续运行，可能会有导致已经标记过的对象状态发生改变。</li>
-<li><strong>重新标记：</strong> 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录(<strong>主要是处理漏标问题</strong>)，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短。<strong>主要用到三色标记里的****增量更新算法(见下面详解)做重新标记。</strong></li>
-<li><strong>并发清理：</strong> 开启用户线程，同时GC线程开始对未标记的区域做清扫。这个阶段如果有新增对象会被标记为黑色不做任何处理(见下面三色标记算法详解)。</li>
+<li><strong>并发标记：</strong> 并发标记阶段就是从GC Roots的直接关联对象开始遍历整个对象图的过程， 这个过程耗时较长但是不需要停顿用户线程， 可以与垃圾收集线程一起并发运行。<strong>因为用户程序继续运行，可能会有导致已经标记过的对象状态发生改变。</strong></li>
+<li><strong>重新标记：</strong> 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录(<strong>主要是处理漏标问题</strong>)，<strong>这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短。主要用到三色标记里的增量更新算法(见下面详解)做重新标记</strong>。</li>
+<li><strong>并发清理：</strong> 开启用户线程，同时GC线程开始对未标记的区域做清扫。这个阶段如果有新增对象会被标记为黑色不做任何处理(见下面三色标记算法详解)。 </li>
 <li><strong>并发重置：</strong>重置本次GC过程中的标记数据。</li>
 </ul>
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/78070" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -334,7 +334,7 @@
 <ul>
 <li>对CPU资源敏感（会和服务抢资源）；</li>
 <li>无法处理<strong>浮动垃圾</strong>(在并发标记和并发清理阶段又产生垃圾，这种浮动垃圾只能等到下一次gc再清理了)；</li>
-<li>它使用的回收算法-<strong>“标记-清除”算法</strong>会导致收集结束时会有<strong>大量空间碎片</strong>产生，当然通过参数-XX:+UseCMSCompactAtFullCollection可以让jvm在执行完标记清除后再做整理</li>
+<li>它使用的回收算法-<strong>“标记-清除”算法</strong>会导致收集结束时会有<strong>大量空间碎片</strong>产生，当然通过参数**-XX:+UseCMSCompactAtFullCollection**可以让jvm在执行完标记清除后再做整理</li>
 <li>执行过程中的不确定性，会存在上一次垃圾回收还没执行完，然后垃圾回收又被触发的情况，<strong>特别是在并发标记和并发清理阶段会出现</strong>，一边回收，系统一边运行，也许没回收完就再次触发full gc，也就是”<strong>concurrent mode failure</strong>“，<strong>此时会进入stop the world，用serial old垃圾收集器来回收</strong></li>
 </ul>
 <p><strong>CMS的相关核心参数</strong></p>
@@ -387,18 +387,15 @@
 </li>
 </ul>
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/95383" srcset="/img/loading.gif" lazyload alt="0"></p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 垃圾收集算法细节之三色标记</span><br><span class="hljs-comment"> * 为了简化例子，代码写法可能不规范，请忽略</span><br><span class="hljs-comment"> * Created by 诸葛老师</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreeColorRemark</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> void main(<span class="hljs-keyword">String</span>[] args) &#123;<br>        A a = <span class="hljs-keyword">new</span> <span class="hljs-type">A</span>();<br>        <span class="hljs-comment">//开始做并发标记</span><br>        D d = a.b.d;   <span class="hljs-comment">// 1.读</span><br>        a.b.d = <span class="hljs-literal">null</span>;  <span class="hljs-comment">// 2.写</span><br>        a.d = d;       <span class="hljs-comment">// 3.写</span><br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>    B b = <span class="hljs-keyword">new</span> <span class="hljs-type">B</span>();<br>    D d = <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> </span>&#123;<br>    C c = <span class="hljs-keyword">new</span> <span class="hljs-type">C</span>();<br>    D d = <span class="hljs-keyword">new</span> <span class="hljs-type">D</span>();<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">C</span> </span>&#123;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">D</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 垃圾收集算法细节之三色标记</span><br><span class="hljs-comment"> * 为了简化例子，代码写法可能不规范，请忽略</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreeColorRemark</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> void main(<span class="hljs-keyword">String</span>[] args) &#123;<br>        A a = <span class="hljs-keyword">new</span> <span class="hljs-type">A</span>();<br>        <span class="hljs-comment">//开始做并发标记</span><br>        D d = a.b.d;   <span class="hljs-comment">// 1.读</span><br>        a.b.d = <span class="hljs-literal">null</span>;  <span class="hljs-comment">// 2.写</span><br>        a.d = d;       <span class="hljs-comment">// 3.写</span><br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>    B b = <span class="hljs-keyword">new</span> <span class="hljs-type">B</span>();<br>    D d = <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> </span>&#123;<br>    C c = <span class="hljs-keyword">new</span> <span class="hljs-type">C</span>();<br>    D d = <span class="hljs-keyword">new</span> <span class="hljs-type">D</span>();<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">C</span> </span>&#123;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">D</span> </span>&#123;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>多标-浮动垃圾</strong></p>
-<p>在并发标记过程中，如果由于方法运行结束导致部分局部变量(gcroot)被销毁，这个gcroot引用的对象之前又被扫描过(被标记为非垃圾对象)，那么本轮GC不会回收这部分内存。这部分本应该回收但是没有回收到的内存，被称之为“<strong>浮动垃圾</strong>”。浮动垃圾并不会影响垃圾回收的正确性，只是需要等到下一轮垃圾回收中才被清除。</p>
+<h3 id="多标-浮动垃圾"><a href="#多标-浮动垃圾" class="headerlink" title="多标-浮动垃圾"></a><strong>多标-浮动垃圾</strong></h3><p>在并发标记过程中，如果由于方法运行结束导致部分局部变量(gcroot)被销毁，这个gcroot引用的对象之前又被扫描过(被标记为非垃圾对象)，那么本轮GC不会回收这部分内存。这部分本应该回收但是没有回收到的内存，被称之为“<strong>浮动垃圾</strong>”。浮动垃圾并不会影响垃圾回收的正确性，只是需要等到下一轮垃圾回收中才被清除。</p>
 <p>另外，<strong>针对并发标记(还有并发清理)开始后产生的新对象，通常的做法是直接全部当成黑色</strong>，本轮不会进行清除。这部分对象期间可能也会变为垃圾，这也算是浮动垃圾的一部分。</p>
-<p><strong>漏标-读写屏障</strong></p>
-<p>漏标会导致被引用的对象被当成垃圾误删除，这是严重bug，必须解决，有两种解决方案： <strong>增量更新（Incremental Update） 和原始快照（Snapshot At The Beginning，SATB） 。</strong></p>
+<h3 id="漏标-读写屏障"><a href="#漏标-读写屏障" class="headerlink" title="漏标-读写屏障"></a><strong>漏标-读写屏障</strong></h3><p>漏标会导致被引用的对象被当成垃圾误删除，这是严重bug，必须解决，有两种解决方案： <strong>增量更新（Incremental Update） 和原始快照（Snapshot At The Beginning，SATB） 。</strong></p>
 <p><strong>增量更新</strong>就是当黑色对象插入新的指向白色对象的引用关系时， 就将这个新插入的引用记录下来， 等并发扫描结束之后， 再将这些记录过的引用关系中的黑色对象为根， 重新扫描一次。 这可以简化理解为， <strong>黑色对象一旦新插入了指向白色对象的引用之后， 它就变回灰色对象了</strong>。</p>
 <p><strong>原始快照</strong>就是当灰色对象要删除指向白色对象的引用关系时， 就将这个要删除的引用记录下来， 在并发扫描结束之后， 再将这些记录过的引用关系中的灰色对象为根， 重新扫描一次，这样就能扫描到白色的对象，将白色对象直接标记为黑色(<strong>目的就是让这种对象在本轮gc清理中能存活下来，待下一轮gc的时候重新扫描，这个对象也有可能是浮动垃圾</strong>)</p>
 <p>以上无论是对引用关系记录的插入还是删除， 虚拟机的记录操作都是通过<strong>写屏障</strong>实现的。 </p>
-<p><strong>写屏障</strong></p>
-<p>给某个对象的成员变量赋值时，其底层代码大概长这样：</p>
+<h3 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a><strong>写屏障</strong></h3><p>给某个对象的成员变量赋值时，其底层代码大概长这样：</p>
 <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* @param field 某对象的成员变量，如 a.b.d </span><br><span class="hljs-comment">* @param new_value 新值，如 null</span><br><span class="hljs-comment">*/</span><br>void oop<span class="hljs-constructor">_field_store(<span class="hljs-params">oop</span><span class="hljs-operator">*</span> <span class="hljs-params">field</span>, <span class="hljs-params">oop</span> <span class="hljs-params">new_value</span>)</span> &#123; <br>    *field = new_value; <span class="hljs-comment">// 赋值操作</span><br>&#125; <br></code></pre></td></tr></table></figure>
 
 <p>所谓的写屏障，其实就是指在赋值操作前后，加入一些处理（可以参考AOP的概念）：</p>
@@ -418,8 +415,7 @@
 <p>当对象A的成员变量的引用发生变化时，比如新增引用（a.d &#x3D; d），我们可以利用写屏障，将A<strong>新的成员变量引用</strong>对象D记录下来：</p>
 <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">void post<span class="hljs-constructor">_write_barrier(<span class="hljs-params">oop</span><span class="hljs-operator">*</span> <span class="hljs-params">field</span>, <span class="hljs-params">oop</span> <span class="hljs-params">new_value</span>)</span> &#123;  <br>    remark_set.add(new_value);  <span class="hljs-comment">// 记录新引用的对象</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>读屏障</strong></p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">oop oop<span class="hljs-constructor">_field_load(<span class="hljs-params">oop</span><span class="hljs-operator">*</span> <span class="hljs-params">field</span>)</span> &#123;<br>    pre<span class="hljs-constructor">_load_barrier(<span class="hljs-params">field</span>)</span>; <span class="hljs-comment">// 读屏障-读取前操作</span><br>    return *field;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="读屏障"><a href="#读屏障" class="headerlink" title="读屏障"></a><strong>读屏障</strong></h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">oop oop<span class="hljs-constructor">_field_load(<span class="hljs-params">oop</span><span class="hljs-operator">*</span> <span class="hljs-params">field</span>)</span> &#123;<br>    pre<span class="hljs-constructor">_load_barrier(<span class="hljs-params">field</span>)</span>; <span class="hljs-comment">// 读屏障-读取前操作</span><br>    return *field;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>读屏障是直接针对第一步：D d &#x3D; a.b.d，当读取成员变量时，一律记录下来：</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs csharp"> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pre_load_barrier</span>(<span class="hljs-params">oop* field</span>)</span> &#123;  <br>    oop old_value = *field;<br>    remark_set.<span class="hljs-keyword">add</span>(old_value); <span class="hljs-comment">// 记录读取到的对象</span><br>&#125;<br></code></pre></td></tr></table></figure>
@@ -427,15 +423,14 @@
 <p>现代追踪式（可达性分析）的垃圾回收器几乎都借鉴了三色标记的算法思想，尽管实现的方式不尽相同：比如白色&#x2F;黑色集合一般都不会出现（但是有其他体现颜色的地方）、灰色集合可以通过栈&#x2F;队列&#x2F;缓存日志等方式进行实现、遍历方式可以是广度&#x2F;深度遍历等等。</p>
 <p>对于读写屏障，以Java HotSpot VM为例，其并发标记时对漏标的处理方案如下：</p>
 <ul>
-<li><strong>CMS：写屏障 + 增量更新</strong></li>
-<li><strong>G1，Shenandoah：写屏障 + SATB</strong></li>
-<li><strong>ZGC：读屏障</strong></li>
+<li><font color="red"><strong>CMS：写屏障 + 增量更新</strong></font></li>
+<li><font color="red"><strong>G1，Shenandoah：写屏障 + SATB</strong></font></li>
+<li><font color="red"><strong>ZGC：读屏障</strong></font></li>
 </ul>
 <p>工程实现中，读写屏障还有其他功能，比如写屏障可以用于记录跨代&#x2F;区引用的变化，读屏障可以用于支持移动对象的并发执行等。功能之外，还有性能的考虑，所以对于选择哪种，每款垃圾回收器都有自己的想法。</p>
 <p><strong>为什么G1用SATB？CMS用增量更新？</strong></p>
 <p><strong>我的理解</strong>：SATB相对增量更新效率会高(当然SATB可能造成更多的浮动垃圾)，因为不需要在重新标记阶段再次深度扫描被删除引用对象，而CMS对增量引用的根对象会做深度扫描，G1因为很多对象都位于不同的region，CMS就一块老年代区域，重新深度扫描对象的话G1的代价会比CMS高，所以G1选择SATB不深度扫描对象，只是简单标记，等到下一轮GC再深度扫描。</p>
-<p><strong>记忆集与卡表</strong></p>
-<p>在新生代做GCRoots可达性扫描过程中可能会碰到跨代引用的对象，这种如果又去对老年代再去扫描效率太低了。</p>
+<h3 id="记忆集与卡表"><a href="#记忆集与卡表" class="headerlink" title="记忆集与卡表"></a><strong>记忆集与卡表</strong></h3><p>在新生代做GCRoots可达性扫描过程中可能会碰到跨代引用的对象，这种如果又去对老年代再去扫描效率太低了。</p>
 <p>为此，在新生代可以引入记录集（<strong>Remember Set</strong>）的数据结构（记录从非收集区到收集区的指针集合），避免把整个老年代加入GCRoots扫描范围。事实上并不只是新生代、 老年代之间才有跨代引用的问题， 所有涉及部分区域收集（Partial GC） 行为的垃圾收集器， 典型的如G1、 ZGC和Shenandoah收集器， 都会面临相同的问题。</p>
 <p>垃圾收集场景中，收集器只需通过记忆集判断出某一块非收集区域是否存在指向收集区域的指针即可，无需了解跨代引用指针的全部细节。</p>
 <p>hotspot使用一种叫做“卡表”(<strong>Cardtable</strong>)的方式实现记忆集，也是目前最常用的一种方式。关于卡表与记忆集的关系， 可以类比为Java语言中HashMap与Map的关系。</p>
@@ -444,8 +439,7 @@
 <p>​    <img src="/5%E3%80%81%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8ParNew-CMS%E5%BA%95%E5%B1%82%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/95719" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>一个卡页中可包含多个对象，只要有一个对象的字段存在跨代指针，其对应的卡表的元素标识就变成1，表示该元素变脏，否则为0.</p>
 <p>GC时，只要筛选本收集区的卡表中变脏的元素加入GCRoots里。</p>
-<p><strong>卡表的维护</strong></p>
-<p>卡表变脏上面已经说了，但是需要知道如何让卡表变脏，即发生引用字段赋值时，如何更新卡表对应的标识为1。</p>
+<h3 id="卡表的维护"><a href="#卡表的维护" class="headerlink" title="卡表的维护"></a><strong>卡表的维护</strong></h3><p>卡表变脏上面已经说了，但是需要知道如何让卡表变脏，即发生引用字段赋值时，如何更新卡表对应的标识为1。</p>
 <p>Hotspot使用<strong>写屏障</strong>维护卡表状态。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
