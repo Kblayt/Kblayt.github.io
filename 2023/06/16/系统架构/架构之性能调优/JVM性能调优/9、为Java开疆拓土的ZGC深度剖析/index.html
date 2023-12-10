@@ -16,12 +16,12 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta name="description" content="为Java开疆拓土的ZGC深度剖析 引言 对于Java 程序员来说，JVM 帮助我们做了很多事情。 JVM是虚拟机，能够识别字节码，就是class文件或者你打包的jar文件，运行在操作系统上。 JVM帮我们实现了跨平台，你只需要编译一次，就可以在不同的操作系统上运行，并且效果是一致的。 ​     在Java中你使用对象，使用内存，不用担心回收，只管new对象就行了，不用管垃圾的回收。 因为Jav">
+    <meta name="description" content="引言对于Java 程序员来说，JVM 帮助我们做了很多事情。 JVM是虚拟机，能够识别字节码，就是class文件或者你打包的jar文件，运行在操作系统上。 JVM帮我们实现了跨平台，你只需要编译一次，就可以在不同的操作系统上运行，并且效果是一致的。 ​     在Java中你使用对象，使用内存，不用担心回收，只管new对象就行了，不用管垃圾的回收。 因为Java当中是自动化的垃圾回收机制。JVM有">
 <meta property="og:type" content="article">
 <meta property="og:title" content="9、为Java开疆拓土的ZGC深度剖析">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/16/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/JVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="为Java开疆拓土的ZGC深度剖析 引言 对于Java 程序员来说，JVM 帮助我们做了很多事情。 JVM是虚拟机，能够识别字节码，就是class文件或者你打包的jar文件，运行在操作系统上。 JVM帮我们实现了跨平台，你只需要编译一次，就可以在不同的操作系统上运行，并且效果是一致的。 ​     在Java中你使用对象，使用内存，不用担心回收，只管new对象就行了，不用管垃圾的回收。 因为Jav">
+<meta property="og:description" content="引言对于Java 程序员来说，JVM 帮助我们做了很多事情。 JVM是虚拟机，能够识别字节码，就是class文件或者你打包的jar文件，运行在操作系统上。 JVM帮我们实现了跨平台，你只需要编译一次，就可以在不同的操作系统上运行，并且效果是一致的。 ​     在Java中你使用对象，使用内存，不用担心回收，只管new对象就行了，不用管垃圾的回收。 因为Java当中是自动化的垃圾回收机制。JVM有">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2389">
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2384">
@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2396">
 <meta property="og:image" content="https://kblayt.github.io/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2391">
 <meta property="article:published_time" content="2023-06-16T08:51:05.000Z">
-<meta property="article:modified_time" content="2023-11-23T13:27:14.937Z">
+<meta property="article:modified_time" content="2023-12-10T07:59:39.615Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="JVM性能调优">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,22 +293,18 @@
             
               <div class="markdown-body">
                 
-                <p><strong>为Java开疆拓土的ZGC深度剖析</strong></p>
-<p><strong>引言</strong></p>
-<p>对于Java 程序员来说，JVM 帮助我们做了很多事情。</p>
+                <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a><strong>引言</strong></h1><p>对于Java 程序员来说，JVM 帮助我们做了很多事情。</p>
 <p>JVM是虚拟机，能够识别字节码，就是class文件或者你打包的jar文件，运行在操作系统上。</p>
 <p>JVM帮我们实现了跨平台，你只需要编译一次，就可以在不同的操作系统上运行，并且效果是一致的。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2389" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>在Java中你使用对象，使用内存，不用担心回收，只管new对象就行了，不用管垃圾的回收。</p>
 <p>因为Java当中是自动化的垃圾回收机制。JVM有专门的垃圾回收器，把垃圾回收这件事给干了。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2384" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>ZGC出现背景</strong></p>
-<p>但是对于Java的项目来说，JVM进行垃圾回收会有一个很大的问题，就是STW。</p>
+<h1 id="ZGC出现背景"><a href="#ZGC出现背景" class="headerlink" title="ZGC出现背景"></a><strong>ZGC出现背景</strong></h1><p>但是对于Java的项目来说，JVM进行垃圾回收会有一个很大的问题，就是STW。</p>
 <p>什么是STW，STW的全称是StopTheWorld。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2392" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>Java项目中，如果JVM要进行垃圾回收，会暂停所有的业务线程，也就是项目中的线程，这样会导致业务系统暂停。</p>
-<p><strong>STW带来的问题</strong></p>
-<p><strong>手机系统(Android) 显示卡顿</strong></p>
+<h2 id="STW带来的问题"><a href="#STW带来的问题" class="headerlink" title="STW带来的问题"></a><strong>STW带来的问题</strong></h2><p><strong>手机系统(Android) 显示卡顿</strong></p>
 <p>Google 主导的 Android 系统需要解决的一大问题就是显示卡顿问题，通过对 GC 算法的不断演进，停顿时间控制在几个ms 级别。</p>
 <p>所以这也是Android与苹果IOS系统竞争的一大利器。</p>
 <p><strong>证券交易系统实时性要求</strong></p>
@@ -316,13 +312,11 @@
 <p>刚收到市场行情是比较低的买入的，但是因为STW卡顿了3秒，3秒后的市场行情可能完全不同。所以如果使用Java来做证券系统，一定是要求STW时间越短越好！</p>
 <p><strong>大数据平台(Hadoop集群性能)</strong></p>
 <p>同样，像King老师的前东家，58同城的大数据系统，单集群5000+的Hadoop集群，日万亿级实时数据分发。如果遇到STW也是不行的。</p>
-<p><strong>垃圾回收器的发展</strong></p>
-<p>为了满足不同的业务需求，Java 的 GC 算法也在不停迭代，对于特定的应用，选择其最适合的 GC 算法，才能更高效的帮助业务实现其业务目标。对于这些延迟敏感的应用来说，GC 停顿已经成为阻碍 Java 广泛应用的一大顽疾，需要更适合的 GC 算法以满足这些业务的需求。</p>
+<h2 id="垃圾回收器的发展"><a href="#垃圾回收器的发展" class="headerlink" title="垃圾回收器的发展"></a><strong>垃圾回收器的发展</strong></h2><p>为了满足不同的业务需求，Java 的 GC 算法也在不停迭代，对于特定的应用，选择其最适合的 GC 算法，才能更高效的帮助业务实现其业务目标。对于这些延迟敏感的应用来说，GC 停顿已经成为阻碍 Java 广泛应用的一大顽疾，需要更适合的 GC 算法以满足这些业务的需求。</p>
 <p>近些年来，服务器的性能越来越强劲，各种应用可使用的堆内存也越来越大，常见的堆大小从 10G 到百 G 级别，部分机型甚至可以到达 TB 级别，在这类大堆应用上，传统的 GC，如 CMS、G1 的停顿时间也跟随着堆大小的增长而同步增加，即堆大小指数级增长时，停顿时间也会指数级增长。特别是当触发 Full GC 时，停顿可达分钟级别(百GB级别的堆)。当业务应用需要提供高服务级别协议（Service Level Agreement，SLA），例如 99.99% 的响应时间不能超过 100ms，此时 CMS、G1 等就无法满足业务的需求。</p>
 <p>为满足当前应用对于超低停顿、并应对大堆和超大堆带来的挑战，伴随着 2018 年发布的 JDK 11，A Scalable Low-Latency Garbage Collector - ZGC 应运而生。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2385" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p><strong>ZGC介绍</strong></p>
-<p>ZGC（The Z Garbage Collector）是<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=JDK+11&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22364813270%22%7D">JDK 11</a>中推出的一款追求极致低延迟的垃圾收集器，它曾经设计目标包括：</p>
+<h1 id="ZGC介绍"><a href="#ZGC介绍" class="headerlink" title="ZGC介绍"></a><strong>ZGC介绍</strong></h1><p>ZGC（The Z Garbage Collector）是<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=JDK+11&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22364813270%22%7D">JDK 11</a>中推出的一款追求极致低延迟的垃圾收集器，它曾经设计目标包括：</p>
 <ul>
 <li><p><strong>停顿时间不超过10ms（JDK16已经达到不超过1ms）</strong>；</p>
 </li>
@@ -332,10 +326,8 @@
 </li>
 </ul>
 <p>这么去想，如果使用ZGC来做Java项目，像对STW敏感的证券系统，游戏的系统都可以去用Java来做（以前都是C或者C++的市场），所以ZGC的出现就是为了抢占其他语言的市场（卷！）。</p>
-<p><strong>ZGC中的内存布局</strong></p>
-<p>为了细粒度地控制内存的分配，和G1一样，ZGC将内存划分成小的分区，在ZGC中称为页面（page）。</p>
-<p><strong>ZGC中没有分代的概念（新生代、老年代）</strong></p>
-<p>ZGC支持<strong>3种</strong>页面，分别为小页面、中页面和大页面。</p>
+<h2 id="ZGC中的内存布局"><a href="#ZGC中的内存布局" class="headerlink" title="ZGC中的内存布局"></a><strong>ZGC中的内存布局</strong></h2><p>为了细粒度地控制内存的分配，和G1一样，ZGC将内存划分成小的分区，在ZGC中称为页面（page）。</p>
+<h2 id="ZGC中没有分代的概念（新生代、老年代）"><a href="#ZGC中没有分代的概念（新生代、老年代）" class="headerlink" title="ZGC中没有分代的概念（新生代、老年代）"></a><strong>ZGC中没有分代的概念（新生代、老年代）</strong></h2><p>ZGC支持<strong>3种</strong>页面，分别为小页面、中页面和大页面。</p>
 <p>其中小页面指的是2MB的页面空间，中页面指32MB的页面空间，大页面指受操作系统控制的大页。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2394" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>当对象大小小于等于256KB时，对象分配在小页面。</p>
@@ -352,8 +344,7 @@
 <p>在UMA中，各处理器与内存单元通过互联总线进行连接，各个CPU之间没有主从关系。之后的X86平台经历了一场从“拼频率”到“拼核心数”的转变，越来越多的核心被尽可能地塞进了同一块芯片上，各个核心对于内存带宽的争抢访问成为瓶颈，所以人们希望能够把CPU和内存集成在一个单元上（称Socket），这就是非统一内存访问（Non-Uniform Memory Access，NUMA）。很明显，在NUMA下，CPU访问本地存储器的速度比访问非本地存储器快一些。下图所示是支持NUMA处理器架构示意图。</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2390" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>ZGC是支持NUMA的，在进行小页面分配时会优先从本地内存分配，当不能分配时才会从远端的内存分配。对于中页面和大页面的分配，ZGC并没有要求从本地内存分配，而是直接交给操作系统，由操作系统找到一块能满足ZGC页面的空间。ZGC这样设计的目的在于，对于小页面，存放的都是小对象，从本地内存分配速度很快，且不会造成内存使用的不平衡，而中页面和大页面因为需要的空间大，如果也优先从本地内存分配，极易造成内存使用不均衡，反而影响性能。</p>
-<p><strong>ZGC的核心概念</strong></p>
-<p><strong>指针着色技术（Color Pointers）</strong></p>
+<h2 id="ZGC的核心概念"><a href="#ZGC的核心概念" class="headerlink" title="ZGC的核心概念"></a><strong>ZGC的核心概念</strong></h2><p><strong>指针着色技术（Color Pointers）</strong></p>
 <p>颜色指针可以说是ZGC的核心概念。因为他在指针中借了几个位出来做事情，所以它必须要求在64位的机器上才可以工作。并且因为要求64位的指针，也就不能支持压缩指针。</p>
 <p>ZGC中低42位表示使用中的堆空间</p>
 <p>ZGC借几位高位来做GC相关的事情(快速实现垃圾回收中的并发标记、转移和重定位等)</p>
@@ -373,8 +364,7 @@
 <p>0x7f93aef8d000&lt;虚地址m0&gt;</p>
 <p>0x7f93aef8c000&lt;虚地址m1&gt;</p>
 <p>但是因为它们都是通过mmap映射同一个内存共享对象，所以它们的物理地址是一样的，并且它们的值都是0xdeafbeef。</p>
-<p><strong>ZGC流程</strong></p>
-<p><strong>一次ZGC流程</strong></p>
+<h2 id="ZGC流程"><a href="#ZGC流程" class="headerlink" title="ZGC流程"></a><strong>ZGC流程</strong></h2><p><strong>一次ZGC流程</strong></p>
 <p>标记阶段(标识垃圾)</p>
 <p>转移阶段(对象复制或移动)</p>
 <p>​    <img src="/9%E3%80%81%E4%B8%BAJava%E5%BC%80%E7%96%86%E6%8B%93%E5%9C%9F%E7%9A%84ZGC%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90/2378" srcset="/img/loading.gif" lazyload alt="0"></p>
