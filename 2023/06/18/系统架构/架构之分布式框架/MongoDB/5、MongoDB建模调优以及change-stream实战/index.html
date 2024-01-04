@@ -16,16 +16,21 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="MongoDB开发规范 （1）命名原则。数据库、集合命名需要简单易懂，数据库名使用小写字符，集合名称使用统一命名风格，可以统一大小写或使用驼峰式命名。数据库名和集合名称均不能超过64个字符。 （2）集合设计。对少量数据的包含关系，使用嵌套模式有利于读性能和保证原子性的写入。对于复杂的关联关系，以及后期可能发生演进变化的情况，建议使用引用模式。 （3）文档设计。避免使用大文档，MongoDB的文档最">
+<meta property="og:type" content="article">
 <meta property="og:title" content="5、MongoDB建模调优以及change stream实战">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/18/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/MongoDB/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MongoDB开发规范 （1）命名原则。数据库、集合命名需要简单易懂，数据库名使用小写字符，集合名称使用统一命名风格，可以统一大小写或使用驼峰式命名。数据库名和集合名称均不能超过64个字符。 （2）集合设计。对少量数据的包含关系，使用嵌套模式有利于读性能和保证原子性的写入。对于复杂的关联关系，以及后期可能发生演进变化的情况，建议使用引用模式。 （3）文档设计。避免使用大文档，MongoDB的文档最">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/44234">
+<meta property="og:image" content="https://kblayt.github.io/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/44238">
 <meta property="article:published_time" content="2023-06-18T13:34:26.000Z">
-<meta property="article:modified_time" content="2023-06-27T10:50:24.279Z">
+<meta property="article:modified_time" content="2024-01-04T10:13:42.042Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MongoDB">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/44234">
   
   
   
@@ -217,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          4.1k 字
         
       </span>
     
@@ -228,7 +233,7 @@
         
         
         
-          1 分钟
+          35 分钟
         
       </span>
     
@@ -271,7 +276,69 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <p><strong>MongoDB开发规范</strong></p>
+<p>（1）命名原则。数据库、集合命名需要简单易懂，数据库名使用小写字符，集合名称使用统一命名风格，可以统一大小写或使用驼峰式命名。数据库名和集合名称均不能超过64个字符。</p>
+<p>（2）集合设计。对少量数据的包含关系，使用嵌套模式有利于读性能和保证原子性的写入。对于复杂的关联关系，以及后期可能发生演进变化的情况，建议使用引用模式。</p>
+<p>（3）文档设计。避免使用大文档，MongoDB的文档最大不能超过16MB。如果使用了内嵌的数组对象或子文档，应该保证内嵌数据不会无限制地增长。在文档结构上，尽可能减少字段名的长度，MongoDB会保存文档中的字段名，因此字段名称会影响整个集合的大小以及内存的需求。一般建议将字段名称控制在32个字符以内。</p>
+<p>（4）索引设计。在必要时使用索引加速查询。避免建立过多的索引，单个集合建议不超过10个索引。MongoDB对集合的写入操作很可能也会触发索引的写入，从而触发更多的I&#x2F;O操作。无效的索引会导致内存空间的浪费，因此有必要对索引进行审视，及时清理不使用或不合理的索引。遵循索引优化原则，如覆盖索引、优先前缀匹配等，使用explain命令分析索引性能。</p>
+<p>（5）分片设计。对可能出现快速增长或读写压力较大的业务表考虑分片。分片键的设计满足均衡分布的目标，业务上尽量避免广播查询。应尽早确定分片策略，最好在集合达到256GB之前就进行分片。如果集合中存在唯一性索引，则应该确保该索引覆盖分片键，避免冲突。为了降低风险，单个分片的数据集合大小建议不超过2TB。</p>
+<p>（6）升级设计。应用上需支持对旧版本数据的兼容性，在添加唯一性约束索引之前，对数据表进行检查并及时清理冗余的数据。新增、修改数据库对象等操作需要经过评审，并保持对数据字典进行更新。</p>
+<p>（7）考虑数据老化问题，要及时清理无效、过期的数据，优先考虑为系统日志、历史数据表添加合理的老化策略。</p>
+<p>（8）数据一致性方面，非关键业务使用默认的WriteConcern：1（更高性能写入）；对于关键业务类，使用WriteConcern：majority保证一致性（性能下降）。如果业务上严格不允许脏读，则使用ReadConcern：majority选项。</p>
+<p>（9）使用update、findAndModify对数据进行修改时，如果设置了upsert：true，则必须使用唯一性索引避免产生重复数据。</p>
+<p>（10）业务上尽量避免短连接，使用官方最新驱动的连接池实现，控制客户端连接池的大小，最大值建议不超过200。</p>
+<p>（11）对大量数据写入使用Bulk Write批量化API，建议使用无序批次更新。</p>
+<p>（12）优先使用单文档事务保证原子性，如果需要使用多文档事务，则必须保证事务尽可能小，一个事务的执行时间最长不能超过60s。</p>
+<p>（13）在条件允许的情况下，利用读写分离降低主节点压力。对于一些统计分析类的查询操作，可优先从节点上执行。</p>
+<p>（14）考虑业务数据的隔离，例如将配置数据、历史数据存放到不同的数据库中。微服务之间使用单独的数据库，尽量避免跨库访问。</p>
+<p>（15）维护数据字典文档并保持更新，提前按不同的业务进行数据容量的规划。</p>
+<p><strong>MongoDB调优</strong></p>
+<p>三大导致MongoDB性能不佳的原因：</p>
+<ol>
+<li><p>慢查询</p>
+</li>
+<li><p>阻塞等待</p>
+</li>
+<li><p>硬件资源不足</p>
+</li>
+</ol>
+<p>1,2通常是因为模型&#x2F;索引设计不佳导致的</p>
+<p>排查思路：按1-2-3依次排查</p>
+<p><strong>影响MongoDB性能的因素</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/6239daa307912906f511b348">https://www.processon.com/view/link/6239daa307912906f511b348</a></p>
+<p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=4f65e76769ec29011a68db6db20611c3&sub=1F63D7953E0042A5BD3392A53C9CB01A"><strong>MongoDB建模小案例分析</strong></a></p>
+<p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=b6613052626348d828c3af714fede113&sub=7A8DC1AD4DEC4E6B8F57FD37E11BF5E3"> <strong>MongoDB性能监控工具</strong></a></p>
+<p><strong>性能问题排查参考案例</strong></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1495820">记一次 MongoDB 占用 CPU 过高问题的排查</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1857119">MongoDB线上案例：一个参数提升16倍写入速度</a></p>
+<p><strong>MongoDB高级集群架构</strong></p>
+<p><strong>两地三中心集群架构</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/6239de401e085306f8cc23ef">https://www.processon.com/view/link/6239de401e085306f8cc23ef</a></p>
+<p>双中心双活＋异地热备&#x3D;两地三中心</p>
+<p>​    <img src="/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/44234" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>全球多写集群架构</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/6239de277d9c08070e59dc0d">https://www.processon.com/view/link/6239de277d9c08070e59dc0d</a></p>
+<p>​    <img src="/5%E3%80%81MongoDB%E5%BB%BA%E6%A8%A1%E8%B0%83%E4%BC%98%E4%BB%A5%E5%8F%8Achange-stream%E5%AE%9E%E6%88%98/44238" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>MongoDB整合SpringBoot</strong></p>
+<p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=cb97c3c95aa6def0f6c3d7072d4afa48&sub=567BDAE8BDE24C49997590E2C1E78B8A"><strong>文档CRUD操作&amp;聚合操作</strong></a></p>
+<p>视频教程： <a target="_blank" rel="noopener" href="https://vip.tulingxueyuan.cn/detail/p_622d92aee4b066e9608ee2c9/6">https://vip.tulingxueyuan.cn/detail/p_622d92aee4b066e9608ee2c9/6</a></p>
+<p><strong>事务操作</strong></p>
+<p>官方文档： <a target="_blank" rel="noopener" href="https://docs.mongodb.com/upcoming/core/transactions/">https://docs.mongodb.com/upcoming/core/transactions/</a></p>
+<p><strong>编程式事务</strong></p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 事务操作API</span><br><span class="hljs-comment"> * https://docs.mongodb.com/upcoming/core/transactions/</span><br><span class="hljs-comment"> */</span><br>@Test<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> updateEmployeeInfo() &#123;<br>    <span class="hljs-comment">//连接复制集</span><br>    MongoClient <span class="hljs-keyword">client</span> = MongoClients.create(<span class="hljs-string">&quot;mongodb://fox:fox@192.168.65.174:28017,192.168.65.174:28018,192.168.65.174:28019/test?authSource=admin&amp;replicaSet=rs0&quot;</span>);<br><br>    MongoCollection&lt;Document&gt; emp = <span class="hljs-keyword">client</span>.getDatabase(<span class="hljs-string">&quot;test&quot;</span>).getCollection(<span class="hljs-string">&quot;emp&quot;</span>);<br>    MongoCollection&lt;Document&gt; events = <span class="hljs-keyword">client</span>.getDatabase(<span class="hljs-string">&quot;test&quot;</span>).getCollection(<span class="hljs-string">&quot;events&quot;</span>);<br>    <span class="hljs-comment">//事务操作配置</span><br>    TransactionOptions txnOptions = TransactionOptions.builder()<br>            .readPreference(ReadPreference.primary())<br>            .readConcern(ReadConcern.MAJORITY)<br>            .writeConcern(WriteConcern.MAJORITY)<br>            .build();<br>    <span class="hljs-keyword">try</span> (ClientSession clientSession = <span class="hljs-keyword">client</span>.startSession()) &#123;<br>        <span class="hljs-comment">//开启事务</span><br>        clientSession.startTransaction(txnOptions);<br><br>        <span class="hljs-keyword">try</span> &#123;<br><br>            emp.updateOne(clientSession,<br>                    Filters.eq(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;张三&quot;</span>),<br>                    Updates.set(<span class="hljs-string">&quot;status&quot;</span>, <span class="hljs-string">&quot;inactive&quot;</span>));<br><br>            <span class="hljs-built_in">int</span> i=<span class="hljs-number">1</span>/<span class="hljs-number">0</span>;<br><br>            events.insertOne(clientSession,<br>                    <span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;张三&quot;</span>).append(<span class="hljs-string">&quot;status&quot;</span>, <span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;new&quot;</span>, <span class="hljs-string">&quot;inactive&quot;</span>).append(<span class="hljs-string">&quot;old&quot;</span>, <span class="hljs-string">&quot;Active&quot;</span>)));<br><br>            <span class="hljs-comment">//提交事务</span><br>            clientSession.commitTransaction();<br><br>        &#125;<span class="hljs-keyword">catch</span> (Exception e)&#123;<br>            e.printStackTrace();<br>            <span class="hljs-comment">//回滚事务</span><br>            clientSession.abortTransaction();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>声明式事务</strong></p>
+<p>配置事务管理器</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Bean<br>MongoTransactionManager transaction<span class="hljs-constructor">Manager(MongoDatabaseFactory <span class="hljs-params">factory</span>)</span>&#123;<br>    <span class="hljs-comment">//事务操作配置</span><br>TransactionOptions txnOptions = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">TransactionOptions</span>.</span></span>builder<span class="hljs-literal">()</span><br>        .read<span class="hljs-constructor">Preference(ReadPreference.<span class="hljs-params">primary</span>()</span>)<br>        .read<span class="hljs-constructor">Concern(ReadConcern.MAJORITY)</span><br>        .write<span class="hljs-constructor">Concern(WriteConcern.MAJORITY)</span><br>        .build<span class="hljs-literal">()</span>;<br>    return <span class="hljs-keyword">new</span> <span class="hljs-constructor">MongoTransactionManager(<span class="hljs-params">factory</span>)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编程测试service</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EmployeeService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-title class_">MongoTemplate</span> mongoTemplate;<br><br>    <span class="hljs-meta">@Transactional</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">addEmployee</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-title class_">Employee</span> employee = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>(<span class="hljs-number">100</span>,<span class="hljs-string">&quot;张三&quot;</span>, <span class="hljs-number">21</span>,<br>                <span class="hljs-number">15000.00</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br>        <span class="hljs-title class_">Employee</span> employee2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Employee</span>(<span class="hljs-number">101</span>,<span class="hljs-string">&quot;赵六&quot;</span>, <span class="hljs-number">28</span>,<br>                <span class="hljs-number">10000.00</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>());<br><br>        mongoTemplate.<span class="hljs-title function_">save</span>(employee);<br>        <span class="hljs-comment">//int i=1/0;</span><br>        mongoTemplate.<span class="hljs-title function_">save</span>(employee2);<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Autowired</span><br><span class="hljs-title class_">EmployeeService</span> employeeService;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">test</span>(<span class="hljs-params"></span>)&#123;<br>    employeeService.<span class="hljs-title function_">addEmployee</span>();<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://note.youdao.com/noteshare?id=d157145be3759e169efd0b3e5fce7152&sub=5D848834826D498B8B52C38C690760BB"><strong>change stream实战</strong></a></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
