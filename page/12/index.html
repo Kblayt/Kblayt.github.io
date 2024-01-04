@@ -223,15 +223,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/03/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/XXL-JOB/" target="_self">
-          XXL-JOB
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/10%E3%80%81Spring%E4%B9%8B%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
+          10、Spring之启动过程源码解析
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/XXL-JOB/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/10%E3%80%81Spring%E4%B9%8B%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
         <div>
-          一、简介1.1 概述XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅速、学习简单、轻量级、易扩展。现已开放源代码并介入多家公司上线产品，开箱即用。 1.2 社区交流社区交流 1.3 特性1、简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手； 2、动态：支持动态修改任务状态、启动&#x2F;停止任务，以及终止运行中任务，即时生效； 3、调度中心HA（中心式）：调度采
+          前言分析通常，我们说的Spring启动，就是构造ApplicationContext对象以及调用refresh()方法的过程。 首先，Spring启动过程主要做了这么几件事情：  构造一个BeanFactory对象  解析配置类，得到BeanDefinition，并注册到BeanFactory中   解析@ComponentScan，此时就会完成扫描 解析@Import 解析@Bean …   因
         </div>
       </a>
 
@@ -239,256 +239,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-02 09:41" pubdate>
-              2023-03-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%A1%86%E6%9E%B6/">#定时任务框架</a>
-            
-              <a href="/tags/XXL-JOB/">#XXL-JOB</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/03/01/%E5%BE%AE%E6%9C%8D%E5%8A%A1/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" target="_self">
-          OpenFeign与负载均衡
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/01/%E5%BE%AE%E6%9C%8D%E5%8A%A1/OpenFeign%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" target="_self">
-        <div>
-          一、Ribbon与OpenFeign关系　　说到 OpenFeign就不得不提 Ribbon，OpenFeign默认将Ribbon作为负载均衡器，直接内置了 Ribbon。在导入OpenFeign 依赖后无需专门导入Ribbon 依赖。 　　Ribbon 是 Netflix 公司的一个开源的负载均衡项目，一个客户端负载均衡器，运行在消费者端。简单来说就是在消费者端配置对提供者的负载均衡器。这点与
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-01 10:22" pubdate>
-              2023-03-01
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/OpenFeign/">#OpenFeign</a>
-            
-              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/02/28/JavaWeb+SSM+SpringBoot/Spring%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%B0%81%E8%A3%85/" target="_self">
-          Java自定义注解封装
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/02/28/JavaWeb+SSM+SpringBoot/Spring%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%B0%81%E8%A3%85/" target="_self">
-        <div>
-          1 注解的概念1.1 注解的官方定义官方对注解的描述 1An annotation is a form of metadata, that can be added to Java source code. Classes, methods, variables, parameters and packages may be annotated. Annotations have no direc
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-28 09:49" pubdate>
-              2023-02-28
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/JavaWeb-SSM-SpringBoot/" class="category-chain-item">JavaWeb+SSM+SpringBoot</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Java%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E5%B0%81%E8%A3%85/">#Java自定义注解封装</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/" target="_self">
-          微服务框架（三）
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/02/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%89/" target="_self">
-        <div>
-          微服务框架（三）一、RabbitMQ同步通讯 优点：  时效性较强，可以立即得到结果  缺点：  耦合度高：每次加入新的需求，都要修改原来的代码 性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。 资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源 级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-27 10:52" pubdate>
-              2023-02-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/">#微服务框架</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
-          设计模式
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/11/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
-        <div>
-          设计模式简介设计模式的类型根据设计模式的参考书 Design Patterns - Elements of Reusable Object-Oriented Software（中文译名：设计模式 - 可复用的面向对象软件元素） 中所提到的，总共有 23 种设计模式。这些模式可以分为三大类：创建型模式（Creational Patterns）、结构型模式（Structural Patterns）、行
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-04 10:58" pubdate>
-              2022-11-04
+            <time datetime="2023-06-10 15:27" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -506,6 +258,13 @@
   <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
   
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
 
       </span>
     
@@ -518,9 +277,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Design-pattern/">#Design pattern</a>
-            
-              <a href="/tags/23%E7%A7%8D%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#23种设计模式</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -534,15 +291,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/10/29/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" target="_self">
-          redis
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/9%E3%80%81Spring%E4%B9%8B%E6%8E%A8%E6%96%AD%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
+          9、Spring之推断构造方法源码解析
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/10/29/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/9%E3%80%81Spring%E4%B9%8B%E6%8E%A8%E6%96%AD%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
         <div>
-          redis安装部署与启动https://www.runoob.com/redis/redis-install.html redis的简单调用123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263package com.e
+          推断构造方法流程图： AutowiredAnnotationBeanPostProcessor中推断构造方法不同情况思维脑图： Spring中的一个bean，需要实例化得到一个对象，而实例化就需要用到构造方法。 一般情况下，一个类只有一个构造方法：  要么是无参的构造方法 要么是有参的构造方法  如果只有一个无参的构造方法，那么实例化就只能使用这个构造方法了。 如果只有一个有参的构造方法，那么实例
         </div>
       </a>
 
@@ -550,8 +307,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-10-29 13:05" pubdate>
-              2022-10-29
+            <time datetime="2023-06-10 15:26" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -566,8 +323,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
   
 
       </span>
@@ -581,7 +345,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/redis/">#redis</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -595,15 +359,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/10/29/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/" target="_self">
-          nginx
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/8%E3%80%81Spring%E4%B9%8B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
+          8、Spring之循环依赖底层源码解析
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/10/29/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/8%E3%80%81Spring%E4%B9%8B%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" target="_self">
         <div>
-          Nginx.xmind 负载均衡有四种方式 轮询（默认）  权重轮询（weight）  ip_hash（让某一客户机在相当长的一段时间内只访问固定的后端的某台真实的web服务器）  least_conn（请求将被传递给当前拥有最少活跃连接的s
+          什么是循环依赖？很简单，就是A对象依赖了B对象，B对象依赖了A对象。 比如： 123456789// A依赖了Bclass A&#123;	public B b;&#125;// B依赖了Aclass B&#123;	public A a;&#125;  那么循环依赖是个问题吗？ 如果不考虑Spring，循环依赖并不是问题，因为对象之间相互依赖是很正常的事情。 比如 12345A a = new
         </div>
       </a>
 
@@ -611,8 +375,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-10-29 12:43" pubdate>
-              2022-10-29
+            <time datetime="2023-06-10 15:26" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -627,8 +391,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="category-chain-item">中间件</a>
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
   
 
       </span>
@@ -642,7 +413,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Jenkins/">#Jenkins</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -656,15 +427,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/" target="_self">
-          微服务框架(二)
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/7%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8B)/" target="_self">
+          7、Spring之依赖注入源码解析(下)
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%BA%8C/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/7%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8B)/" target="_self">
         <div>
-          DockerDocker项目部署问题 Docker如何解决大型项目依赖关系复杂，不同组件依赖的兼容性问题？  Docker允许开发中将应用、依赖、函数库、配置一起打包，形成可移植镜像 Docker应用运行在容器中，使用沙箱机制，相互隔离  Docker如何解决开发、测试、生产环境有差异的问题  Docker镜像中包含完整运行环境，包括系统函数库，仅依赖系统的Linux内核，因此可以在任意Linux
+          上节课我们讲了Spring中的自动注入(byName,byType)和@Autowired注解的工作原理以及源码分析，那么今天这节课，我们来分析还没讲完的，剩下的核心的方法： 123@NullableObject resolveDependency(DependencyDescriptor descriptor, @Nullable String requestingBeanName,		@Nul
         </div>
       </a>
 
@@ -672,8 +443,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-10-29 10:32" pubdate>
-              2022-10-29
+            <time datetime="2023-06-10 15:25" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -688,8 +459,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
   
 
       </span>
@@ -703,7 +481,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/">#微服务框架</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -717,15 +495,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%80/" target="_self">
-          微服务框架(一)
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/" target="_self">
+          6、Spring之依赖注入源码解析
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-%E4%B8%80/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/6%E3%80%81Spring%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(%E4%B8%8A)/" target="_self">
         <div>
-          软件架构分类：单体式、微服务 微服务架构的相关概念：Provider和Consumer，PRC和Restful，分布式和集群。 国内最知名的微服务技术框架就是：  Dubbo&#x2F;Duboox   http://dubbo.io/ https://github.com/dangdangdotcom/dubbox   SpringCloud   http://projects.spring
+          依赖注入底层原理流程图： Spring中到底有几种依赖注入的方式？首先分两种：  手动注入 自动注入  手动注入在XML中定义Bean时，就是手动注入，因为是程序员手动给某个属性指定了值。 123&lt;bean name=&quot;userService&quot; class=&quot;com.luban.service.UserService&quot;&gt;	&lt;property
         </div>
       </a>
 
@@ -733,8 +511,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-10-29 10:32" pubdate>
-              2022-10-29
+            <time datetime="2023-06-10 15:24" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -749,8 +527,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
   
 
       </span>
@@ -764,7 +549,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/">#微服务框架</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -778,15 +563,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/" target="_self">
-          微服务项目打包
+        <a href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/5%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E9%94%80%E6%AF%81%E8%BF%87%E7%A8%8B)/" target="_self">
+          5、Spring之Bean生命周期源码解析(Bean的销毁过程)
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/10/29/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/10/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/5%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E9%94%80%E6%AF%81%E8%BF%87%E7%A8%8B)/" target="_self">
         <div>
-          微服务项目打包1、项目结构说明 其中TakeAwayBack为父项目，其它项目为子项目，Common为其它项目所依赖的公共项目。 2、打包步骤2.1、配置父项目的pom文件修改打包为pom（一般父级的打包方式为pom，所以只要有子项目的项目都需要配置packaging节点为pom。比如：如果MerchantsConsumer下有子项目那么该项目pon文件中的packaging节点也要配置为pom）
+          Bean的销毁过程Bean销毁是发送在Spring容器关闭过程中的。 在Spring容器关闭时，比如： 123456AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);UserService userService = (UserService) c
         </div>
       </a>
 
@@ -794,8 +579,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-10-29 10:17" pubdate>
-              2022-10-29
+            <time datetime="2023-06-10 15:24" pubdate>
+              2023-06-10
             </time>
           </div>
         
@@ -810,8 +595,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">微服务</a>
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
   
 
       </span>
@@ -825,7 +617,244 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E6%89%93%E5%8C%85/">#微服务项目打包</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/05/31/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" target="_self">
+          数据库原理
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/31/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86/" target="_self">
+        <div>
+          
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-31 11:23" pubdate>
+              2023-05-31
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/4%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B)/" target="_self">
+          4、Spring之Bean生命周期源码解析(Bean的创建过程)
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/4%E3%80%81Spring%E4%B9%8BBean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90(Bean%E7%9A%84%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B)/" target="_self">
+        <div>
+          Spring最重要的功能就是帮助程序员创建对象（也就是IOC），而启动Spring就是为创建Bean对象做准备，所以我们先明白Spring到底是怎么去创建Bean的，也就是先弄明白Bean的生命周期。 Bean的生命周期就是指：在Spring中，一个Bean是如何生成的，如何销毁的 Bean生命周期流程图： Bean的生成过程1. 生成BeanDefinitionSpring启动的时候会进行扫描，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-30 17:40" pubdate>
+              2023-05-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/3%E3%80%81Spring%E5%BA%95%E5%B1%82%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%A7%A3%E6%9E%90/" target="_self">
+          3、Spring底层架构核心概念解析
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/3%E3%80%81Spring%E5%BA%95%E5%B1%82%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%A7%A3%E6%9E%90/" target="_self">
+        <div>
+          BeanDefinitionBeanDefinition表示Bean定义，BeanDefinition中存在很多属性用来描述一个Bean的特点。比如：  class，表示Bean类型 scope，表示Bean作用域，单例或原型等 lazyInit：表示Bean是否是懒加载 initMethodName：表示Bean初始化时要执行的方法 destroyMethodName：表示Bean销毁时要执行的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-30 17:40" pubdate>
+              2023-05-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/2%E3%80%81%E6%89%8B%E5%86%99%E6%A8%A1%E6%8B%9FSpring%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" target="_self">
+          2、手写模拟Spring底层原理
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/30/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/2%E3%80%81%E6%89%8B%E5%86%99%E6%A8%A1%E6%8B%9FSpring%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" target="_self">
+        <div>
+          1、Spring的底层源码启动过程 2、BeanDefinition、BeanPostProcessor的概念 3、Spring解析配置类等底层源码工作流程 4、依赖注入、Aware回调等底层源码工作流程 5、Spring AOP的底层源码工作流程
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-30 17:39" pubdate>
+              2023-05-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="category-chain-item">架构之源码解析</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E6%A1%86%E6%9E%B6/">#源码框架</a>
             
           </div>
         
@@ -837,7 +866,7 @@
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/#board">13</a><a class="page-number" href="/page/14/#board">14</a><a class="extend next" rel="next" href="/page/13/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/#board">13</a><a class="page-number" href="/page/14/#board">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/#board">16</a><a class="extend next" rel="next" href="/page/13/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
