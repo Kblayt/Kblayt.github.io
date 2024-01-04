@@ -16,16 +16,42 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="1.聚合操作聚合操作处理数据记录并返回计算结果。聚合操作组值来自多个文档，可以对分组数据执行各种操作以返回单个结果。聚合操作包含三类：单一作用聚合、聚合管道、MapReduce。  单一作用聚合：提供了对常见聚合过程的简单访问，操作都从单个集合聚合文档。 聚合管道是一个数据聚合的框架，模型基于数据处理流水线的概念。文档进入多级管道，将 文档转换为聚合结果。  MapReduce操作具有两个阶段：处">
+<meta property="og:type" content="article">
 <meta property="og:title" content="2、MongoDB聚合操作及索引底层原理">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/18/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/MongoDB/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.聚合操作聚合操作处理数据记录并返回计算结果。聚合操作组值来自多个文档，可以对分组数据执行各种操作以返回单个结果。聚合操作包含三类：单一作用聚合、聚合管道、MapReduce。  单一作用聚合：提供了对常见聚合过程的简单访问，操作都从单个集合聚合文档。 聚合管道是一个数据聚合的框架，模型基于数据处理流水线的概念。文档进入多级管道，将 文档转换为聚合结果。  MapReduce操作具有两个阶段：处">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39657">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39636">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39613">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/37475">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39652">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39679">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39736">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39737">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/42537">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39499">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39747">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39472">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39469">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39749">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39474">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39752">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39542">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40210">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40650">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40115">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40053">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40143">
+<meta property="og:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40163">
 <meta property="article:published_time" content="2023-06-18T13:33:06.000Z">
-<meta property="article:modified_time" content="2023-06-27T09:18:23.445Z">
+<meta property="article:modified_time" content="2024-01-04T06:35:50.533Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MongoDB">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39657">
   
   
   
@@ -217,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          34k 字
         
       </span>
     
@@ -228,7 +254,7 @@
         
         
         
-          1 分钟
+          281 分钟
         
       </span>
     
@@ -271,7 +297,948 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <h1 id="1-聚合操作"><a href="#1-聚合操作" class="headerlink" title="1.聚合操作"></a><strong>1.聚合操作</strong></h1><p>聚合操作处理数据记录并返回计算结果。聚合操作组值来自多个文档，可以对分组数据执行各种操作以返回单个结果。聚合操作包含三类：单一作用聚合、聚合管道、MapReduce。</p>
+<ul>
+<li>单一作用聚合：提供了对常见聚合过程的简单访问，操作都从单个集合聚合文档。</li>
+<li>聚合管道是一个数据聚合的框架，模型基于数据处理流水线的概念。文档进入多级管道，将 文档转换为聚合结果。 </li>
+<li>MapReduce操作具有两个阶段：处理每个文档并向每个输入文档发射一个或多个对象的map阶段，以及reduce组合map操作的输出阶段。</li>
+</ul>
+<h2 id="1-1-单一作用聚合"><a href="#1-1-单一作用聚合" class="headerlink" title="1.1  单一作用聚合"></a><strong>1.1  单一作用聚合</strong></h2><p>MongoDB提供 db.collection.estimatedDocumentCount(), db.collection.count(), db.collection.distinct() 这类单一作用的聚合函数。 所有这些操作都聚合来自单个集合的文档。虽然这些操作提供了对公共聚合过程的简单访问，但它们缺乏聚合管道和map-Reduce的灵活性和功能。</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39657" srcset="/img/loading.gif" lazyload alt="0"></p>
+<table>
+<thead>
+<tr>
+<th>db.collection.estimatedDocumentCount()</th>
+<th>返回集合或视图中所有文档的计数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>db.collection.count()</td>
+<td>返回与find()集合或视图的查询匹配的文档计数 。等同于 db.collection.find(query).count()构造</td>
+</tr>
+<tr>
+<td>db.collection.distinct()</td>
+<td>在单个集合或视图中查找指定字段的不同值，并在数组中返回结果。</td>
+</tr>
+</tbody></table>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">#检索books集合中所有文档的计数<br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.estimatedDocumentCount</span>()<br>#计算与查询匹配的所有文档<br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.count</span>(&#123;favCount:&#123;<span class="hljs-variable">$gt</span>:<span class="hljs-number">50</span>&#125;&#125;)<br>#返回不同type的数组<br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.distinct</span>(<span class="hljs-string">&quot;type&quot;</span>)<br>#返回收藏数大于<span class="hljs-number">90</span>的文档不同type的数组<br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.distinct</span>(<span class="hljs-string">&quot;type&quot;</span>,&#123;favCount:&#123;<span class="hljs-variable">$gt</span>:<span class="hljs-number">90</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>注意：在分片群集上，如果存在孤立文档或正在进行块迁移，则db.collection.count()没有查询谓词可能导致计数不准确。要避免这些情况，请在分片群集上使用 db.collection.aggregate()方法。</p>
+<h2 id="1-2-聚合管道"><a href="#1-2-聚合管道" class="headerlink" title="1.2 聚合管道"></a><strong>1.2 聚合管道</strong></h2><h3 id="什么是-MongoDB-聚合框架"><a href="#什么是-MongoDB-聚合框架" class="headerlink" title="什么是 MongoDB 聚合框架"></a><strong>什么是 MongoDB 聚合框架</strong></h3><p>MongoDB 聚合框架（Aggregation Framework）是一个计算框架，它可以：</p>
+<ul>
+<li>作用在一个或几个集合上； </li>
+<li>对集合中的数据进行的一系列运算；</li>
+<li>将这些数据转化为期望的形式；</li>
+</ul>
+<p>从效果而言，聚合框架相当于 SQL 查询中的GROUP BY、 LEFT OUTER JOIN 、 AS等。</p>
+<h3 id="管道（Pipeline）和阶段（Stage）"><a href="#管道（Pipeline）和阶段（Stage）" class="headerlink" title="管道（Pipeline）和阶段（Stage）"></a><strong>管道（Pipeline）和阶段（Stage）</strong></h3><p>整个聚合运算过程称为管道（Pipeline），它是由多个阶段（Stage）组成的， 每个管道： </p>
+<ul>
+<li>接受一系列文档（原始数据）；  </li>
+<li>每个阶段对这些文档进行一系列运算； </li>
+<li>结果文档输出给下一个阶段；</li>
+</ul>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39636" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>聚合管道操作语法</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gams">pipeline = [<span class="hljs-symbol">$</span>stage1, <span class="hljs-symbol">$</span>stage2, ...<span class="hljs-symbol">$</span>stageN];<br>db.collection.aggregate(pipeline, &#123;<span class="hljs-keyword">options</span>&#125;)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>pipelines 一组数据聚合阶段。除$out、$Merge和$geonear阶段之外，每个阶段都可以在管道中出现多次。 </li>
+<li>options 可选，聚合操作的其他参数。包含：查询计划、是否使用临时文件、 游标、最大操作时间、读写策略、强制索引等等</li>
+</ul>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39613" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="常用的管道聚合阶段"><a href="#常用的管道聚合阶段" class="headerlink" title="常用的管道聚合阶段"></a><strong>常用的管道聚合阶段</strong></h3><p>聚合管道包含非常丰富的聚合阶段，下面是最常用的聚合阶段</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>描述</th>
+<th>SQL等价运算符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$match</td>
+<td>筛选条件</td>
+<td>WHERE</td>
+</tr>
+<tr>
+<td>$project</td>
+<td>投影</td>
+<td>AS</td>
+</tr>
+<tr>
+<td>$lookup</td>
+<td>左外连接</td>
+<td>LEFT OUTER JOIN</td>
+</tr>
+<tr>
+<td>$sort</td>
+<td>排序</td>
+<td>ORDER BY</td>
+</tr>
+<tr>
+<td>$group</td>
+<td>分组</td>
+<td>GROUP BY</td>
+</tr>
+<tr>
+<td>$skip&#x2F;$limit</td>
+<td>分页</td>
+<td></td>
+</tr>
+<tr>
+<td>$unwind</td>
+<td>展开数组</td>
+<td></td>
+</tr>
+<tr>
+<td>$graphLookup</td>
+<td>图搜索</td>
+<td></td>
+</tr>
+<tr>
+<td>$facet&#x2F;$bucket</td>
+<td>分面搜索</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>文档：</strong><a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/"><strong>Aggregation Pipeline Stages — MongoDB Manual</strong></a></p>
+<p><strong>聚合表达式</strong></p>
+<p>获取字段信息</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs armasm">$&lt;<span class="hljs-meta">field</span>&gt;  ： 用 $ 指示字段路径<br>$&lt;<span class="hljs-meta">field</span>&gt;.&lt;<span class="hljs-keyword">sub</span> <span class="hljs-meta">field</span>&gt;  ： 使用 $  和 .  来指示内嵌文档的路径<br></code></pre></td></tr></table></figure>
+
+<p>常量表达式</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$literal</span> <span class="hljs-symbol">:&lt;value&gt;</span> ： 指示常量 &lt;value&gt;<br></code></pre></td></tr></table></figure>
+
+<p>系统变量表达式</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span><span class="hljs-variable">$</span>&lt;variable&gt;  使用 <span class="hljs-variable">$</span><span class="hljs-variable">$</span> 指示系统变量<br><span class="hljs-variable">$</span><span class="hljs-variable">$CURRENT</span>  指示管道中当前操作的文档<br></code></pre></td></tr></table></figure>
+
+<p><strong>数据准备</strong></p>
+<p><strong>准备数据集，执行脚本</strong></p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-built_in">var</span> tags = [<span class="hljs-string">&quot;nosql&quot;</span>,<span class="hljs-string">&quot;mongodb&quot;</span>,<span class="hljs-string">&quot;document&quot;</span>,<span class="hljs-string">&quot;developer&quot;</span>,<span class="hljs-string">&quot;popular&quot;</span>];<br><span class="hljs-built_in">var</span> types = [<span class="hljs-string">&quot;technology&quot;</span>,<span class="hljs-string">&quot;sociality&quot;</span>,<span class="hljs-string">&quot;travel&quot;</span>,<span class="hljs-string">&quot;novel&quot;</span>,<span class="hljs-string">&quot;literature&quot;</span>];<br><span class="hljs-built_in">var</span> books=[];<br><span class="hljs-keyword">for</span>(<span class="hljs-built_in">var</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">50</span>;i++)&#123;<br>    <span class="hljs-built_in">var</span> typeIdx = Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*types.<span class="hljs-built_in">length</span>);<br>    <span class="hljs-built_in">var</span> tagIdx = Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*tags.<span class="hljs-built_in">length</span>);<br>    <span class="hljs-built_in">var</span> tagIdx2 = Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*tags.<span class="hljs-built_in">length</span>);<br>    <span class="hljs-built_in">var</span> favCount = Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*<span class="hljs-number">100</span>);<br>    <span class="hljs-built_in">var</span> username = <span class="hljs-string">&quot;xx00&quot;</span>+Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*<span class="hljs-number">10</span>);<br>    <span class="hljs-built_in">var</span> age = <span class="hljs-number">20</span> + Math.<span class="hljs-built_in">floor</span>(Math.<span class="hljs-built_in">random</span>()*<span class="hljs-number">15</span>);<br>    <span class="hljs-built_in">var</span> book = &#123;<br>        <span class="hljs-built_in">title</span>: <span class="hljs-string">&quot;book-&quot;</span>+i,<br>        type: types[typeIdx],<br>        tag: [tags[tagIdx],tags[tagIdx2]],<br>        favCount: favCount,<br>        author: &#123;name:username,age:age&#125;<br>    &#125;;<br>    books.<span class="hljs-built_in">push</span>(book)<br>&#125;<br>db.books.insertMany(books);<br></code></pre></td></tr></table></figure>
+
+<h3 id="project"><a href="#project" class="headerlink" title="$project"></a><strong>$project</strong></h3><p>投影操作， 将原始字段投影成指定名称， 如将集合中的 title 投影成 name</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([&#123;<span class="hljs-variable">$project</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>&#125;&#125;])<br></code></pre></td></tr></table></figure>
+
+<p>$project 可以灵活控制输出文档的格式，也可以剔除不需要的字段</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([&#123;<span class="hljs-variable">$project</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>,<span class="hljs-attr">_id</span>:<span class="hljs-number">0</span>,<span class="hljs-attr">type</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">author</span>:<span class="hljs-number">1</span>&#125;&#125;])<br></code></pre></td></tr></table></figure>
+
+<p>从嵌套文档中排除字段</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$project</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>,<span class="hljs-attr">_id</span>:<span class="hljs-number">0</span>,<span class="hljs-attr">type</span>:<span class="hljs-number">1</span>,<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-number">1</span>&#125;&#125;<br>])<br>或者<br>db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$project</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>,<span class="hljs-attr">_id</span>:<span class="hljs-number">0</span>,<span class="hljs-attr">type</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">author</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-number">1</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="match"><a href="#match" class="headerlink" title="$match"></a><strong>$match</strong></h3><p>$match用于对文档进行筛选，之后可以在得到的文档子集上做聚合，$match可以使用除了地理空间之外的所有常规查询操作符，在实际应用中尽可能将$match放在管道的前面位置。这样有两个好处：一是可以快速将不需要的文档过滤掉，以减少管道的工作量；二是如果再投射和分组之前执行$match，查询可以使用索引。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.aggregate</span>(<span class="hljs-selector-attr">[&#123;$match:&#123;type:<span class="hljs-string">&quot;technology&quot;</span>&#125;&#125;]</span>)<br></code></pre></td></tr></table></figure>
+
+<p>筛选管道操作和其他管道操作配合时候时，尽量放到开始阶段，这样可以减少后续管道操作符要操作的文档数，提升效率</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-attr">type</span>:<span class="hljs-string">&quot;technology&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-variable">$project</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>,<span class="hljs-attr">_id</span>:<span class="hljs-number">0</span>,<span class="hljs-attr">type</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">author</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-number">1</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="count"><a href="#count" class="headerlink" title="$count"></a><strong>$count</strong></h3><p>计数并返回与查询匹配的结果数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">db.books.aggregate([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-built_in">type</span>:<span class="hljs-string">&quot;technology&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-variable">$count</span>: <span class="hljs-string">&quot;type_count&quot;</span>&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>  $match阶段筛选出type匹配technology的文档，并传到下一阶段；</p>
+<p>  $count阶段返回聚合管道中剩余文档的计数，并将该值分配给type_count</p>
+<h3 id="group"><a href="#group" class="headerlink" title="$group"></a><strong>$group</strong></h3><p>按指定的表达式对文档进行分组，并将每个不同分组的文档输出到下一个阶段。输出文档包含一个_id字段，该字段按键包含不同的组。</p>
+<p>输出文档还可以包含计算字段，该字段保存由$group的_id字段分组的一些accumulator表达式的值。 $group不会输出具体的文档而只是统计信息。</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery">&#123; <span class="hljs-variable">$group:</span> &#123; _id: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">expression</span>&gt;</span>, </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">field1</span>&gt;</span>: </span><span class="language-xquery">&#123; <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">accumulator1</span>&gt;</span> : </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">expression1</span>&gt;</span> &#125;</span></span><span class="language-xml">, ... &#125; &#125;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>_id字段是必填的;但是，可以指定_id值为null来为整个输入文档计算累计值。</li>
+<li>剩余的计算字段是可选的，并使用运算符进行计算。</li>
+<li>_id和表达式可以接受任何有效的<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/meta/aggregation-quick-reference/#aggregation-expressions">表达式</a>。</li>
+</ul>
+<p><strong>accumulator操作符</strong>	</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+<th>类比sql</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$avg</td>
+<td>计算均值</td>
+<td>avg</td>
+</tr>
+<tr>
+<td>$first</td>
+<td>返回每组第一个文档，如果有排序，按照排序，如果没有按照默认的存储的顺序的第一个文档。</td>
+<td>limit 0,1</td>
+</tr>
+<tr>
+<td>$last</td>
+<td>返回每组最后一个文档，如果有排序，按照排序，如果没有按照默认的存储的顺序的最后个文档。</td>
+<td>-</td>
+</tr>
+<tr>
+<td>$max</td>
+<td>根据分组，获取集合中所有文档对应值得最大值。</td>
+<td>max</td>
+</tr>
+<tr>
+<td>$min</td>
+<td>根据分组，获取集合中所有文档对应值得最小值。</td>
+<td>min</td>
+</tr>
+<tr>
+<td>$push</td>
+<td>将指定的表达式的值添加到一个数组中。</td>
+<td>-</td>
+</tr>
+<tr>
+<td>$addToSet</td>
+<td>将表达式的值添加到一个集合中（无重复值，无序）。</td>
+<td>-</td>
+</tr>
+<tr>
+<td>$sum</td>
+<td>计算总和</td>
+<td>sum</td>
+</tr>
+<tr>
+<td>$stdDevPop</td>
+<td>返回输入值的总体标准偏差（population standard deviation）</td>
+<td>-</td>
+</tr>
+<tr>
+<td>$stdDevSamp</td>
+<td>返回输入值的样本标准偏差（the sample standard deviation）</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>$group阶段的内存限制为100M。默认情况下，如果stage超过此限制，$group将产生错误。但是，要允许处理大型数据集，请将allowDiskUse选项设置为true以启用$group操作以写入临时文件。</p>
+<p><strong>book的数量，收藏总数和平均值</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-literal">null</span>,<span class="hljs-attr">count</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-number">1</span>&#125;,<span class="hljs-attr">pop</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>&#125;,<span class="hljs-attr">avg</span>:&#123;<span class="hljs-variable">$avg</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>统计每个作者的book收藏总数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$author</span>.name&quot;</span>,<span class="hljs-attr">pop</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>统计每个作者的每本book的收藏数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:&#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$author</span>.name&quot;</span>,<span class="hljs-attr">title</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$title</span>&quot;</span>&#125;,<span class="hljs-attr">pop</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>每个作者的book的type合集</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$author</span>.name&quot;</span>,<span class="hljs-attr">types</span>:&#123;<span class="hljs-variable">$addToSet</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$type</span>&quot;</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="unwind"><a href="#unwind" class="headerlink" title="$unwind"></a><strong>$unwind</strong></h3><p>可以将数组拆分为单独的文档</p>
+<p>v3.2+支持如下语法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs swift">&#123;<br>  <span class="hljs-variable">$unwind</span>:<br>    &#123;<br>     #要指定字段路径，在字段名称前加上<span class="hljs-variable">$符并用引号括起来</span><span class="hljs-operator">。</span><br>      path: <span class="hljs-operator">&lt;</span>field path<span class="hljs-operator">&gt;</span>,<br>      #可选,一个新字段的名称用于存放元素的数组索引<span class="hljs-operator">。</span>该名称不能以<span class="hljs-variable">$开头</span><span class="hljs-operator">。</span><br>      includeArrayIndex: <span class="hljs-operator">&lt;</span>string<span class="hljs-operator">&gt;</span>,  <br>      #可选，<span class="hljs-keyword">default</span> :<span class="hljs-literal">false</span>，若为<span class="hljs-literal">true</span>,如果路径为空，缺少或为空数组，则<span class="hljs-variable">$unwind输出文档</span><br>      preserveNullAndEmptyArrays: <span class="hljs-operator">&lt;</span>boolean<span class="hljs-operator">&gt;</span> <br> &#125; &#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>姓名为xx006的作者的book的tag数组拆分为多个文档</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">db.books.aggregate([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;xx006&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-variable">$unwind</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$tag</span>&quot;</span>&#125;<br>])<br><br>db.books.aggregate([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;xx006&quot;</span>&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>每个作者的book的tag合集</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$unwind</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>&#125;,<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$author</span>.name&quot;</span>,<span class="hljs-attr">types</span>:&#123;<span class="hljs-variable">$addToSet</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>&#125;&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>示例数据</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs ada">db.books.insert([<br>&#123;<br>	<span class="hljs-string">&quot;title&quot;</span> : &quot;<span class="hljs-type">book</span>-<span class="hljs-number">51</span><span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span><span class="hljs-keyword">type</span><span class="hljs-string">&quot; : &quot;</span>technology<span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span>favCount<span class="hljs-string">&quot; : 11,</span><br><span class="hljs-string">     &quot;</span>tag<span class="hljs-string">&quot;:[],</span><br><span class="hljs-string">	&quot;</span>author<span class="hljs-string">&quot; : &#123;</span><br><span class="hljs-string">		&quot;</span>name<span class="hljs-string">&quot; : &quot;</span>fox<span class="hljs-string">&quot;,</span><br><span class="hljs-string">		&quot;</span>age<span class="hljs-string">&quot; : 28</span><br><span class="hljs-string">	&#125;</span><br><span class="hljs-string">&#125;,&#123;</span><br><span class="hljs-string">	&quot;</span>title<span class="hljs-string">&quot; : &quot;</span>book-<span class="hljs-number">52</span><span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span><span class="hljs-keyword">type</span><span class="hljs-string">&quot; : &quot;</span>technology<span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span>favCount<span class="hljs-string">&quot; : 15,</span><br><span class="hljs-string">	&quot;</span>author<span class="hljs-string">&quot; : &#123;</span><br><span class="hljs-string">		&quot;</span>name<span class="hljs-string">&quot; : &quot;</span>fox<span class="hljs-string">&quot;,</span><br><span class="hljs-string">		&quot;</span>age<span class="hljs-string">&quot; : 28</span><br><span class="hljs-string">	&#125;</span><br><span class="hljs-string">&#125;,&#123;</span><br><span class="hljs-string">	&quot;</span>title<span class="hljs-string">&quot; : &quot;</span>book-<span class="hljs-number">53</span><span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span><span class="hljs-keyword">type</span><span class="hljs-string">&quot; : &quot;</span>technology<span class="hljs-string">&quot;,</span><br><span class="hljs-string">	&quot;</span>tag<span class="hljs-string">&quot; : [</span><br><span class="hljs-string">		&quot;</span>nosql<span class="hljs-string">&quot;,</span><br><span class="hljs-string">		&quot;</span>document<span class="hljs-string">&quot;</span><br><span class="hljs-string">	],</span><br><span class="hljs-string">	&quot;</span>favCount<span class="hljs-string">&quot; : 20,</span><br><span class="hljs-string">	&quot;</span>author<span class="hljs-string">&quot; : &#123;</span><br><span class="hljs-string">		&quot;</span>name<span class="hljs-string">&quot; : &quot;</span>fox<span class="hljs-string">&quot;,</span><br><span class="hljs-string">		&quot;</span>age<span class="hljs-string">&quot; : 28</span><br><span class="hljs-string">	&#125;</span><br><span class="hljs-string">&#125;])</span><br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 使用includeArrayIndex选项来输出数组元素的数组索引</span><br>db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;fox&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-variable">$unwind</span>:&#123;<span class="hljs-attr">path</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>, <span class="hljs-attr">includeArrayIndex</span>: <span class="hljs-string">&quot;arrayIndex&quot;</span>&#125;&#125;<br>])<br><span class="hljs-comment"># 使用preserveNullAndEmptyArrays选项在输出中包含缺少size字段，null或空数组的文档</span><br>db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;fox&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-variable">$unwind</span>:&#123;<span class="hljs-attr">path</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>, <span class="hljs-attr">preserveNullAndEmptyArrays</span>: <span class="hljs-literal">true</span>&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="limit"><a href="#limit" class="headerlink" title="$limit"></a><strong>$limit</strong></h3><p>限制传递到管道中下一阶段的文档数</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">db.books.<span class="hljs-keyword">aggregate</span>([<br>    &#123;$<span class="hljs-keyword">limit</span> : <span class="hljs-number">5</span> &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>此操作仅返回管道传递给它的前5个文档。 $limit对其传递的文档内容没有影响。</p>
+<p>注意：当$sort在管道中的$limit之前立即出现时，$sort操作只会在过程中维持前n个结果，其中n是指定的限制，而MongoDB只需要将n个项存储在内存中。</p>
+<h3 id="skip"><a href="#skip" class="headerlink" title="$skip"></a><strong>$skip</strong></h3><p>跳过进入stage的指定数量的文档，并将其余文档传递到管道中的下一个阶段</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ada">db.books.aggregate([<br>    &#123;$skip : 5 &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>此操作将跳过管道传递给它的前5个文档。 $skip对沿着管道传递的文档的内容没有影响。</p>
+<h3 id="sort"><a href="#sort" class="headerlink" title="$sort"></a><strong>$sort</strong></h3><p>对所有输入文档进行排序，并按排序顺序将它们返回到管道。</p>
+<p>语法：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">&#123; $<span class="hljs-keyword">sort</span>: &#123; <span class="hljs-symbol">&lt;field1&gt;</span>: &lt;<span class="hljs-keyword">sort</span> order&gt;, <span class="hljs-symbol">&lt;field2&gt;</span>: &lt;<span class="hljs-keyword">sort</span> order&gt; ... &#125; &#125;<br></code></pre></td></tr></table></figure>
+
+<p>要对字段进行排序，请将排序顺序设置为1或-1，以分别指定升序或降序排序，如下例所示：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$sort</span> : &#123;<span class="hljs-attr">favCount</span>:-<span class="hljs-number">1</span>,<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="lookup"><a href="#lookup" class="headerlink" title="$lookup"></a><strong>$lookup</strong></h3><p> Mongodb 3.2版本新增，主要用来实现多表关联查询， 相当关系型数据库中多表关联查询。每个输入待处理的文档，经过$lookup 阶段的处理，输出的新文档中会包含一个新生成的数组（可根据需要命名新key ）。数组列存放的数据是来自被Join集合的适配文档，如果没有，集合为空（即 为[ ])</p>
+<p>语法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs php">db.collection.<span class="hljs-title function_ invoke__">aggregate</span>([&#123;<br>      <span class="hljs-variable">$lookup</span>: &#123;<br><span class="hljs-attr">             from</span>: <span class="hljs-string">&quot;&lt;collection to join&gt;&quot;</span>,<br><span class="hljs-attr">             localField</span>: <span class="hljs-string">&quot;&lt;field from the input documents&gt;&quot;</span>,<br><span class="hljs-attr">             foreignField</span>: <span class="hljs-string">&quot;&lt;field from the documents of the from collection&gt;&quot;</span>,<br><span class="hljs-attr">             as</span>: <span class="hljs-string">&quot;&lt;output array field&gt;&quot;</span><br>           &#125;<br>  &#125;)db.collection.<span class="hljs-title function_ invoke__">aggregate</span>([&#123;<br>      <span class="hljs-variable">$lookup</span>: &#123;<br><span class="hljs-attr">             from</span>: <span class="hljs-string">&quot;&lt;collection to join&gt;&quot;</span>,<br><span class="hljs-attr">             localField</span>: <span class="hljs-string">&quot;&lt;field from the input documents&gt;&quot;</span>,<br><span class="hljs-attr">             foreignField</span>: <span class="hljs-string">&quot;&lt;field from the documents of the from collection&gt;&quot;</span>,<br><span class="hljs-attr">             as</span>: <span class="hljs-string">&quot;&lt;output array field&gt;&quot;</span><br>           &#125;<br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>from</th>
+<th>同一个数据库下等待被Join的集合。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>localField</td>
+<td>源集合中的match值，如果输入的集合中，某文档没有 localField这个Key（Field），在处理的过程中，会默认为此文档含有 localField：null的键值对。</td>
+</tr>
+<tr>
+<td>foreignField</td>
+<td>待Join的集合的match值，如果待Join的集合中，文档没有foreignField值，在处理的过程中，会默认为此文档含有 foreignField：null的键值对。</td>
+</tr>
+<tr>
+<td>as</td>
+<td>为输出文档的新增值命名。如果输入的集合中已存在该值，则会覆盖掉</td>
+</tr>
+</tbody></table>
+<p>注意：null &#x3D; null 此为真</p>
+<p>其语法功能类似于下面的伪SQL语句：</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs smali">SELECT *, &lt;output<span class="hljs-built_in"> array </span>field&gt;<br>FROM collection<br>WHERE &lt;output<span class="hljs-built_in"> array </span>field&gt; IN (SELECT *<br>                               FROM &lt;collection to join&gt;<br>                               WHERE &lt;foreignField&gt;= &lt;collection.localField&gt;);<br></code></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<p>数据准备</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs php">db.customer.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">customerCode</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;customer1&quot;</span>,<span class="hljs-attr">phone</span>:<span class="hljs-string">&quot;13112345678&quot;</span>,<span class="hljs-attr">address</span>:<span class="hljs-string">&quot;test1&quot;</span>&#125;)<br>db.customer.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">customerCode</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">name</span>:<span class="hljs-string">&quot;customer2&quot;</span>,<span class="hljs-attr">phone</span>:<span class="hljs-string">&quot;13112345679&quot;</span>,<span class="hljs-attr">address</span>:<span class="hljs-string">&quot;test2&quot;</span>&#125;)<br><br>db.order.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">orderId</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">orderCode</span>:<span class="hljs-string">&quot;order001&quot;</span>,<span class="hljs-attr">customerCode</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">price</span>:<span class="hljs-number">200</span>&#125;)<br>db.order.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">orderId</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderCode</span>:<span class="hljs-string">&quot;order002&quot;</span>,<span class="hljs-attr">customerCode</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">price</span>:<span class="hljs-number">400</span>&#125;)<br><br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;apples&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">1</span>&#125;)<br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;oranges&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">1</span>&#125;)<br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">3</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;mangoes&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">1</span>&#125;)<br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">4</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;apples&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">2</span>&#125;)<br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">5</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;oranges&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">2</span>&#125;)<br>db.orderItem.<span class="hljs-title function_ invoke__">insert</span>(&#123;<span class="hljs-attr">itemId</span>:<span class="hljs-number">6</span>,<span class="hljs-attr">productName</span>:<span class="hljs-string">&quot;mangoes&quot;</span>,<span class="hljs-attr">qutity</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">orderId</span>:<span class="hljs-number">2</span>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>关联查询</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs php">db.customer.<span class="hljs-title function_ invoke__">aggregate</span>([        <br>    &#123;<span class="hljs-variable">$lookup</span>: &#123;<br>       <span class="hljs-attr">from</span>: <span class="hljs-string">&quot;order&quot;</span>,<br>       <span class="hljs-attr">localField</span>: <span class="hljs-string">&quot;customerCode&quot;</span>,<br>       <span class="hljs-attr">foreignField</span>: <span class="hljs-string">&quot;customerCode&quot;</span>,<br>       <span class="hljs-attr">as</span>: <span class="hljs-string">&quot;customerOrder&quot;</span><br>     &#125;<br>    &#125; <br>])<br><br>db.order.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$lookup</span>: &#123;<br>               <span class="hljs-attr">from</span>: <span class="hljs-string">&quot;customer&quot;</span>,<br>               <span class="hljs-attr">localField</span>: <span class="hljs-string">&quot;customerCode&quot;</span>,<br>               <span class="hljs-attr">foreignField</span>: <span class="hljs-string">&quot;customerCode&quot;</span>,<br>               <span class="hljs-attr">as</span>: <span class="hljs-string">&quot;curstomer&quot;</span><br>             &#125;<br>        <br>    &#125;,<br>    &#123;<span class="hljs-variable">$lookup</span>: &#123;<br>               <span class="hljs-attr">from</span>: <span class="hljs-string">&quot;orderItem&quot;</span>,<br>               <span class="hljs-attr">localField</span>: <span class="hljs-string">&quot;orderId&quot;</span>,<br>               <span class="hljs-attr">foreignField</span>: <span class="hljs-string">&quot;orderId&quot;</span>,<br>               <span class="hljs-attr">as</span>: <span class="hljs-string">&quot;orderItem&quot;</span><br>             &#125;<br>    &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="聚合操作案例1"><a href="#聚合操作案例1" class="headerlink" title="聚合操作案例1"></a><strong>聚合操作案例1</strong></h3><p><strong>统计每个分类的book文档数量</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$type</span>&quot;</span>,<span class="hljs-attr">total</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-number">1</span>&#125;&#125;&#125;,<br>    &#123;<span class="hljs-variable">$sort</span>:&#123;<span class="hljs-attr">total</span>:-<span class="hljs-number">1</span>&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p><strong>标签的热度排行，标签的热度则按其关联book文档的收藏数（favCount）来计算</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([<br>    &#123;<span class="hljs-variable">$match</span>:&#123;<span class="hljs-attr">favCount</span>:&#123;<span class="hljs-variable">$gt</span>:<span class="hljs-number">0</span>&#125;&#125;&#125;,<br>    &#123;<span class="hljs-variable">$unwind</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>&#125;,<br>    &#123;<span class="hljs-variable">$group</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$tag</span>&quot;</span>,<span class="hljs-attr">total</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>&#125;&#125;&#125;,<br>    &#123;<span class="hljs-variable">$sort</span>:&#123;<span class="hljs-attr">total</span>:-<span class="hljs-number">1</span>&#125;&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>$match阶段：用于过滤favCount&#x3D;0的文档。</li>
+<li>$unwind阶段：用于将标签数组进行展开，这样一个包含3个标签的文档会被拆解为3个条目。</li>
+<li>$group阶段：对拆解后的文档进行分组计算，$sum：”$favCount”表示按favCount字段进行累加。</li>
+<li>$sort阶段：接收分组计算的输出，按total得分进行排序。</li>
+</ol>
+<p><strong>统计book文档收藏数[0,10),[10,60),[60,80),[80,100),[100,+∞）</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">aggregate</span>([&#123;<br>    <span class="hljs-variable">$bucket</span>:&#123;<br>        <span class="hljs-attr">groupBy</span>:<span class="hljs-string">&quot;<span class="hljs-subst">$favCount</span>&quot;</span>,<br>        <span class="hljs-attr">boundaries</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">10</span>,<span class="hljs-number">60</span>,<span class="hljs-number">80</span>,<span class="hljs-number">100</span>],<br>        <span class="hljs-attr">default</span>:<span class="hljs-string">&quot;other&quot;</span>,<br>        <span class="hljs-attr">output</span>:&#123;<span class="hljs-string">&quot;count&quot;</span>:&#123;<span class="hljs-variable">$sum</span>:<span class="hljs-number">1</span>&#125;&#125;<br>    &#125;<br>&#125;])<br></code></pre></td></tr></table></figure>
+
+<h3 id="聚合操作案例2"><a href="#聚合操作案例2" class="headerlink" title="聚合操作案例2"></a><strong>聚合操作案例2</strong></h3><p>导入邮政编码数据集:<a target="_blank" rel="noopener" href="https://media.mongodb.org/zips.json">https://media.mongodb.org/zips.json</a></p>
+<p><strong>使用mongoimport工具导入数据</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">mongoimport -h <span class="hljs-number">192.168</span>.<span class="hljs-number">65.174</span> -d test -u fox -<span class="hljs-selector-tag">p</span> fox <span class="hljs-attr">--authenticationDatabase</span>=admin -c zips <span class="hljs-attr">--file</span> D:\ProgramData\mongodb\import\zips.json<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>h,–host ：代表远程连接的数据库地址，默认连接本地Mongo数据库；</p>
+<p>–port：代表远程连接的数据库的端口，默认连接的远程端口27017；</p>
+<p>-u,–username：代表连接远程数据库的账号，如果设置数据库的认证，需要指定用户账号；</p>
+<p>-p,–password：代表连接数据库的账号对应的密码；</p>
+<p>-d,–db：代表连接的数据库；</p>
+<p>-c,–collection：代表连接数据库中的集合；</p>
+<p>-f, –fields：代表导入集合中的字段；</p>
+<p>–type：代表导入的文件类型，包括csv和json,tsv文件，默认json格式；</p>
+<p>–file：导入的文件名称</p>
+<p>–headerline：导入csv文件时，指明第一行是列名，不需要导入；</p>
+</blockquote>
+<p><img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/37475" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>返回人口超过1000万的州</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.zips.<span class="hljs-title function_ invoke__">aggregate</span>( [<br>   &#123; <span class="hljs-variable">$group</span>: &#123; <span class="hljs-attr">_id</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$state</span>&quot;</span>, <span class="hljs-attr">totalPop</span>: &#123; <span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125; &#125; &#125;,<br>   &#123; <span class="hljs-variable">$match</span>: &#123; <span class="hljs-attr">totalPop</span>: &#123; <span class="hljs-variable">$gte</span>: <span class="hljs-number">10</span>*<span class="hljs-number">1000</span>*<span class="hljs-number">1000</span> &#125; &#125; &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<p>这个聚合操作的等价SQL是：</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pf">SELECT <span class="hljs-keyword">state</span>, SUM(pop) AS totalPop<br>FROM zips<br>GROUP BY <span class="hljs-keyword">state</span><br>HAVING totalPop &gt;= (<span class="hljs-number">10</span>*<span class="hljs-number">1000</span>*<span class="hljs-number">1000</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>返回各州平均城市人口</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php">db.zips.<span class="hljs-title function_ invoke__">aggregate</span>( [<br>   &#123; <span class="hljs-variable">$group</span>: &#123; <span class="hljs-attr">_id</span>: &#123; <span class="hljs-attr">state</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$state</span>&quot;</span>, <span class="hljs-attr">city</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$city</span>&quot;</span> &#125;, <span class="hljs-attr">cityPop</span>: &#123; <span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125; &#125; &#125;,<br>   &#123; <span class="hljs-variable">$group</span>: &#123; <span class="hljs-attr">_id</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$_id</span>.state&quot;</span>, <span class="hljs-attr">avgCityPop</span>: &#123; <span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$cityPop</span>&quot;</span> &#125; &#125; &#125;<br>] )<br><br>db.zips.<span class="hljs-title function_ invoke__">aggregate</span>( [<br>   &#123; <span class="hljs-variable">$group</span>: &#123; <span class="hljs-attr">_id</span>: &#123; <span class="hljs-attr">state</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$state</span>&quot;</span>, <span class="hljs-attr">city</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$city</span>&quot;</span> &#125;, <span class="hljs-attr">cityPop</span>: &#123; <span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125; &#125; &#125;<br>   <br>] )<br></code></pre></td></tr></table></figure>
+
+<p><strong>按州返回最大和最小的城市</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs php">db.zips.<span class="hljs-title function_ invoke__">aggregate</span>( [<br>   &#123; <span class="hljs-variable">$group</span>:<br>      &#123;<br>        <span class="hljs-attr">_id</span>: &#123; <span class="hljs-attr">state</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$state</span>&quot;</span>, <span class="hljs-attr">city</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$city</span>&quot;</span> &#125;,<br>        <span class="hljs-attr">pop</span>: &#123; <span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125;<br>      &#125;<br>   &#125;,<br>   &#123; <span class="hljs-variable">$sort</span>: &#123; <span class="hljs-attr">pop</span>: <span class="hljs-number">1</span> &#125; &#125;,<br>   &#123; <span class="hljs-variable">$group</span>:<br>      &#123;<br>        _id : <span class="hljs-string">&quot;<span class="hljs-subst">$_id</span>.state&quot;</span>,<br>        <span class="hljs-attr">biggestCity</span>:  &#123; <span class="hljs-variable">$last</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$_id</span>.city&quot;</span> &#125;,<br>        <span class="hljs-attr">biggestPop</span>:   &#123; <span class="hljs-variable">$last</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125;,<br>        <span class="hljs-attr">smallestCity</span>: &#123; <span class="hljs-variable">$first</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$_id</span>.city&quot;</span> &#125;,<br>        <span class="hljs-attr">smallestPop</span>:  &#123; <span class="hljs-variable">$first</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$pop</span>&quot;</span> &#125;<br>      &#125;<br>   &#125;,<br>  &#123; <span class="hljs-variable">$project</span>:<br>    &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">0</span>,<br>      <span class="hljs-attr">state</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$_id</span>&quot;</span>,<br>      <span class="hljs-attr">biggestCity</span>:  &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$biggestCity</span>&quot;</span>,  <span class="hljs-attr">pop</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$biggestPop</span>&quot;</span> &#125;,<br>      <span class="hljs-attr">smallestCity</span>: &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$smallestCity</span>&quot;</span>, <span class="hljs-attr">pop</span>: <span class="hljs-string">&quot;<span class="hljs-subst">$smallestPop</span>&quot;</span> &#125;<br>    &#125;<br>  &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-3-MapReduce"><a href="#1-3-MapReduce" class="headerlink" title="1.3 MapReduce"></a><strong>1.3 MapReduce</strong></h2><p>MapReduce操作将大量的数据处理工作拆分成多个线程并行处理，然后将结果合并在一起。MongoDB提供的Map-Reduce非常灵活，对于大规模数据分析也相当实用。</p>
+<p>MapReduce具有两个阶段：</p>
+<ol>
+<li>将具有相同Key的文档数据整合在一起的map阶段 </li>
+<li>组合map操作的结果进行统计输出的reduce阶段</li>
+</ol>
+<p> MapReduce的基本语法 </p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs xquery"><br>db<span class="hljs-built_in">.collection</span>.mapReduce(<br>   <span class="hljs-keyword">function</span>() &#123;emit<span class="hljs-built_in">(key</span>,<span class="hljs-keyword">value</span>);&#125;,  //<span class="hljs-keyword">map</span> 函数<br>   <span class="hljs-keyword">function</span><span class="hljs-built_in">(key</span>,values) &#123;<span class="hljs-keyword">return</span> reduceFunction&#125;,   //reduce 函数<br>   &#123;<br>      out: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">collection</span>&gt;</span>,</span><br><span class="language-xml">      query: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">document</span>&gt;</span>,</span><br><span class="language-xml">      sort: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">document</span>&gt;</span>,</span><br><span class="language-xml">      limit: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">number</span>&gt;</span>,</span><br><span class="language-xml">     finalize: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">function</span>&gt;</span>, </span><br><span class="language-xml">     scope: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">document</span>&gt;</span>,</span><br><span class="language-xml">     jsMode: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">boolean</span>&gt;</span>,</span><br><span class="language-xml">     verbose: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">boolean</span>&gt;</span>,</span><br><span class="language-xml">     bypassDocumentValidation: </span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">boolean</span>&gt;</span></span><br><span class="language-xml">   &#125;</span><br><span class="language-xml">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>map，将数据拆分成键值对，交给reduce函数</li>
+<li>reduce，根据键将值做统计运算</li>
+<li>out，可选，将结果汇入指定表</li>
+<li>quey，可选筛选数据的条件，筛选的数据送入map </li>
+<li>sort，排序完后，送入map </li>
+<li>limit，限制送入map的文档数 </li>
+<li>finalize，可选，修改reduce的结果后进行输出</li>
+<li>scope，可选，指定map、reduce、finalize的全局变量 </li>
+<li>jsMode，可选，默认false。在mapreduce过程中是否将数 据转换成bson格式。</li>
+<li>verbose，可选，是否在结果中显示时间，默认false </li>
+<li>bypassDocmentValidation，可选，是否略过数据校验</li>
+</ul>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39652" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>统计type为travel的不同作者的book文档收藏数</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">db.books.mapReduce(<br>    <span class="hljs-keyword">function</span>()&#123;emit(this.<span class="hljs-keyword">type</span>,this.favCount)&#125;,<br>    <span class="hljs-keyword">function</span>(key,<span class="hljs-keyword">values</span>)&#123;<span class="hljs-keyword">return</span> <span class="hljs-keyword">Array</span>.sum(<span class="hljs-keyword">values</span>)&#125;,<br>    &#123;<br>        query:&#123;<span class="hljs-keyword">type</span>:&quot;travel&quot;&#125;,<br>        <span class="hljs-keyword">out</span>: &quot;books_favCount&quot;<br>    &#125;<br> )<br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39679" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>从MongoDB 5.0开始，map-reduce操作已被弃用。聚合管道比映射-reduce操作提供更好的性能和可用性。Map-reduce操作可以使用聚合管道操作符重写，例如$group、$merge等。</p>
+<h1 id="MongoDB索引"><a href="#MongoDB索引" class="headerlink" title="MongoDB索引"></a><strong>MongoDB索引</strong></h1><p>索引是一种用来快速查询数据的数据结构。B+Tree就是一种常用的数据库索引数据结构，MongoDB采用B+Tree 做索引，索引创建在colletions上。MongoDB不使用索引的查询，先扫描所有的文档，再匹配符合条件的文档。 使用索引的查询，通过索引找到文档，使用索引能够极大的提升查询效率。</p>
+<p>思考：MongoDB索引数据结构是B-Tree还是B+Tree?</p>
+<h2 id="MongoDB索引数据结构"><a href="#MongoDB索引数据结构" class="headerlink" title="MongoDB索引数据结构"></a><strong>MongoDB索引数据结构</strong></h2><p>B-Tree说法来源于官方文档，然后就导致了分歧：有人说MongoDB索引数据结构使用的是B-Tree,有的人又说是B+Tree。</p>
+<p>MongoDB官方文档：<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/indexes/">https://docs.mongodb.com/manual/indexes/</a></p>
+<p>MongoDB indexes use a B-tree data structure.</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39736" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>WiredTiger官方文档：<a target="_blank" rel="noopener" href="https://source.wiredtiger.com/3.0.0/tune_page_size_and_comp.html">https://source.wiredtiger.com/3.0.0/tune_page_size_and_comp.html</a></p>
+<p>WiredTiger maintains a table’s data in memory using a data structure called a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/B-tree">B-Tree</a> ( <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/B%2B_tree">B+ Tree</a> to be specific), referring to the nodes of a B-Tree as pages. Internal pages carry only keys. The leaf pages store both keys and values.</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39737" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>参考数据结构网站：<a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">https://www.cs.usfca.edu/~galles/visualization/Algorithms.html</a></p>
+<h3 id="WiredTiger数据文件在磁盘的存储结构"><a href="#WiredTiger数据文件在磁盘的存储结构" class="headerlink" title="WiredTiger数据文件在磁盘的存储结构"></a><strong>WiredTiger数据文件在磁盘的存储结构</strong></h3><p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/42537" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>B+ Tree中的leaf page包含一个页头（page header）、块头（block header）和真正的数据（key&#x2F;value），其中页头定义了页的类型、页中实际载荷数据的大小、页中记录条数等信息；块头定义了此页的checksum、块在磁盘上的寻址位置等信息。</p>
+<p>WiredTiger有一个块设备管理的模块，用来为page分配block。如果要定位某一行数据（key&#x2F;value）的位置，可以先通过block的位置找到此page（相对于文件起始位置的偏移量），再通过page找到行数据的相对位置，最后可以得到行数据相对于文件起始位置的偏移量offsets。</p>
+<h2 id="索引的分类"><a href="#索引的分类" class="headerlink" title="索引的分类"></a><strong>索引的分类</strong></h2><ul>
+<li>按照索引包含的字段数量，可以分为单键索引和组合索引（或复合索引）。</li>
+<li>按照索引字段的类型，可以分为主键索引和非主键索引。</li>
+<li>按照索引节点与物理记录的对应方式来分，可以分为聚簇索引和非聚簇索引，其中聚簇索引是指索引节点上直接包含了数据记录，而后者则仅仅包含一个指向数据记录的指针。</li>
+<li>按照索引的特性不同，又可以分为唯一索引、稀疏索引、文本索引、地理空间索引等</li>
+</ul>
+<p>与大多数数据库一样，MongoDB支持各种丰富的索引类型，包括单键索引、复合索引，唯一索引等一些常用的结构。由于采用了灵活可变的文档类型，因此它也同样支持对嵌套字段、数组进行索引。通过建立合适的索引，我们可以极大地提升数据的检索速度。在一些特殊应用场景，MongoDB还支持地理空间索引、文本检索索引、TTL索引等不同的特性。</p>
+<h2 id="索引设计原则"><a href="#索引设计原则" class="headerlink" title="索引设计原则"></a><strong>索引设计原则</strong></h2><p>1、每个查询原则上都需要创建对应索引</p>
+<p>2、单个索引设计应考虑满足尽量多的查询</p>
+<p>3、索引字段选择及顺序需要考虑查询覆盖率及选择性</p>
+<p>4、对于更新及其频繁的字段上创建索引需慎重</p>
+<p>5、对于数组索引需要慎重考虑未来元素个数</p>
+<p>6、对于超长字符串类型字段上慎用索引</p>
+<p>7、并发更新较高的单个集合上不宜创建过多索引</p>
+<h2 id="索引操作"><a href="#索引操作" class="headerlink" title="索引操作"></a><strong>索引操作</strong></h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a><strong>创建索引</strong></h3><p>创建索引语法格式</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.collection.create<span class="hljs-constructor">Index(<span class="hljs-params">keys</span>, <span class="hljs-params">options</span>)</span>              <br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>Key 值为你要创建的索引字段，1 按升序创建索引， -1  按降序创建索引</li>
+<li>可选参数列表如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Parameter</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>background</td>
+<td>Boolean</td>
+<td>建索引过程会阻塞其它数据库操作，background可指定以后台方式创建索引，即增加 “background” 可选参数。 “background” 默认值为false。</td>
+</tr>
+<tr>
+<td>unique</td>
+<td>Boolean</td>
+<td>建立的索引是否唯一。指定为true创建唯一索引。默认值为false.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>索引的名称。如果未指定，MongoDB的通过连接索引的字段名和排序顺序生成一个索引名称。</td>
+</tr>
+<tr>
+<td>dropDups</td>
+<td>Boolean</td>
+<td>3.0+版本已废弃。在建立唯一索引时是否删除重复记录,指定 true 创建唯一索引。默认值为 false.</td>
+</tr>
+<tr>
+<td>sparse</td>
+<td>Boolean</td>
+<td>对文档中不存在的字段数据不启用索引；这个参数需要特别注意，如果设置为true的话，在索引字段中不会查询出不包含对应字段的文档。默认值为 false.</td>
+</tr>
+<tr>
+<td>expireAfterSeconds</td>
+<td>integer</td>
+<td>指定一个以秒为单位的数值，完成 TTL设定，设定集合的生存时间。</td>
+</tr>
+<tr>
+<td>v</td>
+<td>index version</td>
+<td>索引的版本号。默认的索引版本取决于mongod创建索引时运行的版本。</td>
+</tr>
+<tr>
+<td>weights</td>
+<td>document</td>
+<td>索引权重值，数值在 1 到 99,999 之间，表示该索引相对于其他索引字段的得分权重。</td>
+</tr>
+<tr>
+<td>default_language</td>
+<td>string</td>
+<td>对于文本索引，该参数决定了停用词及词干和词器的规则的列表。 默认为英语</td>
+</tr>
+<tr>
+<td>language_override</td>
+<td>string</td>
+<td>对于文本索引，该参数指定了包含在文档中的字段名，语言覆盖默认的language，默认值为 language.</td>
+</tr>
+</tbody></table>
+<p>注意：3.0.0 版本前创建索引方法为 db.collection.ensureIndex()</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 创建索引后台执行 </span><br>db.values.<span class="hljs-title function_ invoke__">createIndex</span>(&#123;<span class="hljs-attr">open</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">close</span>: <span class="hljs-number">1</span>&#125;, &#123;<span class="hljs-attr">background</span>: <span class="hljs-literal">true</span>&#125;) <br><span class="hljs-comment"># 创建唯一索引 </span><br>db.values.<span class="hljs-title function_ invoke__">createIndex</span>(&#123;<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>&#125;,&#123;<span class="hljs-attr">unique</span>:<span class="hljs-literal">true</span>&#125;)              <br></code></pre></td></tr></table></figure>
+
+<h3 id="查看索引"><a href="#查看索引" class="headerlink" title="查看索引"></a><strong>查看索引</strong></h3><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment">#查看索引信息 </span><br>db.<span class="hljs-keyword">books.getIndexes() </span><br><span class="hljs-comment">#查看索引键 </span><br>db.<span class="hljs-keyword">books.getIndexKeys() </span>       <br></code></pre></td></tr></table></figure>
+
+<p>查看索引占用空间</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.collection</span><span class="hljs-selector-class">.totalIndexSize</span>(<span class="hljs-selector-attr">[is_detail]</span>)              <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>is_detail：可选参数，传入除0或false外的任意数据，都会显示该集合中每个索引的大小及总大小。如果传入0或false则只显示该集合中所有索引的总大小。默认值为false。</li>
+</ul>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39499" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a><strong>删除索引</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">#删除集合指定索引 <br>db<span class="hljs-selector-class">.col</span><span class="hljs-selector-class">.dropIndex</span>(<span class="hljs-string">&quot;索引名称&quot;</span>) <br>#删除集合所有索引   不能删除主键索引 <br><span class="hljs-selector-tag">b</span><span class="hljs-selector-class">.col</span><span class="hljs-selector-class">.dropIndexes</span>()              <br></code></pre></td></tr></table></figure>
+
+<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a><strong>索引类型</strong></h2><h3 id="单键索引（Single-Field-Indexes）"><a href="#单键索引（Single-Field-Indexes）" class="headerlink" title="单键索引（Single Field Indexes）"></a><strong>单键索引（Single Field Indexes）</strong></h3><p>在某一个特定的字段上建立索引 mongoDB在ID上建立了唯一的单键索引,所以经常会使用id来进行查询； 在索引字段上进行精确匹配、排序以及范围查找都会使用此索引</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39747" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​                db.books.createIndex({title:1})              </p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39472" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>对内嵌文档字段创建索引：</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39469" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="复合索引（Compound-Index）"><a href="#复合索引（Compound-Index）" class="headerlink" title="复合索引（Compound Index）"></a><strong>复合索引（Compound Index）</strong></h3><p>复合索引是多个字段组合而成的索引，其性质和单字段索引类似。但不同的是，复合索引中字段的顺序、字段的升降序对查询性能有直接的影响，因此在设计复合索引时则需要考虑不同的查询场景。</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39749" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.books.create<span class="hljs-constructor">Index(&#123;<span class="hljs-params">type</span>:1,<span class="hljs-params">favCount</span>:1&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39474" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="多键索引（Multikey-Index）"><a href="#多键索引（Multikey-Index）" class="headerlink" title="多键索引（Multikey Index）"></a><strong>多键索引（Multikey Index）</strong></h3><p>在数组的属性上建立索引。针对这个数组的任意值的查询都会定位到这个文档,既多个索引入口或者键值引用同一个文档</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39752" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>准备inventory集合：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php">db.inventory.<span class="hljs-title function_ invoke__">insertMany</span>([<br>&#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;food&quot;</span>, <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;aaa&quot;</span>, <span class="hljs-attr">ratings</span>: [ <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span> ] &#125;,<br>&#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">6</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;food&quot;</span>, <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;bbb&quot;</span>, <span class="hljs-attr">ratings</span>: [ <span class="hljs-number">5</span>, <span class="hljs-number">9</span> ] &#125;,<br>&#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">7</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;food&quot;</span>, <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;ccc&quot;</span>, <span class="hljs-attr">ratings</span>: [ <span class="hljs-number">9</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span> ] &#125;,<br>&#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">8</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;food&quot;</span>, <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;ddd&quot;</span>, <span class="hljs-attr">ratings</span>: [ <span class="hljs-number">9</span>, <span class="hljs-number">5</span> ] &#125;,<br>&#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;food&quot;</span>, <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;eee&quot;</span>, <span class="hljs-attr">ratings</span>: [ <span class="hljs-number">5</span>, <span class="hljs-number">9</span>, <span class="hljs-number">5</span> ] &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>创建多键索引</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.inventory.create<span class="hljs-constructor">Index( &#123; <span class="hljs-params">ratings</span>: 1 &#125; )</span><br></code></pre></td></tr></table></figure>
+
+<p>多键索引很容易与复合索引产生混淆，复合索引是多个字段的组合，而多键索引则仅仅是在一个字段上出现了多键（multi key）。而实质上，多键索引也可以出现在复合字段上</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 创建复合多值索引</span><br><span class="hljs-attribute">db</span>.inventory.createIndex( &#123; item:<span class="hljs-number">1</span>,ratings: <span class="hljs-number">1</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
+<p>注意： MongoDB并不支持一个复合索引中同时出现多个数组字段</p>
+<p>嵌入文档的索引数组</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs php">db.inventory.<span class="hljs-title function_ invoke__">insertMany</span>([<br>&#123;<br>  <span class="hljs-attr">_id</span>: <span class="hljs-number">1</span>,<br>  <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;abc&quot;</span>,<br>  <span class="hljs-attr">stock</span>: [<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;S&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">25</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;S&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">10</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;M&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">50</span> &#125;<br>  ]<br>&#125;,<br>&#123;<br>  <span class="hljs-attr">_id</span>: <span class="hljs-number">2</span>,<br>  <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;def&quot;</span>,<br>  <span class="hljs-attr">stock</span>: [<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;S&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">20</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;M&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">5</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;M&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;black&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">10</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;L&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">2</span> &#125;<br>  ]<br>&#125;,<br>&#123;<br>  <span class="hljs-attr">_id</span>: <span class="hljs-number">3</span>,<br>  <span class="hljs-attr">item</span>: <span class="hljs-string">&quot;ijk&quot;</span>,<br>  <span class="hljs-attr">stock</span>: [<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;M&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">15</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;L&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;blue&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">100</span> &#125;,<br>    &#123; <span class="hljs-attr">size</span>: <span class="hljs-string">&quot;L&quot;</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-attr">quantity</span>: <span class="hljs-number">25</span> &#125;<br>  ]<br>&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>在包含嵌套对象的数组字段上创建多键索引</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.inventory</span><span class="hljs-selector-class">.createIndex</span>( &#123; <span class="hljs-string">&quot;stock.size&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;stock.quantity&quot;</span>: <span class="hljs-number">1</span> &#125; )<br><br>db<span class="hljs-selector-class">.inventory</span><span class="hljs-selector-class">.find</span>(&#123;<span class="hljs-string">&quot;stock.size&quot;</span>:<span class="hljs-string">&quot;S&quot;</span>,<span class="hljs-string">&quot;stock.quantity&quot;</span>:&#123;<span class="hljs-variable">$gt</span>:<span class="hljs-number">20</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/39542" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="地理空间索引（Geospatial-Index）"><a href="#地理空间索引（Geospatial-Index）" class="headerlink" title="地理空间索引（Geospatial Index）"></a><strong>地理空间索引（Geospatial Index）</strong></h3><p>在移动互联网时代，基于地理位置的检索（LBS）功能几乎是所有应用系统的标配。MongoDB为地理空间检索提供了非常方便的功能。地理空间索引（2dsphereindex）就是专门用于实现位置检索的一种特殊索引。</p>
+<p>案例：MongoDB如何实现“查询附近商家”？</p>
+<p>假设商家的数据模型如下：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs dts">db.restaurant.insert(<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">    restaurantId:</span> <span class="hljs-number">0</span>,<br><span class="hljs-symbol">    restaurantName:</span><span class="hljs-string">&quot;兰州牛肉面&quot;</span>,<br>    location : <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">        type:</span> <span class="hljs-string">&quot;Point&quot;</span>,<br><span class="hljs-symbol">        coordinates:</span> [ <span class="hljs-number">-73.97</span>, <span class="hljs-number">40.77</span> ]<br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>创建一个2dsphere索引</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">db.restaurant.createIndex(&#123;<span class="hljs-keyword">location</span> <span class="hljs-title">: &quot;2dsphere</span><span class="hljs-string">&quot;&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>查询附近10000米商家信息</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.restaurant.<span class="hljs-built_in">find</span>( &#123; <br>    location:&#123; <br>        <span class="hljs-variable">$near</span> :&#123;<br>            <span class="hljs-variable">$geometry</span> :&#123; <br>               <span class="hljs-built_in"> type </span>: <span class="hljs-string">&quot;Point&quot;</span> ,<br>                coordinates : [  -73.88, 40.78 ] <br>            &#125; ,<br>            <span class="hljs-variable">$maxDistance</span>:10000 <br>        &#125; <br>    &#125; <br>&#125; )<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>$near查询操作符，用于实现附近商家的检索，返回数据结果会按距离排序。</li>
+<li>$geometry操作符用于指定一个GeoJSON格式的地理空间对象，type&#x3D;Point表示地理坐标点，coordinates则是用户当前所在的经纬度位置；$maxDistance限定了最大距离，单位是米。</li>
+</ul>
+<h3 id="全文索引（Text-Indexes）"><a href="#全文索引（Text-Indexes）" class="headerlink" title="全文索引（Text Indexes）"></a><strong>全文索引（Text Indexes）</strong></h3><p>MongoDB支持全文检索功能，可通过建立文本索引来实现简易的分词检索。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.reviews.create<span class="hljs-constructor">Index( &#123; <span class="hljs-params">comments</span>: <span class="hljs-string">&quot;text&quot;</span> &#125; )</span><br></code></pre></td></tr></table></figure>
+
+<p>$text操作符可以在有text index的集合上执行文本检索。$text将会使用空格和标点符号作为分隔符对检索字符串进行分词， 并且对检索字符串中所有的分词结果进行一个逻辑上的 OR 操作。</p>
+<p>全文索引能解决快速文本查找的需求，比如有一个博客文章集合，需要根据博客的内容来快速查找，则可以针对博客内容建立文本索引。</p>
+<p><strong>案例</strong></p>
+<p>数据准备</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php">db.stores.<span class="hljs-title function_ invoke__">insert</span>(<br>   [<br>     &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Java Hut&quot;</span>, <span class="hljs-attr">description</span>: <span class="hljs-string">&quot;Coffee and cakes&quot;</span> &#125;,<br>     &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Burger Buns&quot;</span>, <span class="hljs-attr">description</span>: <span class="hljs-string">&quot;Gourmet hamburgers&quot;</span> &#125;,<br>     &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Coffee Shop&quot;</span>, <span class="hljs-attr">description</span>: <span class="hljs-string">&quot;Just coffee&quot;</span> &#125;,<br>     &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Clothes Clothes Clothes&quot;</span>, <span class="hljs-attr">description</span>: <span class="hljs-string">&quot;Discount clothing&quot;</span> &#125;,<br>     &#123; <span class="hljs-attr">_id</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Java Shopping&quot;</span>, <span class="hljs-attr">description</span>: <span class="hljs-string">&quot;Indonesian goods&quot;</span> &#125;<br>   ]<br>)<br></code></pre></td></tr></table></figure>
+
+<p>创建name和description的全文索引</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.stores.create<span class="hljs-constructor">Index(&#123;<span class="hljs-params">name</span>: <span class="hljs-string">&quot;text&quot;</span>, <span class="hljs-params">description</span>: <span class="hljs-string">&quot;text&quot;</span>&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<p>通过$text操作符来查寻数据中所有包含“coffee”,”shop”，“java”列表中任何词语的商店</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.stores.<span class="hljs-built_in">find</span>(&#123;<span class="hljs-variable">$text</span>: &#123;<span class="hljs-variable">$search</span>: <span class="hljs-string">&quot;java coffee shop&quot;</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>MongoDB的文本索引功能存在诸多限制，而官方并未提供中文分词的功能，这使得该功能的应用场景十分受限。</p>
+<h3 id="Hash索引（Hashed-Indexes）"><a href="#Hash索引（Hashed-Indexes）" class="headerlink" title="Hash索引（Hashed Indexes）"></a><strong>Hash索引（Hashed Indexes）</strong></h3><p>不同于传统的B-Tree索引,哈希索引使用hash函数来创建索引。在索引字段上进行精确匹配,但不支持范围查询,不支持多键hash； Hash索引上的入口是均匀分布的,在分片集合中非常有用；</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.users.create<span class="hljs-constructor">Index(&#123;<span class="hljs-params">username</span> : &#x27;<span class="hljs-params">hashed</span>&#x27;&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<h3 id="通配符索引（Wildcard-Indexes）"><a href="#通配符索引（Wildcard-Indexes）" class="headerlink" title="通配符索引（Wildcard Indexes）"></a><strong>通配符索引（Wildcard Indexes）</strong></h3><p>MongoDB的文档模式是动态变化的，而通配符索引可以建立在一些不可预知的字段上，以此实现查询的加速。MongoDB 4.2 引入了通配符索引来支持对未知或任意字段的查询。</p>
+<p><strong>案例</strong></p>
+<p>准备商品数据，不同商品属性不一样</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs prolog">db.products.insert([<br>    &#123;<br>      <span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;Spy Coat&quot;</span>,<br>      <span class="hljs-string">&quot;product_attributes&quot;</span> : &#123;<br>        <span class="hljs-string">&quot;material&quot;</span> : [ <span class="hljs-string">&quot;Tweed&quot;</span>, <span class="hljs-string">&quot;Wool&quot;</span>, <span class="hljs-string">&quot;Leather&quot;</span> ],<br>        <span class="hljs-string">&quot;size&quot;</span> : &#123;<br>          <span class="hljs-string">&quot;length&quot;</span> : <span class="hljs-number">72</span>,<br>          <span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;inches&quot;</span><br>        &#125;<br>      &#125;<br>    &#125;,<br>    &#123;<br>      <span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;Spy Pen&quot;</span>,<br>      <span class="hljs-string">&quot;product_attributes&quot;</span> : &#123;<br>         <span class="hljs-string">&quot;colors&quot;</span> : [ <span class="hljs-string">&quot;Blue&quot;</span>, <span class="hljs-string">&quot;Black&quot;</span> ],<br>         <span class="hljs-string">&quot;secret_feature&quot;</span> : &#123;<br>           <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;laser&quot;</span>,<br>           <span class="hljs-string">&quot;power&quot;</span> : <span class="hljs-string">&quot;1000&quot;</span>,<br>           <span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;watts&quot;</span>,<br>         &#125;<br>      &#125;<br>    &#125;,<br>    &#123;<br>      <span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;Spy Book&quot;</span><br>    &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>创建通配符索引</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sas">db.products.<span class="hljs-keyword">create</span><span class="hljs-meta">Index</span>( &#123; <span class="hljs-string">&quot;product_attributes.$**&quot;</span> : 1 &#125; )<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<p>通配符索引可以支持任意单字段查询 product_attributes或其嵌入字段：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.products.<span class="hljs-built_in">find</span>( &#123; <span class="hljs-string">&quot;product_attributes.size.length&quot;</span> : &#123; <span class="hljs-variable">$gt</span> : 60 &#125; &#125; )<br>db.products.<span class="hljs-built_in">find</span>( &#123; <span class="hljs-string">&quot;product_attributes.material&quot;</span> : <span class="hljs-string">&quot;Leather&quot;</span> &#125; )<br>db.products.<span class="hljs-built_in">find</span>( &#123; <span class="hljs-string">&quot;product_attributes.secret_feature.name&quot;</span> : <span class="hljs-string">&quot;laser&quot;</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong></p>
+<ul>
+<li>通配符索引不兼容的索引类型或属性</li>
+</ul>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40210" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40650" srcset="/img/loading.gif" lazyload alt="0"></p>
+<ul>
+<li>通配符索引是稀疏的，不索引空字段。因此，通配符索引不能支持查询字段不存在的文档。</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 通配符索引不能支持以下查询</span><br>db.products.<span class="hljs-built_in">find</span>( &#123;<span class="hljs-string">&quot;product_attributes&quot;</span> : &#123; <span class="hljs-variable">$exists</span> : <span class="hljs-literal">false</span> &#125; &#125; )<br>db.products.aggregate([<br>  &#123; <span class="hljs-variable">$match</span> : &#123; <span class="hljs-string">&quot;product_attributes&quot;</span> : &#123; <span class="hljs-variable">$exists</span> : <span class="hljs-literal">false</span> &#125; &#125; &#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>通配符索引为文档或数组的内容生成条目，而不是文档&#x2F;数组本身。因此通配符索引不能支持精确的文档&#x2F;数组相等匹配。通配符索引可以支持查询字段等于空文档{}的情况。</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#通配符索引不能支持以下查询:</span><br>db.products.<span class="hljs-built_in">find</span>(&#123; <span class="hljs-string">&quot;product_attributes.colors&quot;</span> : [ <span class="hljs-string">&quot;Blue&quot;</span>, <span class="hljs-string">&quot;Black&quot;</span> ] &#125; )<br><br>db.products.aggregate([&#123;<br>  <span class="hljs-variable">$match</span> : &#123; <span class="hljs-string">&quot;product_attributes.colors&quot;</span> : [ <span class="hljs-string">&quot;Blue&quot;</span>, <span class="hljs-string">&quot;Black&quot;</span> ] &#125; <br>&#125;])<br></code></pre></td></tr></table></figure>
+
+<h2 id="索引属性"><a href="#索引属性" class="headerlink" title="索引属性"></a><strong>索引属性</strong></h2><h3 id="唯一索引（Unique-Indexes）"><a href="#唯一索引（Unique-Indexes）" class="headerlink" title="唯一索引（Unique Indexes）"></a><strong>唯一索引（Unique Indexes）</strong></h3><p>在现实场景中，唯一性是很常见的一种索引约束需求，重复的数据记录会带来许多处理上的麻烦，比如订单的编号、用户的登录名等。通过建立唯一性索引，可以保证集合中文档的指定字段拥有唯一值。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 创建唯一索引</span><br>db.values.<span class="hljs-title function_ invoke__">createIndex</span>(&#123;<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>&#125;,&#123;<span class="hljs-attr">unique</span>:<span class="hljs-literal">true</span>&#125;)<br><span class="hljs-comment"># 复合索引支持唯一性约束</span><br>db.values.<span class="hljs-title function_ invoke__">createIndex</span>(&#123;<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>，<span class="hljs-attr">type</span>:<span class="hljs-number">1</span>&#125;,&#123;<span class="hljs-attr">unique</span>:<span class="hljs-literal">true</span>&#125;)<br><span class="hljs-comment">#多键索引支持唯一性约束</span><br>db.inventory.<span class="hljs-title function_ invoke__">createIndex</span>( &#123; <span class="hljs-attr">ratings</span>: <span class="hljs-number">1</span> &#125;,&#123;<span class="hljs-attr">unique</span>:<span class="hljs-literal">true</span>&#125; )<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>唯一性索引对于文档中缺失的字段，会使用null值代替，因此不允许存在多个文档缺失索引字段的情况。</li>
+<li>对于分片的集合，唯一性约束必须匹配分片规则。换句话说，为了保证全局的唯一性，分片键必须作为唯一性索引的前缀字段。</li>
+</ul>
+<h3 id="部分索引（Partial-Indexes）"><a href="#部分索引（Partial-Indexes）" class="headerlink" title="部分索引（Partial Indexes）"></a><strong>部分索引（Partial Indexes）</strong></h3><p>部分索引仅对满足指定过滤器表达式的文档进行索引。通过在一个集合中为文档的一个子集建立索引，部分索引具有更低的存储需求和更低的索引创建和维护的性能成本。3.2新版功能。</p>
+<p>部分索引提供了稀疏索引功能的超集，应该优先于稀疏索引。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.restaurants.<span class="hljs-title function_ invoke__">createIndex</span>(<br>   &#123; <span class="hljs-attr">cuisine</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-number">1</span> &#125;,<br>   &#123; <span class="hljs-attr">partialFilterExpression</span>: &#123; <span class="hljs-attr">rating</span>: &#123; <span class="hljs-variable">$gt</span>: <span class="hljs-number">5</span> &#125; &#125; &#125;<br>)<br></code></pre></td></tr></table></figure>
+
+<p>partialFilterExpression选项接受指定过滤条件的文档:</p>
+<ul>
+<li>等式表达式(例如:field: value或使用$eq操作符)</li>
+<li><a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/operator/query/exists/#mongodb-query-op.-exists">$exists: true</a></li>
+<li>$gt， $gte， $lt， $lte</li>
+<li>$type </li>
+<li>顶层的$and</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 符合条件，使用索引</span><br>db.restaurants.<span class="hljs-built_in">find</span>( &#123; cuisine: <span class="hljs-string">&quot;Italian&quot;</span>, rating: &#123; <span class="hljs-variable">$gte</span>: 8 &#125; &#125; )<br><span class="hljs-comment"># 不符合条件，不能使用索引</span><br>db.restaurants.<span class="hljs-built_in">find</span>( &#123; cuisine: <span class="hljs-string">&quot;Italian&quot;</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p><strong>案例1</strong></p>
+<p>restaurants集合数据</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs ada">db.restaurants.insert(&#123;<br>   <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-type">ObjectId</span>(<span class="hljs-string">&quot;5641f6a7522545bc535b5dc9&quot;</span>),<br>   <span class="hljs-string">&quot;address&quot;</span> : &#123;<br>      <span class="hljs-string">&quot;building&quot;</span> : &quot;1007&quot;,<br>      <span class="hljs-string">&quot;coord&quot;</span> : [<br>         -<span class="hljs-number">73.856077</span>,<br>         <span class="hljs-number">40.848447</span><br>      ],<br>      <span class="hljs-string">&quot;street&quot;</span> : &quot;<span class="hljs-type">Morris</span> Park Ave<span class="hljs-string">&quot;,</span><br><span class="hljs-string">      &quot;</span>zipcode<span class="hljs-string">&quot; : &quot;</span><span class="hljs-number">10462</span><span class="hljs-string">&quot;</span><br><span class="hljs-string">   &#125;,</span><br><span class="hljs-string">   &quot;</span>borough<span class="hljs-string">&quot; : &quot;</span>Bronx<span class="hljs-string">&quot;,</span><br><span class="hljs-string">   &quot;</span>cuisine<span class="hljs-string">&quot; : &quot;</span>Bakery<span class="hljs-string">&quot;,</span><br><span class="hljs-string">   &quot;</span>rating<span class="hljs-string">&quot; : &#123; &quot;</span>date<span class="hljs-string">&quot; : ISODate(&quot;</span><span class="hljs-number">2014</span>-<span class="hljs-number">03</span>-<span class="hljs-number">03</span>T00:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>Z<span class="hljs-string">&quot;),</span><br><span class="hljs-string">                &quot;</span>grade<span class="hljs-string">&quot; : &quot;</span>A<span class="hljs-string">&quot;,</span><br><span class="hljs-string">                &quot;</span>score<span class="hljs-string">&quot; : 2</span><br><span class="hljs-string">              &#125;,</span><br><span class="hljs-string">   &quot;</span>name<span class="hljs-string">&quot; : &quot;</span>Morris Park Bake Shop<span class="hljs-string">&quot;,</span><br><span class="hljs-string">   &quot;</span>restaurant_id<span class="hljs-string">&quot; : &quot;</span><span class="hljs-number">30075445</span><span class="hljs-string">&quot;</span><br><span class="hljs-string">&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>创建索引</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.restaurants.<span class="hljs-title function_ invoke__">createIndex</span>(<br>   &#123; <span class="hljs-attr">borough</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">cuisine</span>: <span class="hljs-number">1</span> &#125;,<br>   &#123; <span class="hljs-attr">partialFilterExpression</span>: &#123; <span class="hljs-string">&#x27;rating.grade&#x27;</span>: &#123; <span class="hljs-variable">$eq</span>: <span class="hljs-string">&quot;A&quot;</span> &#125; &#125; &#125;<br>)<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.restaurants.<span class="hljs-built_in">find</span>( &#123; borough: <span class="hljs-string">&quot;Bronx&quot;</span>, <span class="hljs-string">&#x27;rating.grade&#x27;</span>: <span class="hljs-string">&quot;A&quot;</span> &#125; )<br>db.restaurants.<span class="hljs-built_in">find</span>( &#123; borough: <span class="hljs-string">&quot;Bronx&quot;</span>, cuisine: <span class="hljs-string">&quot;Bakery&quot;</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p><strong>唯一约束结合部分索引使用导致唯一约束失效的问题</strong></p>
+<p>注意：如果同时指定了partialFilterExpression和唯一约束，那么唯一约束只适用于满足筛选器表达式的文档。如果文档不满足筛选条件，那么带有惟一约束的部分索引不会阻止插入不满足惟一约束的文档。</p>
+<p><strong>案例2</strong></p>
+<p>users集合数据准备</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">db.users.<span class="hljs-title function_ invoke__">insertMany</span>( [<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;david&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">29</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;amanda&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">35</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;rajiv&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">57</span> &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<p>创建索引，指定username字段和部分过滤器表达式age: {$gte: 21}的唯一约束。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.users.<span class="hljs-title function_ invoke__">createIndex</span>(<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-number">1</span> &#125;,<br>   &#123; <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">partialFilterExpression</span>: &#123; <span class="hljs-attr">age</span>: &#123; <span class="hljs-variable">$gte</span>: <span class="hljs-number">21</span> &#125; &#125; &#125;<br>)<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<p>索引防止了以下文档的插入，因为文档已经存在，且指定的用户名和年龄字段大于21:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">db.users.<span class="hljs-title function_ invoke__">insertMany</span>( [<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;david&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">27</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;amanda&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">25</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;rajiv&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span> &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<p>但是，以下具有重复用户名的文档是允许的，因为唯一约束只适用于年龄大于或等于21岁的文档。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">db.users.<span class="hljs-title function_ invoke__">insertMany</span>( [<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;david&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">20</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;amanda&quot;</span> &#125;,<br>   &#123; <span class="hljs-attr">username</span>: <span class="hljs-string">&quot;rajiv&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-literal">null</span> &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<h3 id="稀疏索引（Sparse-Indexes）"><a href="#稀疏索引（Sparse-Indexes）" class="headerlink" title="稀疏索引（Sparse Indexes）"></a><strong>稀疏索引（Sparse Indexes）</strong></h3><p>索引的稀疏属性确保索引只包含具有索引字段的文档的条目，索引将跳过没有索引字段的文档。</p>
+<p>特性： 只对存在字段的文档进行索引（包括字段值为null的文档）</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">不索引不包含xmpp_id字段的文档<br>db.addresses.create<span class="hljs-constructor">Index( &#123; <span class="hljs-string">&quot;xmpp_id&quot;</span>: 1 &#125;, &#123; <span class="hljs-params">sparse</span>: <span class="hljs-params">true</span> &#125; )</span><br></code></pre></td></tr></table></figure>
+
+<p>如果稀疏索引会导致查询和排序操作的结果集不完整，MongoDB将不会使用该索引，除非hint()明确指定索引。</p>
+<p><strong>案例</strong></p>
+<p>数据准备</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">db.<span class="hljs-keyword">scores.insertMany([</span><br><span class="hljs-keyword"></span>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;newbie&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;abby&quot;</span>, <span class="hljs-string">&quot;score&quot;</span> : <span class="hljs-number">82</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;nina&quot;</span>, <span class="hljs-string">&quot;score&quot;</span> : <span class="hljs-number">90</span>&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>创建稀疏索引</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.scores.create<span class="hljs-constructor">Index( &#123; <span class="hljs-params">score</span>: 1 &#125; , &#123; <span class="hljs-params">sparse</span>: <span class="hljs-params">true</span> &#125; )</span><br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment"># 使用稀疏索引</span><br>db.<span class="hljs-keyword">scores.find( </span>&#123; <span class="hljs-keyword">score: </span>&#123; $lt: <span class="hljs-number">90</span> &#125; &#125; )<br><br><span class="hljs-comment"># 即使排序是通过索引字段，MongoDB也不会选择稀疏索引来完成查询，以返回完整的结果</span><br>db.<span class="hljs-keyword">scores.find().sort( </span>&#123; <span class="hljs-keyword">score: </span>-<span class="hljs-number">1</span> &#125; )<br><br><span class="hljs-comment"># 要使用稀疏索引，使用hint()显式指定索引</span><br>db.<span class="hljs-keyword">scores.find().sort( </span>&#123; <span class="hljs-keyword">score: </span>-<span class="hljs-number">1</span> &#125; ).hint( &#123; <span class="hljs-keyword">score: </span><span class="hljs-number">1</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p>同时具有稀疏性和唯一性的索引可以防止集合中存在字段值重复的文档，但允许不包含此索引字段的文档插入。</p>
+<p><strong>案例</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 创建具有唯一约束的稀疏索引</span><br>db.scores.<span class="hljs-title function_ invoke__">createIndex</span>( &#123; <span class="hljs-attr">score</span>: <span class="hljs-number">1</span> &#125; , &#123; <span class="hljs-attr">sparse</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p>测试</p>
+<p>这个索引将允许插入具有唯一的分数字段值或不包含分数字段的文档。因此，给定scores集合中的现有文档，索引允许以下插入操作:</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">db.<span class="hljs-keyword">scores.insertMany( </span>[<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;AAAAAAA&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">43</span> &#125;,<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;BBBBBBB&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">34</span> &#125;,<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;CCCCCCC&quot;</span> &#125;,<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;CCCCCCC&quot;</span> &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<p>索引不允许添加下列文件，因为已经存在评分为82和90的文件：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">db.<span class="hljs-keyword">scores.insertMany( </span>[<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;AAAAAAA&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">82</span> &#125;,<br>   &#123; <span class="hljs-string">&quot;userid&quot;</span>: <span class="hljs-string">&quot;BBBBBBB&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">90</span> &#125;<br>] )<br></code></pre></td></tr></table></figure>
+
+<h3 id="TTL索引（TTL-Indexes）"><a href="#TTL索引（TTL-Indexes）" class="headerlink" title="TTL索引（TTL Indexes）"></a><strong>TTL索引（TTL Indexes）</strong></h3><p>在一般的应用系统中，并非所有的数据都需要永久存储。例如一些系统事件、用户消息等，这些数据随着时间的推移，其重要程度逐渐降低。更重要的是，存储这些大量的历史数据需要花费较高的成本，因此项目中通常会对过期且不再使用的数据进行老化处理。</p>
+<p>通常的做法如下：</p>
+<p>方案一：为每个数据记录一个时间戳，应用侧开启一个定时器，按时间戳定期删除过期的数据。</p>
+<p>方案二：数据按日期进行分表，同一天的数据归档到同一张表，同样使用定时器删除过期的表。</p>
+<p>对于数据老化，MongoDB提供了一种更加便捷的做法：TTL（Time To Live）索引。TTL索引需要声明在一个日期类型的字段中，TTL 索引是特殊的单字段索引，MongoDB 可以使用它在一定时间或特定时钟时间后自动从集合中删除文档。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 创建 TTL 索引，TTL 值为3600秒</span><br><span class="hljs-attribute">db</span>.eventlog.createIndex( &#123; <span class="hljs-string">&quot;lastModifiedDate&quot;</span>: <span class="hljs-number">1</span> &#125;, &#123; expireAfterSeconds: <span class="hljs-number">3600</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p>对集合创建TTL索引之后，MongoDB会在周期性运行的后台线程中对该集合进行检查及数据清理工作。除了数据老化功能，TTL索引具有普通索引的功能，同样可以用于加速数据的查询。</p>
+<p>TTL 索引不保证过期数据会在过期后立即被删除。文档过期和 MongoDB 从数据库中删除文档的时间之间可能存在延迟。删除过期文档的后台任务每 60 秒运行一次。因此，在文档到期和后台任务运行之间的时间段内，文档可能会保留在集合中。</p>
+<p><strong>案例</strong></p>
+<p>数据准备</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.log_events</span><span class="hljs-selector-class">.insertOne</span>( &#123;<br>   <span class="hljs-string">&quot;createdAt&quot;</span>: new <span class="hljs-built_in">Date</span>(),<br>   <span class="hljs-string">&quot;logEvent&quot;</span>: <span class="hljs-number">2</span>,<br>   <span class="hljs-string">&quot;logMessage&quot;</span>: <span class="hljs-string">&quot;Success!&quot;</span><br>&#125; )<br></code></pre></td></tr></table></figure>
+
+<p>创建TTL索引</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">db</span>.log_events.createIndex( &#123; <span class="hljs-string">&quot;createdAt&quot;</span>: <span class="hljs-number">1</span> &#125;, &#123; expireAfterSeconds: <span class="hljs-number">20</span> &#125; )<br></code></pre></td></tr></table></figure>
+
+<p><strong>可变的过期时间</strong></p>
+<p>TTL索引在创建之后，仍然可以对过期时间进行修改。这需要使用collMod命令对索引的定义进行变更</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.run<span class="hljs-constructor">Command(&#123;<span class="hljs-params">collMod</span>:<span class="hljs-string">&quot;log_events&quot;</span>,<span class="hljs-params">index</span>:&#123;<span class="hljs-params">keyPattern</span>:&#123;<span class="hljs-params">createdAt</span>:1&#125;,<span class="hljs-params">expireAfterSeconds</span>:600&#125;&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40115" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>使用约束</strong></p>
+<p>TTL索引的确可以减少开发的工作量，而且通过数据库自动清理的方式会更加高效、可靠，但是在使用TTL索引时需要注意以下的限制：</p>
+<ul>
+<li>TTL索引只能支持单个字段，并且必须是非_id字段。</li>
+<li>TTL索引不能用于固定集合。 </li>
+<li>TTL索引无法保证及时的数据老化，MongoDB会通过后台的TTLMonitor定时器来清理老化数据，默认的间隔时间是1分钟。当然如果在数据库负载过高的情况下，TTL的行为则会进一步受到影响。</li>
+<li>TTL索引对于数据的清理仅仅使用了remove命令，这种方式并不是很高效。因此TTL Monitor在运行期间对系统CPU、磁盘都会造成一定的压力。相比之下，按日期分表的方式操作会更加高效。</li>
+</ul>
+<p>日志存储：</p>
+<ul>
+<li>日期分表</li>
+<li>固定集合</li>
+<li>TTL索引</li>
+</ul>
+<p>插入：  writeConcern:{w:0}</p>
+<p><strong>隐藏索引（Hidden Indexes）</strong></p>
+<p>隐藏索引对查询规划器不可见，不能用于支持查询。通过对规划器隐藏索引，用户可以在不实际删除索引的情况下评估删除索引的潜在影响。如果影响是负面的，用户可以取消隐藏索引，而不必重新创建已删除的索引。4.4新版功能。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">创建隐藏索引<br>db.restaurants.create<span class="hljs-constructor">Index(&#123; <span class="hljs-params">borough</span>: 1 &#125;,&#123; <span class="hljs-params">hidden</span>: <span class="hljs-params">true</span> &#125;)</span>;<br># 隐藏现有索引<br>db.restaurants.hide<span class="hljs-constructor">Index( &#123; <span class="hljs-params">borough</span>: 1&#125; )</span>;<br>db.restaurants.hide<span class="hljs-constructor">Index( <span class="hljs-string">&quot;索引名称&quot;</span> )</span><br># 取消隐藏索引<br>db.restaurants.unhide<span class="hljs-constructor">Index( &#123; <span class="hljs-params">borough</span>: 1&#125; )</span>;<br>db.restaurants.unhide<span class="hljs-constructor">Index( <span class="hljs-string">&quot;索引名称&quot;</span> )</span>; <br></code></pre></td></tr></table></figure>
+
+<p><strong>案例</strong></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">db.<span class="hljs-keyword">scores.insertMany([</span><br><span class="hljs-keyword"></span>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;newbie&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;abby&quot;</span>, <span class="hljs-string">&quot;score&quot;</span> : <span class="hljs-number">82</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;userid&quot;</span> : <span class="hljs-string">&quot;nina&quot;</span>, <span class="hljs-string">&quot;score&quot;</span> : <span class="hljs-number">90</span>&#125;<br>])<br></code></pre></td></tr></table></figure>
+
+<p>创建隐藏索引</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php">db.scores.<span class="hljs-title function_ invoke__">createIndex</span>(<br>   &#123; <span class="hljs-attr">userid</span>: <span class="hljs-number">1</span> &#125;,<br>   &#123; <span class="hljs-attr">hidden</span>: <span class="hljs-literal">true</span> &#125;<br>)<br></code></pre></td></tr></table></figure>
+
+<p>查看索引信息</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.scores</span><span class="hljs-selector-class">.getIndexes</span>()<br></code></pre></td></tr></table></figure>
+
+<p>索引属性hidden只在值为true时返回</p>
+<p>​    <img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40053" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>测试</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 不使用索引</span><br>db.scores.<span class="hljs-built_in">find</span>(&#123;userid:<span class="hljs-string">&quot;abby&quot;</span>&#125;).explain()<br><br><span class="hljs-comment">#取消隐藏索引</span><br>db.scores.unhideIndex( &#123; userid: 1&#125; )<br><span class="hljs-comment">#使用索引</span><br>db.scores.<span class="hljs-built_in">find</span>(&#123;userid:<span class="hljs-string">&quot;abby&quot;</span>&#125;).explain()<br></code></pre></td></tr></table></figure>
+
+<h2 id="索引使用建议"><a href="#索引使用建议" class="headerlink" title="索引使用建议"></a><strong>索引使用建议</strong></h2><p><strong>1.为每一个查询建立合适的索引</strong></p>
+<p>这个是针对于数据量较大比如说超过几十上百万（文档数目）数量级的集合。如果没有索引MongoDB需要把所有的Document从盘上读到内存，这会对MongoDB服务器造成较大的压力并影响到其他请求的执行。</p>
+<p><strong>2.创建合适的复合索引，不要依赖于交叉索引</strong></p>
+<p>如果你的查询会使用到多个字段，MongoDB有两个索引技术可以使用：交叉索引和复合索引。交叉索引就是针对每个字段单独建立一个单字段索引，然后在查询执行时候使用相应的单字段索引进行索引交叉而得到查询结果。交叉索引目前触发率较低，所以如果你有一个多字段查询的时候，建议使用复合索引能够保证索引正常的使用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">#查找所有年龄小于30岁的深圳市马拉松运动员</span><br>db.athelets.<span class="hljs-title function_ invoke__">find</span>(&#123;<span class="hljs-attr">sport</span>: <span class="hljs-string">&quot;marathon&quot;</span>, <span class="hljs-attr">location</span>: <span class="hljs-string">&quot;sz&quot;</span>, <span class="hljs-attr">age</span>: &#123;<span class="hljs-variable">$lt</span>: <span class="hljs-number">30</span>&#125;&#125;&#125;)<br><span class="hljs-comment">#创建复合索引</span><br>db.athelets.<span class="hljs-title function_ invoke__">createIndex</span>(&#123;<span class="hljs-attr">sport</span>:<span class="hljs-number">1</span>, <span class="hljs-attr">location</span>:<span class="hljs-number">1</span>, <span class="hljs-attr">age</span>:<span class="hljs-number">1</span>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><strong>3.复合索引字段顺序：匹配条件在前，范围条件在后（Equality First, Range After）</strong></p>
+<p>前面的例子，在创建复合索引时如果条件有匹配和范围之分，那么匹配条件（sport: “marathon”) 应该在复合索引的前面。范围条件(age: &lt;30)字段应该放在复合索引的后面。</p>
+<p><strong>4.尽可能使用覆盖索引（Covered Index）</strong></p>
+<p>建议只返回需要的字段，同时，利用覆盖索引来提升性能。</p>
+<p><strong>5.建索引要在后台运行</strong></p>
+<p>在对一个集合创建索引时，该集合所在的数据库将不接受其他读写操作。对大数据量的集合建索引，建议使用后台运行选项 {background: true}</p>
+<p><strong>6.避免设计过长的数组索引</strong></p>
+<p>数组索引是多值的，在存储时需要使用更多的空间。如果索引的数组长度特别长，或者数组的增长不受控制，则可能导致索引空间急剧膨胀。</p>
+<h2 id="explain执行计划详解"><a href="#explain执行计划详解" class="headerlink" title="explain执行计划详解"></a><strong>explain执行计划详解</strong></h2><p>通常我们需要关心的问题：</p>
+<ul>
+<li>查询是否使用了索引</li>
+<li>索引是否减少了扫描的记录数量</li>
+<li>是否存在低效的内存排序</li>
+</ul>
+<p>MongoDB提供了explain命令，它可以帮助我们评估指定查询模型（querymodel）的执行计划，根据实际情况进行调整，然后提高查询效率。</p>
+<p>explain()方法的形式如下:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.collection</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.explain</span>(&lt;verbose&gt;)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>verbose  可选参数，表示执行计划的输出模式，默认queryPlanner</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>模式名字</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>queryPlanner</td>
+<td>执行计划的详细信息，包括查询计划、集合信息、查询条件、最佳执行计划、查询方式和 MongoDB 服务信息等</td>
+</tr>
+<tr>
+<td>exectionStats</td>
+<td>最佳执行计划的执行情况和被拒绝的计划等信息</td>
+</tr>
+<tr>
+<td>allPlansExecution</td>
+<td>选择并执行最佳执行计划，并返回最佳执行计划和其他执行计划的执行情况</td>
+</tr>
+</tbody></table>
+<h3 id="queryPlanner"><a href="#queryPlanner" class="headerlink" title="queryPlanner"></a><strong>queryPlanner</strong></h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 未创建title的索引</span><br>db.books.<span class="hljs-built_in">find</span>(&#123;title:<span class="hljs-string">&quot;book-1&quot;</span>&#125;).explain(<span class="hljs-string">&quot;queryPlanner&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40143" srcset="/img/loading.gif" lazyload alt="0"></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段名称</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>plannerVersion</td>
+<td>执行计划的版本</td>
+</tr>
+<tr>
+<td>namespace</td>
+<td>查询的集合</td>
+</tr>
+<tr>
+<td>indexFilterSet</td>
+<td>是否使用索引</td>
+</tr>
+<tr>
+<td>parsedQuery</td>
+<td>查询条件</td>
+</tr>
+<tr>
+<td>winningPlan</td>
+<td>最佳执行计划</td>
+</tr>
+<tr>
+<td>stage</td>
+<td>查询方式</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>过滤条件</td>
+</tr>
+<tr>
+<td>direction</td>
+<td>查询顺序</td>
+</tr>
+<tr>
+<td>rejectedPlans</td>
+<td>拒绝的执行计划</td>
+</tr>
+<tr>
+<td>serverInfo</td>
+<td>mongodb服务器信息</td>
+</tr>
+</tbody></table>
+<h3 id="executionStats"><a href="#executionStats" class="headerlink" title="executionStats"></a><strong>executionStats</strong></h3><p>executionStats 模式的返回信息中包含了 queryPlanner 模式的所有字段，并且还包含了最佳执行计划的执行情况</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sas">#创建索引<br>db.books.<span class="hljs-keyword">create</span><span class="hljs-meta">Index</span>(&#123;<span class="hljs-keyword">title</span>:1&#125;)<br><br>db.books.find(&#123;<span class="hljs-keyword">title</span>:<span class="hljs-string">&quot;book-1&quot;</span>&#125;).explai<span class="hljs-meta">n</span>(<span class="hljs-string">&quot;executionStats&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2%E3%80%81MongoDB%E8%81%9A%E5%90%88%E6%93%8D%E4%BD%9C%E5%8F%8A%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/40163" srcset="/img/loading.gif" lazyload alt="0"></p>
+<table>
+<thead>
+<tr>
+<th><strong>字段名称</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>winningPlan.inputStage</td>
+<td>用来描述子stage，并且为其父stage提供文档和索引关键字</td>
+</tr>
+<tr>
+<td>winningPlan.inputStage.stage</td>
+<td>子查询方式</td>
+</tr>
+<tr>
+<td>winningPlan.inputStage.keyPattern</td>
+<td>所扫描的index内容</td>
+</tr>
+<tr>
+<td>winningPlan.inputStage.indexName</td>
+<td>索引名</td>
+</tr>
+<tr>
+<td>winningPlan.inputStage.isMultiKey</td>
+<td>是否是Multikey。如果索引建立在array上，将是true</td>
+</tr>
+<tr>
+<td>executionStats.executionSuccess</td>
+<td>是否执行成功</td>
+</tr>
+<tr>
+<td>executionStats.nReturned</td>
+<td>返回的个数</td>
+</tr>
+<tr>
+<td>executionStats.executionTimeMillis</td>
+<td>这条语句执行时间</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.executionTimeMillisEstimate</td>
+<td>检索文档获取数据的时间</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.inputStage.executionTimeMillisEstimate</td>
+<td>扫描获取数据的时间</td>
+</tr>
+<tr>
+<td>executionStats.totalKeysExamined</td>
+<td>索引扫描次数</td>
+</tr>
+<tr>
+<td>executionStats.totalDocsExamined</td>
+<td>文档扫描次数</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.isEOF</td>
+<td>是否到达 steam 结尾，1 或者 true 代表已到达结尾</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.works</td>
+<td>工作单元数，一个查询会分解成小的工作单元</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.advanced</td>
+<td>优先返回的结果数</td>
+</tr>
+<tr>
+<td>executionStats.executionStages.docsExamined</td>
+<td>文档检查数</td>
+</tr>
+</tbody></table>
+<h3 id="allPlansExecution"><a href="#allPlansExecution" class="headerlink" title="allPlansExecution"></a><strong>allPlansExecution</strong></h3><p>allPlansExecution返回的信息包含 executionStats 模式的内容，且包含allPlansExecution:[]块</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-string">&quot;allPlansExecution&quot;</span> : [<br>      &#123;<br>         <span class="hljs-string">&quot;nReturned&quot;</span> : &lt;<span class="hljs-type">int</span>&gt;,<br>         <span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : &lt;<span class="hljs-type">int</span>&gt;,<br>         <span class="hljs-string">&quot;totalKeysExamined&quot;</span> : &lt;<span class="hljs-type">int</span>&gt;,<br>         <span class="hljs-string">&quot;totalDocsExamined&quot;</span> :&lt;int&gt;,<br>         <span class="hljs-string">&quot;executionStages&quot;</span> : &#123;<br>            <span class="hljs-string">&quot;stage&quot;</span> : &lt;<span class="hljs-type">STAGEA</span>&gt;,<br>            <span class="hljs-string">&quot;nReturned&quot;</span> : &lt;<span class="hljs-type">int</span>&gt;,<br>            <span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : &lt;<span class="hljs-type">int</span>&gt;,<br>            ...<br>            &#125;<br>         &#125;<br>      &#125;,<br>      ...<br>   ]<br><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="stage状态"><a href="#stage状态" class="headerlink" title="stage状态"></a><strong>stage状态</strong></h3><table>
+<thead>
+<tr>
+<th><strong>状态</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COLLSCAN</td>
+<td>全表扫描</td>
+</tr>
+<tr>
+<td>IXSCAN</td>
+<td>索引扫描</td>
+</tr>
+<tr>
+<td>FETCH</td>
+<td>根据索引检索指定文档</td>
+</tr>
+<tr>
+<td>SHARD_MERGE</td>
+<td>将各个分片返回数据进行合并</td>
+</tr>
+<tr>
+<td>SORT</td>
+<td>在内存中进行了排序</td>
+</tr>
+<tr>
+<td>LIMIT</td>
+<td>使用limit限制返回数</td>
+</tr>
+<tr>
+<td>SKIP</td>
+<td>使用skip进行跳过</td>
+</tr>
+<tr>
+<td>IDHACK</td>
+<td>对_id进行查询</td>
+</tr>
+<tr>
+<td>SHARDING_FILTER</td>
+<td>通过mongos对分片数据进行查询</td>
+</tr>
+<tr>
+<td>COUNTSCAN</td>
+<td>count不使用Index进行count时的stage返回</td>
+</tr>
+<tr>
+<td>COUNT_SCAN</td>
+<td>count使用了Index进行count时的stage返回</td>
+</tr>
+<tr>
+<td>SUBPLA</td>
+<td>未使用到索引的$or查询的stage返回</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>使用全文索引进行查询时候的stage返回</td>
+</tr>
+<tr>
+<td>PROJECTION</td>
+<td>限定返回字段时候stage的返回</td>
+</tr>
+</tbody></table>
+<p>执行计划的返回结果中尽量不要出现以下stage:</p>
+<ul>
+<li>COLLSCAN(全表扫描)</li>
+<li>SORT(使用sort但是无index)</li>
+<li>不合理的SKIP</li>
+<li>SUBPLA(未用到index的$or)</li>
+<li>COUNTSCAN(不使用index进行count)</li>
+</ul>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             

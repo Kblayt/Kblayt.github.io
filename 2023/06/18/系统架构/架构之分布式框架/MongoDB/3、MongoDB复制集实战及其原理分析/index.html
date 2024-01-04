@@ -16,16 +16,39 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="MongoDB复制集复制集架构在生产环境中，不建议使用单机版的MongoDB服务器。原因如下：  单机版的MongoDB无法保证可靠性，一旦进程发生故障或是服务器宕机，业务将直接不可用。 一旦服务器上的磁盘损坏，数据会直接丢失，而此时并没有任何副本可用。  Mongodb复制集（Replication Set）由一组Mongod实例（进程）组成，包含一个Primary节点和多个Secondary节">
+<meta property="og:type" content="article">
 <meta property="og:title" content="3、MongoDB复制集实战及其原理分析">
 <meta property="og:url" content="https://kblayt.github.io/2023/06/18/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/MongoDB/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="MongoDB复制集复制集架构在生产环境中，不建议使用单机版的MongoDB服务器。原因如下：  单机版的MongoDB无法保证可靠性，一旦进程发生故障或是服务器宕机，业务将直接不可用。 一旦服务器上的磁盘损坏，数据会直接丢失，而此时并没有任何副本可用。  Mongodb复制集（Replication Set）由一组Mongod实例（进程）组成，包含一个Primary节点和多个Secondary节">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40801">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40950">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40951">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40949">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40952">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41295">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/43844">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41113">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41111">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41112">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40973">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40978">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41168">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41299">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41303">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41646">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41360">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41351">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/43744">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41436">
 <meta property="article:published_time" content="2023-06-18T13:33:25.000Z">
-<meta property="article:modified_time" content="2023-11-14T07:37:10.629Z">
+<meta property="article:modified_time" content="2024-01-04T07:09:29.699Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MongoDB">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40801">
   
   
   
@@ -217,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          15k 字
         
       </span>
     
@@ -228,7 +251,7 @@
         
         
         
-          1 分钟
+          123 分钟
         
       </span>
     
@@ -271,7 +294,445 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <h1 id="MongoDB复制集"><a href="#MongoDB复制集" class="headerlink" title="MongoDB复制集"></a><strong>MongoDB复制集</strong></h1><h2 id="复制集架构"><a href="#复制集架构" class="headerlink" title="复制集架构"></a><strong>复制集架构</strong></h2><p>在生产环境中，不建议使用单机版的MongoDB服务器。原因如下：</p>
+<ul>
+<li>单机版的MongoDB无法保证可靠性，一旦进程发生故障或是服务器宕机，业务将直接不可用。</li>
+<li>一旦服务器上的磁盘损坏，数据会直接丢失，而此时并没有任何副本可用。</li>
+</ul>
+<p>Mongodb复制集（Replication Set）由一组Mongod实例（进程）组成，包含一个Primary节点和多个Secondary节点，Mongodb Driver（客户端）的所有数据都写入Primary，Secondary从Primary同步写入的数据，以保持复制集内所有成员存储相同的数据集，提供数据的高可用。复制集提供冗余和高可用性，是所有生产部署的基础。它的现实依赖于两个方面的功能:</p>
+<ul>
+<li>数据写入时将数据迅速复制到另一个独立节点上</li>
+<li>在接受写入的节点发生故障时自动选举出一个新的替代节点</li>
+</ul>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40801" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>在实现高可用的同时，复制集实现了其他几个附加作用:</p>
+<ul>
+<li>数据分发: 将数据从一个区域复制到另一个区域，减少另一个区域的读延迟</li>
+<li>读写分离: 不同类型的压力分别在不同的节点上执行</li>
+<li>异地容灾: 在数据中心故障时候快速切换到异地</li>
+</ul>
+<p>早期版本的MongoDB使用了一种Master-Slave的架构，该做法在MongoDB 3.4版本之后已经废弃。</p>
+<h3 id="三节点复制集模式"><a href="#三节点复制集模式" class="headerlink" title="三节点复制集模式"></a><strong>三节点复制集模式</strong></h3><p>常见的复制集架构由3个成员节点组成，其中存在几种不同的模式。</p>
+<h3 id="PSS模式（官方推荐模式）"><a href="#PSS模式（官方推荐模式）" class="headerlink" title="PSS模式（官方推荐模式）"></a><strong>PSS模式（官方推荐模式）</strong></h3><p>PSS模式由一个主节点和两个备节点所组成，即Primary+Secondary+Secondary。 </p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40950" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>此模式始终提供数据集的两个完整副本，如果主节点不可用，则复制集选择备节点作为主节点并继续正常操作。旧的主节点在可用时重新加入复制集。</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40951" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="PSA模式"><a href="#PSA模式" class="headerlink" title="PSA模式"></a><strong>PSA模式</strong></h3><p>PSA模式由一个主节点、一个备节点和一个仲裁者节点组成，即Primary+Secondary+Arbiter</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40949" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>其中，Arbiter节点不存储数据副本，也不提供业务的读写操作。Arbiter节点发生故障不影响业务，仅影响选举投票。此模式仅提供数据的一个完整副本，如果主节点不可用，则复制集将选择备节点作为主节点。</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40952" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h2 id="典型三节点复制集环境搭建"><a href="#典型三节点复制集环境搭建" class="headerlink" title="典型三节点复制集环境搭建"></a><strong>典型三节点复制集环境搭建</strong></h2><p>即使暂时只有一台服务器，也要以单节点模式启动复制集</p>
+<ul>
+<li>单机多实例启动复制集</li>
+<li>单节点启动复制集</li>
+</ul>
+<h3 id="复制集注意事项"><a href="#复制集注意事项" class="headerlink" title="复制集注意事项"></a><strong>复制集注意事项</strong></h3><p>关于硬件:</p>
+<ul>
+<li>因为正常的复制集节点都有可能成为主节点，它们的地位是一样的，因此硬件配置上必须一致;</li>
+<li>为了保证节点不会同时宕机，各节点使用的硬件必须具有独立性。</li>
+</ul>
+<p>关于软件:</p>
+<ul>
+<li>复制集各节点软件版本必须一致，以避免出现不可预知的问题。</li>
+<li>增加节点不会增加系统写性能</li>
+</ul>
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a><strong>环境准备</strong></h3><ul>
+<li>安装 MongoDB并配置好环境变量</li>
+<li>确保有 10GB 以上的硬盘空间</li>
+</ul>
+<p><strong>准备配置文件</strong></p>
+<p>复制集的每个mongod进程应该位于不同的服务器。我们现在在一台机器上运行3个进程，因此要为它们各自配置：</p>
+<ul>
+<li>不同的端口（28017&#x2F;28018&#x2F;28019）</li>
+<li>不同的数据目录</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mkdir</span> -p /data/db&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>不同日志文件路径(例如：&#x2F;data&#x2F;db1&#x2F;mongod.log)</li>
+</ul>
+<p>创建配置文件&#x2F;data&#x2F;db1&#x2F;mongod.conf，内容如下：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># /data/db1/mongod.conf</span><br><span class="hljs-symbol">systemLog:</span><br><span class="hljs-symbol">  destination:</span> file<br><span class="hljs-symbol">  path:</span> <span class="hljs-keyword">/data/</span>db1/mongod.log <span class="hljs-meta"># log path</span><br><span class="hljs-symbol">  logAppend:</span> true<br><span class="hljs-symbol">storage:</span>   <br><span class="hljs-symbol">  dbPath:</span> <span class="hljs-keyword">/data/</span>db1 <span class="hljs-meta"># data directory      </span><br><span class="hljs-symbol">net:</span><br><span class="hljs-symbol">  bindIp:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br><span class="hljs-symbol">  port:</span> <span class="hljs-number">28017</span> <span class="hljs-meta"># port</span><br><span class="hljs-symbol">replication:</span><br><span class="hljs-symbol">  replSetName:</span> rs0  <br><span class="hljs-symbol">processManagement:</span><br><span class="hljs-symbol">  fork:</span> true<br></code></pre></td></tr></table></figure>
+
+<p>参考上面配置修改端口，路径，依次配置db2，db3。注意必须是yaml格式</p>
+<p><strong>启动 MongoDB 进程</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">mongod -f <span class="hljs-regexp">/data/</span>db1/mongod.conf <br>mongod -f <span class="hljs-regexp">/data/</span>db2/mongod.conf <br>mongod -f <span class="hljs-regexp">/data/</span>db3/mongod.conf<br></code></pre></td></tr></table></figure>
+
+<p>注意：如果启用了 SELinux，可能阻止上述进程启动。简单起见请关闭 SELinux。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 永久关闭,将SELINUX=enforcing改为SELINUX=disabled,设置后需要重启才能生效</span><br>vim <span class="hljs-regexp">/etc/</span>selinux/config<br><span class="hljs-comment"># 查看SELINUX</span><br><span class="hljs-regexp">/usr/</span>sbin/sestatus -v<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置复制集"><a href="#配置复制集" class="headerlink" title="配置复制集"></a><strong>配置复制集</strong></h3><p>复制集通过replSetInitiate命令或mongo shell的rs.initiate()进行初始化，初始化后各个成员间开始发送心跳消息，并发起Priamry选举操作，获得『大多数』成员投票支持的节点，会成为Primary，其余节点成为Secondary。</p>
+<ul>
+<li>方法1</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># mongo --port 28017</span><br><span class="hljs-comment"># 初始化复制集</span><br>&gt; rs.initiate() <br><span class="hljs-comment"># 将其余成员添加到复制集</span><br>&gt; rs.<span class="hljs-built_in">add</span>(<span class="hljs-string">&quot;192.168.65.174:28018&quot;</span>) <br>&gt; rs.<span class="hljs-built_in">add</span>(<span class="hljs-string">&quot;192.168.65.174:28019&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>方法2</li>
+</ul>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># mongo --port 28017 </span><br><span class="hljs-meta"># 初始化复制集</span><br>&gt; rs.initiate(<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">    _id:</span> <span class="hljs-string">&quot;rs0&quot;</span>,<br><span class="hljs-symbol">    members:</span> [<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">        _id:</span> <span class="hljs-number">0</span>,<br><span class="hljs-symbol">        host:</span> <span class="hljs-string">&quot;192.168.65.174:28017&quot;</span><br>    <span class="hljs-punctuation">&#125;</span>,<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">        _id:</span> <span class="hljs-number">1</span>,<br><span class="hljs-symbol">        host:</span> <span class="hljs-string">&quot;192.168.65.174:28018&quot;</span><br>    <span class="hljs-punctuation">&#125;</span>,<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">        _id:</span> <span class="hljs-number">2</span>,<br><span class="hljs-symbol">        host:</span> <span class="hljs-string">&quot;192.168.65.174:28019&quot;</span><br>    <span class="hljs-punctuation">&#125;</span>]<br><span class="hljs-punctuation">&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>验证</strong></p>
+<p>MongoDB 主节点进行写入</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"># mongo <span class="hljs-comment">--port 28017</span><br>rs0:<span class="hljs-keyword">PRIMARY</span>&gt; db.<span class="hljs-keyword">user</span>.<span class="hljs-keyword">insert</span>([&#123;<span class="hljs-type">name</span>:&quot;fox&quot;&#125;,&#123;<span class="hljs-type">name</span>:&quot;monkey&quot;&#125;])<br></code></pre></td></tr></table></figure>
+
+<p>MongoDB 从节点进行读</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-meta"># mongo --port 28018</span><br><span class="hljs-meta"># 指定从节点可读</span><br><span class="hljs-symbol">rs0:</span>SECONDARY&gt; rs.secondaryOk()<br><span class="hljs-symbol">rs0:</span>SECONDARY&gt; db.user.find()<br></code></pre></td></tr></table></figure>
+
+<h3 id="复制集状态查询"><a href="#复制集状态查询" class="headerlink" title="复制集状态查询"></a><strong>复制集状态查询</strong></h3><ul>
+<li>查看复制集整体状态：</li>
+</ul>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fortran">rs.<span class="hljs-keyword">status</span>()        <br></code></pre></td></tr></table></figure>
+
+<p>可查看各成员当前状态，包括是否健康，是否在全量同步，心跳信息，增量同步信息， 选举信息，上一次的心跳时间等。</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41295" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>members一列体现了所有复制集成员的状态，主要如下：</p>
+<p>health：成员是否健康，通过心跳进行检测。</p>
+<p>state&#x2F;stateStr：成员的状态，PRIMARY表示主节点，而SECONDARY则表示备节点，如果节点出现故障，则可能出现一些其他的状态，例如RECOVERY。</p>
+<p>uptime：成员的启动时间。</p>
+<p>optime&#x2F;optimeDate：成员最后一条同步oplog的时间。</p>
+<p>optimeDurable&#x2F;optimeDurableDate：成员最后一条同步oplog的时间。</p>
+<p>pingMs：成员与当前节点的ping时延。</p>
+<p>syncingTo：成员的同步来源。</p>
+<ul>
+<li>查看当前节点角色：</li>
+</ul>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">db.isMaster<span class="hljs-comment">()</span>              <br></code></pre></td></tr></table></figure>
+
+<p>除了当前节点角色信息，是一个更精简化的信息，也返回整个复制集的成员列表，真正的Primary是谁，协议相关的配置信息等，Driver 在首次连接复制集时会发送该命令。</p>
+<p><strong>Mongo Shell复制集命令</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>rs.add()</td>
+<td>为复制集新增节点</td>
+</tr>
+<tr>
+<td>rs.addArb()</td>
+<td>为复制集新增一个 arbiter</td>
+</tr>
+<tr>
+<td>rs.conf()</td>
+<td>返回复制集配置信息</td>
+</tr>
+<tr>
+<td>rs.freeze()</td>
+<td>防止当前节点在一段时间内选举成为主节点</td>
+</tr>
+<tr>
+<td>rs.help()</td>
+<td>返回 replica set 的命令帮助</td>
+</tr>
+<tr>
+<td>rs.initiate()</td>
+<td>初始化一个新的复制集</td>
+</tr>
+<tr>
+<td>rs.printReplicationInfo()</td>
+<td>以主节点的视角返回复制的状态报告</td>
+</tr>
+<tr>
+<td>rs.printSecondaryReplicationInfo()</td>
+<td>以从节点的视角返回复制状态报告</td>
+</tr>
+<tr>
+<td>rs.reconfig()</td>
+<td>通过重新应用复制集配置来为复制集更新配置</td>
+</tr>
+<tr>
+<td>rs.remove()</td>
+<td>从复制集中移除一个节点</td>
+</tr>
+<tr>
+<td>rs.secondaryOk()</td>
+<td>为当前的连接设置 从节点可读</td>
+</tr>
+<tr>
+<td>rs.status()</td>
+<td>返回复制集状态信息。</td>
+</tr>
+<tr>
+<td>rs.stepDown()</td>
+<td>让当前的 primary 变为从节点并触发 election</td>
+</tr>
+<tr>
+<td>rs.syncFrom()</td>
+<td>设置复制集节点从哪个节点处同步数据，将会覆盖默认选取逻辑</td>
+</tr>
+</tbody></table>
+<h3 id="使用mtools创建复制集"><a href="#使用mtools创建复制集" class="headerlink" title="使用mtools创建复制集"></a><strong>使用mtools创建复制集</strong></h3><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs llvm">文档：使用mtools搭建MongoDB复制集和分片集?..<br>链接：http://note.youdao.com/noteshare?id<span class="hljs-operator">=</span><span class="hljs-number">3</span><span class="hljs-keyword">c</span><span class="hljs-number">02251</span><span class="hljs-keyword">c</span><span class="hljs-number">8</span>b<span class="hljs-number">4</span>a<span class="hljs-number">8</span>bfc<span class="hljs-number">98</span>ab<span class="hljs-number">392146</span>aa<span class="hljs-number">8222</span>&amp;<span class="hljs-keyword">sub</span><span class="hljs-operator">=</span><span class="hljs-number">9E0834</span>FE<span class="hljs-number">787</span>F<span class="hljs-number">413E8</span>EBA<span class="hljs-number">774596</span>AB<span class="hljs-number">3999</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs haskell"><span class="hljs-meta">#准备复制集使用的工作目录</span><br><span class="hljs-title">mkdir</span> -p /<span class="hljs-class"><span class="hljs-keyword">data</span>/mongo</span><br><span class="hljs-title">cd</span> /<span class="hljs-class"><span class="hljs-keyword">data</span>/mongo</span><br><span class="hljs-meta">#初始化3节点复制集</span><br><span class="hljs-title">mlaunch</span> init <span class="hljs-comment">--replicaset --nodes 3</span><br></code></pre></td></tr></table></figure>
+
+<p>端口默认从27017开始，依次为2017，27018，27019</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/43844" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="安全认证"><a href="#安全认证" class="headerlink" title="安全认证"></a><strong>安全认证</strong></h3><p><strong>创建用户</strong></p>
+<p>在主节点服务器上，启动mongo</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">use</span> admin<br>#创建用户<br><span class="hljs-keyword">db</span>.createUser( &#123;<br>    user: <span class="hljs-string">&quot;fox&quot;</span>,<br>    <span class="hljs-keyword">pwd</span>: <span class="hljs-string">&quot;fox&quot;</span>,<br>     roles: [ &#123; role: <span class="hljs-string">&quot;clusterAdmin&quot;</span>, <span class="hljs-keyword">db</span>: <span class="hljs-string">&quot;admin&quot;</span> &#125; ,<br>         &#123; role: <span class="hljs-string">&quot;userAdminAnyDatabase&quot;</span>, <span class="hljs-keyword">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;,<br>         &#123; role: <span class="hljs-string">&quot;userAdminAnyDatabase&quot;</span>, <span class="hljs-keyword">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;,<br>         &#123; role: <span class="hljs-string">&quot;readWriteAnyDatabase&quot;</span>, <span class="hljs-keyword">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;]<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41113" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>创建keyFile文件</strong></p>
+<p>keyFile文件的作用： 集群之间的安全认证，增加安全认证机制KeyFile（开启keyfile认证就默认开启了auth认证了）。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#mongo.key采用随机算法生成，用作节点内部通信的密钥文件。</span><br>openssl rand -base64 <span class="hljs-number">756</span> &gt; <span class="hljs-regexp">/data/m</span>ongo.key<br> <span class="hljs-comment">#权限必须是600</span><br> chmod <span class="hljs-number">600</span> <span class="hljs-regexp">/data/m</span>ongo.key  <br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p>注意：创建keyFile前，需要先停掉复制集中所有主从节点的mongod服务，然后再创建，否则有可能出现服务启动不了的情况。</p>
+<p>将主节点中的keyfile文件拷贝到复制集其他从节点服务器中，路径地址对应mongo.conf配置文件中的keyFile字段地址，并设置keyfile权限为600</p>
+<p><strong>启动mongod</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 启动mongod</span><br>mongod -f <span class="hljs-regexp">/data/</span>db1<span class="hljs-regexp">/mongod.conf --keyFile /</span>data/mongo.key<br>mongod -f <span class="hljs-regexp">/data/</span>db2<span class="hljs-regexp">/mongod.conf --keyFile /</span>data/mongo.key<br>mongod -f <span class="hljs-regexp">/data/</span>db3<span class="hljs-regexp">/mongod.conf --keyFile /</span>data/mongo.key<br></code></pre></td></tr></table></figure>
+
+<p><strong>测试</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#进入主节点</span><br><span class="hljs-attribute">mongo</span> --port <span class="hljs-number">28017</span><br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41111" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#进入主节点</span><br>mongo <span class="hljs-params">--port</span> 28017 -ufox -pfox <span class="hljs-params">--authenticationDatabase=admin</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41112" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="复制集连接方式"><a href="#复制集连接方式" class="headerlink" title="复制集连接方式"></a><strong>复制集连接方式</strong></h3><p>方式一：直接连接 Primary 节点，正常情况下可读写 MongoDB，但主节点故障切换后，无法正常访问</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40973" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>方式二（强烈推荐）：通过高可用 Uri 的方式连接 MongoDB，当 Primary 故障切换后，MongoDB Driver 可自动感知并把流量路由到新的 Primary 节点</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/40978" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>springboot操作复制集配置</strong></p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">spring:</span><br><span class="hljs-symbol">  data:</span><br><span class="hljs-symbol">    mongodb:</span><br><span class="hljs-symbol">        uri:</span> mongodb:<span class="hljs-comment">//fox:fox@192.168.65.174:28017,192.168.65.174:28018,192.168.65.174:28019/test?authSource=admin&amp;replicaSet=rs0</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="复制集成员角色"><a href="#复制集成员角色" class="headerlink" title="复制集成员角色"></a><strong>复制集成员角色</strong></h2><p>复制集里面有多个节点，每个节点拥有不同的职责。 </p>
+<p>在看成员角色之前，先了解两个重要属性： </p>
+<h3 id="属性一：Priority-x3D-0"><a href="#属性一：Priority-x3D-0" class="headerlink" title="属性一：Priority &#x3D; 0"></a><strong>属性一：Priority &#x3D; 0</strong></h3><p>当 Priority 等于 0 时，它不可以被复制集选举为主，Priority 的值越高，则被选举为主的概率更大。通常，在跨机房方式下部署复制集可以使用该特性。假设使用了机房A和机房B，由于主要业务与机房A更近，则可以将机房B的复制集成员Priority设置为0，这样主节点就一定会是A机房的成员。 </p>
+<h3 id="属性二：Vote-x3D-0"><a href="#属性二：Vote-x3D-0" class="headerlink" title="属性二：Vote &#x3D; 0"></a><strong>属性二：Vote &#x3D; 0</strong></h3><p>不可以参与选举投票，此时该节点的 Priority 也必须为 0，即它也不能被选举为主。由于一个复制集中最多只有7个投票成员，因此多出来的成员则必须将其vote属性值设置为0，即这些成员将无法参与投票。</p>
+<h3 id="成员角色"><a href="#成员角色" class="headerlink" title="成员角色"></a><strong>成员角色</strong></h3><ul>
+<li><p>Primary：主节点，其接收所有的写请求，然后把修改同步到所有备节点。一个复制集只能有一个主节点，当主节点“挂掉”后，其他节点会重新选举出来一个主节点。</p>
+</li>
+<li><p>Secondary：备节点，与主节点保持同样的数据集。当主节点“挂掉”时，参与竞选主节点。分为以下三个不同类型：</p>
+</li>
+<li><ul>
+<li>Hidden &#x3D; false：正常的只读节点，是否可选为主，是否可投票，取决于 Priority，Vote 的值； </li>
+<li>Hidden &#x3D; true：隐藏节点，对客户端不可见， 可以参与选举，但是 Priority 必须为 0，即不能被提升为主。 由于隐藏节点不会接受业务访问，因此可通过隐藏节点做一些数据备份、离线计算的任务，这并不会影响整个复制集。</li>
+<li>Delayed ：延迟节点，必须同时具备隐藏节点和Priority0的特性，会延迟一定的时间（SlaveDelay 配置决定）从上游复制增量，常用于快速回滚场景。</li>
+</ul>
+</li>
+<li><p>Arbiter：仲裁节点，只用于参与选举投票，本身不承载任何数据，只作为投票角色。比如你部署了2个节点的复制集，1个 Primary，1个Secondary，任意节点宕机，复制集将不能提供服务了（无法选出Primary），这时可以给复制集添加⼀个 Arbiter节点，即使有节点宕机，仍能选出Primary。 Arbiter本身不存储数据，是非常轻量级的服务，当复制集成员为偶数时，最好加入⼀个Arbiter节点，以提升复制集可用性。</p>
+</li>
+</ul>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41168" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="配置隐藏节点"><a href="#配置隐藏节点" class="headerlink" title="配置隐藏节点"></a><strong>配置隐藏节点</strong></h3><p>很多情况下将节点设置为隐藏节点是用来协助 delayed members 的。如果我们仅仅需要防止该节点成为主节点，我们可以通过 priority 0 member 来实现。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cfg = rs<span class="hljs-selector-class">.conf</span>()<br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[1]</span><span class="hljs-selector-class">.priority</span> = <span class="hljs-number">0</span><br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[1]</span><span class="hljs-selector-class">.hidden</span> = true<br>rs<span class="hljs-selector-class">.reconfig</span>(cfg)<br></code></pre></td></tr></table></figure>
+
+<p>设置完毕后，该从节点的优先级将变为 0 来防止其升职为主节点，同时其也是对应用程序不可见的。在其他节点上执行 db.isMaster() 将不会显示隐藏节点。</p>
+<h3 id="配置延时节点"><a href="#配置延时节点" class="headerlink" title="配置延时节点"></a><strong>配置延时节点</strong></h3><p>当我们配置一个延时节点的时候，复制过程与该节点的 oplog 都将延时。延时节点中的数据集将会比复制集中主节点的数据延后。举个例子，现在是09：52，如果延时节点延后了1小时，那么延时节点的数据集中将不会有08：52之后的操作。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cfg = rs<span class="hljs-selector-class">.conf</span>()<br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[1]</span><span class="hljs-selector-class">.priority</span> = <span class="hljs-number">0</span><br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[1]</span><span class="hljs-selector-class">.hidden</span> = true<br>#延迟<span class="hljs-number">1</span>分钟<br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[1]</span><span class="hljs-selector-class">.slaveDelay</span> = <span class="hljs-number">60</span><br>rs<span class="hljs-selector-class">.reconfig</span>(cfg)<br></code></pre></td></tr></table></figure>
+
+<p><strong>查看复制延迟</strong></p>
+<p>如果希望查看当前节点oplog的情况，则可以使用rs.printReplicationInfo()命令</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41299" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>这里清晰地描述了oplog的大小、最早一条oplog以及最后一条oplog的产生时间，log length start to end所指的是一个复制窗口（时间差）。通常在oplog大小不变的情况下，业务写操作越频繁，复制窗口就会越短。</p>
+<p>在节点上执行rs.printSecondaryReplicationInfo()命令，可以一并列出所有备节点成员的同步延迟情况</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41303" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="添加投票节点"><a href="#添加投票节点" class="headerlink" title="添加投票节点"></a><strong>添加投票节点</strong></h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 为仲裁节点创建数据目录，存放配置数据。该目录将不保存数据集</span><br>mkdir <span class="hljs-regexp">/data/</span>arb<br><span class="hljs-comment"># 启动仲裁节点，指定数据目录和复制集名称</span><br>mongod --port <span class="hljs-number">30000</span> --dbpath <span class="hljs-regexp">/data/</span>arb --replSet rs0 <br><span class="hljs-comment"># 进入mongo shell,添加仲裁节点到复制集</span><br>rs.addArb(<span class="hljs-string">&quot;ip:30000&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="移除复制集节点"><a href="#移除复制集节点" class="headerlink" title="移除复制集节点"></a><strong>移除复制集节点</strong></h3><p>使用 rs.remove() 来移除节点</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># 1.关闭节点实例</span><br><span class="hljs-comment"># 2.连接主节点，执行下面命令</span><br>rs.<span class="hljs-built_in">remove</span>(<span class="hljs-string">&quot;ip:port&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>通过 rs.reconfig() 来移除节点</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 1.关闭节点实例</span><br><span class="hljs-comment"># 2.连接主节点，执行下面命令</span><br><span class="hljs-attribute">cfg</span> = rs.conf()<br><span class="hljs-attribute">cfg</span>.members.splice(<span class="hljs-number">2</span>,<span class="hljs-number">1</span>)  #从<span class="hljs-number">2</span>开始移除<span class="hljs-number">1</span>个元素<br><span class="hljs-attribute">rs</span>.reconfig(cfg)<br></code></pre></td></tr></table></figure>
+
+<h3 id="更改复制集节点"><a href="#更改复制集节点" class="headerlink" title="更改复制集节点"></a><strong>更改复制集节点</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cfg = rs<span class="hljs-selector-class">.conf</span>() <br>cfg<span class="hljs-selector-class">.members</span><span class="hljs-selector-attr">[0]</span><span class="hljs-selector-class">.host</span> = <span class="hljs-string">&quot;ip:port&quot;</span> <br>rs<span class="hljs-selector-class">.reconfig</span>(cfg)             <br></code></pre></td></tr></table></figure>
+
+<h2 id="复制集高可用"><a href="#复制集高可用" class="headerlink" title="复制集高可用"></a><strong>复制集高可用</strong></h2><h3 id="复制集选举"><a href="#复制集选举" class="headerlink" title="复制集选举"></a><strong>复制集选举</strong></h3><p>MongoDB的复制集选举使用Raft算法（<a target="_blank" rel="noopener" href="https://raft.github.io/%EF%BC%89%E6%9D%A5%E5%AE%9E%E7%8E%B0%EF%BC%8C%E9%80%89%E4%B8%BE%E6%88%90%E5%8A%9F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%A4%A7%E5%A4%9A%E6%95%B0%E6%8A%95%E7%A5%A8%E8%8A%82%E7%82%B9%E5%AD%98%E6%B4%BB%E3%80%82%E5%9C%A8%E5%85%B7%E4%BD%93%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%AD%EF%BC%8CMongoDB%E5%AF%B9raft%E5%8D%8F%E8%AE%AE%E6%B7%BB%E5%8A%A0%E4%BA%86%E4%B8%80%E4%BA%9B%E8%87%AA%E5%B7%B1%E7%9A%84%E6%89%A9%E5%B1%95%EF%BC%8C%E8%BF%99%E5%8C%85%E6%8B%AC%EF%BC%9A">https://raft.github.io/）来实现，选举成功的必要条件是大多数投票节点存活。在具体的实现中，MongoDB对raft协议添加了一些自己的扩展，这包括：</a></p>
+<ul>
+<li>支持chainingAllowed链式复制，即备节点不只是从主节点上同步数据，还可以选择一个离自己最近（心跳延时最小）的节点来复制数据。</li>
+<li>增加了预投票阶段，即preVote，这主要是用来避免网络分区时产生Term(任期)值激增的问题</li>
+<li>支持投票优先级，如果备节点发现自己的优先级比主节点高，则会主动发起投票并尝试成为新的主节点。</li>
+</ul>
+<p>一个复制集最多可以有50 个成员，但只有 7 个投票成员。这是因为一旦过多的成员参与数据复制、投票过程，将会带来更多可靠性方面的问题。</p>
+<table>
+<thead>
+<tr>
+<th>投票成员数</th>
+<th>大多数</th>
+<th>容忍失效数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>4</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<p>当复制集内存活的成员数量不足大多数时，整个复制集将无法选举出主节点，此时无法提供写服务，这些节点都将处于只读状态。此外，如果希望避免平票结果的产生，最好使用奇数个节点成员，比如3个或5个。当然，在MongoDB复制集的实现中，对于平票问题已经提供了解决方案：</p>
+<ul>
+<li>为选举定时器增加少量的随机时间偏差，这样避免各个节点在同一时刻发起选举，提高成功率。</li>
+<li>使用仲裁者角色，该角色不做数据复制，也不承担读写业务，仅仅用来投票。</li>
+</ul>
+<h3 id="自动故障转移"><a href="#自动故障转移" class="headerlink" title="自动故障转移"></a><strong>自动故障转移</strong></h3><p>在故障转移场景中，我们所关心的问题是：</p>
+<ul>
+<li>备节点是怎么感知到主节点已经发生故障的？</li>
+<li>如何降低故障转移对业务产生的影响？</li>
+</ul>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41646" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>一个影响检测机制的因素是心跳，在复制集组建完成之后，各成员节点会开启定时器，持续向其他成员发起心跳，这里涉及的参数为heartbeatIntervalMillis，即心跳间隔时间，默认值是2s。如果心跳成功，则会持续以2s的频率继续发送心跳；如果心跳失败，则会立即重试心跳，一直到心跳恢复成功。</p>
+<p>另一个重要的因素是选举超时检测，一次心跳检测失败并不会立即触发重新选举。实际上除了心跳，成员节点还会启动一个选举超时检测定时器，该定时器默认以10s的间隔执行，具体可以通过electionTimeoutMillis参数指定：</p>
+<ul>
+<li>如果心跳响应成功，则取消上一次的electionTimeout调度（保证不会发起选举），并发起新一轮electionTimeout调度。</li>
+<li>如果心跳响应迟迟不能成功，那么electionTimeout任务被触发，进而导致备节点发起选举并成为新的主节点。</li>
+</ul>
+<p>在MongoDB的实现中，选举超时检测的周期要略大于electionTimeoutMillis设定。该周期会加入一个随机偏移量，大约在10～11.5s，如此的设计是为了错开多个备节点主动选举的时间，提升成功率。</p>
+<p>因此，在electionTimeout任务中触发选举必须要满足以下条件：</p>
+<p>（1）当前节点是备节点。</p>
+<p>（2）当前节点具备选举权限。</p>
+<p>（3）在检测周期内仍然没有与主节点心跳成功。</p>
+<p><strong>业务影响评估</strong></p>
+<ul>
+<li>在复制集发生主备节点切换的情况下，会出现短暂的无主节点阶段，此时无法接受业务写操作。如果是因为主节点故障导致的切换，则对于该节点的所有读写操作都会产生超时。如果使用MongoDB 3.6及以上版本的驱动，则可以通过开启retryWrite来降低影响。</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-comment"># MongoDB Drivers 启用可重试写入</span><br><span class="hljs-symbol">mongodb:</span>/<span class="hljs-regexp">/localhost/</span><span class="hljs-string">?r</span>etryWrites=<span class="hljs-literal">true</span><br><span class="hljs-comment"># mongo shell</span><br>mongo --retryWrites<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>如果主节点属于强制掉电，那么整个Failover过程将会变长，很可能需要在Election定时器超时后才被其他节点感知并恢复，这个时间窗口一般会在12s以内。然而实际上，对于业务呼损的考量还应该加上客户端或mongos对于复制集角色的监视和感知行为（真实的情况可能需要长达30s以上）。</li>
+<li>对于非常重要的业务，建议在业务层面做一些防护策略，比如设计重试机制。</li>
+</ul>
+<p>思考：如何优雅的重启复制集？</p>
+<p>如果想不丢数据重启复制集，更优雅的打开方式应该是这样的：</p>
+<ol>
+<li><p>逐个重启复制集里所有的Secondary节点</p>
+</li>
+<li><p>对Primary发送rs.stepDown()命令，等待primary降级为Secondary </p>
+</li>
+<li><p>重启降级后的Primary</p>
+</li>
+</ol>
+<h2 id="复制集数据同步机制"><a href="#复制集数据同步机制" class="headerlink" title="复制集数据同步机制"></a><strong>复制集数据同步机制</strong></h2><p>在复制集架构中，主节点与备节点之间是通过oplog来同步数据的，这里的oplog是一个特殊的固定集合，当主节点上的一个写操作完成后，会向oplog集合写入一条对应的日志，而备节点则通过这个oplog不断拉取到新的日志，在本地进行回放以达到数据同步的目的。</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41360" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="什么是oplog"><a href="#什么是oplog" class="headerlink" title="什么是oplog"></a><strong>什么是oplog</strong></h3><ul>
+<li>MongoDB <strong>o</strong>plog 是 Local 库下的一个集合，用来保存写操作所产生的增量日志（类似于 MySQL 中 的 Binlog）。</li>
+<li>它是一个 Capped Collection（固定集合），即超出配置的最大值后，会自动删除最老的历史数据，MongoDB 针对 oplog 的删除有特殊优化，以提升删除效率。</li>
+<li>主节点产生新的 oplog Entry，从节点通过复制 oplog 并应用来保持和主节点的状态一致；</li>
+</ul>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41351" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>查看oplog</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">use local <br>db<span class="hljs-selector-class">.oplog</span><span class="hljs-selector-class">.rs</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.sort</span>(&#123;<span class="hljs-variable">$natural</span>:-<span class="hljs-number">1</span>&#125;)<span class="hljs-selector-class">.pretty</span>()              <br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>local.system.replset：用来记录当前复制集的成员。</p>
+<p>local.startup_log：用来记录本地数据库的启动日志信息。</p>
+<p>local.replset.minvalid：用来记录复制集的跟踪信息，如初始化同步需要的字段。</p>
+</blockquote>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/43744" srcset="/img/loading.gif" lazyload alt="0"></p>
+<blockquote>
+<p>ts： 操作时间，当前timestamp + 计数器，计数器每秒都被重置</p>
+<p>v：oplog版本信息 </p>
+<p>op：操作类型:</p>
+<p>​    i：插⼊操作 </p>
+<p>​    u：更新操作 </p>
+<p>​    d：删除操作 </p>
+<p>​    c：执⾏命令（如createDatabase，dropDatabase） </p>
+<p>​    n：空操作，特殊⽤途 </p>
+<p>ns：操作针对的集合 </p>
+<p>o：操作内容</p>
+<p>o2：操作查询条件，仅update操作包含该字段</p>
+</blockquote>
+<p>ts字段描述了oplog产生的时间戳，可称之为optime。optime是备节点实现增量日志同步的关键，它保证了oplog是节点有序的，其由两部分组成：</p>
+<ul>
+<li>当前的系统时间，即UNIX时间至现在的秒数，32位。</li>
+<li>整数计时器，不同时间值会将计数器进行重置，32位。</li>
+</ul>
+<p>optime属于BSON的Timestamp类型，这个类型一般在MongoDB内部使用。既然oplog保证了节点级有序，那么备节点便可以通过轮询的方式进行拉取，这里会用到可持续追踪的游标（tailable cursor）技术。</p>
+<p>​    <img src="/3%E3%80%81MongoDB%E5%A4%8D%E5%88%B6%E9%9B%86%E5%AE%9E%E6%88%98%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/41436" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>每个备节点都分别维护了自己的一个offset，也就是从主节点拉取的最后一条日志的optime，在执行同步时就通过这个optime向主节点的oplog集合发起查询。为了避免不停地发起新的查询链接，在启动第一次查询后可以将cursor挂住（通过将cursor设置为tailable）。这样只要oplog中产生了新的记录，备节点就能使用同样的请求通道获得这些数据。tailable cursor只有在查询的集合为固定集合时才允许开启。</p>
+<p><strong>oplog集合的大小</strong></p>
+<p>oplog集合的大小可以通过参数replication.oplogSizeMB设置，对于64位系统来说，oplog的默认值为：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">oplogSizeMB</span> <span class="hljs-operator">=</span> min(磁盘可用空间*<span class="hljs-number">5</span>%，<span class="hljs-number">50</span>GB)              <br></code></pre></td></tr></table></figure>
+
+<p>对于大多数业务场景来说，很难在一开始评估出一个合适的oplogSize，所幸的是MongoDB在4.0版本之后提供了replSetResizeOplog命令，可以实现动态修改oplogSize而不需要重启服务器。</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs roboconf"><span class="hljs-comment"># 将复制集成员的oplog大小修改为60g  指定大小必须大于990M</span><br>db.adminCommand(&#123;<span class="hljs-attribute">replSetResizeOplog</span>: 1, size: 60000&#125;)<br># 查看oplog大小<br>use local<br>db<span class="hljs-variable">.oplog</span><span class="hljs-variable">.rs</span><span class="hljs-variable">.stats</span>()<span class="hljs-variable">.maxSize</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="幂等性"><a href="#幂等性" class="headerlink" title="幂等性"></a><strong>幂等性</strong></h3><p>每一条oplog记录都描述了一次数据的原子性变更，对于oplog来说，必须保证是幂等性的。也就是说，对于同一个oplog，无论进行多少次回放操作，数据的最终状态都会保持不变。某文档x字段当前值为100，用户向Primary发送一条{$inc: {x: 1}}，记录oplog时会转化为一条{$set: {x: 101}的操作，才能保证幂等性。</p>
+<p><strong>幂等性的代价</strong></p>
+<p>简单元素的操作，$inc 转化为 $set并没有什么影响，执行开销上也差不多，但当遇到数组元素操作时，情况就不一样了。</p>
+<p><strong>测试</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">db</span>.coll.insert(&#123;_id:<span class="hljs-number">1</span>,x:[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>在数组尾部push 2个元素，查看oplog发现$push操作被转换为了$set操作（设置数组指定位置的元素为某个值）</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs stylus">rs0:PRIMARY&gt; db<span class="hljs-selector-class">.coll</span><span class="hljs-selector-class">.update</span>(&#123;_id: <span class="hljs-number">1</span>&#125;, &#123;<span class="hljs-variable">$push</span>: &#123;x: &#123; <span class="hljs-variable">$each</span>: <span class="hljs-selector-attr">[4, 5]</span> &#125;&#125;&#125;)<br><span class="hljs-function"><span class="hljs-title">WriteResult</span><span class="hljs-params">(&#123; <span class="hljs-string">&quot;nMatched&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;nUpserted&quot;</span> : <span class="hljs-number">0</span>, <span class="hljs-string">&quot;nModified&quot;</span> : <span class="hljs-number">1</span> &#125;)</span></span><br>rs0:PRIMARY&gt; db<span class="hljs-selector-class">.coll</span><span class="hljs-selector-class">.find</span>()<br>&#123; <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-selector-attr">[ 1, 2, 3, 4, 5 ]</span> &#125;<br>rs0:PRIMARY&gt; use local<br>switched to db local<br>rs0:PRIMARY&gt; db<span class="hljs-selector-class">.oplog</span><span class="hljs-selector-class">.rs</span><span class="hljs-selector-class">.find</span>(&#123;ns:<span class="hljs-string">&quot;test.coll&quot;</span>&#125;)<span class="hljs-selector-class">.sort</span>(&#123;<span class="hljs-variable">$natural</span>:-<span class="hljs-number">1</span>&#125;)<span class="hljs-selector-class">.pretty</span>()<br>&#123;<br>	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,<br>	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.coll&quot;</span>,<br>	<span class="hljs-string">&quot;ui&quot;</span> : <span class="hljs-built_in">UUID</span>(<span class="hljs-string">&quot;69c871e8-8f99-4734-be5f-c9c5d8565198&quot;</span>),<br>	<span class="hljs-string">&quot;o&quot;</span> : &#123;<br>		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,<br>		<span class="hljs-string">&quot;$set&quot;</span> : &#123;<br>			<span class="hljs-string">&quot;x.3&quot;</span> : <span class="hljs-number">4</span>,<br>			<span class="hljs-string">&quot;x.4&quot;</span> : <span class="hljs-number">5</span><br>		&#125;<br>	&#125;,<br>	<span class="hljs-string">&quot;o2&quot;</span> : &#123;<br>		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span><br>	&#125;,<br>	<span class="hljs-string">&quot;ts&quot;</span> : <span class="hljs-built_in">Timestamp</span>(<span class="hljs-number">1646223051</span>, <span class="hljs-number">1</span>),<br>	<span class="hljs-string">&quot;t&quot;</span> : <span class="hljs-built_in">NumberLong</span>(<span class="hljs-number">4</span>),<br>	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-built_in">NumberLong</span>(<span class="hljs-number">2</span>),<br>	<span class="hljs-string">&quot;wall&quot;</span> : <span class="hljs-built_in">ISODate</span>(<span class="hljs-string">&quot;2022-03-02T12:10:51.882Z&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>$push转换为带具体位置的$set开销上也差不多，但接下来再看看往数组的头部添加2个元素</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs stata">rs0:PRIMARY&gt; <span class="hljs-keyword">use</span> <span class="hljs-keyword">test</span><br>switched to <span class="hljs-keyword">db</span> <span class="hljs-keyword">test</span><br>rs0:PRIMARY&gt; <span class="hljs-keyword">db</span>.coll.<span class="hljs-keyword">update</span>(&#123;_id: 1&#125;, &#123;<span class="hljs-variable">$push</span>: &#123;x: &#123; <span class="hljs-variable">$each</span>: [6, 7], <span class="hljs-variable">$position</span>: 0 &#125;&#125;&#125;)<br>WriteResult(&#123; <span class="hljs-string">&quot;nMatched&quot;</span> : 1, <span class="hljs-string">&quot;nUpserted&quot;</span> : 0, <span class="hljs-string">&quot;nModified&quot;</span> : 1 &#125;)<br>rs0:PRIMARY&gt; <span class="hljs-keyword">db</span>.coll.find()<br>&#123; <span class="hljs-string">&quot;_id&quot;</span> : 1, <span class="hljs-string">&quot;x&quot;</span> : [ 6, 7, 1, 2, 3, 4, 5 ] &#125;<br>rs0:PRIMARY&gt; <span class="hljs-keyword">use</span> <span class="hljs-keyword">local</span><br>switched to <span class="hljs-keyword">db</span> <span class="hljs-keyword">local</span><br>rs0:PRIMARY&gt; <span class="hljs-keyword">db</span>.oplog.rs.find(&#123;ns:<span class="hljs-string">&quot;test.coll&quot;</span>&#125;).<span class="hljs-keyword">sort</span>(&#123;<span class="hljs-variable">$natural</span>:-1&#125;).pretty()<br>&#123;<br>	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,<br>	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.coll&quot;</span>,<br>	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;69c871e8-8f99-4734-be5f-c9c5d8565198&quot;</span>),<br>	<span class="hljs-string">&quot;o&quot;</span> : &#123;<br>		<span class="hljs-string">&quot;$v&quot;</span> : 1,<br>		<span class="hljs-string">&quot;$set&quot;</span> : &#123;<br>			<span class="hljs-string">&quot;x&quot;</span> : [<br>				6,<br>				7,<br>				1,<br>				2,<br>				3,<br>				4,<br>				5<br>			]<br>		&#125;<br>	&#125;,<br>	<span class="hljs-string">&quot;o2&quot;</span> : &#123;<br>		<span class="hljs-string">&quot;_id&quot;</span> : 1<br>	&#125;,<br>	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(1646223232, 1),<br>	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(4),<br>	<span class="hljs-string">&quot;v&quot;</span> : NumberLong(2),<br>	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2022-03-02T12:13:52.076Z&quot;</span>)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>可以发现，当向数组的头部添加元素时，oplog里的$set操作不再是设置数组某个位置的值（因为基本所有的元素位置都调整了），而是$set数组最终的结果，即整个数组的内容都要写入oplog。当push操作指定了$slice或者$sort参数时，oplog的记录方式也是一样的，会将整个数组的内容作为$set的参数。$pull, $addToSet等更新操作符也是类似，更新数组后，oplog里会转换成$set数组的最终内容，才能保证幂等性。</p>
+<p><strong>oplog的写入被放大，导致同步追不上——大数组更新</strong></p>
+<p>当数组非常大时，对数组的一个小更新，可能就需要把整个数组的内容记录到oplog里，我遇到一个实际的生产环境案例，用户的文档内包含一个很大的数组字段，1000个元素总大小在64KB左右，这个数组里的元素按时间反序存储，新插入的元素会放到数组的最前面($position: 0)，然后保留数组的前1000个元素（$slice: 1000）。</p>
+<p>上述场景导致，Primary上的每次往数组里插入一个新元素(请求大概几百字节)，oplog里就要记录整个数组的内容，Secondary同步时会拉取oplog并重放，Primary到Secondary同步oplog的流量是客户端到Primary网络流量的上百倍，导致主备间网卡流量跑满，而且由于oplog的量太大，旧的内容很快被删除掉，最终导致Secondary追不上，转换为RECOVERING状态。</p>
+<p>在文档里使用数组时，一定得注意上述问题，避免数组的更新导致同步开销被无限放大的问题。使用数组时，尽量注意：</p>
+<ol>
+<li>数组的元素个数不要太多，总的大小也不要太大</li>
+<li>尽量避免对数组进行更新操作</li>
+<li>如果一定要更新，尽量只在尾部插入元素，复杂的逻辑可以考虑在业务层面上来支持</li>
+</ol>
+<h3 id="复制延迟"><a href="#复制延迟" class="headerlink" title="复制延迟"></a><strong>复制延迟</strong></h3><p>由于oplog集合是有固定大小的，因此存放在里面的oplog随时可能会被新的记录冲掉。如果备节点的复制不够快，就无法跟上主节点的步伐，从而产生复制延迟（replication lag）问题。这是不容忽视的，一旦备节点的延迟过大，则随时会发生复制断裂的风险，这意味着备节点的optime（最新一条同步记录）已经被主节点老化掉，于是备节点将无法继续进行数据同步。</p>
+<p>为了尽量避免复制延迟带来的风险，我们可以采取一些措施，比如：</p>
+<ul>
+<li>增加oplog的容量大小，并保持对复制窗口的监视。</li>
+<li>通过一些扩展手段降低主节点的写入速度。</li>
+<li>优化主备节点之间的网络。</li>
+<li>避免字段使用太大的数组（可能导致oplog膨胀）。</li>
+</ul>
+<h3 id="数据回滚"><a href="#数据回滚" class="headerlink" title="数据回滚"></a><strong>数据回滚</strong></h3><p>由于复制延迟是不可避免的，这意味着主备节点之间的数据无法保持绝对的同步。当复制集中的主节点宕机时，备节点会重新选举成为新的主节点。那么，当旧的主节点重新加入时，必须回滚掉之前的一些“脏日志数据”，以保证数据集与新的主节点一致。主备复制集合的差距越大，发生大量数据回滚的风险就越高。</p>
+<p>对于写入的业务数据来说，如果已经被复制到了复制集的大多数节点，则可以避免被回滚的风险。应用上可以通过设定更高的写入级别（writeConcern：majority）来保证数据的持久性。这些由旧主节点回滚的数据会被写到单独的rollback目录下，必要的情况下仍然可以恢复这些数据。</p>
+<p>当rollback发生时，MongoDB将把rollback的数据以BSON格式存放到dbpath路径下rollback文件夹中，BSON文件的命名格式如下：…bson</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mongorestore</span> --host <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">192</span>:<span class="hljs-number">27018</span> --db test --collection emp -ufox -pfox  --authenticationDatabase=admin rollback/emp_rollback.bson<br></code></pre></td></tr></table></figure>
+
+<h3 id="同步源选择"><a href="#同步源选择" class="headerlink" title="同步源选择"></a><strong>同步源选择</strong></h3><p>MongoDB是允许通过备节点进行复制的，这会发生在以下的情况中：</p>
+<ul>
+<li>在settings.chainingAllowed开启的情况下，备节点自动选择一个最近的节点（ping命令时延最小）进行同步。settings.chainingAllowed选项默认是开启的，也就是说默认情况下备节点并不一定会选择主节点进行同步，这个副作用就是会带来延迟的增加，你可以通过下面的操作进行关闭：</li>
+</ul>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">cfg</span> <span class="hljs-operator">=</span> rs.config() <br>cfg.settings.chainingAllowed <span class="hljs-operator">=</span> false <br>rs.reconfig（cfg)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用replSetSyncFrom命令临时更改当前节点的同步源，比如在初始化同步时将同步源指向备节点来降低对主节点的影响。</li>
+</ul>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.admin<span class="hljs-constructor">Command( &#123; <span class="hljs-params">replSetSyncFrom</span>: <span class="hljs-string">&quot;hostname:port&quot;</span> &#125;)</span><br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
