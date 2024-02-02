@@ -45,6 +45,7 @@
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35937">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36375">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35911">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/image-20240106082612089.png">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35929">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36389">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36388">
@@ -79,7 +80,7 @@
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/43548">
 <meta property="og:image" content="https://kblayt.github.io/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/43547">
 <meta property="article:published_time" content="2023-06-18T13:32:34.000Z">
-<meta property="article:modified_time" content="2024-01-04T06:09:49.072Z">
+<meta property="article:modified_time" content="2024-01-07T04:56:24.284Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="MongoDB">
 <meta name="twitter:card" content="summary_large_image">
@@ -275,7 +276,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          22k 字
+          24k 字
         
       </span>
     
@@ -286,7 +287,7 @@
         
         
         
-          182 分钟
+          201 分钟
         
       </span>
     
@@ -398,7 +399,8 @@
 <h3 id="下载MongoDB-Community-Server"><a href="#下载MongoDB-Community-Server" class="headerlink" title="下载MongoDB Community Server"></a><strong>下载MongoDB Community Server</strong></h3><p>下载地址：<a target="_blank" rel="noopener" href="https://www.mongodb.com/try/download/community">https://www.mongodb.com/try/download/community</a></p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35872" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>​                #下载MongoDB wget <a target="_blank" rel="noopener" href="https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-4.4.9.tgz">https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-4.4.9.tgz</a> tar -zxvf mongodb-linux-x86_64-rhel70-4.4.9.tgz              </p>
-<h3 id="启动MongoDB-Server"><a href="#启动MongoDB-Server" class="headerlink" title="启动MongoDB Server"></a><strong>启动MongoDB Server</strong></h3><p>​                #创建dbpath和logpath mkdir -p &#x2F;mongodb&#x2F;data &#x2F;mongodb&#x2F;log   #进入mongodb目录，启动mongodb服务 bin&#x2F;mongod –port&#x3D;27017 –dbpath&#x3D;&#x2F;mongodb&#x2F;data –logpath&#x3D;&#x2F;mongodb&#x2F;log&#x2F;mongodb.log \ –bind_ip&#x3D;0.0.0.0 –fork              </p>
+<h3 id="启动MongoDB-Server"><a href="#启动MongoDB-Server" class="headerlink" title="启动MongoDB Server"></a><strong>启动MongoDB Server</strong></h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">\<span class="hljs-comment">#创建dbpath和logpath </span><br>mkdir -p <span class="hljs-regexp">/mongodb/</span>data <span class="hljs-regexp">/mongodb/</span>log   <br><span class="hljs-comment">#进入mongodb目录，启动mongodb服务 </span><br>bin<span class="hljs-regexp">/mongod --port=27017 --dbpath=/m</span>ongodb<span class="hljs-regexp">/data --logpath=/m</span>ongodb<span class="hljs-regexp">/log/m</span>ongodb.log \ --bind_ip=<span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span> --fork          <br></code></pre></td></tr></table></figure>
+
 <p>–dbpath :指定数据文件存放目录</p>
 <p>–logpath :指定日志文件，注意是指定文件不是目录</p>
 <p>–logappend :使用追加的方式记录日志</p>
@@ -409,24 +411,31 @@
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35868" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>添加环境变量</strong></p>
 <p>修改&#x2F;etc&#x2F;profile，添加环境变量,方便执行MongoDB命令</p>
-<p>​                export MONGODB_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;soft&#x2F;mongodb PATH&#x3D;$PATH:$MONGODB_HOME&#x2F;bin                 </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">export</span> <span class="hljs-attribute">MONGODB_HOME</span>=/usr/local/soft/mongodb <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$MONGODB_HOME/bin                 <br></code></pre></td></tr></table></figure>
+
 <p>然后执行source &#x2F;etc&#x2F;profile 重新加载环境变量</p>
 <p><strong>利用配置文件启动服务</strong></p>
 <p>编辑&#x2F;mongodb&#x2F;conf&#x2F;mongo.conf文件，内容如下：</p>
-<p>​                systemLog:  destination: file  path: &#x2F;mongodb&#x2F;log&#x2F;mongod.log # log path  logAppend: true storage:  dbPath: &#x2F;mongodb&#x2F;data # data directory  engine: wiredTiger  #存储引擎  journal:            #是否启用journal日志    enabled: true net:  bindIp: 0.0.0.0  port: 27017 # port processManagement:  fork: true              </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">systemLog:</span>  <br>	<span class="hljs-attr">destination:</span> <span class="hljs-string">file</span>  <br>	<span class="hljs-attr">path:</span> <span class="hljs-string">/mongodb/log/mongod.log</span> <span class="hljs-comment"># log path  </span><br>	<span class="hljs-attr">logAppend:</span> <span class="hljs-literal">true</span> <br><span class="hljs-attr">storage:</span>  <br>	<span class="hljs-attr">dbPath:</span> <span class="hljs-string">/mongodb/data</span> <span class="hljs-comment"># data directory  </span><br>	<span class="hljs-attr">engine:</span> <span class="hljs-string">wiredTiger</span>  <span class="hljs-comment">#存储引擎  </span><br>	<span class="hljs-attr">journal:</span>            <span class="hljs-comment">#是否启用journal日志   </span><br>    	<span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span> <br><span class="hljs-attr">net:</span>  <br>	<span class="hljs-attr">bindIp:</span> <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>  <br>	<span class="hljs-attr">port:</span> <span class="hljs-number">27017</span> <span class="hljs-comment"># port </span><br><span class="hljs-attr">processManagement:</span>  <br>	<span class="hljs-attr">fork:</span> <span class="hljs-literal">true</span>         <br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
 <p>注意：一定要yaml格式</p>
 <p>启动mongod</p>
-<p>​                mongod -f &#x2F;mongodb&#x2F;conf&#x2F;mongo.conf              </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mongod -f <span class="hljs-regexp">/mongodb/</span>conf/mongo.conf              <br></code></pre></td></tr></table></figure>
+
 <p>-f 选项表示将使用配置文件启动mongodb</p>
 <h3 id="关闭MongoDB服务"><a href="#关闭MongoDB服务" class="headerlink" title="关闭MongoDB服务"></a><strong>关闭MongoDB服务</strong></h3><p>方式1：</p>
-<p>​                mongod –port&#x3D;27017 –dbpath&#x3D;&#x2F;mongodb&#x2F;data –shutdown               </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36565" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">mongod <span class="hljs-attribute">--port</span>=27017 <span class="hljs-attribute">--dbpath</span>=/mongodb/data --shutdown           <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36565" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>方式2：</p>
 <p>进入mongo shell</p>
-<p>​                use admin db.shutdownServer()              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36564" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">use</span> admin <span class="hljs-keyword">db</span>.shutdownServer()         <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36564" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="2-2-Mongo-shell使用"><a href="#2-2-Mongo-shell使用" class="headerlink" title="2.2 Mongo shell使用"></a><strong>2.2 Mongo shell使用</strong></h2><p>mongo是MongoDB的交互式JavaScript Shell界面，它为系统管理员提供了强大的界面，并为开发人员提供了直接测试数据库查询和操作的方法。</p>
-<p>​                bin&#x2F;mongo –port&#x3D;27017  bin&#x2F;mongo localhost:27017              </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">bin</span>/mongo --port=<span class="hljs-number">27017</span>  bin/mongo localhost:<span class="hljs-number">27017</span>       <br></code></pre></td></tr></table></figure>
+
 <p>–port:指定端口，默认为27017</p>
 <p>–host:连接的主机地址，默认127.0.0.1</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35871" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -500,10 +509,13 @@
 <td>查看数据库版本</td>
 </tr>
 </tbody></table>
-<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a><strong>数据库操作</strong></h3><p>​                #查看所有库 show dbs # 切换到指定数据库，不存在则创建 use test # 删除当前数据库   db.dropDatabase()              </p>
-<h3 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a><strong>集合操作</strong></h3><p>​                #查看集合 show collections #创建集合 db.createCollection(“emp”) #删除集合 db.emp.drop()              </p>
+<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a><strong>数据库操作</strong></h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clean">#查看所有库 show dbs # 切换到指定数据库，不存在则创建 use test # 删除当前数据库   db.dropDatabase()          <br></code></pre></td></tr></table></figure>
+
+<h3 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a><strong>集合操作</strong></h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clean">#查看集合 show collections #创建集合 db.createCollection(<span class="hljs-string">&quot;emp&quot;</span>) #删除集合 db.emp.drop()        <br></code></pre></td></tr></table></figure>
+
 <p>创建集合语法</p>
-<p>​                db.createCollection(name, options)              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.create<span class="hljs-constructor">Collection(<span class="hljs-params">name</span>, <span class="hljs-params">options</span>)</span>            <br></code></pre></td></tr></table></figure>
+
 <p>options参数</p>
 <table>
 <thead>
@@ -585,25 +597,38 @@
 </tr>
 </tbody></table>
 <p>重新赋予用户操作权限</p>
-<p>​                db.grantRolesToUser( “fox” , [     { role: “clusterAdmin”, db: “admin” } ,     { role: “userAdminAnyDatabase”, db: “admin”},     { role: “userAdminAnyDatabase”, db: “admin”},     { role: “readWriteAnyDatabase”, db: “admin”}  ])              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php">db.<span class="hljs-title function_ invoke__">grantRolesToUser</span>( <br>	<span class="hljs-string">&quot;fox&quot;</span> , [     <br>		&#123; <span class="hljs-attr">role</span>: <span class="hljs-string">&quot;clusterAdmin&quot;</span>, <span class="hljs-attr">db</span>: <span class="hljs-string">&quot;admin&quot;</span> &#125; , <br>		&#123; <span class="hljs-attr">role</span>: <span class="hljs-string">&quot;userAdminAnyDatabase&quot;</span>, <span class="hljs-attr">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;, <br>		&#123; <span class="hljs-attr">role</span>: <span class="hljs-string">&quot;userAdminAnyDatabase&quot;</span>, <span class="hljs-attr">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;,<br>		&#123; <span class="hljs-attr">role</span>: <span class="hljs-string">&quot;readWriteAnyDatabase&quot;</span>, <span class="hljs-attr">db</span>: <span class="hljs-string">&quot;admin&quot;</span>&#125;  <br>	]<br>)        <br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
 <p>删除用户</p>
-<p>​                db.dropUser(“fox”) #删除当前数据库所有用户 db.dropAllUser()              </p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pf">db.<span class="hljs-keyword">drop</span>User(<span class="hljs-string">&quot;fox&quot;</span>) <span class="hljs-comment">#删除当前数据库所有用户 db.dropAllUser()</span><br></code></pre></td></tr></table></figure>
+
 <p>用户认证，返回1表示认证成功</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35937" srcset="/img/loading.gif" lazyload alt="0"></p>
-<h3 id="创建应用数据库用户"><a href="#创建应用数据库用户" class="headerlink" title="创建应用数据库用户"></a><strong>创建应用数据库用户</strong></h3><p>​                use appdb db.createUser({user:”appdb”,pwd:”fox”,roles:[“dbOwner”]})              </p>
+<h3 id="创建应用数据库用户"><a href="#创建应用数据库用户" class="headerlink" title="创建应用数据库用户"></a><strong>创建应用数据库用户</strong></h3><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dts">use appdb db.createUser(<br>	<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">		user:</span><span class="hljs-string">&quot;appdb&quot;</span>,<br><span class="hljs-symbol">		pwd:</span><span class="hljs-string">&quot;fox&quot;</span>,<br><span class="hljs-symbol">		roles:</span>[<span class="hljs-string">&quot;dbOwner&quot;</span>]<br>	<span class="hljs-punctuation">&#125;</span><br>)       <br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
 <p>默认情况下，MongoDB不会启用鉴权，以鉴权模式启动MongoDB</p>
-<p>​                mongod -f &#x2F;mongodb&#x2F;conf&#x2F;mongo.conf –auth              </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mongod -f <span class="hljs-regexp">/mongodb/</span>conf/mongo.conf --auth          <br></code></pre></td></tr></table></figure>
+
 <p>启用鉴权之后，连接MongoDB的相关操作都需要提供身份认证。</p>
-<p>​                mongo 192.168.65.174:27017 -u fox -p fox –authenticationDatabase&#x3D;admin              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36375" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">mongo</span> <span class="hljs-number">192.168.65.174:27017</span> -u fox -p fox --authenticationDatabase=admin    <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36375" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="2-4-Docker安装"><a href="#2-4-Docker安装" class="headerlink" title="2.4 Docker安装"></a><strong>2.4 Docker安装</strong></h2><p><a target="_blank" rel="noopener" href="https://hub.docker.com/_/mongo?tab=description&amp;page=3">https://hub.docker.com/_/mongo?tab=description&amp;page=3</a></p>
-<p>​                #拉取mongo镜像 docker pull mongo:4.4.10 #运行mongo镜像 docker run –name mongo-server -p 29017:27017 \ -e MONGO_INITDB_ROOT_USERNAME&#x3D;fox \ -e MONGO_INITDB_ROOT_PASSWORD&#x3D;fox \ -d mongo:4.4.10 –wiredTigerCacheSizeGB 1              </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#拉取mongo镜像 </span><br>docker pull mongo:4.4.10 #运行mongo镜像 docker <span class="hljs-built_in">run</span> --name mongo-server -p 29017:27017 <br>\ -e <span class="hljs-attribute">MONGO_INITDB_ROOT_USERNAME</span>=root<br>\ -e <span class="hljs-attribute">MONGO_INITDB_ROOT_PASSWORD</span>=123456<br>\ -d mongo:4.4.10 --wiredTigerCacheSizeGB 1  <br></code></pre></td></tr></table></figure>
+
+<p>​            </p>
 <p>默认情况下，Mongo会将wiredTigerCacheSizeGB设置为与主机总内存成比例的值，而不考虑你可能对容器施加的内存限制。</p>
 <p>MONGO_INITDB_ROOT_USERNAME和MONGO_INITDB_ROOT_PASSWORD都存在就会启用身份认证（mongod –auth）</p>
-<p>​                #进入容器 docker exec -it mongo-server  bash #进入Mongo shell mongo -u fox -p fox #创建用户，赋予test库的操作权限 &gt;use test &gt;db.createUser({user:”dcl”,pwd:”123456”,roles:[“readWrite”]})              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35911" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">进入容器 docker <span class="hljs-built_in">exec</span> -it mongo-server  bash</span> <br><span class="hljs-meta prompt_">#</span><span class="language-bash">进入Mongo shell mongosh -u fox -p fox</span> <br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建用户，赋予<span class="hljs-built_in">test</span>库的操作权限 &gt;use <span class="hljs-built_in">test</span> &gt;db.createUser(&#123;user:<span class="hljs-string">&quot;dcl&quot;</span>,<span class="hljs-built_in">pwd</span>:<span class="hljs-string">&quot;123456&quot;</span>,roles:[<span class="hljs-string">&quot;readWrite&quot;</span>]&#125;)</span>         <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35911" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>新版本用mongosh命令</p>
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/image-20240106082612089.png" srcset="/img/loading.gif" lazyload alt="image-20240106082612089"></p>
 <p>进入mongo shell</p>
-<p>​                #远程连接 mongo 192.168.65.97:29017 -u dcl -p 123456              </p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta">#远程连接 mongo 192.168.65.97:29017 -u dcl -p 123456             </span><br></code></pre></td></tr></table></figure>
+
 <p>dcl用户只具备test库的readWrite权限</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/35929" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="2-5-MongoDB工具"><a href="#2-5-MongoDB工具" class="headerlink" title="2.5 MongoDB工具"></a><strong>2.5 MongoDB工具</strong></h2><h3 id="官方GUI工具——COMPASS"><a href="#官方GUI工具——COMPASS" class="headerlink" title="官方GUI工具——COMPASS"></a><strong>官方GUI工具——COMPASS</strong></h3><p>MongoDB图形化管理工具(GUI)，能够帮助您在不需要知道MongoDB查询语法的前提下，便利地分析和理解您的数据库模式,并且帮助您可视化地构建查询。</p>
@@ -657,11 +682,14 @@
 <h3 id="新增单个文档"><a href="#新增单个文档" class="headerlink" title="新增单个文档"></a><strong>新增单个文档</strong></h3><ul>
 <li>insertOne: 支持writeConcern</li>
 </ul>
-<p>​                db.collection.insertOne(   <document>,   {      writeConcern: <document>   } )              </p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xquery">db<span class="hljs-built_in">.collection</span>.insertOne(<br>	<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">document</span>&gt;</span>,   </span><br><span class="language-xml">	</span><span class="language-xquery">&#123;      </span><br><span class="language-xquery">		writeConcern: <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">document</span>&gt;</span>   </span></span><br><span class="language-xml"><span class="language-xquery">	&#125;</span></span><span class="language-xml"> </span><br><span class="language-xml">)   </span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
 <p>writeConcern 决定一个写操作落到多少个节点上才算成功。writeConcern 的取值包括： </p>
-<p>0：发起写操作，不关心是否成功； </p>
-<p>1~集群最大数据节点数：写操作需要被复制到指定节点数才算成功； </p>
+<p>​	0：发起写操作，不关心是否成功； </p>
+<p>​	1~集群最大数据节点数：写操作需要被复制到指定节点数才算成功； </p>
 <p>majority：写操作需要被复制到大多数节点上才算成功。</p>
+</blockquote>
 <ul>
 <li>insert: 若插入的数据主键已经存在，则会抛 DuplicateKeyException 异常，提示主键重复，不保存当前数据。</li>
 <li>save: 如果 _id 主键存在则更新数据，如果不存在就插入数据。</li>
@@ -670,7 +698,8 @@
 <h3 id="批量新增文档"><a href="#批量新增文档" class="headerlink" title="批量新增文档"></a><strong>批量新增文档</strong></h3><ul>
 <li>insertMany:向指定集合中插入多条文档数据</li>
 </ul>
-<p>​                db.collection.insertMany(   [ &lt;document 1&gt; , &lt;document 2&gt;, … ],   {      writeConcern: <document>,      ordered: <boolean>         } )              </p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pf">db.collection.insertM<span class="hljs-literal">any</span>(<br>	[ <span class="hljs-variable">&lt;document 1&gt;</span> , <span class="hljs-variable">&lt;document 2&gt;</span>, ... ],   <br>	&#123;      <br>		writeConcern: <span class="hljs-variable">&lt;document&gt;</span>,<br>    	ordered: <span class="hljs-variable">&lt;boolean&gt;</span>         <br>    &#125; <br>)              <br></code></pre></td></tr></table></figure>
+
 <p>writeConcern：写入策略，默认为 1，即要求确认写操作，0 是不要求。</p>
 <p>ordered：指定是否按顺序写入，默认 true，按顺序写入。</p>
 <ul>
@@ -679,11 +708,14 @@
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36494" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>测试：批量插入50条随机数据</p>
 <p>编辑脚本book.js</p>
-<p>​                var tags &#x3D; [“nosql”,”mongodb”,”document”,”developer”,”popular”]; var types &#x3D; [“technology”,”sociality”,”travel”,”novel”,”literature”]; var books&#x3D;[]; for(var i&#x3D;0;i&lt;50;i++){    var typeIdx &#x3D; Math.floor(Math.random()*types.length);    var tagIdx &#x3D; Math.floor(Math.random()*tags.length);    var favCount &#x3D; Math.floor(Math.random()*100);    var book &#x3D; {        title: “book-“+i,        type: types[typeIdx],        tag: tags[tagIdx],        favCount: favCount,        author: “xxx”+i    };    books.push(book) } db.books.insertMany(books);               </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs sql">var tags <span class="hljs-operator">=</span> [&quot;nosql&quot;,&quot;mongodb&quot;,&quot;document&quot;,&quot;developer&quot;,&quot;popular&quot;];<br>var types <span class="hljs-operator">=</span> [&quot;technology&quot;,&quot;sociality&quot;,&quot;travel&quot;,&quot;novel&quot;,&quot;literature&quot;];<br>var books<span class="hljs-operator">=</span>[];<br><span class="hljs-keyword">for</span>(var i<span class="hljs-operator">=</span><span class="hljs-number">0</span>;i<span class="hljs-operator">&lt;</span><span class="hljs-number">50</span>;i<span class="hljs-operator">+</span><span class="hljs-operator">+</span>)&#123;<br>    var typeIdx <span class="hljs-operator">=</span> Math.<span class="hljs-built_in">floor</span>(Math.random()<span class="hljs-operator">*</span>types.length);<br>    var tagIdx <span class="hljs-operator">=</span> Math.<span class="hljs-built_in">floor</span>(Math.random()<span class="hljs-operator">*</span>tags.length);<br>    var favCount <span class="hljs-operator">=</span> Math.<span class="hljs-built_in">floor</span>(Math.random()<span class="hljs-operator">*</span><span class="hljs-number">100</span>);<br>    var book <span class="hljs-operator">=</span> &#123;<br>        title: &quot;book-&quot;<span class="hljs-operator">+</span>i,<br>        type: types[typeIdx],<br>        tag: tags[tagIdx],<br>        favCount: favCount,<br>        author: &quot;xxx&quot;<span class="hljs-operator">+</span>i<br>    &#125;;<br>    books.push(book)<br>&#125;<br>db.books.insertMany(books);<br></code></pre></td></tr></table></figure>
+
 <p>进入mongo shell，执行</p>
-<p>​                load(“books.js”)              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">load</span><span class="hljs-params">(<span class="hljs-string">&quot;books.js&quot;</span>)</span></span>             <br></code></pre></td></tr></table></figure>
+
 <h2 id="3-2-查询文档"><a href="#3-2-查询文档" class="headerlink" title="3.2 查询文档"></a><strong>3.2 查询文档</strong></h2><p>find 查询集合中的若干文档。语法格式如下：</p>
-<p>​                db.collection.find(query, projection)              </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.collection.<span class="hljs-built_in">find</span>(query, projection)            <br></code></pre></td></tr></table></figure>
+
 <ul>
 <li><strong>query</strong> ：可选，使用查询操作符指定查询条件</li>
 <li><strong>projection</strong> ：可选，使用投影操作符指定返回的键。查询时返回文档中所有键值， 只需省略该参数即可（默认省略）。投影时，_id为1的时候，其他字段必须是1；_id是0的时候，其他字段可以是0；如果没有_id字段约束，多个其他字段必须同为0或同为1。</li>
@@ -691,14 +723,17 @@
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36619" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>如果查询返回的条目数量较多，mongo shell则会自动实现分批显示。默认情况下每次只显示20条，可以输入it命令读取下一批。</p>
 <p>findOne查询集合中的第一个文档。语法格式如下：</p>
-<p>​                db.collection.findOne(query, projection)              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36608" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.collection.find<span class="hljs-constructor">One(<span class="hljs-params">query</span>, <span class="hljs-params">projection</span>)</span>              <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36608" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>如果你需要以易读的方式来读取数据，可以使用pretty)方法，语法格式如下:</p>
-<p>​                db.collection.find().pretty()              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.collection</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.pretty</span>()              <br></code></pre></td></tr></table></figure>
+
 <p>注意：pretty()方法以格式化的方式来显示所有文档</p>
 <p><strong>条件查询</strong></p>
 <p><strong>指定条件查询</strong></p>
-<p>​                #查询带有nosql标签的book文档： db.books.find({tag:”nosql”}) #按照id查询单个book文档： db.books.find({_id:ObjectId(“61caa09ee0782536660494d9”)}) #查询分类为“travel”、收藏数超过60个的book文档： db.books.find({type:”travel”,favCount:{$gt:60}})              </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql">#查询带有nosql标签的book文档：<br>db.books.find(&#123;tag:&quot;nosql&quot;&#125;)<br>#按照id查询单个book文档：<br>db.books.find(&#123;_id:ObjectId(&quot;61caa09ee0782536660494d9&quot;)&#125;)<br>#查询分类为“travel”、收藏数超过<span class="hljs-number">60</span>个的book文档：<br>db.books.find(&#123;type:&quot;travel&quot;,favCount:&#123;$gt:<span class="hljs-number">60</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <p><strong>查询条件对照表</strong></p>
 <table>
 <thead>
@@ -772,14 +807,16 @@
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36613" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="排序-amp-分页"><a href="#排序-amp-分页" class="headerlink" title="排序&amp;分页"></a><strong>排序&amp;分页</strong></h3><p><strong>指定排序</strong></p>
 <p>在 MongoDB 中使用 sort() 方法对数据进行排序</p>
-<p>​                #指定按收藏数（favCount）降序返回 db.books.find({type:”travel”}).sort({favCount:-1})              </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#指定按收藏数（favCount）降序返回</span><br>db.books.find(&#123;<span class="hljs-built_in">type</span>:<span class="hljs-string">&quot;travel&quot;</span>&#125;).<span class="hljs-built_in">sort</span>(&#123;favCount:-1&#125;)<br></code></pre></td></tr></table></figure>
+
 <ul>
 <li>1 为升序排列，而 -1 是用于降序排列</li>
 </ul>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36643" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>分页查询</strong></p>
-<p>skip用于指定跳过记录数，limit则用于限定返回结果数量。可以在执行find命令的同时指定skip、limit参数，以此实现分页的功能。比如，假定每页大小为8条，查询第3页的book文档：</p>
-<p>​                db.books.find().skip(8).limit(4)              </p>
+<p>skip用于指定跳过记录数，limit则用于限定返回结果数量。可以在执行find命令的同时指定skip、limit参数，以此实现分页的功能。比如，假定每页大小为4条，查询第3页的book文档：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.skip</span>(<span class="hljs-number">8</span>)<span class="hljs-selector-class">.limit</span>(<span class="hljs-number">4</span>)<br></code></pre></td></tr></table></figure>
+
 <p><strong>处理分页问题 – 巧分页</strong> </p>
 <p>数据量大的时候，应该避免使用skip&#x2F;limit形式的分页。</p>
 <p>替代方案：<strong>使用查询条件+唯一排序条件；</strong></p>
@@ -790,15 +827,18 @@
 <p><strong>处理分页问题 – 避免使用 count</strong> </p>
 <p>尽可能不要计算总页数，特别是数据量大和查询条件不能完整命中索引时。 </p>
 <p>考虑以下场景：假设集合总共有 1000w 条数据，在没有索引的情况下考虑以下查询：</p>
-<p>​                db.coll.find({x: 100}).limit(50); db.coll.count({x: 100});               </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">db</span>.coll.find(&#123;x: <span class="hljs-number">100</span>&#125;).limit(<span class="hljs-number">50</span>);<br><span class="hljs-attribute">db</span>.coll.count(&#123;x: <span class="hljs-number">100</span>&#125;); <br></code></pre></td></tr></table></figure>
+
 <ul>
 <li>前者只需要遍历前 n 条，直到找到 50 条 x&#x3D;100 的文档即可结束； </li>
 <li>后者需要遍历完 1000w 条找到所有符合要求的文档才能得到结果。 为了计算总页数而进行的 count() 往往是拖慢页面整体加载速度的原因</li>
 </ul>
 <h3 id="正则表达式匹配查询"><a href="#正则表达式匹配查询" class="headerlink" title="正则表达式匹配查询"></a><strong>正则表达式匹配查询</strong></h3><p>MongoDB 使用 $regex 操作符来设置匹配字符串的正则表达式。</p>
-<p>​                &#x2F;&#x2F;使用正则表达式查找type包含 so 字符串的book db.books.find({type:{$regex:”so”}}) &#x2F;&#x2F;或者 db.books.find({type:&#x2F;so&#x2F;})              </p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-comment">//使用正则表达式查找type包含 so 字符串的book</span><br>db.books.<span class="hljs-built_in">find</span>(&#123;<span class="hljs-attr">type</span>:&#123;<span class="hljs-symbol">$rege</span>x:<span class="hljs-string">&quot;so&quot;</span>&#125;&#125;)<br><span class="hljs-comment">//或者</span><br>db.books.<span class="hljs-built_in">find</span>(&#123;<span class="hljs-attr">type</span>:<span class="hljs-regexp">/so/</span>&#125;)<br></code></pre></td></tr></table></figure>
+
 <h2 id="3-3-更新文档"><a href="#3-3-更新文档" class="headerlink" title="3.3 更新文档"></a><strong>3.3 更新文档</strong></h2><p>可以用update命令对指定的数据进行更新，命令的格式如下：</p>
-<p>​                db.collection.update(query,update,options)              </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">db</span>.collection.<span class="hljs-keyword">update</span>(<span class="hljs-keyword">query</span>,<span class="hljs-keyword">update</span>,options)<br></code></pre></td></tr></table></figure>
+
 <ul>
 <li><p>query：描述更新的查询条件；</p>
 </li>
@@ -869,12 +909,14 @@
 </tbody></table>
 <p><strong>更新单个文档</strong></p>
 <p>某个book文档被收藏了，则需要将该文档的favCount字段自增</p>
-<p>​                db.books.update({_id:ObjectId(“61caa09ee0782536660494d9”)},{$inc:{favCount:1}})              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36708" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.update</span>(&#123;_id:<span class="hljs-built_in">ObjectId</span>(<span class="hljs-string">&quot;61caa09ee0782536660494d9&quot;</span>)&#125;,&#123;<span class="hljs-variable">$inc</span>:&#123;favCount:<span class="hljs-number">1</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36708" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p><strong>更新多个文档</strong></p>
 <p>默认情况下，update命令只在更新第一个文档之后返回，如果需要更新多个文档，则可以使用multi选项。</p>
 <p>将分类为“novel”的文档的增加发布时间（publishedDate）</p>
-<p>​                db.books.update({type:”novel”},{$set:{publishedDate:new Date()}},{“multi”:true})              </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">db.books.<span class="hljs-keyword">update</span>(&#123;<span class="hljs-keyword">type</span>:&quot;novel&quot;&#125;,&#123;$<span class="hljs-keyword">set</span>:&#123;publishedDate:<span class="hljs-built_in">new</span> <span class="hljs-type">Date</span>()&#125;&#125;,&#123;&quot;multi&quot;:<span class="hljs-keyword">true</span>&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>multi : 可选，mongodb 默认是false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36722" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="update命令的选项配置较多，为了简化使用还可以使用一些快捷命令"><a href="#update命令的选项配置较多，为了简化使用还可以使用一些快捷命令" class="headerlink" title="update命令的选项配置较多，为了简化使用还可以使用一些快捷命令:"></a><strong>update命令的选项配置较多，为了简化使用还可以使用一些快捷命令:</strong></h3><ul>
@@ -883,18 +925,22 @@
 <li>replaceOne：替换单个文档。</li>
 </ul>
 <h3 id="使用upsert命令"><a href="#使用upsert命令" class="headerlink" title="使用upsert命令"></a><strong>使用upsert命令</strong></h3><p>upsert是一种特殊的更新，其表现为如果目标文档不存在，则执行插入命令。</p>
-<p>​                db.books.update(    {title:”my book”},    {$set:{tags:[“nosql”,”mongodb”],type:”none”,author:”fox”}},    {upsert:true} )              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">update</span>(<br>    &#123;<span class="hljs-attr">title</span>:<span class="hljs-string">&quot;my book&quot;</span>&#125;,<br>    &#123;<span class="hljs-variable">$set</span>:&#123;<span class="hljs-attr">tags</span>:[<span class="hljs-string">&quot;nosql&quot;</span>,<span class="hljs-string">&quot;mongodb&quot;</span>],<span class="hljs-attr">type</span>:<span class="hljs-string">&quot;none&quot;</span>,<span class="hljs-attr">author</span>:<span class="hljs-string">&quot;fox&quot;</span>&#125;&#125;,<br>    &#123;<span class="hljs-attr">upsert</span>:<span class="hljs-literal">true</span>&#125;<br>)<br></code></pre></td></tr></table></figure>
+
 <p>nMatched、nModified都为0，表示没有文档被匹配及更新，nUpserted&#x3D;1提示执行了upsert动作</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36737" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="实现replace语义"><a href="#实现replace语义" class="headerlink" title="实现replace语义"></a><strong>实现replace语义</strong></h3><p>update命令中的更新描述（update）通常由操作符描述，如果更新描述中不包含任何操作符，那么MongoDB会实现文档的replace语义</p>
-<p>​                db.books.update(    {title:”my book”},    {justTitle:”my first book”} )                  </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.update</span>(<br>    &#123;title:<span class="hljs-string">&quot;my book&quot;</span>&#125;,<br>    &#123;justTitle:<span class="hljs-string">&quot;my first book&quot;</span>&#125;<br>)    <br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36751" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="findAndModify命令"><a href="#findAndModify命令" class="headerlink" title="findAndModify命令"></a><strong>findAndModify命令</strong></h3><p>findAndModify兼容了查询和修改指定文档的功能，findAndModify只能更新单个文档</p>
-<p>​                &#x2F;&#x2F;将某个book文档的收藏数（favCount）加1 db.books.findAndModify({    query:{_id:ObjectId(“61caa09ee0782536660494dd”)},    update:{$inc:{favCount:1}} })              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">//将某个book文档的收藏数（favCount）加1</span><br>db.books.<span class="hljs-title function_ invoke__">findAndModify</span>(&#123;<br>    <span class="hljs-attr">query</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-title function_ invoke__">ObjectId</span>(<span class="hljs-string">&quot;61caa09ee0782536660494dd&quot;</span>)&#125;,<br>    <span class="hljs-attr">update</span>:&#123;<span class="hljs-variable">$inc</span>:&#123;<span class="hljs-attr">favCount</span>:<span class="hljs-number">1</span>&#125;&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>该操作会返回符合查询条件的文档数据，并完成对文档的修改。</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36773" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>默认情况下，findAndModify会返回修改前的“旧”数据。如果希望返回修改后的数据，则可以指定new选项</p>
-<p>​                db.books.findAndModify({    query:{_id:ObjectId(“61caa09ee0782536660494dd”)},    update:{$inc:{favCount:1}},    new: true })              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">db.books.<span class="hljs-title function_ invoke__">findAndModify</span>(&#123;<br>    <span class="hljs-attr">query</span>:&#123;<span class="hljs-attr">_id</span>:<span class="hljs-title function_ invoke__">ObjectId</span>(<span class="hljs-string">&quot;61caa09ee0782536660494dd&quot;</span>)&#125;,<br>    <span class="hljs-attr">update</span>:&#123;<span class="hljs-variable">$inc</span>:&#123;<span class="hljs-attr">favCount</span>:<span class="hljs-number">1</span>&#125;&#125;,<br>    <span class="hljs-attr">new</span>: <span class="hljs-literal">true</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>与findAndModify语义相近的命令如下：</p>
 <ul>
 <li>findOneAndUpdate：更新单个文档并返回更新前（或更新后）的文档。</li>
@@ -906,19 +952,24 @@
 <li>指定一个空文档条件会删除所有文档；</li>
 </ul>
 <p>示例：</p>
-<p>​                db.user.remove({age:28})&#x2F;&#x2F; 删除age 等于28的记录 db.user.remove({age:{$lt:25}})   &#x2F;&#x2F; 删除age 小于25的记录 db.user.remove( { } ) &#x2F;&#x2F; 删除所有记录 db.user.remove() &#x2F;&#x2F;报错              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.remove</span>(&#123;age:<span class="hljs-number">28</span>&#125;)<span class="hljs-comment">// 删除age 等于28的记录</span><br>db<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.remove</span>(&#123;age:&#123;<span class="hljs-variable">$lt</span>:<span class="hljs-number">25</span>&#125;&#125;)   <span class="hljs-comment">// 删除age 小于25的记录</span><br>db<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.remove</span>( &#123; &#125; ) <span class="hljs-comment">// 删除所有记录</span><br>db<span class="hljs-selector-class">.user</span><span class="hljs-selector-class">.remove</span>() <span class="hljs-comment">//报错</span><br></code></pre></td></tr></table></figure>
+
 <p>remove命令会删除匹配条件的全部文档，如果希望明确限定只删除一个文档，则需要指定justOne参数，命令格式如下：</p>
-<p>​                db.collection.remove(query,justOne)              </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.collection.<span class="hljs-built_in">remove</span>(query,justOne)             <br></code></pre></td></tr></table></figure>
+
 <p>例如：删除满足type:novel条件的首条记录</p>
-<p>​                db.books.remove({type:”novel”},true)              </p>
-<h3 id="使用-delete-删除文档"><a href="#使用-delete-删除文档" class="headerlink" title="使用 delete 删除文档"></a><strong>使用 delete 删除文档</strong></h3><p>官方推荐使用 deleteOne() 和 deleteMany() 方法删除文档，语法格式如下：</p>
-<p>​                db.books.deleteMany ({})  &#x2F;&#x2F;删除集合下全部文档 db.books.deleteMany ({ type:”novel” })  &#x2F;&#x2F;删除 type等于 novel 的全部文档 db.books.deleteOne ({ type:”novel” })  &#x2F;&#x2F;删除 type等于novel 的一个文档              </p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lua">db.books.<span class="hljs-built_in">remove</span>(&#123;<span class="hljs-built_in">type</span>:<span class="hljs-string">&quot;novel&quot;</span>&#125;,<span class="hljs-literal">true</span>)              <br></code></pre></td></tr></table></figure>
+
+<h3 id="使用-delete-删除文档"><a href="#使用-delete-删除文档" class="headerlink" title="使用 delete 删除文档"></a><strong>使用 delete 删除文档</strong></h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.deleteMany</span> (&#123;&#125;)  <span class="hljs-comment">//删除集合下全部文档</span><br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.deleteMany</span> (&#123; type:<span class="hljs-string">&quot;novel&quot;</span> &#125;)  <span class="hljs-comment">//删除 type等于 novel 的全部文档</span><br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.deleteOne</span> (&#123; type:<span class="hljs-string">&quot;novel&quot;</span> &#125;)  <span class="hljs-comment">//删除 type等于novel 的一个文档</span><br></code></pre></td></tr></table></figure>
+
 <p>注意： remove、deleteMany等命令需要对查询范围内的文档逐个删除，如果希望删除整个集合，则使用drop命令会更加高效</p>
 <h3 id="返回被删除文档"><a href="#返回被删除文档" class="headerlink" title="返回被删除文档"></a><strong>返回被删除文档</strong></h3><p>remove、deleteOne等命令在删除文档后只会返回确认性的信息，如果希望获得被删除的文档，则可以使用findOneAndDelete命令</p>
-<p>​                db.books.findOneAndDelete({type:”novel”})              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.books.find<span class="hljs-constructor">OneAndDelete(&#123;<span class="hljs-params">type</span>:<span class="hljs-string">&quot;novel&quot;</span>&#125;)</span><br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36852" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>除了在结果中返回删除文档，findOneAndDelete命令还允许定义“删除的顺序”，即按照指定顺序删除找到的第一个文档</p>
-<p>​                db.books.findOneAndDelete({type:”novel”},{sort:{favCount:1}})              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.books.find<span class="hljs-constructor">OneAndDelete(&#123;<span class="hljs-params">type</span>:<span class="hljs-string">&quot;novel&quot;</span>&#125;,&#123;<span class="hljs-params">sort</span>:&#123;<span class="hljs-params">favCount</span>:1&#125;&#125;)</span><br></code></pre></td></tr></table></figure>
+
 <p>remove、deleteOne等命令只能按默认顺序删除，利用这个特性，findOneAndDelete可以实现队列的先进先出。</p>
 <p><strong>文档操作最佳实践</strong></p>
 <p>关于文档结构 </p>
@@ -1098,9 +1149,11 @@
 </tbody></table>
 <p><strong>$type操作符</strong></p>
 <p>$type操作符基于BSON类型来检索集合中匹配的数据类型，并返回结果。</p>
-<p>​                db.books.find({“title” : {$type : 2}}) &#x2F;&#x2F;或者 db.books.find({“title” : {$type : “string”}})              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.find</span>(&#123;<span class="hljs-string">&quot;title&quot;</span> : &#123;<span class="hljs-variable">$type</span> : <span class="hljs-number">2</span>&#125;&#125;)<br><span class="hljs-comment">//或者</span><br>db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.find</span>(&#123;<span class="hljs-string">&quot;title&quot;</span> : &#123;<span class="hljs-variable">$type</span> : <span class="hljs-string">&quot;string&quot;</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <h2 id="4-2-日期类型"><a href="#4-2-日期类型" class="headerlink" title="4.2 日期类型"></a><strong>4.2 日期类型</strong></h2><p>MongoDB的日期类型使用UTC（Coordinated Universal Time）进行存储，也就是+0时区的时间。</p>
-<p>​                db.dates.insert([{data1:Date()},{data2:new Date()},{data3:ISODate()}]) db.dates.find().pretty()              </p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss">db<span class="hljs-selector-class">.dates</span><span class="hljs-selector-class">.insert</span>([&#123;data1:Date()&#125;,&#123;data2:new <span class="hljs-built_in">Date</span>()&#125;,&#123;data3<span class="hljs-selector-pseudo">:IS</span><span class="hljs-built_in">ODate</span>()&#125;])<br>db<span class="hljs-selector-class">.dates</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.pretty</span>()<br></code></pre></td></tr></table></figure>
+
 <p>使用new Date与ISODate最终都会生成ISODate类型的字段（对应于UTC时间）</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/36966" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h2 id="4-3-ObjectId生成器"><a href="#4-3-ObjectId生成器" class="headerlink" title="4.3 ObjectId生成器"></a><strong>4.3 ObjectId生成器</strong></h2><p>MongoDB集合中所有的文档都有一个唯一的_id字段，作为集合的主键。在默认情况下，_id字段使用ObjectId类型，采用16进制编码形式，共12个字节。</p>
@@ -1138,57 +1191,72 @@
 </tr>
 </tbody></table>
 <p>生成一个新的 ObjectId</p>
-<p>​                x &#x3D; ObjectId()              </p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">x</span> <span class="hljs-operator">=</span> ObjectId()              <br></code></pre></td></tr></table></figure>
+
 <h2 id="4-4-内嵌文档和数组"><a href="#4-4-内嵌文档和数组" class="headerlink" title="4.4 内嵌文档和数组"></a><strong>4.4 内嵌文档和数组</strong></h2><h3 id="内嵌文档"><a href="#内嵌文档" class="headerlink" title="内嵌文档"></a><strong>内嵌文档</strong></h3><p>一个文档中可以包含作者的信息，包括作者名称、性别、家乡所在地，一个显著的优点是，当我们查询book文档的信息时，作者的信息也会一并返回。</p>
-<p>​                db.books.insert({    title: “撒哈拉的故事”,    author: {        name:”三毛”,        gender:”女”,        hometown:”重庆”    } })              </p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs dts">db.books.insert(<span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">    title:</span> <span class="hljs-string">&quot;撒哈拉的故事&quot;</span>,<br><span class="hljs-symbol">    author:</span> <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">        name:</span><span class="hljs-string">&quot;三毛&quot;</span>,<br><span class="hljs-symbol">        gender:</span><span class="hljs-string">&quot;女&quot;</span>,<br><span class="hljs-symbol">        hometown:</span><span class="hljs-string">&quot;重庆&quot;</span><br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span>)<br></code></pre></td></tr></table></figure>
+
 <p>查询三毛的作品</p>
-<p>​                db.books.find({“author.name”:”三毛”})              </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">db.books.<span class="hljs-built_in">find</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;)              <br></code></pre></td></tr></table></figure>
+
 <p>修改三毛的家乡所在地</p>
-<p>​                db.books.updateOne({“author.name”:”三毛”},{$set:{“author.hometown”:”重庆&#x2F;台湾”}})              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.updateOne</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-variable">$set</span>:&#123;<span class="hljs-string">&quot;author.hometown&quot;</span>:<span class="hljs-string">&quot;重庆/台湾&quot;</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a><strong>数组</strong></h3><p>除了作者信息，文档中还包含了若干个标签，这些标签可以用来表示文档所包含的一些特征，如豆瓣读书中的标签（tag）</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37180" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>增加tags标签</p>
-<p>​                db.books.updateOne({“author.name”:”三毛”},{$set:{tags:[“旅行”,”随笔”,”散文”,”爱情”,”文学”]}})              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.updateOne</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-variable">$set</span>:&#123;tags:<span class="hljs-selector-attr">[<span class="hljs-string">&quot;旅行&quot;</span>,<span class="hljs-string">&quot;随笔&quot;</span>,<span class="hljs-string">&quot;散文&quot;</span>,<span class="hljs-string">&quot;爱情&quot;</span>,<span class="hljs-string">&quot;文学&quot;</span>]</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37190" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>查询数组元素</p>
-<p>​                # 会查询到所有的tags db.books.find({“author.name”:”三毛”},{title:1,tags:1}) #利用$slice获取最后一个tag db.books.find({“author.name”:”三毛”},{title:1,tags:{$slice:-1}})              </p>
-<p>$silice是一个查询操作符，用于指定数组的切片方式</p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37202" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 会查询到所有的tags</span><br>db.books.<span class="hljs-title function_ invoke__">find</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">tags</span>:<span class="hljs-number">1</span>&#125;)<br><span class="hljs-comment">#利用$slice获取最后一个tag</span><br>db.books.<span class="hljs-title function_ invoke__">find</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-attr">title</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">tags</span>:&#123;<span class="hljs-variable">$slice</span>:-<span class="hljs-number">1</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>$silice是一个查询操作符，用于指定数组的切片方式<img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37202" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>数组末尾追加元素，可以使用$push操作符</p>
-<p>​                db.books.updateOne({“author.name”:”三毛”},{$push:{tags:”猎奇”}})              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.books.update<span class="hljs-constructor">One(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;$<span class="hljs-params">push</span>:&#123;<span class="hljs-params">tags</span>:<span class="hljs-string">&quot;猎奇&quot;</span>&#125;&#125;)</span><br></code></pre></td></tr></table></figure>
+
 <p>$push操作符可以配合其他操作符，一起实现不同的数组修改操作，比如和$each操作符配合可以用于添加多个元素</p>
-<p>​                db.books.updateOne({“author.name”:”三毛”},{$push:{tags:{$each:[“伤感”,”想象力”]}}})              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.updateOne</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-variable">$push</span>:&#123;tags:&#123;<span class="hljs-variable">$each</span>:<span class="hljs-selector-attr">[<span class="hljs-string">&quot;伤感&quot;</span>,<span class="hljs-string">&quot;想象力&quot;</span>]</span>&#125;&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>如果加上$slice操作符，那么只会保留经过切片后的元素</p>
-<p>​                db.books.updateOne({“author.name”:”三毛”},{$push:{tags:{$each:[“伤感”,”想象力”],$slice:-3}}})              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.books</span><span class="hljs-selector-class">.updateOne</span>(&#123;<span class="hljs-string">&quot;author.name&quot;</span>:<span class="hljs-string">&quot;三毛&quot;</span>&#125;,&#123;<span class="hljs-variable">$push</span>:&#123;tags:&#123;<span class="hljs-variable">$each</span>:<span class="hljs-selector-attr">[<span class="hljs-string">&quot;伤感&quot;</span>,<span class="hljs-string">&quot;想象力&quot;</span>]</span>,<span class="hljs-variable">$slice</span>:-<span class="hljs-number">3</span>&#125;&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37213" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>根据元素查询</p>
 <p>​                #会查出所有包含伤感的文档 db.books.find({tags:”伤感”}) # 会查出所有同时包含”伤感”,”想象力”的文档 db.books.find({tags:{$all:[“伤感”,”想象力”]}})              </p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37215" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="嵌套型的数组"><a href="#嵌套型的数组" class="headerlink" title="嵌套型的数组"></a><strong>嵌套型的数组</strong></h3><p>数组元素可以是基本类型，也可以是内嵌的文档结构</p>
-<p>​                {    tags:[        {tagKey:xxx,tagValue:xxxx},        {tagKey:xxx,tagValue:xxxx}    ] }              </p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pf">&#123;<br>    tags:[<br>        &#123;<span class="hljs-keyword">tag</span>Key:xxx,<span class="hljs-keyword">tag</span>Value:xxxx&#125;,<br>        &#123;<span class="hljs-keyword">tag</span>Key:xxx,<span class="hljs-keyword">tag</span>Value:xxxx&#125;<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>这种结构非常灵活，一个很适合的场景就是商品的多属性表示</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37235" srcset="/img/loading.gif" lazyload alt="0"></p>
 <p>一个商品可以同时包含多个维度的属性，比如尺码、颜色、风格等，使用文档可以表示为：</p>
-<p>​                db.goods.insertMany([{    name:”羽绒服”,    tags:[        {tagKey:”size”,tagValue:[“M”,”L”,”XL”,”XXL”,”XXXL”]},        {tagKey:”color”,tagValue:[“黑色”,”宝蓝”]},        {tagKey:”style”,tagValue:”韩风”}    ] },{    name:”羊毛衫”,    tags:[        {tagKey:”size”,tagValue:[“L”,”XL”,”XXL”]},        {tagKey:”color”,tagValue:[“蓝色”,”杏色”]},        {tagKey:”style”,tagValue:”韩风”}    ] }])              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs php">db.goods.<span class="hljs-title function_ invoke__">insertMany</span>([&#123;<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&quot;羽绒服&quot;</span>,<br>    <span class="hljs-attr">tags</span>:[<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;size&quot;</span>,<span class="hljs-attr">tagValue</span>:[<span class="hljs-string">&quot;M&quot;</span>,<span class="hljs-string">&quot;L&quot;</span>,<span class="hljs-string">&quot;XL&quot;</span>,<span class="hljs-string">&quot;XXL&quot;</span>,<span class="hljs-string">&quot;XXXL&quot;</span>]&#125;,<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;color&quot;</span>,<span class="hljs-attr">tagValue</span>:[<span class="hljs-string">&quot;黑色&quot;</span>,<span class="hljs-string">&quot;宝蓝&quot;</span>]&#125;,<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;style&quot;</span>,<span class="hljs-attr">tagValue</span>:<span class="hljs-string">&quot;韩风&quot;</span>&#125;<br>    ]<br>&#125;,&#123;<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&quot;羊毛衫&quot;</span>,<br>    <span class="hljs-attr">tags</span>:[<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;size&quot;</span>,<span class="hljs-attr">tagValue</span>:[<span class="hljs-string">&quot;L&quot;</span>,<span class="hljs-string">&quot;XL&quot;</span>,<span class="hljs-string">&quot;XXL&quot;</span>]&#125;,<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;color&quot;</span>,<span class="hljs-attr">tagValue</span>:[<span class="hljs-string">&quot;蓝色&quot;</span>,<span class="hljs-string">&quot;杏色&quot;</span>]&#125;,<br>        &#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;style&quot;</span>,<span class="hljs-attr">tagValue</span>:<span class="hljs-string">&quot;韩风&quot;</span>&#125;<br>    ]<br>&#125;])<br></code></pre></td></tr></table></figure>
+
 <p>以上的设计是一种常见的多值属性的做法，当我们需要根据属性进行检索时，需要用到$elementMatch操作符：</p>
-<p>​                #筛选出color&#x3D;黑色的商品信息 db.goods.find({    tags:{        $elemMatch:{tagKey:”color”,tagValue:”黑色”}    } })              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">#筛选出color=黑色的商品信息</span><br>db.goods.<span class="hljs-title function_ invoke__">find</span>(&#123;<br>    <span class="hljs-attr">tags</span>:&#123;<br>        <span class="hljs-variable">$elemMatch</span>:&#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;color&quot;</span>,<span class="hljs-attr">tagValue</span>:<span class="hljs-string">&quot;黑色&quot;</span>&#125;<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
 <p>如果进行组合式的条件检索，则可以使用多个$elemMatch操作符：</p>
-<p>​                # 筛选出color&#x3D;蓝色，并且size&#x3D;XL的商品信息 db.goods.find({    tags:{        $all:[            {$elemMatch:{tagKey:”color”,tagValue:”黑色”}},            {$elemMatch:{tagKey:”size”,tagValue:”XL”}}        ]      } })              </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment"># 筛选出color=蓝色，并且size=XL的商品信息</span><br>db.goods.<span class="hljs-title function_ invoke__">find</span>(&#123;<br>    <span class="hljs-attr">tags</span>:&#123;<br>        <span class="hljs-variable">$all</span>:[<br>            &#123;<span class="hljs-variable">$elemMatch</span>:&#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;color&quot;</span>,<span class="hljs-attr">tagValue</span>:<span class="hljs-string">&quot;黑色&quot;</span>&#125;&#125;,<br>            &#123;<span class="hljs-variable">$elemMatch</span>:&#123;<span class="hljs-attr">tagKey</span>:<span class="hljs-string">&quot;size&quot;</span>,<span class="hljs-attr">tagValue</span>:<span class="hljs-string">&quot;XL&quot;</span>&#125;&#125;<br>        ]  <br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
 <h2 id="4-5-固定集合"><a href="#4-5-固定集合" class="headerlink" title="4.5 固定集合"></a><strong>4.5 固定集合</strong></h2><p>固定集合（capped collection）是一种限定大小的集合，其中capped是覆盖、限额的意思。跟普通的集合相比，数据在写入这种集合时遵循FIFO原则。可以将这种集合想象为一个环状的队列，新文档在写入时会被插入队列的末尾，如果队列已满，那么之前的文档就会被新写入的文档所覆盖。通过固定集合的大小，我们可以保证数据库只会存储“限额”的数据，超过该限额的旧数据都会被丢弃。</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37009" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a><strong>使用示例</strong></h3><p><strong>创建固定集合</strong></p>
-<p>​                db.createCollection(“logs”,{capped:true,size:4096,max:10})              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.create<span class="hljs-constructor">Collection(<span class="hljs-string">&quot;logs&quot;</span>,&#123;<span class="hljs-params">capped</span>:<span class="hljs-params">true</span>,<span class="hljs-params">size</span>:4096,<span class="hljs-params">max</span>:10&#125;)</span><br></code></pre></td></tr></table></figure>
+
 <ul>
 <li>max：指集合的文档数量最大值，这里是10条</li>
 <li>size：指集合的空间占用最大值，这里是4096字节（4KB）</li>
 </ul>
 <p>这两个参数会同时对集合的上限产生影响。也就是说，只要任一条件达到阈值都会认为集合已经写满。其中size是必选的，而max则是可选的。</p>
 <p>可以使用collection.stats命令查看文档的占用空间</p>
-<p>​                db.logs.stats()              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.logs</span><span class="hljs-selector-class">.stats</span>() <br></code></pre></td></tr></table></figure>
+
 <p><strong>测试</strong></p>
 <p>尝试在这个集合中插入15条数据，再查询会发现，由于文档数量上限被设定为10条，前面插入的5条数据已经被覆盖了</p>
-<p>​                for(var i&#x3D;0;i&lt;15;i++){    db.logs.insert({t:”row-“+i}) }              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37034" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(var i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">15</span>;i++)</span></span>&#123;<br>    db<span class="hljs-selector-class">.logs</span><span class="hljs-selector-class">.insert</span>(&#123;t:<span class="hljs-string">&quot;row-&quot;</span>+i&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37034" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h3 id="优势与限制"><a href="#优势与限制" class="headerlink" title="优势与限制"></a><strong>优势与限制</strong></h3><p>固定集合在底层使用的是顺序I&#x2F;O操作，而普通集合使用的是随机I&#x2F;O。顺序I&#x2F;O在磁盘操作上由于寻道次数少而比随机I&#x2F;O要高效得多，因此固定集合的写入性能是很高的。此外，如果按写入顺序进行数据读取，也会获得非常好的性能表现。</p>
 <p>但它也存在一些限制，主要有如下5个方面：</p>
 <ol>
@@ -1213,31 +1281,46 @@
 <p><strong>使用固定集合实现FIFO队列</strong></p>
 <p>在股票实时系统中，大家往往最关心股票价格的变动。而应用系统中也需要根据这些实时的变化数据来分析当前的行情。倘若将股票的价格变化看作是一个事件，而股票交易所则是价格变动事件的“发布者”，股票APP、应用系统则是事件的“消费者”。这样，我们就可以将股票价格的发布、通知抽象为一种数据的消费行为，此时往往需要一个消息队列来实现该需求。</p>
 <p>结合业务场景： 利用固定集合实现存储股票价格变动信息的消息队列</p>
-<p>\1. 创建stock_queue消息队列，其可以容纳10MB的数据</p>
-<p>​                db.createCollection(“stock_queue”,{capped:true,size:10485760})              </p>
-<p>\2. 定义消息格式</p>
-<p>​                {    timestamped:new Date(),    stock: “MongoDB Inc”,    price: 20.33 }              </p>
+<ol>
+<li>创建stock_queue消息队列，其可以容纳10MB的数据</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.create<span class="hljs-constructor">Collection(<span class="hljs-string">&quot;stock_queue&quot;</span>,&#123;<span class="hljs-params">capped</span>:<span class="hljs-params">true</span>,<span class="hljs-params">size</span>:10485760&#125;)</span>  <br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>定义消息格式</li>
+</ol>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">    timestamped:</span>new Date(),<br><span class="hljs-symbol">    stock:</span> <span class="hljs-string">&quot;MongoDB Inc&quot;</span>,<br><span class="hljs-symbol">    price:</span> <span class="hljs-number">20.33</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
 <ul>
 <li>timestamp指股票动态消息的产生时间。</li>
 <li>stock指股票的名称。</li>
 <li>price指股票的价格，是一个Double类型的字段。</li>
 </ul>
 <p>为了能支持按时间条件进行快速的检索，比如查询某个时间点之后的数据，可以为timestamp添加索引</p>
-<p>​                db.stock_queue.createIndex({timestamped:1})              </p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">db.stock_queue.create<span class="hljs-constructor">Index(&#123;<span class="hljs-params">timestamped</span>:1&#125;)</span>              <br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37141" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p>\3. 构建生产者，发布股票动态</p>
+<ol start="3">
+<li>构建生产者，发布股票动态</li>
+</ol>
 <p>模拟股票的实时变动</p>
-<p>​                function pushEvent(){    while(true){        db.stock_queue.insert({            timestamped:new Date(),            stock: “MongoDB Inc”,            price: 100*Math.random(1000)        });        print(“publish stock changed”);        sleep(1000);    } }               </p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs scss">function <span class="hljs-built_in">pushEvent</span>()&#123;<br>    <span class="hljs-built_in">while</span>(true)&#123;<br>        db<span class="hljs-selector-class">.stock_queue</span><span class="hljs-selector-class">.insert</span>(&#123;<br>            timestamped:new Date(),<br>            stock: <span class="hljs-string">&quot;MongoDB Inc&quot;</span>,<br>            price: <span class="hljs-number">100</span>*Math.<span class="hljs-built_in">random</span>(<span class="hljs-number">1000</span>)<br>        &#125;);<br>        <span class="hljs-built_in">print</span>(&quot;publish stock changed&quot;);<br>        <span class="hljs-built_in">sleep</span>(<span class="hljs-number">1000</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
 <p>执行pushEvent函数，此时客户端会每隔1秒向stock_queue中写入一条股票信息</p>
-<p>​                pushEvent()              </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">pushEvent</span><span class="hljs-params">()</span></span>           <br></code></pre></td></tr></table></figure>
+
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37143" srcset="/img/loading.gif" lazyload alt="0"></p>
-<p>\4. 构建消费者，监听股票动态</p>
+<ol start="4">
+<li>构建消费者，监听股票动态</li>
+</ol>
 <p>对于消费方来说，更关心的是最新数据，同时还应该保持持续进行“拉取”，以便知晓实时发生的变化。根据这样的逻辑，可以实现一个listen函数</p>
-<p>​                function listen(){    var cursor &#x3D; db.stock_queue.find({timestamped:{$gte:new Date()}}).tailable();    while(true){        if(cursor.hasNext()){                print(JSON.stringify(cursor.next(),null,2));        }        sleep(1000);    } }              </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">function</span> <span class="hljs-keyword">listen</span>()&#123;<br>    var <span class="hljs-keyword">cursor</span> = db.stock_queue.find(&#123;timestamped:&#123;$gte:<span class="hljs-built_in">new</span> <span class="hljs-type">Date</span>()&#125;&#125;).tailable();<br>    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;<br>        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">cursor</span>.hasNext())&#123;<br>                print(<span class="hljs-type">JSON</span>.stringify(<span class="hljs-keyword">cursor</span>.next(),<span class="hljs-keyword">null</span>,<span class="hljs-number">2</span>));<br>        &#125;<br>        sleep(<span class="hljs-number">1000</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>find操作的查询条件被指定为仅查询比当前时间更新的数据，而由于采用了读取游标的方式，因此游标在获取不到数据时并不会被关闭，这种行为非常类似于Linux中的tail-f命令。在一个循环中会定时检查是否有新的数据产生，一旦发现新的数据（cursor.hasNext()&#x3D;true），则直接将数据打印到控制台。</p>
 <p>执行这个监听函数，就可以看到实时发布的股票信息</p>
-<p>​                listen()              </p>
-<p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37146" srcset="/img/loading.gif" lazyload alt="0"></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">listen</span><span class="hljs-params">()</span></span>              <br></code></pre></td></tr></table></figure>
+
+<p><img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/37146" srcset="/img/loading.gif" lazyload alt="0"></p>
 <h1 id="5-WiredTiger读写模型详解"><a href="#5-WiredTiger读写模型详解" class="headerlink" title="5. WiredTiger读写模型详解"></a><strong>5. WiredTiger读写模型详解</strong></h1><h2 id="5-1-WiredTiger介绍"><a href="#5-1-WiredTiger介绍" class="headerlink" title="5.1 WiredTiger介绍"></a><strong>5.1 WiredTiger介绍</strong></h2><p>MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPV1、WiredTiger存储引擎可供选择。在3.22源的消耗,节省约60%以上的硬盘资源；</p>
 <h2 id="5-2-WiredTiger读写模型"><a href="#5-2-WiredTiger读写模型" class="headerlink" title="5.2 WiredTiger读写模型"></a><strong>5.2 WiredTiger读写模型</strong></h2><h3 id="读缓存"><a href="#读缓存" class="headerlink" title="读缓存"></a><strong>读缓存</strong></h3><p>理想情况下，MongoDB可以提供近似内存式的读写性能。WiredTiger引擎实现了数据的二级缓存，第一层是操作系统的页面缓存，第二层则是引擎提供的内部缓存。</p>
 <p>​    <img src="/1%E3%80%81MongoDB%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%B8%8E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/43548" srcset="/img/loading.gif" lazyload alt="0"></p>
@@ -1248,7 +1331,8 @@
 <li>在内存中完成匹配查询，将结果返回给应用。</li>
 </ul>
 <p>MongoDB为了尽可能保证业务查询的“热数据”能快速被访问，其内部缓存的默认大小达到了内存的一半，该值由wiredTigerCacheSize参数指定，其默认的计算公式如下：</p>
-<p>​                wiredTigerCacheSize&#x3D;Math.max(0.5*(RAM-1GB),256MB)              </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wiredTigerCacheSize</span>=Math.max(<span class="hljs-number">0</span>.<span class="hljs-number">5</span>*(RAM-<span class="hljs-number">1</span>GB),<span class="hljs-number">256</span>MB)              <br></code></pre></td></tr></table></figure>
+
 <h3 id="写缓冲"><a href="#写缓冲" class="headerlink" title="写缓冲"></a><strong>写缓冲</strong></h3><p>当数据发生写入时，MongoDB并不会立即持久化到磁盘上，而是先在内存中记录这些变更，之后通过CheckPoint机制将变化的数据写入磁盘。为什么要这么处理？主要有以下两个原因：</p>
 <ul>
 <li>如果每次写入都触发一次磁盘I&#x2F;O，那么开销太大，而且响应时延会比较大。</li>
