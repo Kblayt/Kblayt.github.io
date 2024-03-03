@@ -16,15 +16,35 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="一、Headers路由 在官网的体验示例中，还有一种路由策略并没有提及，那就是Headers路由。其实官网之所以没有过多介绍，就是因为这种策略在实际中用得比较少，但是在某些比较特殊的业务场景，还是挺好用的。  官网示例中的集中路由策略， direct,fanout,topic等这些Exchange，都是以routingkey为关键字来进行消息路由的，但是这些Exchange有一个普遍的局限就是都是">
+<meta property="og:type" content="article">
 <meta property="og:title" content="3、RabbitMQ高级使用场景">
 <meta property="og:url" content="https://kblayt.github.io/2024/01/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/RabbitMQ/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、Headers路由 在官网的体验示例中，还有一种路由策略并没有提及，那就是Headers路由。其实官网之所以没有过多介绍，就是因为这种策略在实际中用得比较少，但是在某些比较特殊的业务场景，还是挺好用的。  官网示例中的集中路由策略， direct,fanout,topic等这些Exchange，都是以routingkey为关键字来进行消息路由的，但是这些Exchange有一个普遍的局限就是都是">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/651042F9E9574A539670714FEA3A55B5.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/CE99EE92847E4D59AC06096EFDEBD383.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/5F44FC25AF304C0DAE155A554217DDD8.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/94102188805549CDAA7D2D1FF88B687C.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/EF7BC5F162184BB58E5CDAF6EDF78B26.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/D5B2F71FC8A04B4B992F550E28EF938F.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/303F4FFA2CAA41BC83D209D1DC0753AF.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/E31B2E92CAC141E79F1254E2E189D4C3.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/CD64E266C39B4830BC4E3DD3C75BF2A0.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/957D01BDDADC4FD09177F364B8DB1F80.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/5B259F5E767941A9B29F2508ECD2ADF5.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/B1C5E1C4C7E249798694883033127189.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/F26D6B23F3E243F49D7EE962AD50BC44.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/E24B2BBB58694B319C91A62D9745A917.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/D8F47F9B665F4A3893D2E57D25F5C7DE.png">
+<meta property="og:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/C9278CE4F2364150A41D851567C0CA7F.png">
 <meta property="article:published_time" content="2024-01-04T13:06:07.000Z">
-<meta property="article:modified_time" content="2024-01-04T13:06:07.662Z">
+<meta property="article:modified_time" content="2024-03-02T07:55:25.437Z">
 <meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="RabbitMQ">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/651042F9E9574A539670714FEA3A55B5.png">
   
   
   
@@ -216,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          15k 字
         
       </span>
     
@@ -227,7 +247,7 @@
         
         
         
-          1 分钟
+          123 分钟
         
       </span>
     
@@ -270,7 +290,186 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <h1 id="一、Headers路由"><a href="#一、Headers路由" class="headerlink" title="一、Headers路由"></a>一、Headers路由</h1><p> 在官网的体验示例中，还有一种路由策略并没有提及，那就是Headers路由。其实官网之所以没有过多介绍，就是因为这种策略在实际中用得比较少，但是在某些比较特殊的业务场景，还是挺好用的。</p>
+<p> 官网示例中的集中路由策略， direct,fanout,topic等这些Exchange，都是以routingkey为关键字来进行消息路由的，但是这些Exchange有一个普遍的局限就是都是只支持一个字符串的形式，而不支持其他形式。Headers类型的Exchange就是一种忽略routingKey的路由方式。他通过Headers来进行消息路由。这个headers是一个键值对，发送者可以在发送的时候定义一些键值对，接受者也可以在绑定时定义自己的键值对。当键值对匹配时，对应的消费者就能接收到消息。匹配的方式有两种，一种是all，表示需要所有的键值对都满足才行。另一种是any，表示只要满足其中一个键值就可以了。而这个值，可以是List、Boolean等多个类型。</p>
+<p> 关于Headers路由的示例，首先在Web管理页面上，可以看到默认创建了一个amqp.headers这样的Exchange交换机，这个就是Headers类型的路由交换机。然后关于Headers路由的示例，可以查看示例代码。BasicDemo和SpringBootDemo中均有详细的使用示例。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/651042F9E9574A539670714FEA3A55B5.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 例如我们收集应用日志时，如果需要实现按Log4j那种向上收集的方式，就可以使用这种Headers路由策略。</p>
+<blockquote>
+<p>日志等级分为 debug - info - warning - error四个级别。而针对四个日志级别，按四个队列进行分开收集，收集时，每个队列对应一个日志级别，然后收集该日志级别以上级别的所有日志(包含当前日志级别)。像这种场景，就比较适合使用Headers路由机制。</p>
+</blockquote>
+<h1 id="二、分组消费模式"><a href="#二、分组消费模式" class="headerlink" title="二、分组消费模式"></a>二、分组消费模式</h1><h2 id="1、什么是分组消费模式"><a href="#1、什么是分组消费模式" class="headerlink" title="1、什么是分组消费模式"></a>1、什么是分组消费模式</h2><p> 我们回顾下RabbitMQ的消费模式，Exchange与Queue之间的消息路由都是通过RoutingKey关键字来进行的，不同类型的Exchange对RoutingKey进行不同的处理。那有没有不通过RoutingKey来进行路由的策略呢？</p>
+<blockquote>
+<p>这个问题其实是很常见的，一个产品的业务模型设计得再完美，也会有照顾不到的场景。例如ShardingSphere分库分表时，默认都是基于SQL语句来进行分库分表，但是为了保证产品灵活性，也提供了hint强制路由策略，脱离了SQL的限制。</p>
+</blockquote>
+<p> 在RabbitMQ产品当中，确实没有这样的路由策略，但是在SpringCloudStream框架对RabbitMQ进行封装时，提供了一个这种策略，即分区消费策略。</p>
+<p> 这种策略很类似于kafka的分组消费策略。 我们回忆一下，在kafka中的分组策略，是不同的group，都会消费到同样的一份message副本，而在同一个group中，只会有一个消费者消费到一个message。这种分组消费策略，严格来说，在Rabbit中是不存在的。RabbitMQ是通过不同类型的exchange来实现不同的消费策略的。这虽然与kafka的这一套完全不同，但是在SpringCloudStream针对RabbitMQ的实现中，可以很容易的看到kafka这种分组策略的影子。</p>
+<p> 当有多个消费者实例消费同一个bingding时，Spring Cloud Stream同样是希望将这种分组策略，移植到RabbitMQ中来的。就是在不同的group中，会同样消费同一个Message，而在同一个group中，只会有一个消费者消息到一个Message。</p>
+<h2 id="2、实例测试"><a href="#2、实例测试" class="headerlink" title="2、实例测试"></a>2、实例测试</h2><p> 要使用分组消费策略，需要在生产者和消费者两端都进行分组配置。</p>
+<p> 1、生产者端 核心配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#指定参与消息分区的消费端节点数量</span><br><span class="hljs-attr">spring.cloud.stream.bindings.output.producer.partition-count</span>=<span class="hljs-string">2</span><br><span class="hljs-comment">#只有消费端分区ID为1的消费端能接收到消息</span><br><span class="hljs-attr">spring.cloud.stream.bindings.output.producer.partition-key-expression</span>=<span class="hljs-string">1</span><br></code></pre></td></tr></table></figure>
+
+<p> 2、消费者端启动两个实例，组成一个消费者组</p>
+<p> 消费者1 核心配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#启动消费分区</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.partitioned</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#参与分区的消费端节点个数</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.instance-count</span>=<span class="hljs-string">2</span><br><span class="hljs-comment">#设置该实例的消费端分区ID</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.instance-index</span>=<span class="hljs-string">1</span><br></code></pre></td></tr></table></figure>
+
+<p> 消费者2 核心配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#启动消费分区</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.partitioned</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#参与分区的消费端节点个数</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.instance-count</span>=<span class="hljs-string">2</span><br><span class="hljs-comment">#设置该实例的消费端分区ID</span><br><span class="hljs-attr">spring.cloud.stream.bindings.input.consumer.instance-index</span>=<span class="hljs-string">0</span><br></code></pre></td></tr></table></figure>
+
+<p> 这样就完成了一个分组消费的配置。两个消费者实例会组成一个消费者组。而生产者发送的消息，只会被消费者1 消费到(生产者的partition-key-expression 和 消费者的 instance-index 匹配)。</p>
+<h2 id="3、实现原理"><a href="#3、实现原理" class="headerlink" title="3、实现原理"></a>3、实现原理</h2><p> 实际上，在跟踪查看RabbitMQ的实现时，就会发现，Spring Cloud Stream在增加了消费者端的分区设置后，会对每个有效的分区创建一个单独的queue，这个队列的队列名是在原有队列名后面加上一个索引值。而发送者端的消息，会最终发送到这个带索引值的队列上，而不是原队列上。这样就完成了分区消费。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/CE99EE92847E4D59AC06096EFDEBD383.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 我们的示例中，分组表达式是直接指定的，这样其实是丧失了灵活性的。实际开发中，可以将这个分组表达式放到消息的header当中，在发送消息时指定，这样就更有灵活性了。</p>
+<p> 例如：将生产者端的分组表达式配置为header[‘partitonkey’]</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#生产者端设置</span><br><span class="hljs-attr">spring.cloud.stream.bindings.output.producer.partition-key-expression</span>=<span class="hljs-string">header[&#x27;partitionkey&#x27;]</span><br></code></pre></td></tr></table></figure>
+
+<p> 这样，就可以在发送消息时，给消息指定一个header属性，来控制控制分组消费的结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Message</span> <span class="hljs-variable">message</span> <span class="hljs-operator">=</span> MessageBuilder.withPayload(str).setHeader(<span class="hljs-string">&quot;partitionKey&quot;</span>, <span class="hljs-number">0</span>).build();<br>source.output().send(message);<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这个实验请自行验证。</p>
+</blockquote>
+<p> 分组消费策略是在原有路由策略上的一个补充，在实际生产中也是经常会用到的一种策略。并且，MQ的使用场景是非常多的，这也意味着，不管MQ产品设计得如何完善，在复杂场景下，往往都不可能满足所有的使用要求。这时，如果想要自行设计一些更灵活的使用方式，那么这种分组消费的模式就是一个很好的示例。</p>
+<h1 id="三、死信队列"><a href="#三、死信队列" class="headerlink" title="三、死信队列"></a>三、死信队列</h1><blockquote>
+<p>文档地址： <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/dlx.html">https://www.rabbitmq.com/dlx.html</a></p>
+</blockquote>
+<p> 死信队列是RabbitMQ中非常重要的一个特性。简单理解，他是RabbitMQ对于未能正常消费的消息进行的一种补救机制。死信队列也是一个普通的队列，同样可以在队列上声明消费者，继续对消息进行消费处理。</p>
+<p> 对于死信队列，在RabbitMQ中主要涉及到几个参数。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">x-dead-letter-exchange:</span>	<span class="hljs-string">mirror.dlExchange</span>   <span class="hljs-string">对应的死信交换机</span><br><span class="hljs-attr">x-dead-letter-routing-key:</span>	<span class="hljs-string">mirror.messageExchange1.messageQueue1</span>  <span class="hljs-string">死信交换机routing-key</span><br><span class="hljs-attr">x-message-ttl:</span>	<span class="hljs-number">3000</span>  <span class="hljs-string">消息过期时间</span><br><span class="hljs-attr">durable:</span>	<span class="hljs-literal">true</span>  <span class="hljs-string">持久化，这个是必须的。</span><br></code></pre></td></tr></table></figure>
+
+<p> 在这里，x-dead-letter-exchange指定一个交换机作为死信交换机，然后x-dead-letter-routing-key指定交换机的RoutingKey。而接下来，死信交换机就可以像普通交换机一样，通过RoutingKey将消息转发到对应的死信队列中。</p>
+<h2 id="1、何时会产生死信"><a href="#1、何时会产生死信" class="headerlink" title="1、何时会产生死信"></a>1、何时会产生死信</h2><p>有以下三种情况，RabbitMQ会将一个正常消息转成死信</p>
+<ul>
+<li>消息被消费者确认拒绝。消费者把requeue参数设置为true(false)，并且在消费后，向RabbitMQ返回拒绝。channel.basicReject或者channel.basicNack。</li>
+<li>消息达到预设的TTL时限还一直没有被消费。</li>
+<li>消息由于队列已经达到最长长度限制而被丢掉</li>
+</ul>
+<blockquote>
+<p>TTL即最长存活时间 Time-To-Live 。消息在队列中保存时间超过这个TTL，即会被认为死亡。死亡的消息会被丢入死信队列，如果没有配置死信队列的话，RabbitMQ会保证死了的消息不会再次被投递，并且在未来版本中，会主动删除掉这些死掉的消息。</p>
+<p>设置TTL有两种方式，一是通过配置策略指定，另一种是给队列单独声明TTL</p>
+<p>策略配置方式 - Web管理平台配置 或者 使用指令配置 60000为毫秒单位</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">rabbitmqctl <span class="hljs-keyword">set</span>_policy TTL <span class="hljs-string">&quot;.*&quot;</span> &#x27;&#123;<span class="hljs-string">&quot;message-ttl&quot;</span><span class="hljs-function">:60000</span>&#125;&#x27; <span class="hljs-params">--apply-to</span> queues<br></code></pre></td></tr></table></figure>
+
+<p>在声明队列时指定 - 同样可以在Web管理平台配置，也可以在代码中配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;String, Object&gt; args = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;String, Object&gt;();<br>args.put(<span class="hljs-string">&quot;x-message-ttl&quot;</span>, <span class="hljs-number">60000</span>);<br>channel.queueDeclare(<span class="hljs-string">&quot;myqueue&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, args);<br></code></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="2、死信队列的配置方式"><a href="#2、死信队列的配置方式" class="headerlink" title="2、死信队列的配置方式"></a>2、死信队列的配置方式</h2><p>RabbitMQ中有两种方式可以声明死信队列，一种是针对某个单独队列指定对应的死信队列。另一种就是以策略的方式进行批量死信队列的配置。</p>
+<p>针对多个队列，可以使用策略方式，配置统一的死信队列。、</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">rabbitmqctl set_policy DLX &quot;.*&quot; &#x27;&#123;&quot;dead-letter-exchange&quot;:&quot;my-dlx&quot;&#125;&#x27; --apply-to queues<br></code></pre></td></tr></table></figure>
+
+<p>针对队列单独指定死信队列的方式主要是之前提到的三个属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">channel.exchangeDeclare(<span class="hljs-string">&quot;some.exchange.name&quot;</span>, <span class="hljs-string">&quot;direct&quot;</span>);<br><br>Map&lt;String, Object&gt; args = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;String, Object&gt;();<br>args.put(<span class="hljs-string">&quot;x-dead-letter-exchange&quot;</span>, <span class="hljs-string">&quot;some.exchange.name&quot;</span>);<br>channel.queueDeclare(<span class="hljs-string">&quot;myqueue&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, args);<br></code></pre></td></tr></table></figure>
+
+<p>这些参数，也可以在RabbitMQ的管理页面进行配置。例如配置策略时：</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/5F44FC25AF304C0DAE155A554217DDD8.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 另外，你会注意到，在对队列进行配置时，只有Classic经典队列和Quorum仲裁队列才能配置死信队列，而目前Stream流式队列，并不支持配置死信队列。</p>
+<h2 id="3、关于参数x-dead-letter-routing-key"><a href="#3、关于参数x-dead-letter-routing-key" class="headerlink" title="3、关于参数x-dead-letter-routing-key"></a>3、关于参数x-dead-letter-routing-key</h2><p> 死信在转移到死信队列时，他的Routing key 也会保存下来。但是如果配置了x-dead-letter-routing-key这个参数的话，routingkey就会被替换为配置的这个值。</p>
+<p> 另外，死信在转移到死信队列的过程中，是没有经过消息发送者确认的，<strong>所以并不能保证消息的安全性</strong>。</p>
+<h2 id="4、如何确定一个消息是不是死信"><a href="#4、如何确定一个消息是不是死信" class="headerlink" title="4、如何确定一个消息是不是死信"></a>4、如何确定一个消息是不是死信</h2><p> 消息被作为死信转移到死信队列后，会在Header当中增加一些消息。在官网的详细介绍中，可以看到很多内容，比如时间、原因(rejected,expired,maxlen)、队列等。然后header中还会加上第一次成为死信的三个属性，并且这三个属性在以后的传递过程中都不会更改。</p>
+<ul>
+<li>x-first-death-reason</li>
+<li>x-first-death-queue</li>
+<li>x-first-death-exchange</li>
+</ul>
+<h2 id="5、死信队列如何消费"><a href="#5、死信队列如何消费" class="headerlink" title="5、死信队列如何消费"></a>5、死信队列如何消费</h2><p> 其实从前面的配置过程能够看到，所谓死信交换机或者死信队列，不过是在交换机或者队列之间建立一种死信对应关系，而死信队列可以像正常队列一样被消费。他与普通队列一样具有FIFO的特性。对死信队列的消费逻辑通常是对这些失效消息进行一些业务上的补偿。</p>
+<blockquote>
+<p>RabbitMQ中，是不存在延迟队列的功能的，而通常如果要用到延迟队列，就会采用TTL+死信队列的方式来处理。</p>
+<p>RabbitMQ提供了一个rabbitmq_delayed_message_exchange插件，可以实现延迟队列的功能，但是并没有集成到官方的发布包当中，需要单独去下载。这里就不去讨论了。</p>
+</blockquote>
+<h1 id="四、消费优先级与流量控制"><a href="#四、消费优先级与流量控制" class="headerlink" title="四、消费优先级与流量控制"></a>四、消费优先级与流量控制</h1><blockquote>
+<p>文档地址： <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/consumer-priority.html">https://www.rabbitmq.com/consumer-priority.html</a></p>
+</blockquote>
+<p> 关于消费队列的优先级，关键是<strong>x-priority</strong> 这个参数，可以指定队列的优先级。默认情况下，RabbitMQ会根据round-robin策略，把消息均匀的给不同的消费者进行处理。但是有了优先级之后，RabbitMQ会保证优先级高的队列先进行消费，而同一优先级的队列，还是会使用round-robin轮询策略来进行分配。</p>
+<p> 与之对应的是RabbitMQ的流量控制配置，关键是channel.basicQos(int prefetch_size, int prefetch_count, boolean global)。 这个方法中，prefetch_count设置了当前消费者节点最多保持的未答复的消息个数， prefetch_size设置了当前消费节点最多保持的未答复的消息大小，然后global参数为true则表示该配置针对当前channel的所有队列，而默认情况下是false，表示该配置只针对当前消费者队列。最常用的方式就是只设定一个prefetch_count参数。</p>
+<p> 这两个参数实际上都是为了配置当前消费节点的消息吞吐量。当消费者集群中的业务处理能力或者消息配置不一样时，可以通过给不同的消费节点配置不同的prefetch_count，再结合消费优先级的配置来实现流量控制策略。</p>
+<h1 id="五、远程数据分发插件-Federation-Plugin"><a href="#五、远程数据分发插件-Federation-Plugin" class="headerlink" title="五、远程数据分发插件-Federation Plugin"></a>五、远程数据分发插件-Federation Plugin</h1><p> 如果我们需要在多个RabbitMQ服务之间进行消息同步，那么，首选的方案自然是通过RabbitMQ集群来进行。但是，在某些网络状况比较差的场景下，搭建集群会不太方便。例如，某大型企业，可能在北京机房和长沙机房分别搭建RabbitMQ服务，然后希望长沙机房需要同步北京机房的消息，这样可以让长沙的消费者服务可以直接连接长沙本地的RabbitMQ，而不用费尽周折去连接北京机房的RabbitMQ服务。这时要如何进行数据同步呢？搭建一个网络跨度这么大的集群显然就不太划算。这时就可以考虑使用RabbitMQ的Federation插件，搭建联邦队列Federation。通过Federation可以搭建一个单向的数据同步通道(当然，要搭建双相同步也是可以的)。</p>
+<h2 id="1、启动插件"><a href="#1、启动插件" class="headerlink" title="1、启动插件"></a>1、启动插件</h2><p> RabbitMQ的官方运行包中已经包含了Federation插件。只需要启动后就可以直接使用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">确认联邦插件</span><br>rabbitmq-plugins list|grep federation<br><br>[  ] rabbitmq_federation               3.9.15<br>[  ] rabbitmq_federation_management    3.9.15<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">启用联邦插件</span><br>rabbitmq-plugins.bat enable rabbitmq_federation<br><span class="hljs-meta prompt_"># </span><span class="language-bash">启用联邦插件的管理平台支持</span><br>rabbitmq-plugins.bat enable rabbitmq_federation_management<br></code></pre></td></tr></table></figure>
+
+<p> 插件启用完成后，可以在管理控制台的Admin菜单看到两个新增选项 Federation Status和Federation Upstreams。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/94102188805549CDAA7D2D1FF88B687C.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h2 id="2、配置Upstream"><a href="#2、配置Upstream" class="headerlink" title="2、配置Upstream"></a>2、配置Upstream</h2><p> Upstream表示是一个外部的服务节点，在RabbitMQ中，可以是一个交换机，也可以是一个队列。他的配置方式是由下游服务主动配置一个与上游服务的链接，然后数据就会从上游服务主动同步到下游服务中。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/EF7BC5F162184BB58E5CDAF6EDF78B26.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>接下来我们用本地localhost的RabbitMQ服务来模拟DownStream下游服务，去指向一个worker2机器上搭建的RabbitMQ服务，搭建一个联邦交换机Federation Exchange。</p>
+<p> 先在本地用程序的方式，声明一个交换机和交换队列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DownStreamConsumer</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException, TimeoutException &#123;<br>        <span class="hljs-type">ConnectionFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConnectionFactory</span>();<br>        factory.setHost(<span class="hljs-string">&quot;localhost&quot;</span>);<br>        factory.setPort(<span class="hljs-number">5672</span>);<br>        factory.setUsername(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setPassword(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setVirtualHost(<span class="hljs-string">&quot;/mirror&quot;</span>);<br>        <span class="hljs-type">Connection</span> <span class="hljs-variable">connection</span> <span class="hljs-operator">=</span> factory.newConnection();<br>        <span class="hljs-type">Channel</span> <span class="hljs-variable">channel</span> <span class="hljs-operator">=</span> connection.createChannel();<br><br>        channel.exchangeDeclare(<span class="hljs-string">&quot;fed_exchange&quot;</span>,<span class="hljs-string">&quot;direct&quot;</span>);<br>        channel.queueDeclare(<span class="hljs-string">&quot;fed_queue&quot;</span>,<span class="hljs-literal">true</span>,<span class="hljs-literal">false</span>,<span class="hljs-literal">false</span>,<span class="hljs-literal">null</span>);<br>        channel.queueBind(<span class="hljs-string">&quot;fed_queue&quot;</span>,<span class="hljs-string">&quot;fed_exchange&quot;</span>,<span class="hljs-string">&quot;routKey&quot;</span>);<br><br>        <span class="hljs-type">Consumer</span> <span class="hljs-variable">myconsumer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultConsumer</span>(channel) &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleDelivery</span><span class="hljs-params">(String consumerTag, Envelope envelope,</span><br><span class="hljs-params">                                       AMQP.BasicProperties properties, <span class="hljs-type">byte</span>[] body)</span><br>                    <span class="hljs-keyword">throws</span> IOException &#123;<br>                System.out.println(<span class="hljs-string">&quot;========================&quot;</span>);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">routingKey</span> <span class="hljs-operator">=</span> envelope.getRoutingKey();<br>                System.out.println(<span class="hljs-string">&quot;routingKey &gt;&quot;</span> + routingKey);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">contentType</span> <span class="hljs-operator">=</span> properties.getContentType();<br>                System.out.println(<span class="hljs-string">&quot;contentType &gt;&quot;</span> + contentType);<br>                <span class="hljs-type">long</span> <span class="hljs-variable">deliveryTag</span> <span class="hljs-operator">=</span> envelope.getDeliveryTag();<br>                System.out.println(<span class="hljs-string">&quot;deliveryTag &gt;&quot;</span> + deliveryTag);<br>                System.out.println(<span class="hljs-string">&quot;content:&quot;</span> + <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(body, <span class="hljs-string">&quot;UTF-8&quot;</span>));<br>                <span class="hljs-comment">// (process the message components here ...)</span><br>                <span class="hljs-comment">//消息处理完后，进行答复。答复过的消息，服务器就不会再次转发。</span><br>                <span class="hljs-comment">//没有答复过的消息，服务器会一直不停转发。</span><br><span class="hljs-comment">//				 channel.basicAck(deliveryTag, false);</span><br>            &#125;<br>        &#125;;<br>        channel.basicConsume(<span class="hljs-string">&quot;fed_queue&quot;</span>, <span class="hljs-literal">true</span>, myconsumer);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 然后在本地RabbitMQ中配置一个上游服务，服务的名字Name属性随意，URI指向Worker2上的&#x2F;mirror虚拟机(配置方式参看页面上的示例)：amqp:&#x2F;&#x2F;admin:admin@worker2:5672&#x2F; (注意，在添加时，如果指定了Upstream的Virtual Host是mirror，那么在URI中就不能再添加Virtual host配置了，默认会在上游服务中使用相同的VirtualHost。)</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/D5B2F71FC8A04B4B992F550E28EF938F.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<blockquote>
+<p>注意： 1、其他的相关参数，可以在页面上查看帮助。例如，默认情况下，Upstream会使用和Downstream同名的Exchange，但是也可以通过Upstream配置中的Exchange参数指定不同的。</p>
+<p>2、关于Virtual Host虚拟机配置，如果在配置Upstream时指定了Virtual Host属性，那么在URI中就不能再添加Virtaul Host配置了，默认会在Upstream上使用相同的Virtual Host。</p>
+</blockquote>
+<h2 id="3、配置Federation策略"><a href="#3、配置Federation策略" class="headerlink" title="3、配置Federation策略"></a>3、配置Federation策略</h2><p> 接下来需要配置一个指向上游服务的Federation策略。在配置策略时可以选择是针对Exchange交换机还是针对Queue队列。配置策略时，同样有很多参数可以选择配置。最简化的一个配置如下：</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/303F4FFA2CAA41BC83D209D1DC0753AF.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<blockquote>
+<p>注意：每个策略的Definition部分，至少需要指定一个Federation目标。federation-upstream-set参数表示是以set集合的方式针对多个Upstream生效，all表示是全部Upstream。而federation-upstream参数表示只对某一个Upstream生效。</p>
+</blockquote>
+<h2 id="4、测试"><a href="#4、测试" class="headerlink" title="4、测试"></a>4、测试</h2><p> 配置完Upstream和对应的策略后，进入Federation Status菜单就能看到Federation插件的执行情况。状态为running表示启动成功，如果配置出错，则会提示失败原因<code>这个提示非常非常简单</code></p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/E31B2E92CAC141E79F1254E2E189D4C3.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 然后，在远程服务Worker2的RabbitMQ服务中，可以看到对应生成的Federation交换机。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/CD64E266C39B4830BC4E3DD3C75BF2A0.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 接下来就可以尝试在上游服务Worker2的fed_exchange中发送消息，消息会同步到Local本地的联邦交换机中，从而被对应的消费者消费到。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/957D01BDDADC4FD09177F364B8DB1F80.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 在很多网络情况复杂的大型项目中，Federation插件甚至会比镜像集群使用更多，这也是为什么RabbitMQ有了集群机制后，依然一直保留着Federation插件。</p>
+<blockquote>
+<p>在我们的实验过程中，会在上游服务重新生成一个新的Exchange交换机，这显然是不太符合实际情况的。我们通常的使用方式是希望将上游MQ中的某一个已有的Exchange交换机或者Queue队列的数据同步到下游一个新的Exchange或者Queue中。这要如何配置呢？大家自行理解实验把。</p>
+</blockquote>
+<h1 id="六、懒队列-Lazy-Queue"><a href="#六、懒队列-Lazy-Queue" class="headerlink" title="六、懒队列 Lazy Queue"></a>六、懒队列 Lazy Queue</h1><blockquote>
+<p>文档地址： <a target="_blank" rel="noopener" href="https://www.rabbitmq.com/lazy-queues.html">https://www.rabbitmq.com/lazy-queues.html</a></p>
+</blockquote>
+<p> RabbitMQ从3.6.0版本开始，就引入了懒队列的概念。懒队列会尽可能早的将消息内容保存到硬盘当中，并且只有在用户请求到时，才临时从硬盘加载到RAM内存当中。</p>
+<p> 懒队列的设计目标是为了支持非常长的队列(数百万级别)。队列可能会因为一些原因变得非常长-也就是数据堆积。</p>
+<ul>
+<li>消费者服务宕机了</li>
+<li>有一个突然的消息高峰，生产者生产消息超过消费者</li>
+<li>消费者消费太慢了</li>
+</ul>
+<p> 默认情况下，RabbitMQ接收到消息时，会保存到内存以便使用，同时把消息写到硬盘。但是，消息写入硬盘的过程中，是会阻塞队列的。RabbitMQ虽然针对写入硬盘速度做了很多算法优化，但是在长队列中，依然表现不是很理想，所以就有了懒队列的出现。</p>
+<p> 懒队列会尝试尽可能早的把消息写到硬盘中。这意味着在正常操作的大多数情况下，RAM中要保存的消息要少得多。当然，这是以增加磁盘IO为代价的。</p>
+<p> 声明懒队列有两种方式：</p>
+<p>1、给队列指定参数</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/5B259F5E767941A9B29F2508ECD2ADF5.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>在代码中可以通过x-queue-mode参数指定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Map&lt;String, Object&gt; args = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;String, Object&gt;();<br>  args.put(<span class="hljs-string">&quot;x-queue-mode&quot;</span>, <span class="hljs-string">&quot;lazy&quot;</span>);<br>  channel.queueDeclare(<span class="hljs-string">&quot;myqueue&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, args);<br></code></pre></td></tr></table></figure>
+
+<p>2、设定一个策略，在策略中指定queue-mode 为 lazy。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">rabbitmqctl set_policy Lazy &quot;^lazy-queue$&quot; &#x27;&#123;&quot;queue-mode&quot;:&quot;default&quot;&#125;&#x27; --apply-to queues<br></code></pre></td></tr></table></figure>
+
+<p> 要注意的是，当一个队列被声明为懒队列，那即使队列被设定为不持久化，消息依然会写入到硬盘中。并且，在镜像集群中，大量的消息也会被同步到当前节点的镜像节点当中，并写入硬盘。这会给集群资源造成很大的负担。</p>
+<p> 最后一句话总结：<strong>懒队列适合消息量大且长期有堆积的队列，可以减少内存使用，加快消费速度。但是这是以大量消耗集群的网络及磁盘IO为代价的</strong>。</p>
+<h1 id="七、消息分片存储插件-Sharding-Plugin"><a href="#七、消息分片存储插件-Sharding-Plugin" class="headerlink" title="七、消息分片存储插件-Sharding Plugin"></a>七、消息分片存储插件-Sharding Plugin</h1><p> 谈到Sharding，你是不是就想到了分库分表？对于数据库的分库分表，分库可以减少数据库的IO性能压力，而真正要解决单表数据太大的问题，就需要分表。</p>
+<p> 对于RabbitMQ同样，通过集群模式，能够增大他的吞吐量，但是，针对单个队列，如何增加吞吐量呢？普通集群保证不了数据的高可用，而镜像队列虽然可以保证消息高可用，但是消费者并不能对消息增加消费并发度，所以，RabbitMQ的集群机制并不能增加单个队列的吞吐量。</p>
+<p> 上面的懒队列其实就是针对这个问题的一种解决方案。但是很显然，懒队列的方式属于治标不治本。真正要提升RabbitMQ单队列的吞吐量，还是要从数据也就是消息入手，只有将数据真正的分开存储才行。RabbitMQ提供的Sharding插件，就是一个可选的方案。他会真正将一个队列中的消息分散存储到不同的节点上，并提供多个节点的负载均衡策略实现对等的读与写功能。</p>
+<h2 id="1、安装Sharding插件"><a href="#1、安装Sharding插件" class="headerlink" title="1、安装Sharding插件"></a>1、安装Sharding插件</h2><p> 在当前RabbitMQ的运行版本中，已经包含了Sharding插件，需要使用插件时，只需要安装启用即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">rabbitmq-plugins enable rabbitmq_sharding<br></code></pre></td></tr></table></figure>
+
+<h2 id="2、配置Sharding策略"><a href="#2、配置Sharding策略" class="headerlink" title="2、配置Sharding策略"></a>2、配置Sharding策略</h2><p> 启用完成后，需要配置Sharding的策略。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/B1C5E1C4C7E249798694883033127189.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 按照要求，就可以配置一个针对sharding_开头的交换机和队列的策略。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/F26D6B23F3E243F49D7EE962AD50BC44.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h2 id="3、新增带Sharding的Exchange交换机"><a href="#3、新增带Sharding的Exchange交换机" class="headerlink" title="3、新增带Sharding的Exchange交换机"></a>3、新增带Sharding的Exchange交换机</h2><p> 在创建队列时，可以看到，安装了Sharding插件后，多出了一种队列类型，x-modulus-hash</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/E24B2BBB58694B319C91A62D9745A917.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h2 id="4、往分片交换机上发送消息"><a href="#4、往分片交换机上发送消息" class="headerlink" title="4、往分片交换机上发送消息"></a>4、往分片交换机上发送消息</h2><p> 接下来，就可以用下面的生产者代码，在RabbitMQ上声明一个x-modulus-hash类型的交换机，并往里面发送一万条消息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShardingProducer</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">EXCHANGE_NAME</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;sharding2_exchange&quot;</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception&#123;<br>        <span class="hljs-type">ConnectionFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConnectionFactory</span>();<br>        factory.setHost(<span class="hljs-string">&quot;localhost&quot;</span>);<br>        factory.setPort(<span class="hljs-number">5672</span>);<br>        factory.setUsername(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setPassword(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setVirtualHost(<span class="hljs-string">&quot;/mirror&quot;</span>);<br>        <span class="hljs-type">Connection</span> <span class="hljs-variable">connection</span> <span class="hljs-operator">=</span> factory.newConnection();<br>        <span class="hljs-type">Channel</span> <span class="hljs-variable">channel</span> <span class="hljs-operator">=</span> connection.createChannel();<br>        <span class="hljs-comment">//发送者只管往exchange里发消息，而不用关心具体发到哪些queue里。</span><br>        channel.exchangeDeclare(EXCHANGE_NAME, <span class="hljs-string">&quot;x-modulus-hash&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">message</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;LOG INFO 44444&quot;</span>;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span> ; i &lt; <span class="hljs-number">10000</span> ; i ++)&#123;<br>            channel.basicPublish(EXCHANGE_NAME, String.valueOf(i), <span class="hljs-literal">null</span>, message.getBytes());<br>        &#125;<br>        channel.close();<br>        connection.close();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 启动后，就会在RabbitMQ上声明一个sharding_exchange。查看这个交换机的详情，可以看到他的分片情况：</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/D8F47F9B665F4A3893D2E57D25F5C7DE.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> 并且，一万条消息被平均分配到了三个队列当中。</p>
+<p><img src="/3%E3%80%81RabbitMQ%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/C9278CE4F2364150A41D851567C0CA7F.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> Sharding插件带来的x-modulus-hash类型Exchange，会忽略之前的routingkey配置，而将消息以轮询的方式平均分配到Exchange绑定的所有队列上。</p>
+<h2 id="5、消费分片交换机上的消息"><a href="#5、消费分片交换机上的消息" class="headerlink" title="5、消费分片交换机上的消息"></a>5、消费分片交换机上的消息</h2><p> 现在sharding2_exchange交换机上的消息已经平均分配到了三个碎片队列上。这时如何去消费这些消息呢？你会发现这些碎片队列的名字并不是毫无规律的，他是有一个固定的格式的。都是固定的这种格式：<strong>sharding: {exchangename}-{node}-{shardingindex}</strong> 。你当然可以针对每个队列去单独声明消费者，这样当然是能够消费到消息的，但是这样，你消费到的消息就是一些零散的消息了，这不符合分片的业务场景要求。</p>
+<p> 数据分片后，还是希望能够像一个普通队列一样消费到完整的数据副本。这时，Sharding插件提供了一种伪队列的消费方式。你可以声明一个名字为 <strong>exchangename</strong> 的伪队列，然后像消费一个普通队列一样去消费这一系列的碎片队列。</p>
+<blockquote>
+<p>为什么说是伪队列？exchange、queue傻傻分不清楚？因为名为exchangename的队列实际是不存在的。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShardingConsumer</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String QUEUENAME=<span class="hljs-string">&quot;sharding2_exchange&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> IOException, TimeoutException &#123;<br>        <span class="hljs-type">ConnectionFactory</span> <span class="hljs-variable">factory</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConnectionFactory</span>();<br>        factory.setHost(<span class="hljs-string">&quot;localhost&quot;</span>);<br>        factory.setPort(<span class="hljs-number">5672</span>);<br>        factory.setUsername(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setPassword(<span class="hljs-string">&quot;admin&quot;</span>);<br>        factory.setVirtualHost(<span class="hljs-string">&quot;/mirror&quot;</span>);<br>        <span class="hljs-type">Connection</span> <span class="hljs-variable">connection</span> <span class="hljs-operator">=</span> factory.newConnection();<br>        <span class="hljs-type">Channel</span> <span class="hljs-variable">channel</span> <span class="hljs-operator">=</span> connection.createChannel();<br><br>        channel.queueDeclare(QUEUENAME,<span class="hljs-literal">false</span>,<span class="hljs-literal">false</span>,<span class="hljs-literal">false</span>,<span class="hljs-literal">null</span>);<br><br>        <span class="hljs-type">Consumer</span> <span class="hljs-variable">myconsumer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DefaultConsumer</span>(channel) &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleDelivery</span><span class="hljs-params">(String consumerTag, Envelope envelope,</span><br><span class="hljs-params">                                       AMQP.BasicProperties properties, <span class="hljs-type">byte</span>[] body)</span><br>                    <span class="hljs-keyword">throws</span> IOException &#123;<br>                System.out.println(<span class="hljs-string">&quot;========================&quot;</span>);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">routingKey</span> <span class="hljs-operator">=</span> envelope.getRoutingKey();<br>                System.out.println(<span class="hljs-string">&quot;routingKey &gt;&quot;</span> + routingKey);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">contentType</span> <span class="hljs-operator">=</span> properties.getContentType();<br>                System.out.println(<span class="hljs-string">&quot;contentType &gt;&quot;</span> + contentType);<br>                <span class="hljs-type">long</span> <span class="hljs-variable">deliveryTag</span> <span class="hljs-operator">=</span> envelope.getDeliveryTag();<br>                System.out.println(<span class="hljs-string">&quot;deliveryTag &gt;&quot;</span> + deliveryTag);<br>                System.out.println(<span class="hljs-string">&quot;content:&quot;</span> + <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(body, <span class="hljs-string">&quot;UTF-8&quot;</span>));<br>                <span class="hljs-comment">// (process the message components here ...)</span><br>                <span class="hljs-comment">//消息处理完后，进行答复。答复过的消息，服务器就不会再次转发。</span><br>                <span class="hljs-comment">//没有答复过的消息，服务器会一直不停转发。</span><br><span class="hljs-comment">//				 channel.basicAck(deliveryTag, false);</span><br>            &#125;<br>        &#125;;<br>        channel.basicConsume(QUEUENAME, <span class="hljs-literal">true</span>, myconsumer);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6、注意事项"><a href="#6、注意事项" class="headerlink" title="6、注意事项"></a>6、注意事项</h2><p> Sharding插件将消息分散存储时，是尽量按照轮询的方式进行。</p>
+<p>首先，这些消息在分片的过程中，是没有考虑消息顺序的，这会让RabbitMQ中原本就不是很严谨的消息顺序变得更加雪上加霜。所以，<strong>Sharding插件适合于那些对于消息延迟要求不严格，以及对消费顺序没有任何要求的的场景。</strong></p>
+<p>然后，Sharding插件消费伪队列的消息时，会从消费者最少的碎片中选择队列。这时，如果你的这些碎片队列中已经有了很多其他的消息，那么再去消费伪队列消息时，就会受到这些不均匀数据的影响。所以，<strong>如果使用Sharding插件，这些碎片队列就尽量不要单独使用了</strong>。</p>
+<p> RabbitMQ针对各种复杂场景，还有非常多精妙的设计以及扩展。我们多学习一些扩展的场景，也还只是冰山一角，但是，这些场景已经超出了国内80%企业的应用范围。多学习了解这些扩展场景，对我们的好处不光是能把RabbitMQ用得更好，更重要在于能帮你更深入的理解MQ的应用场景以及各种细节问题。而对于业务问题挖掘深度，才是决定一个程序员实力的前提。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
@@ -278,6 +477,48 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/" class="category-chain-item">架构之分布式框架</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/RabbitMQ/" class="category-chain-item">RabbitMQ</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/RabbitMQ/">#RabbitMQ</a>
+      
+    </div>
   
 </div>
 

@@ -16,15 +16,24 @@
   <meta name="author" content="Kblayt">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="一、RocketMQ介绍 RocketMQ是阿里巴巴开源的一个消息中间件，在阿里内部历经了双十一等很多高并发场景的考验，能够处理亿万级别的消息。2016年开源后捐赠给Apache，现在是Apache的一个顶级项目。  目前RocketMQ在阿里云上有一个购买即可用的商业版本，商业版本集成了阿里内部一些更深层次的功能及运维定制。我们这里学习的是Apache的开源版本。开源版本相对于阿里云上的商业版本">
+<meta property="og:type" content="article">
 <meta property="og:title" content="1、RocketMQ快速实战以及集群架构解析">
 <meta property="og:url" content="https://kblayt.github.io/2024/01/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/RocketMQ/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一、RocketMQ介绍 RocketMQ是阿里巴巴开源的一个消息中间件，在阿里内部历经了双十一等很多高并发场景的考验，能够处理亿万级别的消息。2016年开源后捐赠给Apache，现在是Apache的一个顶级项目。  目前RocketMQ在阿里云上有一个购买即可用的商业版本，商业版本集成了阿里内部一些更深层次的功能及运维定制。我们这里学习的是Apache的开源版本。开源版本相对于阿里云上的商业版本">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/8D5A33847FFD40F9BBCD186C5DCD9547.png">
+<meta property="og:image" content="https://kblayt.github.io/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/B324F92B57AD481A8A4CFC2CF717D3A2.png">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/7AC9B9FEF57A45BCBDD2F628857CF0BE?ynotemdtimestamp=1709085011706">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/FEAB80F530AB4F17B3052E77047733DD?ynotemdtimestamp=1709085011706">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/526184557CED4B54988CD129B567474C?ynotemdtimestamp=1709085011706">
 <meta property="article:published_time" content="2024-01-04T12:57:01.000Z">
-<meta property="article:modified_time" content="2024-01-04T12:57:01.844Z">
+<meta property="article:modified_time" content="2024-02-28T01:50:40.544Z">
 <meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="RocketMQ">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/8D5A33847FFD40F9BBCD186C5DCD9547.png">
   
   
   
@@ -216,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          24k 字
         
       </span>
     
@@ -227,7 +236,7 @@
         
         
         
-          1 分钟
+          199 分钟
         
       </span>
     
@@ -270,7 +279,382 @@
             
               <div class="markdown-body">
                 
-                <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <h1 id="一、RocketMQ介绍"><a href="#一、RocketMQ介绍" class="headerlink" title="一、RocketMQ介绍"></a>一、RocketMQ介绍</h1><p> RocketMQ是阿里巴巴开源的一个消息中间件，在阿里内部历经了双十一等很多高并发场景的考验，能够处理亿万级别的消息。2016年开源后捐赠给Apache，现在是Apache的一个顶级项目。</p>
+<p> 目前RocketMQ在阿里云上有一个购买即可用的商业版本，商业版本集成了阿里内部一些更深层次的功能及运维定制。我们这里学习的是Apache的开源版本。开源版本相对于阿里云上的商业版本，功能上略有缺失，但是大体上功能是一样的。</p>
+<h2 id="1-1、RocketMQ的发展历程"><a href="#1-1、RocketMQ的发展历程" class="headerlink" title="1.1、RocketMQ的发展历程"></a>1.1、RocketMQ的发展历程</h2><p> 早期阿里使用ActiveMQ，但是，当消息开始逐渐增多后，ActiveMQ的IO性能很快达到了瓶颈。于是，阿里开始关注Kafka。但是Kafka是针对日志收集场景设计的，他的并发性能并不是很理想。尤其当他的Topic过多时，由于Partition文件也会过多，会严重影响IO性能。于是阿里才决定自研中间件，最早叫做MetaQ，后来改名成为RocketMQ。最早他所希望解决的最大问题就是多Topic下的IO性能压力。但是产品在阿里内部的不断改进，RocketMQ开始体现出一些不一样的优势。</p>
+<h2 id="1-2、RocketMQ产品特点比较"><a href="#1-2、RocketMQ产品特点比较" class="headerlink" title="1.2、RocketMQ产品特点比较"></a>1.2、RocketMQ产品特点比较</h2><p> RocketMQ的消息吞吐量虽然依然不如Kafka，但是却比RabbitMQ高很多。在阿里内部，RocketMQ集群每天处理的请求数超过5万亿次，支持的核心应用超过3000个。</p>
+<p> RocketMQ天生就为金融互联网而生，因此他的消息可靠性相比Kafka也有了很大的提升，而消息吞吐量相比RabbitMQ也有很大的提升。另外，RocketMQ的高级功能也越来越全面，广播消费、延迟队列、死信队列等等高级功能一应俱全，甚至某些业务功能比如事务消息，已经呈现出领先潮流的趋势。</p>
+<p> RocketMQ的源码是用Java开发的，这也使得很多互联网公司可以根据自己的业务需求做深度定制。而RocketMQ经过阿里双十一多次考验，源码的稳定性是值得信赖的，这使得功能定制有一个非常高的起点。</p>
+<p> 传统意义上，RocketMQ有一个比较大的局限，就是他的客户端只支持Java语言。但RocketMQ作为一个开源软件，自身产品不断成熟的同时，周边的技术生态也需要不断演进。RocketMQ成为Apache顶级项目后，又继续通过社区开发出了很多与主流技术生态融合的周边产品。例如在RocketMQ的社区，也正在开发GO，Python，Nodejs等语言的客户端。下图列出了RocketMQ社区目前的一些项目</p>
+<p><img src="/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/8D5A33847FFD40F9BBCD186C5DCD9547.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h1 id="二、RocketMQ快速实战"><a href="#二、RocketMQ快速实战" class="headerlink" title="二、RocketMQ快速实战"></a>二、RocketMQ快速实战</h1><p> RocketMQ的官网地址： <a target="_blank" rel="noopener" href="http://rocketmq.apache.org/">http://rocketmq.apache.org</a> ，github地址是 <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq">https://github.com/apache/rocketmq</a> ，当前最新的版本是4.9.3。我们这次采用4.9.1版本来学习</p>
+<h2 id="2-1、下载RocketMQ"><a href="#2-1、下载RocketMQ" class="headerlink" title="2.1、下载RocketMQ"></a>2.1、下载RocketMQ</h2><p> 最新版本的RocketMQ可以到官网上进行下载。历史版本需要到Github仓库中下载。下载地址：<a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq/releases%E3%80%82">https://github.com/apache/rocketmq/releases。</a></p>
+<p> 目前RocketMQ的历史运行版本已经无法在官网下载，只能通过Github仓库下载历史版本的源码，自行编译。配套资料中提供了4.9.1版本的运行版本以及源码。</p>
+<h2 id="2-2、快速安装RocketMQ"><a href="#2-2、快速安装RocketMQ" class="headerlink" title="2.2、快速安装RocketMQ"></a>2.2、快速安装RocketMQ</h2><p> RocketMQ的安装非常简单，就是上传解压就可以了。</p>
+<p> 然后我们准备一台CentOS7的Linux机器，快速把RocketMQ给运行起来。我使用的Linux版本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[oper@worker1 jdk1.8]$ uname -a<br>Linux worker1 3.10.0-1127.el7.x86_64 #1 SMP Tue Mar 31 23:36:51 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux<br></code></pre></td></tr></table></figure>
+
+<p> 我们需要创建一个操作用户用来运行自己的程序，与root用户区分开。使用root用户创建一个oper用户，并给他创建一个工作目录。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@worker1 ~]# useradd oper<br>[root@worker1 ~]# passwd oper <br>设置用户密码<br>[root@worker1 ~]# mkdir /app<br>[root@worker1 ~]# chown oper:oper /app<br></code></pre></td></tr></table></figure>
+
+<p> 运行RocketMQ需要先安装JDK。我们采用目前最稳定的JDK1.8版本。CentOS可以采用课件资料中的jdk-8u171-linux-x64.tar.gz，也可以自行去Oracle官网上下载。然后用FTP上传到oper用户的工作目录下。由oper用户解压到&#x2F;app&#x2F;jdk1.8目录下。</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs crystal">[oper<span class="hljs-variable">@worker1</span> tools]<span class="hljs-variable">$ </span>tar -zxvf jdk-<span class="hljs-number">8</span>u171-linux-x64.tar.gz<br>[oper<span class="hljs-variable">@worker1</span> tools]<span class="hljs-variable">$ </span>mv jdk1.<span class="hljs-number">8.0_171</span>/ <span class="hljs-regexp">/app/jdk</span>1.<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+
+<p> 配置环境变量。使用 vi ~&#x2F;.bash_profile编辑文件，在下面加入以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">export JAVA_HOME=/app/jdk1.8/<br>PATH=$JAVA_HOME/bin:$PATH:$HOME/.local/bin:$HOME/bin<br>export PATH<br></code></pre></td></tr></table></figure>
+
+<p> 编辑完成后，执行 source ~&#x2F;.bash_profile让环境变量生效。输入java -version能查看到以下内容表明JDK安装成功了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">[oper@worker1 ~]$ java -version<br>java version &quot;1.8.0_171&quot;<br>Java(TM) SE Runtime Environment (build 1.8.0_171-b11)<br>Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)<br></code></pre></td></tr></table></figure>
+
+<p> 然后我们把下载的rocketmq-all-4.9.1-bin-release.zip在本地完成解压，并上传到&#x2F;app&#x2F;rocketmq目录。完成后，把rocketmq的bin目录也配置到环境变量当中。 vi ~&#x2F;.bash_profile，加入以下内容，并执行source ~&#x2F;.bash_profile让环境变量生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">export JAVA_HOME=/app/jdk1.8/<br>export ROCKETMQ_HOME=/app/rocketmq/rocketmq-all-4.9.1-bin-release<br>PATH=$ROCKETMQ_HOME/bin:$JAVA_HOME/bin:$PATH:$HOME/.local/bin:$HOME/bin<br>export PATH<br></code></pre></td></tr></table></figure>
+
+<p> 这样RocketMQ就安装完成了。我们把他运行起来。</p>
+<blockquote>
+<p>这个ROCKETMQ_HOME的环境变量是必须要单独配置的，如果不配置的话，启动NameSever和Broker都会报错。</p>
+<p>这个环境变量的作用是用来加载$ROCKETMQ_HOME&#x2F;conf下的除broker.conf以外的几个配置文件。所以实际情况中，可以不按这个配置，但是一定要能找到配置文件。</p>
+</blockquote>
+<h2 id="2-3、-快速运行RocketMQ"><a href="#2-3、-快速运行RocketMQ" class="headerlink" title="2.3、 快速运行RocketMQ"></a>2.3、 快速运行RocketMQ</h2><h3 id="2-31-RocketMQ工作原理"><a href="#2-31-RocketMQ工作原理" class="headerlink" title="2.31 RocketMQ工作原理"></a>2.31 RocketMQ工作原理</h3><p> 运行之前，我们需要对RocketMQ的组件结构有个大致的了解。</p>
+<p><img src="/1%E3%80%81RocketMQ%E5%BF%AB%E9%80%9F%E5%AE%9E%E6%88%98%E4%BB%A5%E5%8F%8A%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/B324F92B57AD481A8A4CFC2CF717D3A2.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p> RocketMQ由以下这几个组件组成</p>
+<ul>
+<li>NameServer : 提供轻量级的Broker路由服务。</li>
+<li>Broker：实际处理消息存储、转发等服务的核心组件。</li>
+<li>Producer：消息生产者集群。通常是业务系统中的一个功能模块。</li>
+<li>Consumer：消息消费者集群。通常也是业务系统中的一个功能模块。</li>
+</ul>
+<p>所以我们要启动RocketMQ服务，需要先启动NameServer。</p>
+<h3 id="2-3-2-NameServer服务搭建"><a href="#2-3-2-NameServer服务搭建" class="headerlink" title="2.3.2 NameServer服务搭建"></a>2.3.2 NameServer服务搭建</h3><p> 启动NameServer非常简单， 在$ROCKETMQ_HOME&#x2F;bin目录下有个mqadminsrv。直接执行这个脚本就可以启动RocketMQ的NameServer服务。</p>
+<p> 但是要注意，RocketMQ默认预设的JVM内存是4G，这是RocketMQ给我们的最佳配置。但是通常我们用虚拟机的话都是不够4G内存的，所以需要调整下JVM内存大小。<a target="_blank" rel="noopener" href="http://修改的方式是直接修改runserver.sh/">修改的方式是直接修改runserver.sh</a>。 用vi runserver.sh编辑这个脚本，在脚本中找到这一行调整内存大小为512M</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -server -Xms512m -Xmx512m -Xmn256m -<br>XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m&quot;<br></code></pre></td></tr></table></figure>
+
+<p> 然后我们用静默启动的方式启动NameServer服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nohup bin/mqnamesrv &amp; <br></code></pre></td></tr></table></figure>
+
+<p> 启动完成后，在nohup.out里看到这一条关键日志就是启动成功了。并且使用jps指令可以看到有一个NamesrvStartup进程。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">Java HotSpot(TM) <span class="hljs-number">64</span>-<span class="hljs-type">Bit</span> <span class="hljs-keyword">Server</span> VM <span class="hljs-built_in">warning</span>: <span class="hljs-keyword">Using</span> the DefNew young collector <span class="hljs-keyword">with</span> the CMS<br>collector <span class="hljs-keyword">is</span> deprecated <span class="hljs-keyword">and</span> will likely be removed <span class="hljs-keyword">in</span> a future <span class="hljs-keyword">release</span><br>Java HotSpot(TM) <span class="hljs-number">64</span>-<span class="hljs-type">Bit</span> <span class="hljs-keyword">Server</span> VM <span class="hljs-built_in">warning</span>: UseCMSCompactAtFullCollection <span class="hljs-keyword">is</span> deprecated <span class="hljs-keyword">and</span><br>will likely be removed <span class="hljs-keyword">in</span> a future <span class="hljs-keyword">release</span>.<br>The <span class="hljs-type">Name</span> <span class="hljs-keyword">Server</span> boot success. serializeType=<span class="hljs-type">JSON</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-3-Broker服务搭建"><a href="#2-3-3-Broker服务搭建" class="headerlink" title="2.3.3 Broker服务搭建"></a>2.3.3 Broker服务搭建</h3><p> <a target="_blank" rel="noopener" href="http://启动broker的脚本是runbroker.sh/">启动Broker的脚本是runbroker.sh</a>。Broker的默认预设内存是8G，启动前，如果内存不够，同样需要调整下JVM内存。vi <a target="_blank" rel="noopener" href="http://runbroker.sh/">runbroker.sh</a>，找到这一行，进行内存调整</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -server -Xms512m -Xmx512m&quot;<br></code></pre></td></tr></table></figure>
+
+<p> 然后我们需要找到$ROCKETMQ_HOME&#x2F;conf&#x2F;broker.conf， vi指令进行编辑，在最下面加入一个配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">autoCreateTopicEnable=true<br></code></pre></td></tr></table></figure>
+
+<p> <a target="_blank" rel="noopener" href="http://然后也以静默启动的方式启动runbroker.sh/">然后也以静默启动的方式启动runbroker.sh</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nohup ./mqbroker &amp;<br></code></pre></td></tr></table></figure>
+
+<p> 启动完成后，同样是检查nohup.out日志，有这一条关键日志就标识启动成功了。 并且jps指令可以看到一个BrokerStartup进程。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">The <span class="hljs-keyword">broker[worker1, </span><span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">232</span>.<span class="hljs-number">128</span>:<span class="hljs-number">10911</span>] <span class="hljs-keyword">boot </span>success. serializeType=<span class="hljs-keyword">JSON</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在观察runserver.sh和runbroker.sh时，我们还可以查看到其他的JVM执行参数，这些参数都可以进行定制。例如我们观察到一个比较有意思的地方，nameServer使用的是CMS垃圾回收器，而Broker使用的是G1垃圾回收器。 关于垃圾回收器的知识你还记得吗？</p>
+</blockquote>
+<h3 id="2-3-3-命令行启动客户端"><a href="#2-3-3-命令行启动客户端" class="headerlink" title="2.3.3 命令行启动客户端"></a>2.3.3 命令行启动客户端</h3><p> 在RocketMQ的安装包中，提供了一个tools.sh工具可以用来在命令行快速验证RocketMQ服务。我们在worker2上进入RocketMQ的安装目录：</p>
+<p>首先需要配置一个环境变量NAMESRV_ADDR指向我们启动的NameServer服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">export NAMESRV_ADDR=&#x27;localhost:9876&#x27; <br></code></pre></td></tr></table></figure>
+
+<p>然后启动消息生产者发送消息：默认会发1000条消息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Producer<br></code></pre></td></tr></table></figure>
+
+<p>我们可以看到发送消息的日志：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">..</span><span class="hljs-built_in">..</span>.<br>SendResult [<span class="hljs-attribute">sendStatus</span>=SEND_OK, <span class="hljs-attribute">msgId</span>=C0A8E88007AC3764951D891CE9A003E7, <span class="hljs-attribute">offsetMsgId</span>=C0A8E88000002A9F00000000000317BF, <span class="hljs-attribute">messageQueue</span>=MessageQueue [<span class="hljs-attribute">topic</span>=TopicTest, <span class="hljs-attribute">brokerName</span>=worker1, <span class="hljs-attribute">queueId</span>=1], <span class="hljs-attribute">queueOffset</span>=249]<br>14:59:33.418 [NettyClientSelector_1] <span class="hljs-built_in">INFO</span>  RocketmqRemoting - closeChannel: close the<span class="hljs-built_in"> connection </span><span class="hljs-keyword">to</span> remote address[127.0.0.1:9876] result: <span class="hljs-literal">true</span><br>14:59:33.423 [NettyClientSelector_1] <span class="hljs-built_in">INFO</span>  RocketmqRemoting - closeChannel: close the<span class="hljs-built_in"> connection </span><span class="hljs-keyword">to</span> remote address[192.168.232.128:10911] result: <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>这日志中，上面部分就是我们发送的消息的内容。后面两句标识消息生产者正常关闭。</p>
+<p>然后启动消息消费者接收消息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bin/tools.sh  org.apache.rocketmq.example.quickstart.Consumer<br></code></pre></td></tr></table></figure>
+
+<p>启动后，可以看到消费到的消息。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">..</span><span class="hljs-built_in">..</span><span class="hljs-built_in">..</span><br>ConsumeMessageThread_19 Receive New Messages: [MessageExt [<span class="hljs-attribute">brokerName</span>=worker1, <span class="hljs-attribute">queueId</span>=2, <span class="hljs-attribute">storeSize</span>=203, <span class="hljs-attribute">queueOffset</span>=53, <span class="hljs-attribute">sysFlag</span>=0, <span class="hljs-attribute">bornTimestamp</span>=1606460371999, <span class="hljs-attribute">bornHost</span>=/192.168.232.128:43436, <span class="hljs-attribute">storeTimestamp</span>=1606460372000, <span class="hljs-attribute">storeHost</span>=/192.168.232.128:10911, <span class="hljs-attribute">msgId</span>=C0A8E88000002A9F000000000000A7AE, <span class="hljs-attribute">commitLogOffset</span>=42926, <span class="hljs-attribute">bodyCRC</span>=1968636794, <span class="hljs-attribute">reconsumeTimes</span>=0, <span class="hljs-attribute">preparedTransactionOffset</span>=0, toString()=Message&#123;<span class="hljs-attribute">topic</span>=<span class="hljs-string">&#x27;TopicTest&#x27;</span>, <span class="hljs-attribute">flag</span>=0, properties=&#123;<span class="hljs-attribute">MIN_OFFSET</span>=0, <span class="hljs-attribute">MAX_OFFSET</span>=250, <span class="hljs-attribute">CONSUME_START_TIME</span>=1606460450150, <span class="hljs-attribute">UNIQ_KEY</span>=C0A8E88007AC3764951D891CE41F00D4, <span class="hljs-attribute">CLUSTER</span>=DefaultCluster, <span class="hljs-attribute">WAIT</span>=<span class="hljs-literal">true</span>, <span class="hljs-attribute">TAGS</span>=TagA&#125;, body=[72, 101, 108, 108, 111, 32, 82, 111, 99, 107, 101, 116, 77, 81, 32, 50, 49, 50], <span class="hljs-attribute">transactionId</span>=<span class="hljs-string">&#x27;null&#x27;</span>&#125;]] <br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>日志中MessageExt后的整个内容就是一条完整的RocketMQ消息。我们要对这个消息的结构有个大概的了解，后面会对这个消息进行深入的理解。</p>
+<p>其中比较关键的属性有：brokerName，queueId，msgId，topic，cluster，tags，body，transactionId。先找下这些属性在哪里。</p>
+</blockquote>
+<p>而这个Consume指令并不会结束，他会继续挂起，等待消费其他的消息。我们可以使用CTRL+C停止该进程。</p>
+<h3 id="2-3-4-关闭RocketMQ服务"><a href="#2-3-4-关闭RocketMQ服务" class="headerlink" title="2.3.4 关闭RocketMQ服务"></a>2.3.4 关闭RocketMQ服务</h3><p>要关闭RocketMQ服务可以通过mqshutdown脚本直接关闭</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">1.关闭NameServer</span><br>sh bin/mqshutdown namesrv<br><span class="hljs-meta prompt_"># </span><span class="language-bash">2.关闭Broker</span><br>sh bin/mqshutdown broker<br></code></pre></td></tr></table></figure>
+
+<h1 id="三、RocketMQ集群架构"><a href="#三、RocketMQ集群架构" class="headerlink" title="三、RocketMQ集群架构"></a>三、RocketMQ集群架构</h1><p> 刚才的演示中，我们已经体验到了RocketMQ是如何工作的。这样，我们回头看RocketMQ的集群架构，就能够有更全面的理解了。</p>
+<p><img src="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/7AC9B9FEF57A45BCBDD2F628857CF0BE?ynotemdtimestamp=1709085011706" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h2 id="3-1、RocketMQ集群架构解析"><a href="#3-1、RocketMQ集群架构解析" class="headerlink" title="3.1、RocketMQ集群架构解析"></a>3.1、RocketMQ集群架构解析</h2><p>一个完整的RocketMQ集群中，有如下几个角色</p>
+<ul>
+<li>Producer：消息的发送者；举例：发信者</li>
+<li>Consumer：消息接收者；举例：收信者</li>
+<li>Broker：暂存和传输消息；举例：邮局</li>
+<li>NameServer：管理Broker；举例：各个邮局的管理机构</li>
+<li>Topic：区分消息的种类；一个发送者可以发送消息给一个或者多个Topic；一个消息的接收者可以订阅一个或者多个Topic消息</li>
+</ul>
+<blockquote>
+<p>我们之前的测试案例中，Topic是什么？topic&#x3D;’TopicTest’</p>
+<p>现在你能看懂我们之前在broker.conf中添加的autoCreateTopicEnable&#x3D;true这个属性的用处了吗？</p>
+</blockquote>
+<ul>
+<li>Message Queue：相当于是Topic的分区；用于并行发送和接收消息</li>
+</ul>
+<blockquote>
+<p>在我们之前的测试案例中，一个queueId就代表了一个MessageQueue。有哪些queueId？ 0，1，2，3四个MessageQueue，你都找到了吗？</p>
+</blockquote>
+<h2 id="3-2、RocketMQ集群搭建与优化"><a href="#3-2、RocketMQ集群搭建与优化" class="headerlink" title="3.2、RocketMQ集群搭建与优化"></a>3.2、RocketMQ集群搭建与优化</h2><h3 id="3-2-1-实验环境"><a href="#3-2-1-实验环境" class="headerlink" title="3.2.1 实验环境"></a>3.2.1 实验环境</h3><p> 准备三台虚拟机，硬盘空间建议大于4G。配置机器名。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">#vi /etc/hosts<br><span class="hljs-number">192.168.232.128</span> worker1<br><span class="hljs-number">192.168.232.129</span> worker2<br><span class="hljs-number">192.168.232.130</span> worker3<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以后我们更多的会关注机器名，而不会太多关注IP地址。</p>
+</blockquote>
+<h3 id="3-2-2-创建用户–可选"><a href="#3-2-2-创建用户–可选" class="headerlink" title="3.2.2 创建用户–可选"></a>3.2.2 创建用户–可选</h3><p>useradd oper</p>
+<p>passwd oper (密码输入 123qweasd)</p>
+<h3 id="3-2-3-系统配置"><a href="#3-2-3-系统配置" class="headerlink" title="3.2.3 系统配置"></a>3.2.3 系统配置</h3><p><strong>免密登录</strong></p>
+<p>切换oper用户，在worker1上 生成key</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-kengen<br></code></pre></td></tr></table></figure>
+
+<p>然后分发给其他机器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh-copy-id worker1<br>ssh-copy-id worker2<br>ssh-copy-id worker3<br></code></pre></td></tr></table></figure>
+
+<p>这样就可以在worker1上直接ssh 或者scp到另外的机器，不需要输密码了。</p>
+<p><strong>关闭防火墙</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl stop firewalld.service<br>firewall-cmd --state <br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-4-安装JDK1-8-略"><a href="#3-2-4-安装JDK1-8-略" class="headerlink" title="3.2.4 安装JDK1.8 - 略"></a>3.2.4 安装JDK1.8 - 略</h3><h3 id="3-2-5-安装RocketMQ"><a href="#3-2-5-安装RocketMQ" class="headerlink" title="3.2.5 安装RocketMQ"></a>3.2.5 安装RocketMQ</h3><p>上传配套的运行包rocketmq-all-4.9.1-bin-release.zip，直接解压到&#x2F;app&#x2F;rocketmq目录。然后配置环境变量</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">export</span> ROCKETMQ_HOME=/app/rocketmq/rocketmq-<span class="hljs-literal">all</span>-<span class="hljs-number">4</span>.<span class="hljs-number">9</span>.<span class="hljs-number">1</span>-bin-release<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-6-配置RocketMQ主从集群"><a href="#3-2-6-配置RocketMQ主从集群" class="headerlink" title="3.2.6 配置RocketMQ主从集群"></a>3.2.6 配置RocketMQ主从集群</h3><p> 我们为了便于观察，这次搭建一个2主2从异步刷盘的集群，所以我们会使用conf&#x2F;2m-2s-async下的配置文件。预备设计的集群情况如下：</p>
+<table>
+<thead>
+<tr>
+<th>机器名</th>
+<th>nemaeServer节点部署</th>
+<th>broker节点部署</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>worker1</td>
+<td>nameserver</td>
+<td></td>
+</tr>
+<tr>
+<td>worker2</td>
+<td>nameserver</td>
+<td>broker-a, broker-b-s</td>
+</tr>
+<tr>
+<td>worker3</td>
+<td>nameserver</td>
+<td>broker-b,broker-a-s</td>
+</tr>
+</tbody></table>
+<p>所以修改的配置文件是进入rocketmq的config目录下修改2m-2s-async的配置文件。主要是配置broker.conf文件。</p>
+<blockquote>
+<p>在rocketmq的config目录下可以看到rocketmq建议的各种配置方式：</p>
+<ul>
+<li>2m-2s-async: 2主2从异步刷盘(吞吐量较大，但是消息可能丢失),</li>
+<li>2m-2s-sync:2主2从同步刷盘(吞吐量会下降，但是消息更安全)，</li>
+<li>2m-noslave:2主无从(单点故障)，然后还可以直接配置broker.conf，进行单点环境配置。</li>
+<li>而dleger就是用来实现主从切换的。集群中的节点会基于Raft协议随机选举出一个leader，其他的就都是follower。通常正式环境都会采用这种方式来搭建集群。</li>
+</ul>
+</blockquote>
+<p>我们这次采用2m-2s-async的方式搭建集群。</p>
+<p><strong>1、配置第一组broker-a</strong></p>
+<p>在<strong>worker2</strong>上先配置borker-a的master节点。先配置2m-2s-async&#x2F;broker-a.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#所属集群名字，名字一样的节点就在同一个集群内</span><br><span class="hljs-attr">brokerClusterName</span>=<span class="hljs-string">rocketmq-cluster</span><br><span class="hljs-comment">#broker名字，名字一样的节点就是一组主从节点。</span><br><span class="hljs-attr">brokerName</span>=<span class="hljs-string">broker-a</span><br><span class="hljs-comment">#brokerid,0就表示是Master，&gt;0的都是表示 Slave</span><br><span class="hljs-attr">brokerId</span>=<span class="hljs-string">0</span><br><span class="hljs-comment">#nameServer地址，分号分割</span><br><span class="hljs-attr">namesrvAddr</span>=<span class="hljs-string">worker1:9876;worker2:9876;worker3:9876</span><br><span class="hljs-comment">#在发送消息时，自动创建服务器不存在的topic，默认创建的队列数</span><br><span class="hljs-attr">defaultTopicQueueNums</span>=<span class="hljs-string">4</span><br><span class="hljs-comment">#是否允许 Broker 自动创建Topic，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateTopicEnable</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#是否允许 Broker 自动创建订阅组，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateSubscriptionGroup</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#Broker 对外服务的监听端口</span><br><span class="hljs-attr">listenPort</span>=<span class="hljs-string">10911</span><br><span class="hljs-comment">#删除文件时间点，默认凌晨 4点</span><br><span class="hljs-attr">deleteWhen</span>=<span class="hljs-string">04</span><br><span class="hljs-comment">#文件保留时间，默认 48 小时</span><br><span class="hljs-attr">fileReservedTime</span>=<span class="hljs-string">120</span><br><span class="hljs-comment">#commitLog每个文件的大小默认1G</span><br><span class="hljs-attr">mapedFileSizeCommitLog</span>=<span class="hljs-string">1073741824</span><br><span class="hljs-comment">#ConsumeQueue每个文件默认存30W条，根据业务情况调整</span><br><span class="hljs-attr">mapedFileSizeConsumeQueue</span>=<span class="hljs-string">300000</span><br><span class="hljs-comment">#destroyMapedFileIntervalForcibly=120000</span><br><span class="hljs-comment">#redeleteHangedFileInterval=120000</span><br><span class="hljs-comment">#检测物理文件磁盘空间</span><br><span class="hljs-attr">diskMaxUsedSpaceRatio</span>=<span class="hljs-string">88</span><br><span class="hljs-comment">#存储路径</span><br><span class="hljs-attr">storePathRootDir</span>=<span class="hljs-string">/app/rocketmq/store</span><br><span class="hljs-comment">#commitLog 存储路径</span><br><span class="hljs-attr">storePathCommitLog</span>=<span class="hljs-string">/app/rocketmq/store/commitlog</span><br><span class="hljs-comment">#消费队列存储路径存储路径</span><br><span class="hljs-attr">storePathConsumeQueue</span>=<span class="hljs-string">/app/rocketmq/store/consumequeue</span><br><span class="hljs-comment">#消息索引存储路径</span><br><span class="hljs-attr">storePathIndex</span>=<span class="hljs-string">/app/rocketmq/store/index</span><br><span class="hljs-comment">#checkpoint 文件存储路径</span><br><span class="hljs-attr">storeCheckpoint</span>=<span class="hljs-string">/app/rocketmq/store/checkpoint</span><br><span class="hljs-comment">#abort 文件存储路径</span><br><span class="hljs-attr">abortFile</span>=<span class="hljs-string">/app/rocketmq/store/abort</span><br><span class="hljs-comment">#限制的消息大小</span><br><span class="hljs-attr">maxMessageSize</span>=<span class="hljs-string">65536</span><br><span class="hljs-comment">#flushCommitLogLeastPages=4</span><br><span class="hljs-comment">#flushConsumeQueueLeastPages=2</span><br><span class="hljs-comment">#flushCommitLogThoroughInterval=10000</span><br><span class="hljs-comment">#flushConsumeQueueThoroughInterval=60000</span><br><span class="hljs-comment">#Broker 的角色</span><br><span class="hljs-comment">#- ASYNC_MASTER 异步复制Master</span><br><span class="hljs-comment">#- SYNC_MASTER 同步双写Master</span><br><span class="hljs-comment">#- SLAVE</span><br><span class="hljs-attr">brokerRole</span>=<span class="hljs-string">ASYNC_MASTER</span><br><span class="hljs-comment">#刷盘方式</span><br><span class="hljs-comment">#- ASYNC_FLUSH 异步刷盘</span><br><span class="hljs-comment">#- SYNC_FLUSH 同步刷盘</span><br><span class="hljs-attr">flushDiskType</span>=<span class="hljs-string">ASYNC_FLUSH</span><br><span class="hljs-comment">#checkTransactionMessageEnable=false</span><br><span class="hljs-comment">#发消息线程池数量</span><br><span class="hljs-comment">#sendMessageThreadPoolNums=128</span><br><span class="hljs-comment">#拉消息线程池数量</span><br><span class="hljs-comment">#pullMessageThreadPoolNums=128</span><br></code></pre></td></tr></table></figure>
+
+<p>该节点对应的从节点在<strong>worker3</strong>上。修改2m-2s-async&#x2F;broker-a-s.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#所属集群名字，名字一样的节点就在同一个集群内</span><br><span class="hljs-attr">brokerClusterName</span>=<span class="hljs-string">rocketmq-cluster</span><br><span class="hljs-comment">#broker名字，名字一样的节点就是一组主从节点。</span><br><span class="hljs-attr">brokerName</span>=<span class="hljs-string">broker-a</span><br><span class="hljs-comment">#brokerid,0就表示是Master，&gt;0的都是表示 Slave</span><br><span class="hljs-attr">brokerId</span>=<span class="hljs-string">1</span><br><span class="hljs-comment">#nameServer地址，分号分割</span><br><span class="hljs-attr">namesrvAddr</span>=<span class="hljs-string">worker1:9876;worker2:9876;worker3:9876</span><br><span class="hljs-comment">#在发送消息时，自动创建服务器不存在的topic，默认创建的队列数</span><br><span class="hljs-attr">defaultTopicQueueNums</span>=<span class="hljs-string">4</span><br><span class="hljs-comment">#是否允许 Broker 自动创建Topic，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateTopicEnable</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#是否允许 Broker 自动创建订阅组，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateSubscriptionGroup</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#Broker 对外服务的监听端口</span><br><span class="hljs-attr">listenPort</span>=<span class="hljs-string">11011</span><br><span class="hljs-comment">#删除文件时间点，默认凌晨 4点</span><br><span class="hljs-attr">deleteWhen</span>=<span class="hljs-string">04</span><br><span class="hljs-comment">#文件保留时间，默认 48 小时</span><br><span class="hljs-attr">fileReservedTime</span>=<span class="hljs-string">120</span><br><span class="hljs-comment">#commitLog每个文件的大小默认1G</span><br><span class="hljs-attr">mapedFileSizeCommitLog</span>=<span class="hljs-string">1073741824</span><br><span class="hljs-comment">#ConsumeQueue每个文件默认存30W条，根据业务情况调整</span><br><span class="hljs-attr">mapedFileSizeConsumeQueue</span>=<span class="hljs-string">300000</span><br><span class="hljs-comment">#destroyMapedFileIntervalForcibly=120000</span><br><span class="hljs-comment">#redeleteHangedFileInterval=120000</span><br><span class="hljs-comment">#检测物理文件磁盘空间</span><br><span class="hljs-attr">diskMaxUsedSpaceRatio</span>=<span class="hljs-string">88</span><br><span class="hljs-comment">#存储路径</span><br><span class="hljs-attr">storePathRootDir</span>=<span class="hljs-string">/app/rocketmq/storeSlave</span><br><span class="hljs-comment">#commitLog 存储路径</span><br><span class="hljs-attr">storePathCommitLog</span>=<span class="hljs-string">/app/rocketmq/storeSlave/commitlog</span><br><span class="hljs-comment">#消费队列存储路径存储路径</span><br><span class="hljs-attr">storePathConsumeQueue</span>=<span class="hljs-string">/app/rocketmq/storeSlave/consumequeue</span><br><span class="hljs-comment">#消息索引存储路径</span><br><span class="hljs-attr">storePathIndex</span>=<span class="hljs-string">/app/rocketmq/storeSlave/index</span><br><span class="hljs-comment">#checkpoint 文件存储路径</span><br><span class="hljs-attr">storeCheckpoint</span>=<span class="hljs-string">/app/rocketmq/storeSlave/checkpoint</span><br><span class="hljs-comment">#abort 文件存储路径</span><br><span class="hljs-attr">abortFile</span>=<span class="hljs-string">/app/rocketmq/storeSlave/abort</span><br><span class="hljs-comment">#限制的消息大小</span><br><span class="hljs-attr">maxMessageSize</span>=<span class="hljs-string">65536</span><br><span class="hljs-comment">#flushCommitLogLeastPages=4</span><br><span class="hljs-comment">#flushConsumeQueueLeastPages=2</span><br><span class="hljs-comment">#flushCommitLogThoroughInterval=10000</span><br><span class="hljs-comment">#flushConsumeQueueThoroughInterval=60000</span><br><span class="hljs-comment">#Broker 的角色</span><br><span class="hljs-comment">#- ASYNC_MASTER 异步复制Master</span><br><span class="hljs-comment">#- SYNC_MASTER 同步双写Master</span><br><span class="hljs-comment">#- SLAVE</span><br><span class="hljs-attr">brokerRole</span>=<span class="hljs-string">SLAVE</span><br><span class="hljs-comment">#刷盘方式</span><br><span class="hljs-comment">#- ASYNC_FLUSH 异步刷盘</span><br><span class="hljs-comment">#- SYNC_FLUSH 同步刷盘</span><br><span class="hljs-attr">flushDiskType</span>=<span class="hljs-string">ASYNC_FLUSH</span><br><span class="hljs-comment">#checkTransactionMessageEnable=false</span><br><span class="hljs-comment">#发消息线程池数量</span><br><span class="hljs-comment">#sendMessageThreadPoolNums=128</span><br><span class="hljs-comment">#拉消息线程池数量</span><br><span class="hljs-comment">#pullMessageThreadPoolNums=128</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>2、配置第二组Broker-b</strong></p>
+<p>这一组broker的主节点在<strong>worker3</strong>上，所以需要配置worker3上的config&#x2F;2m-2s-async&#x2F;broker-b.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#所属集群名字，名字一样的节点就在同一个集群内</span><br><span class="hljs-attr">brokerClusterName</span>=<span class="hljs-string">rocketmq-cluster</span><br><span class="hljs-comment">#broker名字，名字一样的节点就是一组主从节点。</span><br><span class="hljs-attr">brokerName</span>=<span class="hljs-string">broker-b</span><br><span class="hljs-comment">#brokerid,0就表示是Master，&gt;0的都是表示 Slave</span><br><span class="hljs-attr">brokerId</span>=<span class="hljs-string">0</span><br><span class="hljs-comment">#nameServer地址，分号分割</span><br><span class="hljs-attr">namesrvAddr</span>=<span class="hljs-string">worker1:9876;worker2:9876;worker3:9876</span><br><span class="hljs-comment">#在发送消息时，自动创建服务器不存在的topic，默认创建的队列数</span><br><span class="hljs-attr">defaultTopicQueueNums</span>=<span class="hljs-string">4</span><br><span class="hljs-comment">#是否允许 Broker 自动创建Topic，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateTopicEnable</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#是否允许 Broker 自动创建订阅组，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateSubscriptionGroup</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#Broker 对外服务的监听端口</span><br><span class="hljs-attr">listenPort</span>=<span class="hljs-string">10911</span><br><span class="hljs-comment">#删除文件时间点，默认凌晨 4点</span><br><span class="hljs-attr">deleteWhen</span>=<span class="hljs-string">04</span><br><span class="hljs-comment">#文件保留时间，默认 48 小时</span><br><span class="hljs-attr">fileReservedTime</span>=<span class="hljs-string">120</span><br><span class="hljs-comment">#commitLog每个文件的大小默认1G</span><br><span class="hljs-attr">mapedFileSizeCommitLog</span>=<span class="hljs-string">1073741824</span><br><span class="hljs-comment">#ConsumeQueue每个文件默认存30W条，根据业务情况调整</span><br><span class="hljs-attr">mapedFileSizeConsumeQueue</span>=<span class="hljs-string">300000</span><br><span class="hljs-comment">#destroyMapedFileIntervalForcibly=120000</span><br><span class="hljs-comment">#redeleteHangedFileInterval=120000</span><br><span class="hljs-comment">#检测物理文件磁盘空间</span><br><span class="hljs-attr">diskMaxUsedSpaceRatio</span>=<span class="hljs-string">88</span><br><span class="hljs-comment">#存储路径</span><br><span class="hljs-attr">storePathRootDir</span>=<span class="hljs-string">/app/rocketmq/store</span><br><span class="hljs-comment">#commitLog 存储路径</span><br><span class="hljs-attr">storePathCommitLog</span>=<span class="hljs-string">/app/rocketmq/store/commitlog</span><br><span class="hljs-comment">#消费队列存储路径存储路径</span><br><span class="hljs-attr">storePathConsumeQueue</span>=<span class="hljs-string">/app/rocketmq/store/consumequeue</span><br><span class="hljs-comment">#消息索引存储路径</span><br><span class="hljs-attr">storePathIndex</span>=<span class="hljs-string">/app/rocketmq/store/index</span><br><span class="hljs-comment">#checkpoint 文件存储路径</span><br><span class="hljs-attr">storeCheckpoint</span>=<span class="hljs-string">/app/rocketmq/store/checkpoint</span><br><span class="hljs-comment">#abort 文件存储路径</span><br><span class="hljs-attr">abortFile</span>=<span class="hljs-string">/app/rocketmq/store/abort</span><br><span class="hljs-comment">#限制的消息大小</span><br><span class="hljs-attr">maxMessageSize</span>=<span class="hljs-string">65536</span><br><span class="hljs-comment">#flushCommitLogLeastPages=4</span><br><span class="hljs-comment">#flushConsumeQueueLeastPages=2</span><br><span class="hljs-comment">#flushCommitLogThoroughInterval=10000</span><br><span class="hljs-comment">#flushConsumeQueueThoroughInterval=60000</span><br><span class="hljs-comment">#Broker 的角色</span><br><span class="hljs-comment">#- ASYNC_MASTER 异步复制Master</span><br><span class="hljs-comment">#- SYNC_MASTER 同步双写Master</span><br><span class="hljs-comment">#- SLAVE</span><br><span class="hljs-attr">brokerRole</span>=<span class="hljs-string">ASYNC_MASTER</span><br><span class="hljs-comment">#刷盘方式</span><br><span class="hljs-comment">#- ASYNC_FLUSH 异步刷盘</span><br><span class="hljs-comment">#- SYNC_FLUSH 同步刷盘</span><br><span class="hljs-attr">flushDiskType</span>=<span class="hljs-string">ASYNC_FLUSH</span><br><span class="hljs-comment">#checkTransactionMessageEnable=false</span><br><span class="hljs-comment">#发消息线程池数量</span><br><span class="hljs-comment">#sendMessageThreadPoolNums=128</span><br><span class="hljs-comment">#拉消息线程池数量</span><br><span class="hljs-comment">#pullMessageThreadPoolNums=128</span><br></code></pre></td></tr></table></figure>
+
+<p>然后他对应的slave在worker2上，修改work2上的 conf&#x2F;2m-2s-async&#x2F;broker-b-s.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-comment">#所属集群名字，名字一样的节点就在同一个集群内</span><br><span class="hljs-attr">brokerClusterName</span>=<span class="hljs-string">rocketmq-cluster</span><br><span class="hljs-comment">#broker名字，名字一样的节点就是一组主从节点。</span><br><span class="hljs-attr">brokerName</span>=<span class="hljs-string">broker-b</span><br><span class="hljs-comment">#brokerid,0就表示是Master，&gt;0的都是表示 Slave</span><br><span class="hljs-attr">brokerId</span>=<span class="hljs-string">1</span><br><span class="hljs-comment">#nameServer地址，分号分割</span><br><span class="hljs-attr">namesrvAddr</span>=<span class="hljs-string">worker1:9876;worker2:9876;worker3:9876</span><br><span class="hljs-comment">#在发送消息时，自动创建服务器不存在的topic，默认创建的队列数</span><br><span class="hljs-attr">defaultTopicQueueNums</span>=<span class="hljs-string">4</span><br><span class="hljs-comment">#是否允许 Broker 自动创建Topic，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateTopicEnable</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#是否允许 Broker 自动创建订阅组，建议线下开启，线上关闭</span><br><span class="hljs-attr">autoCreateSubscriptionGroup</span>=<span class="hljs-string">true</span><br><span class="hljs-comment">#Broker 对外服务的监听端口</span><br><span class="hljs-attr">listenPort</span>=<span class="hljs-string">11011</span><br><span class="hljs-comment">#删除文件时间点，默认凌晨 4点</span><br><span class="hljs-attr">deleteWhen</span>=<span class="hljs-string">04</span><br><span class="hljs-comment">#文件保留时间，默认 48 小时</span><br><span class="hljs-attr">fileReservedTime</span>=<span class="hljs-string">120</span><br><span class="hljs-comment">#commitLog每个文件的大小默认1G</span><br><span class="hljs-attr">mapedFileSizeCommitLog</span>=<span class="hljs-string">1073741824</span><br><span class="hljs-comment">#ConsumeQueue每个文件默认存30W条，根据业务情况调整</span><br><span class="hljs-attr">mapedFileSizeConsumeQueue</span>=<span class="hljs-string">300000</span><br><span class="hljs-comment">#destroyMapedFileIntervalForcibly=120000</span><br><span class="hljs-comment">#redeleteHangedFileInterval=120000</span><br><span class="hljs-comment">#检测物理文件磁盘空间</span><br><span class="hljs-attr">diskMaxUsedSpaceRatio</span>=<span class="hljs-string">88</span><br><span class="hljs-comment">#存储路径</span><br><span class="hljs-attr">storePathRootDir</span>=<span class="hljs-string">/app/rocketmq/storeSlave</span><br><span class="hljs-comment">#commitLog 存储路径</span><br><span class="hljs-attr">storePathCommitLog</span>=<span class="hljs-string">/app/rocketmq/storeSlave/commitlog</span><br><span class="hljs-comment">#消费队列存储路径存储路径</span><br><span class="hljs-attr">storePathConsumeQueue</span>=<span class="hljs-string">/app/rocketmq/storeSlave/consumequeue</span><br><span class="hljs-comment">#消息索引存储路径</span><br><span class="hljs-attr">storePathIndex</span>=<span class="hljs-string">/app/rocketmq/storeSlave/index</span><br><span class="hljs-comment">#checkpoint 文件存储路径</span><br><span class="hljs-attr">storeCheckpoint</span>=<span class="hljs-string">/app/rocketmq/storeSlave/checkpoint</span><br><span class="hljs-comment">#abort 文件存储路径</span><br><span class="hljs-attr">abortFile</span>=<span class="hljs-string">/app/rocketmq/storeSlave/abort</span><br><span class="hljs-comment">#限制的消息大小</span><br><span class="hljs-attr">maxMessageSize</span>=<span class="hljs-string">65536</span><br><span class="hljs-comment">#flushCommitLogLeastPages=4</span><br><span class="hljs-comment">#flushConsumeQueueLeastPages=2</span><br><span class="hljs-comment">#flushCommitLogThoroughInterval=10000</span><br><span class="hljs-comment">#flushConsumeQueueThoroughInterval=60000</span><br><span class="hljs-comment">#Broker 的角色</span><br><span class="hljs-comment">#- ASYNC_MASTER 异步复制Master</span><br><span class="hljs-comment">#- SYNC_MASTER 同步双写Master</span><br><span class="hljs-comment">#- SLAVE</span><br><span class="hljs-attr">brokerRole</span>=<span class="hljs-string">SLAVE</span><br><span class="hljs-comment">#刷盘方式</span><br><span class="hljs-comment">#- ASYNC_FLUSH 异步刷盘</span><br><span class="hljs-comment">#- SYNC_FLUSH 同步刷盘</span><br><span class="hljs-attr">flushDiskType</span>=<span class="hljs-string">ASYNC_FLUSH</span><br><span class="hljs-comment">#checkTransactionMessageEnable=false</span><br><span class="hljs-comment">#发消息线程池数量</span><br><span class="hljs-comment">#sendMessageThreadPoolNums=128</span><br><span class="hljs-comment">#拉消息线程池数量</span><br><span class="hljs-comment">#pullMessageThreadPoolNums=128</span><br></code></pre></td></tr></table></figure>
+
+<p>这样2主2从的集群配置基本就完成了。搭建过程中需要注意的配置项：</p>
+<p>1、同一机器上两个实例的store目录不能相同，否则会报错 Lock failed,MQ already started<br>2、同一机器上两个实例的listenPort也不能相同。否则会报端口占用的错<br>nameserver不需要进行配置，直接启动就行。这也看出nameserver是无状态的。<br>3、<strong>如果是多网卡的机器，比如云服务器，那么需要在broker.conf中增加brokerIP1属性，指定所在机器的外网网卡地址。</strong></p>
+<h3 id="3-2-7-启动RocketMQ"><a href="#3-2-7-启动RocketMQ" class="headerlink" title="3.2.7 启动RocketMQ"></a>3.2.7 启动RocketMQ</h3><p>启动就比较简单了，直接调用bin目录下的脚本就行。只是启动之前要注意看下他们的JVM内存配置，默认的配置都比较高。</p>
+<p><strong>1、先启动nameServer</strong></p>
+<p>修改三个节点上的bin&#x2F;runserver.sh，调整里面的jvm内存配置。找到下面这一行调整下内存</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -server -Xms512m -Xmx512m -Xmn256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m&quot;<br></code></pre></td></tr></table></figure>
+
+<p>直接在三个节点上启动nameServer。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">nohup</span> bin/mqnamesrv &amp;<br></code></pre></td></tr></table></figure>
+
+<p>启动完成后，在nohup.out里看到这一条关键日志就是启动成功了。</p>
+<p>Java HotSpot(TM) 64-Bit Server VM warning: Using the DefNew young collector with the CMS collector is deprecated and will likely be removed in a future release<br>Java HotSpot(TM) 64-Bit Server VM warning: UseCMSCompactAtFullCollection is deprecated and will likely be removed in a future release.<br>The Name Server boot success. serializeType&#x3D;JSON</p>
+<p>使用jps指令可以看到一个NamesrvStartup进程。</p>
+<blockquote>
+<p>这里也看到，RocketMQ在runserver.sh中是使用的CMS垃圾回收期，而在runbroker.sh中使用的是G1垃圾回收期。</p>
+</blockquote>
+<p><strong>2、再启动broker</strong></p>
+<p>启动broker是使用的mqbroker指令，只是注意启动broker时需要通过-c 指定对应的配置文件。</p>
+<p>在<strong>worker2</strong>上启动broker-a的master节点和broker-b的slave节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">nohup ./mqbroker -c ../conf/2m-2s-async/broker-a.properties &amp;<br>nohup ./mqbroker -c ../conf/2m-2s-async/broker-b-s.properties &amp;<br></code></pre></td></tr></table></figure>
+
+<p>在work3上启动broker-b的master节点和broker-a的slave节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">nohup ./mqbroker -c ../conf/2m-2s-async/broker-b.properties &amp;<br>nohup ./mqbroker -c ../conf/2m-2s-async/broker-a-s.properties &amp;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>启动slave时，如果遇到报错 Lock failed,MQ already started ，那是因为有多个实例共用了同一个storePath造成的，这时就需要调整store的路径。</p>
+</blockquote>
+<p><strong>3、启动状态检查</strong></p>
+<p>使用jps指令，能看到一个NameSrvStartup进程和两个BrokerStartup进程。</p>
+<p>nohup.out中也有启动成功的日志。</p>
+<p>对应的日志文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">查看nameServer日志</span><br>tail -500f ~/logs/rocketmqlogs/namesrv.log<br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看broker日志</span><br>tail -500f ~/logs/rocketmqlogs/broker.log<br></code></pre></td></tr></table></figure>
+
+<p><strong>4、测试mqadmin管理工具</strong></p>
+<p> RocketMQ源码中并没有提供管理控制台，只提供了一个mqadmin指令来管理RocketMQ。指令的位置在bin目录下。直接使用该指令就会列出所有支持的命令。</p>
+<p><img src="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/FEAB80F530AB4F17B3052E77047733DD?ynotemdtimestamp=1709085011706" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>使用方式都是 **mqadmin {command} {args}**。 如果有某个指令不会使用，可以使用 <strong>mqadmin help {command}</strong> 指令查看帮助。</p>
+<p><strong>5、命令行快速验证</strong></p>
+<p> RocketMQ提供了一个tools.sh工具可以用来在命令行快速验证RocketMQ服务。例如，在worker2机器上进入RocketMQ的安装目录：</p>
+<p>发送消息：默认会发1000条消息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bin/tools.sh org.apache.rocketmq.example.quickstart.Producer<br></code></pre></td></tr></table></figure>
+
+<p>接收消息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bin/tools.sh  org.apache.rocketmq.example.quickstart.Consumer<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，这是官方提供的Demo，但是官方的源码中，这两个类都是没有指定nameServer的，所以运行会有点问题。要指定NameServer地址，可以配置一个环境变量NAMESRV_ADDR，这样默认会读取这个NameServer地址。可以配到.bash_profile里或者直接临时指定。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">export NAMESRV_ADDR=&#x27;worker1:9876;worker2:9876;worker3:9876&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>然后就可以正常执行了。</p>
+</blockquote>
+<p>这个tooles.sh实际上是封装了一个简单的运行RocketMQ的环境，上面指令中指定的Java类，都在lib&#x2F;rocketmq-example-4.7.1.jar包中。未来如果自己有一些客户端示例，也可以打成jar包放到这个lib目录下，通过tools.sh运行。</p>
+<h3 id="3-2-8-搭建管理控制台"><a href="#3-2-8-搭建管理控制台" class="headerlink" title="3.2.8 搭建管理控制台"></a>3.2.8 搭建管理控制台</h3><p>RocketMQ源代码中并没有提供控制台，但是有一个Rocket的社区扩展项目中提供了一个控制台，地址： <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq-dashboard">https://github.com/apache/rocketmq-dashboard</a></p>
+<p>下载下来后，解压并进入对应的目录，使用maven进行编译</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">mvn clean package -Dmaven.test.skip=true<br></code></pre></td></tr></table></figure>
+
+<p>编译完成后，获取target下的jar包，就可以直接执行。但是这个时候要注意，在这个项目的application.yml中需要指定nameserver的地址。默认这个属性是指向本地。如果配置为空，会读取环境变量NAMESRV_ADDR。</p>
+<p>那我们可以在jar包的当前目录下增加一个application.yml文件，覆盖jar包中默认的一个属性：</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">rocketmq</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">config</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">namesrvAddrs</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">worker1:9876</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">worker2:9876</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">worker3:9876</span><br></code></pre></td></tr></table></figure>
+
+<p>然后执行：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">java</span> -jar rocketmq-dashboard-<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">1</span>-SNAPSHOT.jar<br></code></pre></td></tr></table></figure>
+
+<p>启动完成后，可以访问 <a href="http://192.168.232.128:8080看到管理页面">http://192.168.232.128:8080看到管理页面</a></p>
+<h3 id="3-2-9-搭建Dledger高可用集群–了解"><a href="#3-2-9-搭建Dledger高可用集群–了解" class="headerlink" title="3.2.9 搭建Dledger高可用集群–了解"></a>3.2.9 搭建Dledger高可用集群–了解</h3><p> 通过这种方式，我们搭建了一个主从结构的RocketMQ集群，但是我们要注意，这种主从结构是只做数据备份，没有容灾功能的。也就是说当一个master节点挂了后，slave节点是无法切换成master节点继续提供服务的。注意这个集群至少要是3台，允许少于一半的节点发生故障。</p>
+<blockquote>
+<p>如果slave挂了，对集群的影响不会很大，因为slave只是做数据备份的。但是影响也是会有的，例如，当消费者要拉取的数据量比较大时，RocketMQ有一定的机制会优先保证Master节点的性能，只让Master节点返回一小部分数据，而让其他部分的数据从slave节点去拉取。</p>
+<p>另外，需要注意，Dleger会有他自己的CommitLog机制，也就是说，使用主从集群累计下来的消息，是无法转移到Dleger集群中的。</p>
+</blockquote>
+<p> 而如果要进行高可用的容灾备份，需要采用Dledger的方式来搭建高可用集群。注意，这个Dledger需要在RocketMQ4.5以后的版本才支持，我们使用的4.7.1版本已经默认集成了dledger。</p>
+<p><strong>搭建方法</strong></p>
+<p> 要搭建高可用的Broker集群，我们只需要配置conf&#x2F;dleger下的配置文件就行。</p>
+<blockquote>
+<p>这种模式是基于Raft协议的，是一个类似于Zookeeper的paxos协议的选举协议，也是会在集群中随机选举出一个leader，其他的就是follower。只是他选举的过程跟paxos有点不同。Raft协议基于随机休眠机制的，选举过程会比paxos相对慢一点。</p>
+</blockquote>
+<p> 首先：<a target="_blank" rel="noopener" href="http://我们同样是需要修改runserver.sh和runbroker.sh/">我们同样是需要修改runserver.sh和runbroker.sh</a>，对JVM内存进行定制。</p>
+<p> 然后：我们需要修改conf&#x2F;dleger下的配置文件。 跟dleger相关的几个配置项如下：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>含义</th>
+<th>举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>enableDLegerCommitLog</td>
+<td>是否启动 DLedger</td>
+<td>true</td>
+</tr>
+<tr>
+<td>dLegerGroup</td>
+<td>DLedger Raft Group的名字，建议和 brokerName 保持一致</td>
+<td>RaftNode00</td>
+</tr>
+<tr>
+<td>dLegerPeers</td>
+<td>DLedger Group 内各节点的端口信息，同一个 Group 内的各个节点配置必须要保证一致</td>
+<td>n0-127.0.0.1:40911;n1-127.0.0.1:40912;n2-127.0.0.1:40913</td>
+</tr>
+<tr>
+<td>dLegerSelfId</td>
+<td>节点 id, 必须属于 dLegerPeers 中的一个；同 Group 内各个节点要唯一</td>
+<td>n0</td>
+</tr>
+<tr>
+<td>sendMessageThreadPoolNums</td>
+<td>发送线程个数，建议配置成 Cpu 核数</td>
+<td>16</td>
+</tr>
+</tbody></table>
+<p>配置完后，同样是使用 nohup bin&#x2F;mqbroker -c $conf_name &amp; 的方式指定实例文件。</p>
+<blockquote>
+<p>在bin&#x2F;dleger下有个fast-try.sh，这个脚本是在本地启动三个RocketMQ实例，搭建一个高可用的集群，读取的就是conf&#x2F;dleger下的broker-no.conf，broker-n1.conf和broker-n2.conf。使用这个脚本同样要注意定制下JVM内存，他给每个实例默认定制的是1G内存，虚拟机肯定是不够的。</p>
+<p>这种单机三实例的集群搭建完成后，可以使用 bin&#x2F;mqadmin clusterList -n worker1.conf的方式查看集群状态。</p>
+</blockquote>
+<h3 id="3-2-10-系统参数调优-–-重要"><a href="#3-2-10-系统参数调优-–-重要" class="headerlink" title="3.2.10 系统参数调优 – 重要"></a>3.2.10 系统参数调优 – 重要</h3><p>到这里，我们的整个RocketMQ的服务就搭建完成了。但是在实际使用时，我们说RocketMQ的吞吐量、性能都很高，那要发挥RocketMQ的高性能，还需要对RocketMQ以及服务器的性能进行定制</p>
+<p><strong>1、配置RocketMQ的JVM内存大小：</strong></p>
+<p>之前提到过，在runserver.sh中需要定制nameserver的内存大小，在runbroker.sh中需要定制broker的内存大小。这些默认的配置可以认为都是经过检验的最优化配置，但是在实际情况中都还需要根据服务器的实际情况进行调整。这里以runbroker.sh中对G1GC的配置举例，在runbroker.sh中的关键配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0&quot;<br>JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -verbose:gc -Xloggc:$&#123;GC_LOG_DIR&#125;/rmq_broker_gc_%p_%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintAdaptiveSizePolicy&quot;<br>JAVA_OPT=&quot;$&#123;JAVA_OPT&#125; -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m&quot;<br></code></pre></td></tr></table></figure>
+
+<p>-XX:+UseG1GC: 使用G1垃圾回收器， -XX:G1HeapRegionSize&#x3D;16m 将G1的region块大小设为16M，-XX:G1ReservePercent：在G1的老年代中预留25%空闲内存，这个默认值是10%，RocketMQ把这个参数调大了。-XX:InitiatingHeapOccupancyPercent&#x3D;30：当堆内存的使用率达到30%之后就会启动G1垃圾回收器尝试回收垃圾，默认值是45%，RocketMQ把这个参数调小了，也就是提高了GC的频率，但是避免了垃圾对象过多，一次垃圾回收时间太长的问题。</p>
+<p>然后，后面定制了GC的日志文件，确定GC日志文件的地址、打印的内容以及控制每个日志文件的大小为30M并且只保留5个文件。这些在进行性能检验时，是相当重要的参考内容。</p>
+<p><strong>2、RocketMQ的其他一些核心参数</strong></p>
+<p>例如在conf&#x2F;dleger&#x2F;broker-n0.conf中有一个参数：sendMessageThreadPoolNums&#x3D;16。这一个参数是表明RocketMQ内部用来发送消息的线程池的线程数量是16个，其实这个参数可以根据机器的CPU核心数进行适当调整，例如如果你的机器核心数超过16个，就可以把这个参数适当调大。</p>
+<p><strong>3、Linux内核参数定制</strong></p>
+<p>我们在部署RocketMQ的时候，还需要对Linux内核参数进行一定的定制。例如</p>
+<ul>
+<li><strong>ulimit</strong>，需要进行大量的网络通信和磁盘IO。</li>
+<li><strong>vm.extra_free_kbytes</strong>，告诉VM在后台回收（kswapd）启动的阈值与直接回收（通过分配进程）的阈值之间保留额外的可用内存。RocketMQ使用此参数来避免内存分配中的长延迟。（与具体内核版本相关）</li>
+<li><strong>vm.min_free_kbytes</strong>，如果将其设置为低于1024KB，将会巧妙的将系统破坏，并且系统在高负载下容易出现死锁。</li>
+<li><strong>vm.max_map_count</strong>，限制一个进程可能具有的最大内存映射区域数。RocketMQ将使用mmap加载CommitLog和ConsumeQueue，因此建议将为此参数设置较大的值。</li>
+<li><strong>vm.swappiness</strong>，定义内核交换内存页面的积极程度。较高的值会增加攻击性，较低的值会减少交换量。建议将值设置为10来避免交换延迟。</li>
+<li><strong>File descriptor limits</strong>，RocketMQ需要为文件（CommitLog和ConsumeQueue）和网络连接打开文件描述符。我们建议设置文件描述符的值为655350。</li>
+</ul>
+<blockquote>
+<p>这些参数在CentOS7中的配置文件都在 &#x2F;proc&#x2F;sys&#x2F;vm目录下。</p>
+<p>另外，RocketMQ的bin目录下有个os.sh里面设置了RocketMQ建议的系统内核参数，可以根据情况进行调整。</p>
+</blockquote>
+<h1 id="四、RocketMQ消息转发模型"><a href="#四、RocketMQ消息转发模型" class="headerlink" title="四、RocketMQ消息转发模型"></a>四、RocketMQ消息转发模型</h1><p> 这一部分我们可以结合一下管理控制台，先来理解下RocketMQ的一些重要的基础概念：</p>
+<h2 id="1-消息模型（Message-Model）"><a href="#1-消息模型（Message-Model）" class="headerlink" title="1 消息模型（Message Model）"></a>1 消息模型（Message Model）</h2><p> RocketMQ主要由 Producer、Broker、Consumer 三部分组成，其中Producer 负责生产消息，Consumer 负责消费消息，Broker 负责存储消息。Broker 在实际部署过程中对应一台服务器，每个 Broker 可以存储多个Topic的消息，每个Topic的消息也可以分片存储于不同的 Broker。Message Queue 用于存储消息的物理地址，每个Topic中的消息地址存储于多个 Message Queue 中。ConsumerGroup 由多个Consumer 实例构成。</p>
+<h2 id="2-消息生产者（Producer）"><a href="#2-消息生产者（Producer）" class="headerlink" title="2 消息生产者（Producer）"></a>2 消息生产者（Producer）</h2><p> 负责生产消息，一般由业务系统负责生产消息。一个消息生产者会把业务应用系统里产生的消息发送到broker服务器。RocketMQ提供多种发送方式，同步发送、异步发送、顺序发送、单向发送。同步和异步方式均需要Broker返回确认信息，单向发送不需要。</p>
+<p> 生产者中，会把同一类Producer组成一个集合，叫做生产者组。同一组的Producer被认为是发送同一类消息且发送逻辑一致。</p>
+<h2 id="3-消息消费者（Consumer）"><a href="#3-消息消费者（Consumer）" class="headerlink" title="3 消息消费者（Consumer）"></a>3 消息消费者（Consumer）</h2><p> 负责消费消息，一般是后台系统负责异步消费。一个消息消费者会从Broker服务器拉取消息、并将其提供给应用程序。从用户应用的角度而言提供了两种消费形式：拉取式消费、推动式消费。</p>
+<ul>
+<li>拉取式消费的应用通常主动调用Consumer的拉消息方法从Broker服务器拉消息、主动权由应用控制。一旦获取了批量消息，应用就会启动消费过程。</li>
+<li>推动式消费模式下Broker收到数据后会主动推送给消费端，该消费模式一般实时性较高。</li>
+</ul>
+<p> 消费者同样会把同一类Consumer组成一个集合，叫做消费者组，这类Consumer通常消费同一类消息且消费逻辑一致。消费者组使得在消息消费方面，实现负载均衡和容错的目标变得非常容易。要注意的是，消费者组的消费者实例必须订阅完全相同的Topic。RocketMQ 支持两种消息模式：集群消费（Clustering）和广播消费（Broadcasting）。</p>
+<ul>
+<li>集群消费模式下, 相同Consumer Group的每个Consumer实例平均分摊消息。</li>
+<li>广播消费模式下，相同Consumer Group的每个Consumer实例都接收全量的消息。</li>
+</ul>
+<h2 id="4-主题（Topic）"><a href="#4-主题（Topic）" class="headerlink" title="4 主题（Topic）"></a>4 主题（Topic）</h2><p> 表示一类消息的集合，每个主题包含若干条消息，每条消息只能属于一个主题，是RocketMQ进行消息订阅的基本单位。</p>
+<p> Topic只是一个逻辑概念，并不实际保存消息。同一个Topic下的消息，会分片保存到不同的Broker上，而每一个分片单位，就叫做MessageQueue。MessageQueue是一个具有FIFO特性的队列结构，生产者发送消息与消费者消费消息的最小单位。</p>
+<h2 id="5-代理服务器（Broker-Server）"><a href="#5-代理服务器（Broker-Server）" class="headerlink" title="5 代理服务器（Broker Server）"></a>5 代理服务器（Broker Server）</h2><p> 消息中转角色，负责存储消息、转发消息。代理服务器在RocketMQ系统中负责接收从生产者发送来的消息并存储、同时为消费者的拉取请求作准备。代理服务器也存储消息相关的元数据，包括消费者组、消费进度偏移和主题和队列消息等。</p>
+<p>Broker Server是RocketMQ真正的业务核心，包含了多个重要的子模块：</p>
+<ul>
+<li>Remoting Module：整个Broker的实体，负责处理来自clients端的请求。</li>
+<li>Client Manager：负责管理客户端(Producer&#x2F;Consumer)和维护Consumer的Topic订阅信息</li>
+<li>Store Service：提供方便简单的API接口处理消息存储到物理硬盘和查询功能。</li>
+<li>HA Service：高可用服务，提供Master Broker 和 Slave Broker之间的数据同步功能。</li>
+<li>Index Service：根据特定的Message key对投递到Broker的消息进行索引服务，以提供消息的快速查询。</li>
+</ul>
+<p>而Broker Server要保证高可用需要搭建主从集群架构。RocketMQ中有两种Broker架构模式：</p>
+<ul>
+<li>普通集群：</li>
+</ul>
+<p>这种集群模式下会给每个节点分配一个固定的角色，master负责响应客户端的请求，并存储消息。slave则只负责对master的消息进行同步保存，并响应部分客户端的读请求。消息同步方式分为同步同步和异步同步。</p>
+<p>这种集群模式下各个节点的角色无法进行切换，也就是说，master节点挂了，这一组Broker就不可用了。</p>
+<ul>
+<li>Dledger高可用集群：</li>
+</ul>
+<p>Dledger是RocketMQ自4.5版本引入的实现高可用集群的一项技术。这个模式下的集群会随机选出一个节点作为master，而当master节点挂了后，会从slave中自动选出一个节点升级成为master。</p>
+<p>Dledger技术做的事情：1、从集群中选举出master节点 2、完成master节点往slave节点的消息同步。</p>
+<h2 id="6-名字服务（Name-Server）"><a href="#6-名字服务（Name-Server）" class="headerlink" title="6 名字服务（Name Server）"></a>6 名字服务（Name Server）</h2><p> 名称服务充当路由消息的提供者。Broker Server会在启动时向所有的Name Server注册自己的服务信息，并且后续通过心跳请求的方式保证这个服务信息的实时性。生产者或消费者能够通过名字服务查找各主题相应的Broker IP列表。多个Namesrv实例组成集群，但相互独立，没有信息交换。</p>
+<p> 这种特性也就意味着NameServer中任意的节点挂了，只要有一台服务节点正常，整个路由服务就不会有影响。当然，这里不考虑节点的负载情况。</p>
+<h2 id="7-消息（Message）"><a href="#7-消息（Message）" class="headerlink" title="7 消息（Message）"></a>7 消息（Message）</h2><p> 消息系统所传输信息的物理载体，生产和消费数据的最小单位，每条消息必须属于一个主题Topic。RocketMQ中每个消息拥有唯一的Message ID，且可以携带具有业务标识的Key。系统提供了通过Message ID和Key查询消息的功能。</p>
+<p> 并且Message上有一个为消息设置的标志，Tag标签。用于同一主题下区分不同类型的消息。来自同一业务单元的消息，可以根据不同业务目的在同一主题下设置不同标签。标签能够有效地保持代码的清晰度和连贯性，并优化RocketMQ提供的查询系统。消费者可以根据Tag实现对不同子主题的不同消费逻辑，实现更好的扩展性。</p>
+<blockquote>
+<p>关于Message的更详细字段，在源码的docs&#x2F;cn&#x2F;best_practice.md中有详细介绍。</p>
+</blockquote>
+<p>整体的基础概念如下图总结：</p>
+<p><img src="https://note.youdao.com/yws/public/resource/fa3c32cea984593b3c8cf5faeb16e634/526184557CED4B54988CD129B567474C?ynotemdtimestamp=1709085011706" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p>其中有一些比较常见的面试题需要注意一下：</p>
+<p>1、为什么RocketMQ不用Zookeeper而要自己实现一个NameServer来进行注册？</p>
+<p>2、Consumer分组有什么用？Producer分组呢？</p>
+<p>3、RocketMQ如何保证集群服务高可用？</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
               </div>
             
@@ -278,6 +662,48 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/" class="category-chain-item">架构之分布式框架</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/RocketMQ/" class="category-chain-item">RocketMQ</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/RocketMQ/">#RocketMQ</a>
+      
+    </div>
   
 </div>
 

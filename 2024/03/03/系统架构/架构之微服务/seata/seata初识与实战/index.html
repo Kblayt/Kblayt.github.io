@@ -1,0 +1,1148 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="参考：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;250516428  1. 分布式事务简介分布式事务：https:&#x2F;&#x2F;www.processon.com&#x2F;view&#x2F;link&#x2F;61cd52fb0e3e7441570801ab 1.1 本地事务​    大多数场景下，我们的应用都只需要操作单一的数据库，这种情况下的事务称之为本地事务(Local Transaction)。本地事务的A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="seata初识与实战">
+<meta property="og:url" content="https://kblayt.github.io/2024/03/03/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1/seata/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="参考：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;250516428  1. 分布式事务简介分布式事务：https:&#x2F;&#x2F;www.processon.com&#x2F;view&#x2F;link&#x2F;61cd52fb0e3e7441570801ab 1.1 本地事务​    大多数场景下，我们的应用都只需要操作单一的数据库，这种情况下的事务称之为本地事务(Local Transaction)。本地事务的A">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54181">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54186">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54185">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54184">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54220">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54140">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54152">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54150">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54151">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53908">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53914">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54137">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53940">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53946">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53887">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53977">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54003">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54005">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54044">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54055">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54053">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54076">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54068">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55865">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55847">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54287">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55787">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55786">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55681">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55759">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55758">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55757">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55687">
+<meta property="og:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55750">
+<meta property="article:published_time" content="2024-03-03T05:18:40.000Z">
+<meta property="article:modified_time" content="2024-03-03T05:31:04.239Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="seatac">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54181">
+  
+  
+  
+  <title>seata初识与实战 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="seata初识与实战"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-03 13:18" pubdate>
+          2024年3月3日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          20k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          169 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">seata初识与实战</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/250516428">https://zhuanlan.zhihu.com/p/250516428</a></p>
+</blockquote>
+<h1 id="1-分布式事务简介"><a href="#1-分布式事务简介" class="headerlink" title="1. 分布式事务简介"></a><strong>1. 分布式事务简介</strong></h1><p>分布式事务：<a target="_blank" rel="noopener" href="https://www.processon.com/view/link/61cd52fb0e3e7441570801ab">https://www.processon.com/view/link/61cd52fb0e3e7441570801ab</a></p>
+<h2 id="1-1-本地事务"><a href="#1-1-本地事务" class="headerlink" title="1.1 本地事务"></a><strong>1.1 本地事务</strong></h2><p>​    大多数场景下，我们的应用都只需要操作单一的数据库，这种情况下的事务称之为本地事务(Local Transaction)。本地事务的ACID特性是数据库直接提供支持。本地事务应用架构如下所示：</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54181" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>在JDBC编程中，我们通过java.sql.Connection对象来开启、关闭或者提交事务。代码如下所示：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">Connection conn = ... <span class="hljs-regexp">//</span>获取数据库连接<br>conn.setAutoCommit(false); <span class="hljs-regexp">//</span>开启事务<br>try&#123;<br>   <span class="hljs-regexp">//</span>...执行增删改查sql<br>   conn.commit(); <span class="hljs-regexp">//</span>提交事务<br>&#125;catch (Exception e) &#123;<br>  conn.rollback();<span class="hljs-regexp">//</span>事务回滚<br>&#125;finally&#123;<br>   conn.close();<span class="hljs-regexp">//</span>关闭链接<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-分布式事务"><a href="#1-2-分布式事务" class="headerlink" title="1.2 分布式事务"></a><strong>1.2 分布式事务</strong></h2><p>在微服务架构中，完成某一个业务功能可能需要横跨多个服务，操作多个数据库。这就涉及到到了分布式事务，需要操作的资源位于多个资源服务器上，而应用需要保证对于多个资源服务器的数据操作，要么全部成功，要么全部失败。本质上来说，分布式事务就是为了保证不同资源服务器的数据一致性。</p>
+<h3 id="典型的分布式事务应用场景"><a href="#典型的分布式事务应用场景" class="headerlink" title="典型的分布式事务应用场景"></a><strong>典型的分布式事务应用场景</strong></h3><p><strong>1) 跨库事务</strong></p>
+<p>   跨库事务指的是，一个应用某个功能需要操作多个库，不同的库中存储不同的业务数据。下图演示了一个服务同时操作2个库的情况： </p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54186" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>2) 分库分表</strong></p>
+<p>   通常一个库数据量比较大或者预期未来的数据量比较大，都会进行分库分表。如下图，将数据库B拆分成了2个库： </p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54185" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>  对于分库分表的情况，一般开发人员都会使用一些数据库中间件来降低sql操作的复杂性。如，对于sql：insert into user(id,name) values (1,”张三”),(2,”李四”)。这条sql是操作单库的语法，单库情况下，可以保证事务的一致性。 但是由于现在进行了分库分表，开发人员希望将1号记录插入分库1，2号记录插入分库2。所以数据库中间件要将其改写为2条sql，分别插入两个不同的分库，此时要保证两个库要不都成功，要不都失败，因此基本上所有的数据库中间件都面临着分布式事务的问题。</p>
+<p><strong>3) 微服务架构</strong></p>
+<p>  下图演示了一个3个服务之间彼此调用的微服务架构：</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54184" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>  Service A完成某个功能需要直接操作数据库，同时需要调用Service B和Service C，而Service B又同时操作了2个数据库，Service C也操作了一个库。需要保证这些跨服务调用对多个数据库的操作要么都成功，要么都失败，实际上这可能是最典型的分布式事务场景。</p>
+<p>   小结：上述讨论的分布式事务场景中，无一例外的都直接或者间接的操作了多个数据库。如何保证事务的ACID特性，对于分布式事务实现方案而言，是非常大的挑战。同时，分布式事务实现方案还必须要考虑性能的问题，如果为了严格保证ACID特性，导致性能严重下降，那么对于一些要求快速响应的业务，是无法接受的。</p>
+<h2 id="1-3-两阶段提交协议-2PC"><a href="#1-3-两阶段提交协议-2PC" class="headerlink" title="1.3 两阶段提交协议(2PC)"></a><strong>1.3 两阶段提交协议(2PC)</strong></h2><p>两阶段提交（Two Phase Commit），就是将提交(commit)过程划分为2个阶段(Phase)：</p>
+<p><strong>阶段1：</strong></p>
+<p>  TM通知各个RM准备提交它们的事务分支。如果RM判断自己进行的工作可以被提交，那就对工作内容进行持久化，再给TM肯定答复；要是发生了其他情况，那给TM的都是否定答复。</p>
+<p>  以mysql数据库为例，在第一阶段，事务管理器向所有涉及到的数据库服务器发出prepare”准备提交”请求，数据库收到请求后执行数据修改和日志记录等处理，处理完成后只是把事务的状态改成”可以提交”,然后把结果返回给事务管理器。</p>
+<p><strong>阶段2</strong></p>
+<p>  TM根据阶段1各个RM prepare的结果，决定是提交还是回滚事务。如果所有的RM都prepare成功，那么TM通知所有的RM进行提交；如果有RM prepare失败的话，则TM通知所有RM回滚自己的事务分支。</p>
+<p>​    以mysql数据库为例，如果第一阶段中所有数据库都prepare成功，那么事务管理器向数据库服务器发出”确认提交”请求，数据库服务器把事务的”可以提交”状态改为”提交完成”状态，然后返回应答。如果在第一阶段内有任何一个数据库的操作发生了错误，或者事务管理器收不到某个数据库的回应，则认为事务失败，回撤所有数据库的事务。数据库服务器收不到第二阶段的确认提交请求，也会把”可以提交”的事务回撤。</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54220" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>两阶段提交方案下全局事务的ACID特性，是依赖于RM的。一个全局事务内部包含了多个独立的事务分支，这一组事务分支要么都成功，要么都失败。各个事务分支的ACID特性共同构成了全局事务的ACID特性。也就是将单个事务分支支持的ACID特性提升一个层次到分布式事务的范畴。</p>
+<h3 id="2PC存在的问题"><a href="#2PC存在的问题" class="headerlink" title="2PC存在的问题"></a><strong>2PC存在的问题</strong></h3><ul>
+<li><strong>同步阻塞问题</strong></li>
+</ul>
+<p>2PC 中的参与者是阻塞的。在第一阶段收到请求后就会预先锁定资源，一直到 commit 后才会释放。</p>
+<ul>
+<li><strong>单点故障</strong></li>
+</ul>
+<p>由于协调者的重要性，一旦协调者TM发生故障，参与者RM会一直阻塞下去。尤其在第二阶段，协调者发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。</p>
+<ul>
+<li><strong>数据不一致</strong></li>
+</ul>
+<p>若协调者第二阶段发送提交请求时崩溃，可能部分参与者收到commit请求提交了事务，而另一部分参与者未收到commit请求而放弃事务，从而造成数据不一致的问题。</p>
+<h1 id="2-Seata是什么"><a href="#2-Seata是什么" class="headerlink" title="2.Seata是什么"></a><strong>2.Seata是什么</strong></h1><p>Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA 事务模式，为用户打造一站式的分布式解决方案。AT模式是阿里首推的模式，阿里云上有商用版本的GTS（Global Transaction Service 全局事务服务）</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://seata.io/zh-cn/index.html">https://seata.io/zh-cn/index.html</a></p>
+<p>源码: <a target="_blank" rel="noopener" href="https://github.com/seata/seata">https://github.com/seata/seata</a></p>
+<p>seata版本：v1.5.1</p>
+<h2 id="2-1-Seata的三大角色"><a href="#2-1-Seata的三大角色" class="headerlink" title="2.1 Seata的三大角色"></a><strong>2.1 Seata的三大角色</strong></h2><p>在 Seata 的架构中，一共有三个角色： </p>
+<ul>
+<li><strong>TC (Transaction Coordinator) - 事务协调者</strong></li>
+</ul>
+<p>维护全局和分支事务的状态，驱动全局事务提交或回滚。</p>
+<ul>
+<li><strong>TM (Transaction Manager) - 事务管理器</strong></li>
+</ul>
+<p>定义全局事务的范围：开始全局事务、提交或回滚全局事务。</p>
+<ul>
+<li><strong>RM (Resource Manager) - 资源管理器</strong></li>
+</ul>
+<p>管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。</p>
+<p>其中，TC 为单独部署的 Server 服务端，TM 和 RM 为嵌入到应用中的 Client 客户端。</p>
+<p>在 Seata 中，一个分布式事务的生命周期如下：</p>
+<ol>
+<li>TM 请求 TC 开启一个全局事务。TC 会生成一个 XID 作为该全局事务的编号。XID会在微服务的调用链路中传播，保证将多个微服务的子事务关联在一起。</li>
+<li>RM 请求 TC 将本地事务注册为全局事务的分支事务，通过全局事务的 XID 进行关联。</li>
+<li>TM 请求 TC 告诉 XID 对应的全局事务是进行提交还是回滚。</li>
+<li>TC 驱动 RM 们将 XID 对应的自己的本地事务进行提交还是回滚。</li>
+</ol>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54140" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h2 id="2-2-Seata提供的四种不同的分布式事务解决方案"><a href="#2-2-Seata提供的四种不同的分布式事务解决方案" class="headerlink" title="2.2 Seata提供的四种不同的分布式事务解决方案"></a>2.2 Seata提供的四种不同的分布式事务解决方案</h2><ol>
+<li>XA模式：强一致性分阶段事务模式，牺牲了一定的可用性，无业务侵入</li>
+<li>TCC模式：最终一致的分阶段事务模式，有业务侵入</li>
+<li>AT模式：最终一致的分阶段事务模式，无业务侵入，也是Seata的默认模式</li>
+<li>SAGA模式：长事务模式，有业务侵入</li>
+</ol>
+<h2 id="2-3-Seata-AT模式的设计思路"><a href="#2-3-Seata-AT模式的设计思路" class="headerlink" title="2.3 Seata AT模式的设计思路"></a><strong>2.3 Seata AT模式的设计思路</strong></h2><p>Seata AT模式的核心是对业务无侵入，是一种改进后的两阶段提交，其设计思路如下:</p>
+<ul>
+<li><p>一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。</p>
+</li>
+<li><p>二阶段：</p>
+</li>
+<li><ul>
+<li>提交异步化，非常快速地完成。</li>
+<li>回滚通过一阶段的回滚日志进行反向补偿。</li>
+</ul>
+</li>
+</ul>
+<h3 id="一阶段"><a href="#一阶段" class="headerlink" title="一阶段"></a><strong>一阶段</strong></h3><p>业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。核心在于对业务sql进行解析，转换成undolog，并同时入库，这是怎么做的呢？</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54152" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h3 id="二阶段"><a href="#二阶段" class="headerlink" title="二阶段"></a><strong>二阶段</strong></h3><ul>
+<li>分布式事务操作成功，则TC通知RM异步删除undolog</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54150" srcset="/img/loading.gif" lazyload alt="0"></p>
+<ul>
+<li>分布式事务操作失败，TM向TC发送回滚请求，RM 收到协调器TC发来的回滚请求，通过 XID 和 Branch ID 找到相应的回滚日志记录，通过回滚记录生成反向的更新 SQL 并执行，以完成分支的回滚。</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54151" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h1 id="3-Seata快速开始"><a href="#3-Seata快速开始" class="headerlink" title="3. Seata快速开始"></a><strong>3. Seata快速开始</strong></h1><p>Seata分TC、TM和RM三个角色，TC（Server端）为单独服务端部署，TM和RM（Client端）由业务系统集成。</p>
+<h2 id="3-1-Seata-Server（TC）环境搭建"><a href="#3-1-Seata-Server（TC）环境搭建" class="headerlink" title="3.1 Seata Server（TC）环境搭建"></a><strong>3.1 Seata Server（TC）环境搭建</strong></h2><p><strong>Server端存储模式（store.mode）支持三种：</strong></p>
+<ul>
+<li>file：单机模式，全局事务会话信息内存中读写并持久化本地文件root.data，性能较高</li>
+<li>db：高可用模式，全局事务会话信息通过db共享，相应性能差些</li>
+<li>redis：1.3及以上版本支持,性能较高,存在事务信息丢失风险,请提前配置适合当前场景的redis持久化配置</li>
+</ul>
+<p>资源目录：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/seata/seata/tree/v1.5.1/script">https://github.com/seata/seata/tree/v1.5.1/script</a></p>
+</li>
+<li><p>client </p>
+</li>
+<li><ul>
+<li>存放client端sql脚本，参数配置</li>
+</ul>
+</li>
+<li><p>config-center</p>
+</li>
+<li><ul>
+<li>各个配置中心参数导入脚本，config.txt(包含server和client)为通用参数文件</li>
+</ul>
+</li>
+<li><p>server</p>
+</li>
+<li><ul>
+<li>server端数据库脚本及各个容器配置</li>
+</ul>
+</li>
+</ul>
+<h3 id="db存储模式-Nacos-注册-amp-配置中心-方式部署"><a href="#db存储模式-Nacos-注册-amp-配置中心-方式部署" class="headerlink" title="db存储模式+Nacos(注册&amp;配置中心)方式部署"></a><strong>db存储模式+Nacos(注册&amp;配置中心)方式部署</strong></h3><p><strong>步骤一：下载安装包</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/seata/seata/releases">https://github.com/seata/seata/releases</a></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53908" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>步骤二：建表(db模式)</strong></p>
+<p>创建数据库seata，执行sql脚本，<a target="_blank" rel="noopener" href="https://github.com/seata/seata/tree/v1.5.1/script/server/db">https://github.com/seata/seata/tree/v1.5.1/script/server/db</a></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53914" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>步骤三：配置Nacos注册中心</strong></p>
+<p>注册中心可以说是微服务架构中的”通讯录“，它记录了服务和服务地址的映射关系。在分布式架构中，服务会注册到注册中心，当服务需要调用其它服务时，就到注册中心找到服务的地址，进行调用。比如Seata Client端(TM,RM)，发现Seata Server(TC)集群的地址,彼此通信。</p>
+<p>注意：Seata的注册中心是作用于Seata自身的，和Spring  Cloud的注册中心无关</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54137" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>Seata支持哪些注册中心?</p>
+<ol>
+<li>eureka</li>
+<li>consul</li>
+<li>nacos</li>
+<li>etcd</li>
+<li>zookeeper</li>
+<li>sofa</li>
+<li>redis</li>
+<li>file (直连)</li>
+</ol>
+<p><strong>配置将Seata Server注册到Nacos，修改conf&#x2F;application.yml文件</strong></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">registry</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># support: nacos, eureka, redis, zk, consul, etcd3, sofa</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">application</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seata-server</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">cluster</span><span class="hljs-punctuation">:</span> <span class="hljs-string">default</span><br>      <span class="hljs-attribute">username</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">password</span><span class="hljs-punctuation">:</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：请确保client与server的注册处于同一个namespace和group，不然会找不到服务。</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53940" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>启动 Seata-Server 后，会发现Server端的服务出现在 Nacos 控制台中的注册中心列表中。</p>
+<p><strong>步骤四：配置Nacos配置中心</strong></p>
+<p>配置中心可以说是一个”大货仓”,内部放置着各种配置文件,你可以通过自己所需进行获取配置加载到对应的客户端。比如Seata Client端(TM,RM),Seata Server(TC),会去读取全局事务开关,事务会话存储模式等信息。</p>
+<p>注意：Seata的配置中心是作用于Seata自身的，和Spring  Cloud的配置中心无关</p>
+<p>Seata支持哪些配置中心?</p>
+<ol>
+<li>nacos</li>
+<li>consul</li>
+<li>apollo</li>
+<li>etcd</li>
+<li>zookeeper</li>
+<li>file (读本地文件, 包含conf、properties、yml配置文件的支持)</li>
+</ol>
+<p><strong>1）配置Nacos配置中心地址，修改conf&#x2F;application.yml文件</strong></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">seata</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">config</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># support: nacos, consul, apollo, zk, etcd3</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span> <span class="hljs-string">7e838c12-8554-4231-82d5-6d93573ddf32</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br>      <span class="hljs-attribute">data-id</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seataServer.properties</span><br>     <span class="hljs-attribute">username</span><span class="hljs-punctuation">:</span><br>     <span class="hljs-attribute">password</span><span class="hljs-punctuation">:</span><br></code></pre></td></tr></table></figure>
+
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53946" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>2）上传配置至Nacos配置中心</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/seata/seata/tree/v1.5.1/script/config-center">https://github.com/seata/seata/tree/v1.5.1/script/config-center</a></p>
+<p>a) 获取&#x2F;seata&#x2F;script&#x2F;config-center&#x2F;config.txt，修改为db存储模式，并修改mysql连接配置</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">store.mode</span>=db<br><span class="hljs-attr">store.lock.mode</span>=db<br><span class="hljs-attr">store.session.mode</span>=db<br><span class="hljs-attr">store.db.driverClassName</span>=com.mysql.jdbc.Driver<br><span class="hljs-attr">store.db.url</span>=jdbc:mysql://<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">3306</span>/seata?useUnicode=<span class="hljs-literal">true</span>&amp;rewriteBatchedStatements=<span class="hljs-literal">true</span><br><span class="hljs-attr">store.db.user</span>=root<br><span class="hljs-attr">store.db.password</span>=root<br></code></pre></td></tr></table></figure>
+
+<p>在store.mode&#x3D;db，由于seata是通过jdbc的executeBatch来批量插入全局锁的，根据MySQL官网的说明，连接参数中的rewriteBatchedStatements为true时，在执行executeBatch，并且操作类型为insert时，jdbc驱动会把对应的SQL优化成<code>insert into () values (), ()</code>的形式来提升批量插入的性能。 根据实际的测试，该参数设置为true后，对应的批量插入性能为原来的10倍多，因此在数据源为MySQL时，建议把该参数设置为true。</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53887" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>b) 配置事务分组， 要与client配置的事务分组一致</p>
+<ul>
+<li>事务分组：seata的资源逻辑，可以按微服务的需要，在应用程序（客户端）对自行定义事务分组，每组取一个名字。</li>
+<li>集群：seata-server服务端一个或多个节点组成的集群cluster。 应用程序（客户端）使用时需要指定事务逻辑分组与Seata服务端集群的映射关系。</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/53977" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>事务分组如何找到后端Seata集群（TC）？</p>
+<ol>
+<li>首先应用程序（客户端）中配置了事务分组（GlobalTransactionScanner 构造方法的txServiceGroup参数）。若应用程序是SpringBoot则通过seata.tx-service-group 配置。</li>
+<li>应用程序（客户端）会通过用户配置的配置中心去寻找service.vgroupMapping .[事务分组配置项]，取得配置项的值就是TC集群的名称。若应用程序是SpringBoot则通过seata.service.vgroup-mapping.事务分组名&#x3D;集群名称 配置</li>
+<li>拿到集群名称程序通过一定的前后缀+集群名称去构造服务名，各配置中心的服务名实现不同（前提是Seata-Server已经完成服务注册，且Seata-Server向注册中心报告cluster名与应用程序（客户端）配置的集群名称一致）</li>
+<li>拿到服务名去相应的注册中心去拉取相应服务名的服务列表，获得后端真实的TC服务列表（即Seata-Server集群节点列表）</li>
+</ol>
+<p>c) 在nacos配置中心中新建配置，dataId为seataServer.properties，配置内容为上面修改后的config.txt中的配置信息</p>
+<p>从v1.4.2版本开始，seata已支持从一个Nacos dataId中获取所有配置信息,你只需要额外添加一个dataId配置项。</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54003" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>添加后查看：</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54005" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>步骤五：启动Seata Server</strong></p>
+<p>启动命令:</p>
+<p>​                bin&#x2F;seata-server.sh              </p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54044" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>启动成功，查看控制台，账号密码都是seata。<a target="_blank" rel="noopener" href="http://localhost:7091/#/login">http://localhost:7091/#/login</a></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54055" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>在Nacos注册中心中可以查看到seata-server注册成功</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54053" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>支持的启动参数</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>全写</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-h</td>
+<td>–host</td>
+<td>指定在注册中心注册的 IP</td>
+<td>不指定时获取当前的 IP，外部访问部署在云环境和容器中的 server 建议指定</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>–port</td>
+<td>指定 server 启动的端口</td>
+<td>默认为 8091</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>–storeMode</td>
+<td>事务日志存储方式</td>
+<td>支持file,db,redis，默认为 file 注:redis需seata-server 1.3版本及以上</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>–serverNode</td>
+<td>用于指定seata-server节点ID</td>
+<td>如 1,2,3…, 默认为 1</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>–seataEnv</td>
+<td>指定 seata-server 运行环境</td>
+<td>如 dev, test 等, 服务启动时会使用 registry-dev.conf 这样的配置</td>
+</tr>
+</tbody></table>
+<p>比如：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">bin</span>/seata-server.sh -p <span class="hljs-number">8091</span> -h <span class="hljs-number">127.0.0.1</span> -m db        <br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-Seata-Client快速开始"><a href="#3-2-Seata-Client快速开始" class="headerlink" title="3.2 Seata Client快速开始"></a><strong>3.2 Seata Client快速开始</strong></h2><h3 id="Spring-Cloud-Alibaba整合Seata-AT模式实战"><a href="#Spring-Cloud-Alibaba整合Seata-AT模式实战" class="headerlink" title="Spring Cloud Alibaba整合Seata AT模式实战"></a><strong>Spring Cloud Alibaba整合Seata AT模式实战</strong></h3><p><strong>业务场景</strong></p>
+<p>用户下单，整个业务逻辑由三个微服务构成：</p>
+<ul>
+<li>库存服务：对给定的商品扣除库存数量。</li>
+<li>订单服务：根据采购需求创建订单。</li>
+<li>帐户服务：从用户帐户中扣除余额。</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54076" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>1) 环境准备</strong></p>
+<ul>
+<li>父pom指定微服务版本</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Cloud Version</th>
+<th>Spring Boot Version</th>
+<th>Seata Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.2.8.RELEASE</td>
+<td>Spring Cloud Hoxton.SR12</td>
+<td>2.3.12.RELEASE</td>
+<td>1.5.1</td>
+</tr>
+</tbody></table>
+<ul>
+<li>启动Seata Server(TC)端，Seata Server使用nacos作为配置中心和注册中心</li>
+<li>启动nacos服务</li>
+</ul>
+<p><strong>2)  微服务导入seata依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- seata--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-seata<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>3)微服务对应数据库中添加undo_log表(仅AT模式)</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/seata/seata/blob/v1.5.1/script/client/at/db/mysql.sql">https://github.com/seata/seata/blob/v1.5.1/script/client/at/db/mysql.sql</a></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-comment">-- for AT mode you must to init this sql for you business database. the seata server not need it.</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `undo_log`<br>(<br>    `branch_id`     <span class="hljs-type">BIGINT</span>       <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;branch transaction id&#x27;</span>,<br>    `xid`           <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;global transaction id&#x27;</span>,<br>    `context`       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;undo_log context,such as serialization&#x27;</span>,<br>    `rollback_info` LONGBLOB     <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;rollback info&#x27;</span>,<br>    `log_status`    <span class="hljs-type">INT</span>(<span class="hljs-number">11</span>)      <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;0:normal status,1:defense status&#x27;</span>,<br>    `log_created`   DATETIME(<span class="hljs-number">6</span>)  <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;create datetime&#x27;</span>,<br>    `log_modified`  DATETIME(<span class="hljs-number">6</span>)  <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">&#x27;modify datetime&#x27;</span>,<br>    <span class="hljs-keyword">UNIQUE</span> KEY `ux_undo_log` (`xid`, `branch_id`)<br>) ENGINE = InnoDB<br>  AUTO_INCREMENT = <span class="hljs-number">1</span><br>  <span class="hljs-keyword">DEFAULT</span> CHARSET = utf8mb4 <span class="hljs-keyword">COMMENT</span> =<span class="hljs-string">&#x27;AT transaction mode undo table&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>​         </p>
+<p><strong>4) 微服务application.yml中添加seata配置</strong></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">seata</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">application-id</span><span class="hljs-punctuation">:</span> <span class="hljs-string">$&#123;spring.application.name&#125;</span><br>  <span class="hljs-comment"># seata 服务分组，要与服务端配置service.vgroup_mapping的后缀对应</span><br>  <span class="hljs-attribute">tx-service-group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">default_tx_group</span><br>  <span class="hljs-attribute">registry</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># 指定nacos作为注册中心</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">application</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seata-server</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br><br>  <span class="hljs-attribute">config</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># 指定nacos作为配置中心</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span> <span class="hljs-string">7e838c12-8554-4231-82d5-6d93573ddf32</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br>      <span class="hljs-attribute">data-id</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seataServer.properties</span><br></code></pre></td></tr></table></figure>
+
+<p><a href=""></a>           </p>
+<p>注意：请确保client与server的注册中心和配置中心namespace和group一致</p>
+<p><strong>5） 在全局事务发起者中添加@GlobalTransactional注解</strong></p>
+<p>核心代码</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@Override<br>@<span class="hljs-constructor">GlobalTransactional(<span class="hljs-params">name</span>=<span class="hljs-string">&quot;createOrder&quot;</span>,<span class="hljs-params">rollbackFor</span>=Exception.<span class="hljs-params">class</span>)</span><br>public Order save<span class="hljs-constructor">Order(OrderVo <span class="hljs-params">orderVo</span>)</span>&#123;<br>    log.info(<span class="hljs-string">&quot;=============用户下单=================&quot;</span>);<br>    log.info(<span class="hljs-string">&quot;当前 XID: &#123;&#125;&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RootContext</span>.</span></span>get<span class="hljs-constructor">XID()</span>);<br>    <br>    <span class="hljs-comment">// 保存订单</span><br>    Order order = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Order()</span>;<br>    order.set<span class="hljs-constructor">UserId(<span class="hljs-params">orderVo</span>.<span class="hljs-params">getUserId</span>()</span>);<br>    order.set<span class="hljs-constructor">CommodityCode(<span class="hljs-params">orderVo</span>.<span class="hljs-params">getCommodityCode</span>()</span>);<br>    order.set<span class="hljs-constructor">Count(<span class="hljs-params">orderVo</span>.<span class="hljs-params">getCount</span>()</span>);<br>    order.set<span class="hljs-constructor">Money(<span class="hljs-params">orderVo</span>.<span class="hljs-params">getMoney</span>()</span>);<br>    order.set<span class="hljs-constructor">Status(OrderStatus.INIT.<span class="hljs-params">getValue</span>()</span>);<br><br>    Integer saveOrderRecord = orderMapper.insert(order);<br>    log.info(<span class="hljs-string">&quot;保存订单&#123;&#125;&quot;</span>, saveOrderRecord &gt; <span class="hljs-number">0</span> ? <span class="hljs-string">&quot;成功&quot;</span> : <span class="hljs-string">&quot;失败&quot;</span>);<br>    <br>    <span class="hljs-comment">//扣减库存</span><br>    storageFeignService.deduct(orderVo.get<span class="hljs-constructor">CommodityCode()</span>,orderVo.get<span class="hljs-constructor">Count()</span>);<br>    <br>    <span class="hljs-comment">//扣减余额</span><br>    accountFeignService.debit(orderVo.get<span class="hljs-constructor">UserId()</span>,orderVo.get<span class="hljs-constructor">Money()</span>);<br><br>    <span class="hljs-comment">//更新订单</span><br>    Integer updateOrderRecord = orderMapper.update<span class="hljs-constructor">OrderStatus(<span class="hljs-params">order</span>.<span class="hljs-params">getId</span>()</span>,<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OrderStatus</span>.</span><span class="hljs-module"><span class="hljs-identifier">SUCCESS</span>.</span></span>get<span class="hljs-constructor">Value()</span>);<br>    log.info(<span class="hljs-string">&quot;更新订单id:&#123;&#125; &#123;&#125;&quot;</span>, order.get<span class="hljs-constructor">Id()</span>, updateOrderRecord &gt; <span class="hljs-number">0</span> ? <span class="hljs-string">&quot;成功&quot;</span> : <span class="hljs-string">&quot;失败&quot;</span>);<br>    <br>    return order;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>6）测试分布式事务是否生效</strong></p>
+<ul>
+<li>分布式事务成功，模拟正常下单、扣库存，扣余额</li>
+<li>分布式事务失败，模拟下单扣库存成功、扣余额失败，事务是否回滚</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54068" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h1 id="4-Seata-XA模式"><a href="#4-Seata-XA模式" class="headerlink" title="4. Seata XA模式"></a><strong>4. Seata XA模式</strong></h1><h2 id="4-1-整体机制"><a href="#4-1-整体机制" class="headerlink" title="4.1 整体机制"></a><strong>4.1 整体机制</strong></h2><p>在 Seata 定义的分布式事务框架内，利用事务资源（数据库、消息服务等）对 XA 协议的支持，以 XA 协议的机制来管理分支事务的一种 事务模式。</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55865" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>AT和XA模式数据源代理机制对比</strong></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55847" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>XA 模式的使用</strong></p>
+<p>从编程模型上，XA 模式与 AT 模式保持完全一致。只需要修改数据源代理，即可实现 XA 模式与 AT 模式之间的切换。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@<span class="hljs-constructor">Bean(<span class="hljs-string">&quot;dataSource&quot;</span>)</span><br>public DataSource data<span class="hljs-constructor">Source(DruidDataSource <span class="hljs-params">druidDataSource</span>)</span> &#123;<br>    <span class="hljs-comment">// DataSourceProxy for AT mode</span><br>    <span class="hljs-comment">// return new DataSourceProxy(druidDataSource);</span><br><br>    <span class="hljs-comment">// DataSourceProxyXA for XA mode</span><br>    return <span class="hljs-keyword">new</span> <span class="hljs-constructor">DataSourceProxyXA(<span class="hljs-params">druidDataSource</span>)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-2-Spring-Cloud-Alibaba整合Seata-XA实战"><a href="#4-2-Spring-Cloud-Alibaba整合Seata-XA实战" class="headerlink" title="4.2 Spring Cloud Alibaba整合Seata XA实战"></a><strong>4.2 Spring Cloud Alibaba整合Seata XA实战</strong></h2><p>对比Seata AT模式配置，只需修改两个地方：</p>
+<ul>
+<li>微服务数据库不需要undo_log表，undo_log表仅用于AT模式</li>
+<li>修改数据源代码模式为XA模式</li>
+</ul>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">seata</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-comment"># 数据源代理模式 默认AT</span><br>  <span class="hljs-attribute">data-source-proxy-mode</span><span class="hljs-punctuation">:</span> <span class="hljs-string">XA</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="5-什么是TCC"><a href="#5-什么是TCC" class="headerlink" title="5. 什么是TCC"></a><strong>5. 什么是TCC</strong></h1><p>TCC 基于分布式事务中的二阶段提交协议实现，它的全称为 Try-Confirm-Cancel，即资源预留（Try）、确认操作（Confirm）、取消操作（Cancel），他们的具体含义如下：</p>
+<ol>
+<li>Try：对业务资源的检查并预留；</li>
+<li>Confirm：对业务处理进行提交，即 commit 操作，只要 Try 成功，那么该步骤一定成功；</li>
+<li>Cancel：对业务处理进行取消，即回滚操作，该步骤回对 Try 预留的资源进行释放。</li>
+</ol>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/54287" srcset="/img/loading.gif" lazyload alt="0"></p>
+<ul>
+<li><strong>XA是资源层面的分布式事务，强一致性，在两阶段提交的整个过程中，一直会持有资源的锁。</strong></li>
+<li><strong>TCC是业务层面的分布式事务，最终一致性，不会一直持有资源的锁。</strong></li>
+</ul>
+<p>TCC 是一种侵入式的分布式事务解决方案，以上三个操作都需要业务系统自行实现，对业务系统有着非常大的入侵性，设计相对复杂，但优点是 TCC 完全不依赖数据库，能够实现跨数据库、跨应用资源管理，对这些不同数据访问通过侵入式的编码方式实现一个原子操作，更好地解决了在各种复杂业务场景下的分布式事务问题。</p>
+<p><strong>以用户下单为例</strong></p>
+<p><strong>try-commit</strong></p>
+<p>try 阶段首先进行预留资源，然后在 commit 阶段扣除资源。如下图：</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55787" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>try-cancel</strong></p>
+<p>try 阶段首先进行预留资源，预留资源时扣减库存失败导致全局事务回滚，在 cancel 阶段释放资源。如下图：</p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55786" srcset="/img/loading.gif" lazyload alt="0"></p>
+<h2 id="5-1-Seata-TCC-模式"><a href="#5-1-Seata-TCC-模式" class="headerlink" title="5.1 Seata TCC 模式"></a><strong>5.1 Seata TCC 模式</strong></h2><p>一个分布式的全局事务，整体是 两阶段提交 的模型。全局事务是由若干分支事务组成的，分支事务要满足 两阶段提交 的模型要求，即需要每个分支事务都具备自己的：</p>
+<ul>
+<li>一阶段 prepare 行为</li>
+<li>二阶段 commit 或 rollback 行为</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55681" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>在Seata中，AT模式与TCC模式事实上都是两阶段提交的具体实现，他们的区别在于：</p>
+<p>AT 模式基于 支持本地 ACID 事务的关系型数据库：</p>
+<ul>
+<li>一阶段 prepare 行为：在本地事务中，一并提交业务数据更新和相应回滚日志记录。</li>
+<li>二阶段 commit 行为：马上成功结束，自动异步批量清理回滚日志。</li>
+<li>二阶段 rollback 行为：通过回滚日志，自动生成补偿操作，完成数据回滚。</li>
+</ul>
+<p>相应的，TCC 模式不依赖于底层数据资源的事务支持：</p>
+<ul>
+<li>一阶段 prepare 行为：调用自定义的 prepare 逻辑。</li>
+<li>二阶段 commit 行为：调用自定义的 commit 逻辑。</li>
+<li>二阶段 rollback 行为：调用自定义的 rollback 逻辑。</li>
+</ul>
+<p>简单点概括，SEATA的TCC模式就是手工的AT模式，它允许你自定义两阶段的处理逻辑而不依赖AT模式的undo_log。</p>
+<h2 id="5-2-Seata-TCC模式接口如何改造"><a href="#5-2-Seata-TCC模式接口如何改造" class="headerlink" title="5.2 Seata TCC模式接口如何改造"></a><strong>5.2 Seata TCC模式接口如何改造</strong></h2><p>假设现有一个业务需要同时使用服务 A 和服务 B 完成一个事务操作，我们在服务 A 定义该服务的一个 TCC 接口：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">interface</span> <span class="hljs-selector-tag">TccActionOne</span> &#123;<br>    <span class="hljs-variable">@TwoPhaseBusinessAction</span>(name = <span class="hljs-string">&quot;prepare&quot;</span>, commitMethod = <span class="hljs-string">&quot;commit&quot;</span>, rollbackMethod = <span class="hljs-string">&quot;rollback&quot;</span>)<br>    public boolean <span class="hljs-built_in">prepare</span>(BusinessActionContext actionContext, <span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;a&quot;</span>) String a);<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">commit</span>(BusinessActionContext actionContext);<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">rollback</span>(BusinessActionContext actionContext);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同样，在服务 B 定义该服务的一个 TCC 接口：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">interface</span> <span class="hljs-selector-tag">TccActionTwo</span> &#123;<br>    <span class="hljs-variable">@TwoPhaseBusinessAction</span>(name = <span class="hljs-string">&quot;prepare&quot;</span>, commitMethod = <span class="hljs-string">&quot;commit&quot;</span>, rollbackMethod = <span class="hljs-string">&quot;rollback&quot;</span>)<br>    public void <span class="hljs-built_in">prepare</span>(BusinessActionContext actionContext, <span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;b&quot;</span>) String b);<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">commit</span>(BusinessActionContext actionContext);<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">rollback</span>(BusinessActionContext actionContext);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在业务所在系统中开启全局事务并执行服务 A 和服务 B 的 TCC 预留资源方法：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@GlobalTransactional</span><br><span class="hljs-keyword">public</span> <span class="hljs-title class_">String</span> <span class="hljs-title function_">doTransactionCommit</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-comment">//服务A事务参与者</span><br>    tccActionOne.<span class="hljs-title function_">prepare</span>(<span class="hljs-literal">null</span>,<span class="hljs-string">&quot;one&quot;</span>);<br>    <span class="hljs-comment">//服务B事务参与者</span><br>    tccActionTwo.<span class="hljs-title function_">prepare</span>(<span class="hljs-literal">null</span>,<span class="hljs-string">&quot;two&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以上就是使用 Seata TCC 模式实现一个全局事务的例子，TCC 模式同样使用 @GlobalTransactional 注解开启全局事务，而服务 A 和服务 B 的 TCC 接口为事务参与者，Seata 会把一个 TCC 接口当成一个 Resource，也叫 TCC Resource。</p>
+<h2 id="5-3-TCC如何控制异常"><a href="#5-3-TCC如何控制异常" class="headerlink" title="5.3 TCC如何控制异常"></a><strong>5.3 TCC如何控制异常</strong></h2><p>在 TCC 模型执行的过程中，还可能会出现各种异常，其中最为常见的有空回滚、幂等、悬挂等。TCC 模式是分布式事务中非常重要的事务模式，但是幂等、悬挂和空回滚一直是 TCC 模式需要考虑的问题，Seata 框架在 1.5.1 版本完美解决了这些问题。</p>
+<h3 id="如何处理空回滚"><a href="#如何处理空回滚" class="headerlink" title="如何处理空回滚"></a><strong>如何处理空回滚</strong></h3><p>空回滚指的是在一个分布式事务中，在没有调用参与方的 Try 方法的情况下，TM 驱动二阶段回滚调用了参与方的 Cancel 方法。</p>
+<p><strong>那么空回滚是如何产生的呢？</strong></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55759" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>如上图所示，全局事务开启后，参与者 A 分支注册完成之后会执行参与者一阶段 RPC 方法，如果此时参与者 A 所在的机器发生宕机，网络异常，都会造成 RPC 调用失败，即参与者 A 一阶段方法未成功执行，但是此时全局事务已经开启，Seata 必须要推进到终态，在全局事务回滚时会调用参与者 A 的 Cancel 方法，从而造成空回滚。</p>
+<p><strong>要想防止空回滚，那么必须在 Cancel 方法中识别这是一个空回滚，Seata 是如何做的呢？</strong></p>
+<p>Seata 的做法是新增一个 TCC 事务控制表，包含事务的 XID 和 BranchID 信息，在 Try 方法执行时插入一条记录，表示一阶段执行了，执行 Cancel 方法时读取这条记录，如果记录不存在，说明 Try 方法没有执行。</p>
+<h3 id="如何处理幂等"><a href="#如何处理幂等" class="headerlink" title="如何处理幂等"></a><strong>如何处理幂等</strong></h3><p>幂等问题指的是 TC 重复进行二阶段提交，因此 Confirm&#x2F;Cancel 接口需要支持幂等处理，即不会产生资源重复提交或者重复释放。</p>
+<p><strong>那么幂等问题是如何产生的呢？</strong></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55758" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>如上图所示，参与者 A 执行完二阶段之后，由于网络抖动或者宕机问题，会造成 TC 收不到参与者 A 执行二阶段的返回结果，TC 会重复发起调用，直到二阶段执行结果成功。</p>
+<p><strong>Seata 是如何处理幂等问题的呢？</strong></p>
+<p>同样的也是在 TCC 事务控制表中增加一个记录状态的字段 status，该字段有 3 个值，分别为：</p>
+<ol>
+<li>tried：1</li>
+<li>committed：2</li>
+<li>rollbacked：3</li>
+</ol>
+<p>二阶段 Confirm&#x2F;Cancel 方法执行后，将状态改为 committed 或 rollbacked 状态。当重复调用二阶段 Confirm&#x2F;Cancel 方法时，判断事务状态即可解决幂等问题。</p>
+<h3 id="如何处理悬挂"><a href="#如何处理悬挂" class="headerlink" title="如何处理悬挂"></a><strong>如何处理悬挂</strong></h3><p>悬挂指的是二阶段 Cancel 方法比 一阶段 Try 方法优先执行，由于允许空回滚的原因，在执行完二阶段 Cancel 方法之后直接空回滚返回成功，此时全局事务已结束，但是由于 Try 方法随后执行，这就会造成一阶段 Try 方法预留的资源永远无法提交和释放了。</p>
+<p><strong>那么悬挂是如何产生的呢？</strong></p>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55757" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>如上图所示，在执行参与者 A 的一阶段 Try 方法时，出现网路拥堵，由于 Seata 全局事务有超时限制，执行 Try 方法超时后，TM 决议全局回滚，回滚完成后如果此时 RPC 请求才到达参与者 A，执行 Try 方法进行资源预留，从而造成悬挂。</p>
+<p><strong>Seata 是怎么处理悬挂的呢？</strong></p>
+<p>在 TCC 事务控制表记录状态的字段 status 中增加一个状态：</p>
+<ul>
+<li>suspended：4</li>
+</ul>
+<p>当执行二阶段 Cancel 方法时，如果发现 TCC 事务控制表有相关记录，说明二阶段 Cancel 方法优先一阶段 Try 方法执行，因此插入一条 status&#x3D;4 状态的记录，当一阶段 Try 方法后面执行时，判断 status&#x3D;4 ，则说明有二阶段 Cancel 已执行，并返回 false 以阻止一阶段 Try 方法执行成功。</p>
+<h2 id="5-4-Spring-Cloud-Alibaba整合Seata-TCC实战"><a href="#5-4-Spring-Cloud-Alibaba整合Seata-TCC实战" class="headerlink" title="5.4 Spring Cloud Alibaba整合Seata TCC实战"></a><strong>5.4 Spring Cloud Alibaba整合Seata TCC实战</strong></h2><p><strong>业务场景</strong></p>
+<p>用户下单，整个业务逻辑由三个微服务构成：</p>
+<ul>
+<li>库存服务：对给定的商品扣除库存数量。</li>
+<li>订单服务：根据采购需求创建订单。</li>
+<li>帐户服务：从用户帐户中扣除余额。</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55687" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>1) 环境准备</strong></p>
+<ul>
+<li>父pom指定微服务版本</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Spring Cloud Alibaba Version</th>
+<th>Spring Cloud Version</th>
+<th>Spring Boot Version</th>
+<th>Seata Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2.2.8.RELEASE</td>
+<td>Spring Cloud Hoxton.SR12</td>
+<td>2.3.12.RELEASE</td>
+<td>1.5.1</td>
+</tr>
+</tbody></table>
+<ul>
+<li>启动Seata Server(TC)端，Seata Server使用nacos作为配置中心和注册中心</li>
+<li>启动nacos服务</li>
+</ul>
+<p><strong>2)  微服务导入seata依赖</strong></p>
+<p>spring-cloud-starter-alibaba-seata内部集成了seata，并实现了xid传递</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- seata--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-seata<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p> <strong>3）微服务application.yml中添加seata配置</strong></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">seata</span><span class="hljs-punctuation">:</span><br>  <span class="hljs-attribute">application-id</span><span class="hljs-punctuation">:</span> <span class="hljs-string">$&#123;spring.application.name&#125;</span><br>  <span class="hljs-comment"># seata 服务分组，要与服务端配置service.vgroup_mapping的后缀对应</span><br>  <span class="hljs-attribute">tx-service-group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">default_tx_group</span><br>  <span class="hljs-attribute">registry</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># 指定nacos作为注册中心</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">application</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seata-server</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br><br>  <span class="hljs-attribute">config</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-comment"># 指定nacos作为配置中心</span><br>    <span class="hljs-attribute">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nacos</span><br>    <span class="hljs-attribute">nacos</span><span class="hljs-punctuation">:</span><br>      <span class="hljs-attribute">server-addr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">127.0.0.1:8848</span><br>      <span class="hljs-attribute">namespace</span><span class="hljs-punctuation">:</span> <span class="hljs-string">7e838c12-8554-4231-82d5-6d93573ddf32</span><br>      <span class="hljs-attribute">group</span><span class="hljs-punctuation">:</span> <span class="hljs-string">SEATA_GROUP</span><br>      <span class="hljs-attribute">data-id</span><span class="hljs-punctuation">:</span> <span class="hljs-string">seataServer.properties</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：请确保client与server的注册中心和配置中心namespace和group一致</p>
+<p><strong>4）定义TCC接口</strong></p>
+<p>TCC相关注解如下：</p>
+<ul>
+<li>@LocalTCC 适用于SpringCloud+Feign模式下的TCC，@LocalTCC一定需要注解在接口上，此接口可以是寻常的业务接口，只要实现了TCC的两阶段提交对应方法便可</li>
+<li>@TwoPhaseBusinessAction 注解try方法，其中name为当前tcc方法的bean名称，写方法名便可（全局唯一），commitMethod指向提交方法，rollbackMethod指向事务回滚方法。指定好三个方法之后，seata会根据全局事务的成功或失败，去帮我们自动调用提交方法或者回滚方法。</li>
+<li>@BusinessActionContextParameter 注解可以将参数传递到二阶段（commitMethod&#x2F;rollbackMethod）的方法。</li>
+<li>BusinessActionContext 便是指TCC事务上下文</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 通过 @LocalTCC 这个注解，RM 初始化的时候会向 TC 注册一个分支事务。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-variable">@LocalTCC</span><br>public interface OrderService &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * TCC的try方法：保存订单信息，状态为支付中</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 定义两阶段提交，在try阶段通过@TwoPhaseBusinessAction注解定义了分支事务的 resourceId，commit和 cancel 方法</span><br><span class="hljs-comment">     *  name = 该tcc的bean名称,全局唯一</span><br><span class="hljs-comment">     *  commitMethod = commit 为二阶段确认方法</span><br><span class="hljs-comment">     *  rollbackMethod = rollback 为二阶段取消方法</span><br><span class="hljs-comment">     *  BusinessActionContextParameter注解 传递参数到二阶段中</span><br><span class="hljs-comment">     *  useTCCFence seata1.5.1的新特性，用于解决TCC幂等，悬挂，空回滚问题，需增加日志表tcc_fence_log</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-variable">@TwoPhaseBusinessAction</span>(name = <span class="hljs-string">&quot;prepareSaveOrder&quot;</span>, commitMethod = <span class="hljs-string">&quot;commit&quot;</span>, rollbackMethod = <span class="hljs-string">&quot;rollback&quot;</span>, useTCCFence = true)<br>    Order <span class="hljs-built_in">prepareSaveOrder</span>(OrderVo orderVo, <span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;orderId&quot;</span>) Long orderId);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * TCC的confirm方法：订单状态改为支付成功</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 二阶段确认方法可以另命名，但要保证与commitMethod一致</span><br><span class="hljs-comment">     * context可以传递try方法的参数</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">commit</span>(BusinessActionContext actionContext);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * TCC的cancel方法：订单状态改为支付失败</span><br><span class="hljs-comment">     * 二阶段取消方法可以另命名，但要保证与rollbackMethod一致</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">rollback</span>(BusinessActionContext actionContext);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 通过 @LocalTCC 这个注解，RM 初始化的时候会向 TC 注册一个分支事务。</span><br><span class="hljs-comment"> */</span><br>@<span class="hljs-selector-tag">LocalTCC</span><br><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">interface</span> <span class="hljs-selector-tag">StorageService</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Try: 库存-扣减数量，冻结库存+扣减数量</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 定义两阶段提交，在try阶段通过@TwoPhaseBusinessAction注解定义了分支事务的 resourceId，commit和 cancel 方法</span><br><span class="hljs-comment">     *  name = 该tcc的bean名称,全局唯一</span><br><span class="hljs-comment">     *  commitMethod = commit 为二阶段确认方法</span><br><span class="hljs-comment">     *  rollbackMethod = rollback 为二阶段取消方法</span><br><span class="hljs-comment">     *  BusinessActionContextParameter注解 传递参数到二阶段中</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param commodityCode 商品编号</span><br><span class="hljs-comment">     * @param count 扣减数量</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-variable">@TwoPhaseBusinessAction</span>(name = <span class="hljs-string">&quot;deduct&quot;</span>, commitMethod = <span class="hljs-string">&quot;commit&quot;</span>, rollbackMethod = <span class="hljs-string">&quot;rollback&quot;</span>, useTCCFence = true)<br>    boolean <span class="hljs-built_in">deduct</span>(<span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;commodityCode&quot;</span>) String commodityCode,<br>                   <span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;count&quot;</span>) int count);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * Confirm: 冻结库存-扣减数量</span><br><span class="hljs-comment">     * 二阶段确认方法可以另命名，但要保证与commitMethod一致</span><br><span class="hljs-comment">     * context可以传递try方法的参数</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">commit</span>(BusinessActionContext actionContext);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Cancel: 库存+扣减数量，冻结库存-扣减数量</span><br><span class="hljs-comment">     * 二阶段取消方法可以另命名，但要保证与rollbackMethod一致</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">rollback</span>(BusinessActionContext actionContext);<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 通过 @LocalTCC 这个注解，RM 初始化的时候会向 TC 注册一个分支事务。</span><br><span class="hljs-comment"> */</span><br>@<span class="hljs-selector-tag">LocalTCC</span><br><span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">interface</span> <span class="hljs-selector-tag">AccountService</span> &#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 用户账户扣款</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 定义两阶段提交，在try阶段通过@TwoPhaseBusinessAction注解定义了分支事务的 resourceId，commit和 cancel 方法</span><br><span class="hljs-comment">     *  name = 该tcc的bean名称,全局唯一</span><br><span class="hljs-comment">     *  commitMethod = commit 为二阶段确认方法</span><br><span class="hljs-comment">     *  rollbackMethod = rollback 为二阶段取消方法</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param userId</span><br><span class="hljs-comment">     * @param money 从用户账户中扣除的金额</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-variable">@TwoPhaseBusinessAction</span>(name = <span class="hljs-string">&quot;debit&quot;</span>, commitMethod = <span class="hljs-string">&quot;commit&quot;</span>, rollbackMethod = <span class="hljs-string">&quot;rollback&quot;</span>, useTCCFence = true)<br>    boolean <span class="hljs-built_in">debit</span>(<span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;userId&quot;</span>) String userId,<br>                  <span class="hljs-variable">@BusinessActionContextParameter</span>(paramName = <span class="hljs-string">&quot;money&quot;</span>) int money);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 提交事务，二阶段确认方法可以另命名，但要保证与commitMethod一致</span><br><span class="hljs-comment">     * context可以传递try方法的参数</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">commit</span>(BusinessActionContext actionContext);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 回滚事务，二阶段取消方法可以另命名，但要保证与rollbackMethod一致</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @param actionContext</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-selector-tag">boolean</span> <span class="hljs-selector-tag">rollback</span>(BusinessActionContext actionContext);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​         </p>
+<p>TCC 幂等、悬挂和空回滚问题如何解决？</p>
+<p>TCC 模式中存在的三大问题是幂等、悬挂和空回滚。在 Seata1.5.1 版本中，增加了一张事务控制表，表名是 tcc_fence_log 来解决这个问题。而在@TwoPhaseBusinessAction 注解中提到的属性 useTCCFence 就是来指定是否开启这个机制，这个属性值默认是 false。</p>
+<p><strong>5）微服务增加tcc_fence_log日志表</strong></p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"># tcc_fence_log 建表语句如下（MySQL 语法）<br><span class="hljs-keyword">CREATE</span> TABLE <span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-symbol">`tcc_fence_log`</span><br>(<br>    <span class="hljs-symbol">`xid`</span>           VARCHAR(<span class="hljs-number">128</span>)  <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;global id&#x27;</span>,<br>    <span class="hljs-symbol">`branch_id`</span>     BIGINT        <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;branch id&#x27;</span>,<br>    <span class="hljs-symbol">`action_name`</span>   VARCHAR(<span class="hljs-number">64</span>)   <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;action name&#x27;</span>,<br>    <span class="hljs-symbol">`status`</span>        TINYINT       <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;status(tried:1;committed:2;rollbacked:3;suspended:4)&#x27;</span>,<br>    <span class="hljs-symbol">`gmt_create`</span>    DATETIME(<span class="hljs-number">3</span>)   <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;create time&#x27;</span>,<br>    <span class="hljs-symbol">`gmt_modified`</span>  DATETIME(<span class="hljs-number">3</span>)   <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> COMMENT <span class="hljs-string">&#x27;update time&#x27;</span>,<br>    <span class="hljs-keyword">PRIMARY</span> <span class="hljs-keyword">KEY</span> (<span class="hljs-symbol">`xid`</span>, <span class="hljs-symbol">`branch_id`</span>),<br>    <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`idx_gmt_modified`</span> (<span class="hljs-symbol">`gmt_modified`</span>),<br>    <span class="hljs-keyword">KEY</span> <span class="hljs-symbol">`idx_status`</span> (<span class="hljs-symbol">`status`</span>)<br>) ENGINE = InnoDB<br>DEFAULT CHARSET = utf8mb4;<br></code></pre></td></tr></table></figure>
+
+<p><strong>6）TCC接口的业务实现</strong></p>
+<p>参考课堂代码</p>
+<p><strong>7） 在全局事务发起者中添加@GlobalTransactional注解</strong></p>
+<p>核心代码</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">@<span class="hljs-constructor">GlobalTransactional(<span class="hljs-params">name</span>=<span class="hljs-string">&quot;createOrder&quot;</span>,<span class="hljs-params">rollbackFor</span>=Exception.<span class="hljs-params">class</span>)</span><br>public Order save<span class="hljs-constructor">Order(OrderVo <span class="hljs-params">orderVo</span>)</span> &#123;<br>    log.info(<span class="hljs-string">&quot;=============用户下单=================&quot;</span>);<br>    log.info(<span class="hljs-string">&quot;当前 XID: &#123;&#125;&quot;</span>, <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">RootContext</span>.</span></span>get<span class="hljs-constructor">XID()</span>);<br><br>    <span class="hljs-comment">//获取全局唯一订单号  测试使用</span><br>    Long orderId = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">UUIDGenerator</span>.</span></span>generate<span class="hljs-constructor">UUID()</span>;<br><br>    <span class="hljs-comment">//阶段一： 创建订单</span><br>    Order order = orderService.prepare<span class="hljs-constructor">SaveOrder(<span class="hljs-params">orderVo</span>,<span class="hljs-params">orderId</span>)</span>;<br><br>    <span class="hljs-comment">//扣减库存</span><br>    storageFeignService.deduct(orderVo.get<span class="hljs-constructor">CommodityCode()</span>, orderVo.get<span class="hljs-constructor">Count()</span>);<br>    <span class="hljs-comment">//扣减余额</span><br>    accountFeignService.debit(orderVo.get<span class="hljs-constructor">UserId()</span>, orderVo.get<span class="hljs-constructor">Money()</span>);<br><br>    return order;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>8）测试分布式事务是否生效</strong></p>
+<ul>
+<li>分布式事务成功，模拟正常下单、扣库存，扣余额</li>
+<li>分布式事务失败，模拟下单扣库存成功、扣余额失败，事务是否回滚</li>
+</ul>
+<p>​    <img src="/seata%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%9E%E6%88%98/55750" srcset="/img/loading.gif" lazyload alt="0"></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6/" class="category-chain-item">架构之微服务组件</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6/seata/" class="category-chain-item">seata</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/seatac/">#seatac</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>seata初识与实战</div>
+      <div>https://kblayt.github.io/2024/03/03/系统架构/架构之微服务/seata/seata初识与实战/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/04/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E6%A1%86%E6%9E%B6/Kafka/3%E3%80%81kafka%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93%E5%8F%8A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5/" title="3、kafka线上问题总结及性能优化实践">
+                        <span class="hidden-mobile">3、kafka线上问题总结及性能优化实践</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
