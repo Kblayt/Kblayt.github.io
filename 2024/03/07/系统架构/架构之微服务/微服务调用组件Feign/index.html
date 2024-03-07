@@ -1,0 +1,879 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Kblayt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. RPC概述 思考： 微服务之间如何方便优雅的实现服务间的远程调用？ RPC 全称是 Remote Procedure Call ，即远程过程调用，其对应的是我们的本地调用。RPC 的目的是：让我们调用远程方法像调用本地方法一样。 1234&#x2F;&#x2F;本地调用R result &#x3D; orderService.findOrderByUserId(id);&#x2F;&#x2F;RPC远程调用  orderService为代理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务调用组件Feign">
+<meta property="og:url" content="https://kblayt.github.io/2024/03/07/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. RPC概述 思考： 微服务之间如何方便优雅的实现服务间的远程调用？ RPC 全称是 Remote Procedure Call ，即远程过程调用，其对应的是我们的本地调用。RPC 的目的是：让我们调用远程方法像调用本地方法一样。 1234&#x2F;&#x2F;本地调用R result &#x3D; orderService.findOrderByUserId(id);&#x2F;&#x2F;RPC远程调用  orderService为代理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53802">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/54803">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53054">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53060">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53055">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53049">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53056">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53053">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53044">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53048">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53045">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/54856">
+<meta property="og:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53843">
+<meta property="article:published_time" content="2024-03-07T02:27:32.000Z">
+<meta property="article:modified_time" content="2024-03-07T03:41:35.236Z">
+<meta property="article:author" content="Kblayt">
+<meta property="article:tag" content="Feign">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kblayt.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53802">
+  
+  
+  
+  <title>微服务调用组件Feign - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"kblayt.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="微服务调用组件Feign"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-07 10:27" pubdate>
+          2024年3月7日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          119 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">微服务调用组件Feign</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>1. RPC概述</strong></p>
+<p>思考： 微服务之间如何方便优雅的实现服务间的远程调用？</p>
+<p>RPC 全称是 Remote Procedure Call ，即远程过程调用，其对应的是我们的本地调用。RPC 的目的是：让我们调用远程方法像调用本地方法一样。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">//本地调用</span><br>R result = orderService.find<span class="hljs-constructor">OrderByUserId(<span class="hljs-params">id</span>)</span>;<br><span class="hljs-comment">//RPC远程调用  orderService为代理对象</span><br>R result = orderService.find<span class="hljs-constructor">OrderByUserId(<span class="hljs-params">id</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p><strong>RPC框架设计架构</strong></p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53802" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>2. 什么是Feign</strong></p>
+<p>Feign是Netflix开发的声明式、模板化的HTTP客户端，Feign可帮助我们更加便捷、优雅地调用HTTP API。</p>
+<p>Feign可以做到使用 HTTP 请求远程服务时就像调用本地方法一样的体验，开发者完全感知不到这是远程方法，更感知不到这是个 HTTP 请求。它像 Dubbo 一样，consumer 直接调用接口方法调用 provider，而不需要通过常规的 Http Client 构造请求再解析返回数据。它解决了让开发者调用远程接口就跟调用本地方法一样，无需关注与远程的交互细节，更无需关注分布式环境开发。</p>
+<p>Spring Cloud openfeign对Feign进行了增强，使其支持Spring MVC注解，另外还整合了Ribbon和Eureka，从而使得Feign的使用更加方便。</p>
+<p><strong>2.1 Ribbon&amp;Feign对比</strong></p>
+<p> <strong>Ribbon+RestTemplate进行微服务调用</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span><br><span class="hljs-meta">@LoadBalanced</span><br><span class="hljs-keyword">public</span> RestTemplate <span class="hljs-title function_">restTemplate</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RestTemplate</span>();<br>&#125;<br><br><span class="hljs-comment">//调用方式</span><br><span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;http://mall-order/order/findOrderByUserId/&quot;</span>+id;<br><span class="hljs-type">R</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> restTemplate.getForObject(url,R.class);<br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p><strong>Feign进行微服务调用</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@FeignClient(value = <span class="hljs-string">&quot;mall-order&quot;</span>,path = <span class="hljs-string">&quot;/order&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">OrderFeignService</span> &#123;<br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/findOrderByUserId/&#123;userId&#125;&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> R findOrderByUserId(<span class="hljs-meta">@PathVariable(<span class="hljs-string">&quot;userId&quot;</span>)</span> Integer userId);<br>&#125;<br><br><span class="hljs-meta">@Autowired</span><br>OrderFeignService orderFeignService;<br><span class="hljs-comment">//feign调用</span><br>R result = orderFeignService.findOrderByUserId(id);<br></code></pre></td></tr></table></figure>
+
+<p>​        </p>
+<p><strong>2.2 Feign的设计架构</strong></p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/54803" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>2.3 Spring Cloud Alibaba快速整合Feign</strong></p>
+<p><strong>1）引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- openfeign 远程调用 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>2）编写调用接口+@FeignClient注解</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@FeignClient</span>(value = <span class="hljs-string">&quot;mall-order&quot;</span>,path = <span class="hljs-string">&quot;/order&quot;</span>)<br>public interface OrderFeignService &#123;<br><br>    <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/findOrderByUserId/&#123;userId&#125;&quot;</span>)<br>    public R <span class="hljs-built_in">findOrderByUserId</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;userId&quot;</span>) Integer userId);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​          </p>
+<p><strong>3）调用端在启动类上添加</strong><strong>@EnableFeignClients****注解</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@SpringBootApplication</span><br><span class="hljs-variable">@EnableFeignClients</span>  <span class="hljs-comment">//扫描和注册feign客户端的beanDefinition</span><br>public class MallUserFeignDemoApplication &#123;<br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">static</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">main</span>(String[] args) &#123;<br>        <span class="hljs-selector-tag">SpringApplication</span><span class="hljs-selector-class">.run</span>(MallUserFeignDemoApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
+<p><strong>4）发起调用，像调用本地方式一样调用远程服务</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/user&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserController</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    OrderFeignService orderFeignService;<br><br>    <span class="hljs-meta">@RequestMapping(value = <span class="hljs-string">&quot;/findOrderByUserId/&#123;id&#125;&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> R  findOrderByUserId(<span class="hljs-meta">@PathVariable(<span class="hljs-string">&quot;id&quot;</span>)</span> Integer id) &#123;<br>        <span class="hljs-comment">//feign调用</span><br>        R result = orderFeignService.findOrderByUserId(id);<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>提示： Feign 的继承特性可以让服务的接口定义单独抽出来，作为公共的依赖，以方便使用。</p>
+<p><strong>2.3 Spring Cloud Feign扩展</strong></p>
+<p> Feign 提供了很多的扩展机制，让用户可以更加灵活的使用。</p>
+<p><strong>日志配置</strong></p>
+<p>有时候我们遇到 Bug，比如接口调用失败、参数没收到等问题，或者想看看调用性能，就需要配置 Feign 的日志了，以此让 Feign 把请求信息输出来。</p>
+<p><strong>1）定义一个配置类，指定日志级别</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">// 注意： 此处配置@<span class="hljs-keyword">Configuration</span>注解就会全局生效，如果想指定对应微服务生效，就不能配置@<span class="hljs-keyword">Configuration</span><br>@<span class="hljs-keyword">Configuration</span><br><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> FeignConfig &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 日志级别</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * @return</span><br><span class="hljs-comment">     */</span><br>    @Bean<br>    <span class="hljs-built_in">public</span> Logger.<span class="hljs-keyword">Level</span> feignLoggerLevel() &#123;<br>        <span class="hljs-keyword">return</span> Logger.<span class="hljs-keyword">Level</span>.<span class="hljs-keyword">FULL</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
+<p>通过源码可以看到日志等级有 4 种，分别是：</p>
+<ul>
+<li><strong>NONE</strong>【性能最佳，适用于生产】：不记录任何日志（默认值）。</li>
+<li><strong>BASIC</strong>【适用于生产环境追踪问题】：仅记录请求方法、URL、响应状态代码以及执行时间。</li>
+<li><strong>HEADERS</strong>：记录BASIC级别的基础上，记录请求和响应的header。</li>
+<li><strong>FULL</strong>【比较适用于开发及测试环境定位问题】：记录请求和响应的header、body和元数据。</li>
+</ul>
+<p><strong>2) 局部配置，让调用的微服务生效，在</strong><strong>@FeignClient 注解中指定使用的配置类</strong></p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53054" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>3) 在yml配置文件中配置 Client 的日志级别才能正常输出日志，格式是”logging.level.feign接口包路径&#x3D;debug”</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">logging:<br>  level:<br>    com<span class="hljs-selector-class">.tuling</span><span class="hljs-selector-class">.mall</span><span class="hljs-selector-class">.feigndemo</span><span class="hljs-selector-class">.feign</span>: debug<br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
+<p>测试：BASIC级别日志</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53060" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>补充：局部配置可以在yml中配置</strong></p>
+<p>对应属性配置类： org.springframework.cloud.openfeign.FeignClientProperties.FeignClientConfiguration</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">mall-order:</span>  <span class="hljs-comment">#对应微服务</span><br>        <span class="hljs-attr">loggerLevel:</span> <span class="hljs-string">FULL</span><br></code></pre></td></tr></table></figure>
+
+<p>​        </p>
+<p><strong>契约配置</strong></p>
+<p>Spring Cloud 在 Feign 的基础上做了扩展，可以让 Feign 支持 Spring MVC 的注解来调用。原生的 Feign 是不支持 Spring MVC 注解的，如果你想在 Spring Cloud 中使用原生的注解方式来定义客户端也是可以的，通过配置契约来改变这个配置，Spring Cloud 中默认的是 SpringMvcContract。</p>
+<p><strong>1）修改契约配置，支持Feign原生的注解</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 修改契约配置，支持Feign原生的注解</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> <span class="hljs-title class_">Contract</span> <span class="hljs-title function_">feignContract</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Contract</span>.<span class="hljs-title class_">Default</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p>注意：修改契约配置后，OrderFeignService 不再支持springmvc的注解，需要使用Feign原生的注解</p>
+<p><strong>2）OrderFeignService 中配置使用Feign原生的注解</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@FeignClient</span>(value = <span class="hljs-string">&quot;mall-order&quot;</span>,path = <span class="hljs-string">&quot;/order&quot;</span>)<br>public interface OrderFeignService &#123;<br>    <span class="hljs-variable">@RequestLine</span>(<span class="hljs-string">&quot;GET /findOrderByUserId/&#123;userId&#125;&quot;</span>)<br>    public R <span class="hljs-built_in">findOrderByUserId</span>(<span class="hljs-variable">@Param</span>(<span class="hljs-string">&quot;userId&quot;</span>) Integer userId);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
+<p><strong>3）补充，也可以通过yml配置契约</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">mall-order:</span>  <span class="hljs-comment">#对应微服务</span><br>        <span class="hljs-attr">loggerLevel:</span> <span class="hljs-string">FULL</span><br>        <span class="hljs-attr">contract:</span> <span class="hljs-string">feign.Contract.Default</span>   <span class="hljs-comment">#指定Feign原生注解契约配置</span><br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p><strong>通过拦截器实现参数传递</strong></p>
+<p>通常我们调用的接口都是有权限控制的，很多时候可能认证的值是通过参数去传递的，还有就是通过请求头去传递认证信息，比如 Basic 认证方式。  </p>
+<p><strong>Feign 中我们可以直接配置 Basic 认证</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Configuration</span>  <span class="hljs-comment">// 全局配置</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignConfig</span> &#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">BasicAuthRequestInterceptor</span> <span class="hljs-title function_">basicAuthRequestInterceptor</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BasicAuthRequestInterceptor</span>(<span class="hljs-string">&quot;fox&quot;</span>, <span class="hljs-string">&quot;123456&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
+<p><strong>扩展点： feign.RequestInterceptor</strong> </p>
+<p>每次 feign 发起http调用之前，会去执行拦截器中的逻辑。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-symbol">RequestInterceptor</span> &#123;<br><br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * Called for every request. Add data using methods on the supplied &#123;@link RequestTemplate&#125;.</span><br><span class="hljs-comment">   */</span><br>  <span class="hljs-built_in">void</span> apply(RequestTemplate template);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用场景</p>
+<ol>
+<li>统一添加 header 信息；</li>
+<li>对 body 中的信息做修改或替换；</li>
+</ol>
+<p><strong>自定义拦截器实现认证逻辑</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignAuthRequestInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">RequestInterceptor</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">apply</span>(<span class="hljs-params">RequestTemplate template</span>) &#123;<br>        <span class="hljs-comment">// 业务逻辑</span><br>        <span class="hljs-title class_">String</span> access_token = <span class="hljs-variable constant_">UUID</span>.<span class="hljs-title function_">randomUUID</span>().<span class="hljs-title function_">toString</span>();<br>        template.<span class="hljs-title function_">header</span>(<span class="hljs-string">&quot;Authorization&quot;</span>,access_token);<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@Configuration</span>  <span class="hljs-comment">// 全局配置</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FeignConfig</span> &#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Logger</span>.<span class="hljs-property">Level</span> <span class="hljs-title function_">feignLoggerLevel</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Logger</span>.<span class="hljs-property">Level</span>.<span class="hljs-property">FULL</span>;<br>    &#125;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 自定义拦截器</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">FeignAuthRequestInterceptor</span> <span class="hljs-title function_">feignAuthRequestInterceptor</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FeignAuthRequestInterceptor</span>();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p>测试</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53055" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>补充：可以在yml中配置</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus">feign:<br>  client:<br>    config:<br>      mall-<span class="hljs-attribute">order</span>:  #对应微服务<br>        requestInterceptors<span class="hljs-selector-attr">[0]</span>:  #配置拦截器<br>          com<span class="hljs-selector-class">.tuling</span><span class="hljs-selector-class">.mall</span><span class="hljs-selector-class">.feigndemo</span><span class="hljs-selector-class">.interceptor</span>.FeignAuthRequestInterceptor<br></code></pre></td></tr></table></figure>
+
+<p>mall-order端可以通过 @RequestHeader获取请求参数，建议在filter,interceptor中处理</p>
+<p><strong>超时时间配置</strong></p>
+<p>通过 Options 可以配置连接超时时间和读取超时时间，Options 的第一个参数是连接的超时时间（ms），默认值是 2s；第二个是请求处理的超时时间（ms），默认值是 5s。</p>
+<p><strong>全局配置</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">@<span class="hljs-keyword">Configuration</span><br><span class="hljs-built_in">public</span> <span class="hljs-keyword">class</span> FeignConfig &#123;<br>    @Bean<br>    <span class="hljs-built_in">public</span> Request.<span class="hljs-keyword">Options</span> <span class="hljs-keyword">options</span>() &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span> Request.<span class="hljs-keyword">Options</span>(<span class="hljs-number">5000</span>, <span class="hljs-number">10000</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p><strong>yml中配置</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">mall-order:</span>  <span class="hljs-comment">#对应微服务</span><br>        <span class="hljs-comment"># 连接超时时间，默认2s</span><br>        <span class="hljs-attr">connectTimeout:</span> <span class="hljs-number">5000</span><br>        <span class="hljs-comment"># 请求处理超时时间，默认5s</span><br>        <span class="hljs-attr">readTimeout:</span> <span class="hljs-number">10000</span><br></code></pre></td></tr></table></figure>
+
+<p>补充说明： Feign的底层用的是Ribbon，但超时时间以Feign配置为准</p>
+<p>测试超时情况：</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53049" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>返回结果</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53056" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>客户端组件配置</strong></p>
+<p>Feign 中默认使用 JDK 原生的 URLConnection 发送 HTTP 请求，我们可以集成别的组件来替换掉 URLConnection，比如 Apache HttpClient，OkHttp。</p>
+<p>Feign发起调用真正执行逻辑：<strong>feign.Client#execute   （扩展点）</strong></p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53053" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>配置Apache HttpClient</strong></p>
+<p>引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- Apache HttpClient --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.httpcomponents<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>httpclient<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>4.5.7<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.github.openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>feign-httpclient<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>10.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>​         </p>
+<p><strong>然后修改yml配置，将 Feign 的</strong> <strong>Apache HttpClient****启用 ：</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-comment">#feign 使用 Apache HttpClient  可以忽略，默认开启</span><br>  <span class="hljs-attr">httpclient:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>  <br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p>关于配置可参考源码： org.springframework.cloud.openfeign.FeignAutoConfiguration</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53044" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>测试：调用会进入feign.httpclient.ApacheHttpClient#execute</p>
+<p><strong>配置 OkHttp</strong></p>
+<p>引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.github.openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>feign-okhttp<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>然后修改yml配置，将 Feign 的 HttpClient 禁用，启用 OkHttp，配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-comment">#feign 使用 okhttp</span><br>  <span class="hljs-attr">httpclient:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br>  <span class="hljs-attr">okhttp:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>关于配置可参考源码： org.springframework.cloud.openfeign.FeignAutoConfiguration</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53048" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>测试：调用会进入feign.okhttp.OkHttpClient#execute</p>
+<p><strong>GZIP 压缩配置</strong></p>
+<p>开启压缩可以有效节约网络资源，提升接口性能，我们可以配置 GZIP 来压缩数据：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-comment"># 配置 GZIP 来压缩数据</span><br>  <span class="hljs-attr">compression:</span><br>    <span class="hljs-attr">request:</span><br>      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-comment"># 配置压缩的类型</span><br>      <span class="hljs-attr">mime-types:</span> <span class="hljs-string">text/xml,application/xml,application/json</span><br>      <span class="hljs-comment"># 最小压缩值</span><br>      <span class="hljs-attr">min-request-size:</span> <span class="hljs-number">2048</span><br>    <span class="hljs-attr">response:</span><br>      <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
+<p>注意：只有当 Feign 的 Http Client 不是 okhttp3 的时候，压缩才会生效，配置源码在FeignAcceptGzipEncodingAutoConfiguration</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53045" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p>核心代码就是 @ConditionalOnMissingBean（type&#x3D;”okhttp3.OkHttpClient”），表示 Spring BeanFactory 中不包含指定的 bean 时条件匹配，也就是没有启用 okhttp3 时才会进行压缩配置。</p>
+<p><strong>编码器解码器配置</strong></p>
+<p>Feign 中提供了自定义的编码解码器设置，同时也提供了多种编码器的实现，比如 Gson、Jaxb、Jackson。我们可以用不同的编码解码器来处理数据的传输。如果你想传输 XML 格式的数据，可以自定义 XML 编码解码器来实现获取使用官方提供的 Jaxb。</p>
+<p>扩展点：Encoder &amp; Decoder </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-built_in">public</span> interface Encoder &#123;<br>    <span class="hljs-type">void</span> encode(<span class="hljs-keyword">Object</span> <span class="hljs-keyword">object</span>, <span class="hljs-keyword">Type</span> bodyType, RequestTemplate <span class="hljs-keyword">template</span>) throws EncodeException;<br>&#125;<br><span class="hljs-built_in">public</span> interface Decoder &#123;<br>    <span class="hljs-keyword">Object</span> decode(Response response, <span class="hljs-keyword">Type</span> <span class="hljs-keyword">type</span>) throws IOException, DecodeException, FeignException;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>Java配置方式</strong></p>
+<p>配置编码解码器只需要在 Feign 的配置类中注册 Decoder 和 Encoder 这两个类即可:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> <span class="hljs-title class_">Decoder</span> <span class="hljs-title function_">decoder</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JacksonDecoder</span>();<br>&#125;<br><span class="hljs-meta">@Bean</span><br><span class="hljs-keyword">public</span> <span class="hljs-title class_">Encoder</span> <span class="hljs-title function_">encoder</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JacksonEncoder</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>yml配置方式</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">feign:</span><br>  <span class="hljs-attr">client:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">mall-order:</span>  <span class="hljs-comment">#对应微服务</span><br>        <span class="hljs-comment"># 配置编解码器</span><br>        <span class="hljs-attr">encoder:</span> <span class="hljs-string">feign.jackson.JacksonEncoder</span><br>        <span class="hljs-attr">decoder:</span> <span class="hljs-string">feign.jackson.JacksonDecoder</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>3. Spring Cloud整合Dubbo</strong></p>
+<p><strong>3.1 provider端配置</strong></p>
+<p> <strong>1）引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：因为spring cloud alibaba 2.2.8这个版本没有整合dubbo，所以需要指定dubbo的版本</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/54856" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>2）修改application.yml</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">dubbo:</span><br>  <span class="hljs-attr">scan:</span><br>    <span class="hljs-comment"># 指定 Dubbo 服务实现类的扫描基准包</span><br>    <span class="hljs-attr">base-packages:</span> <span class="hljs-string">com.tuling.mall.user.service</span><br><span class="hljs-comment">#  application:</span><br><span class="hljs-comment">#    name: $&#123;spring.application.name&#125;</span><br>  <span class="hljs-attr">protocol:</span><br>    <span class="hljs-comment"># dubbo 协议</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">dubbo</span><br>    <span class="hljs-comment"># dubbo 协议端口（ -1 表示自增端口，从 20880 开始）</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">-1</span><br><span class="hljs-comment">#  registry:</span><br><span class="hljs-comment">#    #挂载到 Spring Cloud 注册中心  高版本可选</span><br><span class="hljs-comment">#    address: spring-cloud://127.0.0.1:8848</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">spring-cloud-dubbo-provider-user</span><br>  <span class="hljs-attr">main:</span><br>    <span class="hljs-comment"># Spring Boot2.1及更高的版本需要设定</span><br>    <span class="hljs-attr">allow-bean-definition-overriding:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-comment"># Nacos 服务发现与注册配置</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">:8848</span><br></code></pre></td></tr></table></figure>
+
+<p>​      </p>
+<p><strong>3）服务实现类上配置</strong><strong>@DubboService****暴露服务</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-meta">@DubboService</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">UserService</span> &#123;<br><br>   <span class="hljs-meta">@Autowired</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-title class_">UserMapper</span> userMapper;<br><br>   <span class="hljs-meta">@Override</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">User</span>&gt; <span class="hljs-title function_">list</span>(<span class="hljs-params"></span>) &#123;<br>      <span class="hljs-keyword">return</span> userMapper.<span class="hljs-title function_">list</span>();<br>   &#125;<br><br>   <span class="hljs-meta">@Override</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-title class_">User</span> <span class="hljs-title function_">getById</span>(<span class="hljs-params">Integer id</span>) &#123;<br>      <span class="hljs-keyword">return</span> userMapper.<span class="hljs-title function_">getById</span>(id);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​          </p>
+<p><strong>3.2 consumer端配置</strong></p>
+<p><strong>1）引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>2）修改application.yml</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">dubbo:</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-comment"># 指定需要订阅的服务提供方，默认值*，会订阅所有服务，不建议使用</span><br>    <span class="hljs-attr">subscribed-services:</span> <span class="hljs-string">spring-cloud-dubbo-provider-user</span><br><span class="hljs-comment">#  application:</span><br><span class="hljs-comment">#    name: $&#123;spring.application.name&#125;</span><br>  <span class="hljs-attr">protocol:</span><br>    <span class="hljs-comment"># dubbo 协议</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">dubbo</span><br>    <span class="hljs-comment"># dubbo 协议端口（ -1 表示自增端口，从 20880 开始）</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">-1</span><br><span class="hljs-comment">#  registry:</span><br><span class="hljs-comment">#    #挂载到 Spring Cloud 注册中心  高版本可选</span><br><span class="hljs-comment">#    address: spring-cloud://127.0.0.1:8848</span><br><br><span class="hljs-attr">spring:</span><br>  <span class="hljs-attr">application:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">spring-cloud-dubbo-consumer-user</span><br>  <span class="hljs-attr">main:</span><br>    <span class="hljs-comment"># Spring Boot2.1及更高的版本需要设定</span><br>    <span class="hljs-attr">allow-bean-definition-overriding:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">cloud:</span><br>    <span class="hljs-attr">nacos:</span><br>      <span class="hljs-comment"># Nacos 服务发现与注册配置</span><br>      <span class="hljs-attr">discovery:</span><br>        <span class="hljs-attr">server-addr:</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">:8848</span><br></code></pre></td></tr></table></figure>
+
+<p>当应用使用属性dubbo.cloud.subscribed-services为默认值时，日志中将会输出警告：</p>
+<p>​    <img src="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E7%BB%84%E4%BB%B6Feign/53843" srcset="/img/loading.gif" lazyload alt="0"></p>
+<p><strong>3）服务消费方通过</strong><strong>@DubboReference****引入服务</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/user&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserConstroller</span> &#123;<br><br>    <span class="hljs-meta">@DubboReference</span><br>    <span class="hljs-keyword">private</span> UserService userService;<br><br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/info/&#123;id&#125;&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> User info(<span class="hljs-meta">@PathVariable(<span class="hljs-string">&quot;id&quot;</span>)</span> Integer id)&#123;<br><br>        <span class="hljs-keyword">return</span> userService.getById(id);<br>    &#125;<br><br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/list&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> List&lt;User&gt; list()&#123;<br><br>        <span class="hljs-keyword">return</span> userService.list();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​       </p>
+<p><strong>3.3 从Open Feign迁移到Dubbo</strong></p>
+<p>Dubbo Spring Cloud 提供了方案，可以从Open Feign迁移到Dubbo，即 @DubboTransported 注解。能够帮助服务消费端的 Spring Cloud Open Feign 接口以及 @LoadBalanced RestTemplate Bean 底层走 Dubbo 调用（可切换 Dubbo 支持的协议），而服务提供方则只需在原有 @RestController 类上追加 Dubbo @Servce 注解（需要抽取接口）即可，换言之，在不调整 Feign 接口以及 RestTemplate URL 的前提下，实现无缝迁移。</p>
+<p><strong>1）修改服务提供者</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@DubboService</span><br><span class="hljs-variable">@Slf4j</span><br><span class="hljs-variable">@RestController</span><br><span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/user&quot;</span>)<br>public class UserServiceImpl implements UserService &#123;<br><br>   <span class="hljs-variable">@Autowired</span><br>   private UserMapper userMapper;<br><br>   <span class="hljs-variable">@Override</span><br>   <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/list&quot;</span>)<br>   public List&lt;User&gt; <span class="hljs-built_in">list</span>() &#123;<br>      <span class="hljs-selector-tag">log</span><span class="hljs-selector-class">.info</span>(<span class="hljs-string">&quot;查询user列表&quot;</span>);<br>      <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">userMapper</span><span class="hljs-selector-class">.list</span>();<br>   &#125;<br><br>   @<span class="hljs-selector-tag">Override</span><br>   @<span class="hljs-selector-tag">RequestMapping</span>(<span class="hljs-string">&quot;/getById/&#123;id&#125;&quot;</span>)<br>   <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">User</span> <span class="hljs-selector-tag">getById</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) Integer id) &#123;<br>      <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">userMapper</span><span class="hljs-selector-class">.getById</span>(id);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​     </p>
+<p><strong>2）服务消费端引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>​        </p>
+<p><strong>3）添加Feign的实现，启动类上添加</strong><strong>@EnableFeignClients</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@SpringBootApplication</span><br><span class="hljs-variable">@EnableFeignClients</span><br>public class SpringCloudDubboConsumerUserFeignApplication &#123;<br><br>    <span class="hljs-selector-tag">public</span> <span class="hljs-selector-tag">static</span> <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">main</span>(String[] args) &#123;<br>        <span class="hljs-selector-tag">SpringApplication</span><span class="hljs-selector-class">.run</span>(SpringCloudDubboConsumerUserFeignApplication.class, args);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>4）Feign接口添加</strong> <strong>@DubboTransported</strong> <strong>注解</strong></p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-variable">@FeignClient</span>(value = <span class="hljs-string">&quot;spring-cloud-dubbo-provider-user-feign&quot;</span>,path = <span class="hljs-string">&quot;/user&quot;</span>)<br><span class="hljs-variable">@DubboTransported</span>(protocol = <span class="hljs-string">&quot;dubbo&quot;</span>)<br>public interface UserDubboFeignService &#123;<br><br>    <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/list&quot;</span>)<br>    public List&lt;User&gt; <span class="hljs-built_in">list</span>();<br><br>    <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/getById/&#123;id&#125;&quot;</span>)<br>    public User <span class="hljs-built_in">getById</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) Integer id);<br>&#125;<br><br><span class="hljs-variable">@FeignClient</span>(value = <span class="hljs-string">&quot;spring-cloud-dubbo-provider-user-feign&quot;</span>,path = <span class="hljs-string">&quot;/user&quot;</span>)<br>public interface UserFeignService &#123;<br><br>    <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/list&quot;</span>)<br>    public List&lt;User&gt; <span class="hljs-built_in">list</span>();<br><br><br>    <span class="hljs-variable">@RequestMapping</span>(<span class="hljs-string">&quot;/getById/&#123;id&#125;&quot;</span>)<br>    public User <span class="hljs-built_in">getById</span>(<span class="hljs-variable">@PathVariable</span>(<span class="hljs-string">&quot;id&quot;</span>) Integer id);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​         </p>
+<p><strong>5）调用对象添加</strong> <strong>@DubboTransported</strong> <strong>注解，发起调用</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/user&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserConstroller</span> &#123;<br><br>    <span class="hljs-meta">@DubboReference</span><br>    <span class="hljs-keyword">private</span> UserService userService;<br><br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/info/&#123;id&#125;&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> User info(<span class="hljs-meta">@PathVariable(<span class="hljs-string">&quot;id&quot;</span>)</span> Integer id)&#123;<br>        <span class="hljs-keyword">return</span> userService.getById(id);<br>    &#125;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserFeignService userFeignService;<br><br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/list&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> List&lt;User&gt; list()&#123;<br>        <span class="hljs-keyword">return</span> userFeignService.list();<br>    &#125;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserDubboFeignService userDubboFeignService;<br><br>    <span class="hljs-meta">@RequestMapping(<span class="hljs-string">&quot;/list2&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> List&lt;User&gt; list2()&#123;<br><br>        <span class="hljs-keyword">return</span> userDubboFeignService.list();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/" class="category-chain-item">系统架构</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6/" class="category-chain-item">架构之微服务组件</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6/Feign/" class="category-chain-item">Feign</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Feign/">#Feign</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>微服务调用组件Feign</div>
+      <div>https://kblayt.github.io/2024/03/07/系统架构/架构之微服务/微服务调用组件Feign/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Kblayt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/03/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E4%B9%8B%E5%BE%AE%E6%9C%8D%E5%8A%A1/canal/canal/" title="canal">
+                        <span class="hidden-mobile">canal</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
