@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1582">
 <meta property="og:image" content="https://kblayt.github.io/3%E3%80%81%E5%B9%B6%E5%8F%91List%E3%80%81Set%E3%80%81ConcurrentHashMap%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/1581">
 <meta property="article:published_time" content="2023-06-16T15:34:35.000Z">
-<meta property="article:modified_time" content="2023-07-24T13:31:35.759Z">
+<meta property="article:modified_time" content="2024-04-01T02:52:34.322Z">
 <meta property="article:author" content="Kblayt">
 <meta property="article:tag" content="并发编程">
 <meta property="article:tag" content="JUC">
@@ -292,10 +292,8 @@
 <p>​    基础类型的变量拷贝之后是独立的，不会随着源变量变动而变</p>
 <p>​    String类型拷贝之后也是独立的</p>
 <p>​    引用类型拷贝的是引用地址，拷贝前后的变量引用同一个堆中的对象</p>
-<p>public Object clone() throws CloneNotSupportedException {    </p>
-<p>​		Study s &#x3D; (Study) super.clone();    </p>
-<p>​		return s; </p>
-<p>}</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException &#123;    <br>		<span class="hljs-type">Study</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> (Study) <span class="hljs-built_in">super</span>.clone();    <br>		<span class="hljs-keyword">return</span> s; <br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>基本类型、引用类型。</p>
 <p>浅拷贝 基本类型（int类型）是独立的（改了值会生效），引用类型不独立的（同一份数据，string也是同样的）</p>
 <p><strong>2.2、深拷贝</strong></p>
