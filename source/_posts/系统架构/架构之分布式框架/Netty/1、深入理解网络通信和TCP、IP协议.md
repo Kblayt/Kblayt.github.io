@@ -1,7 +1,12 @@
 ---
 title: 1、深入理解网络通信和TCP、IP协议
 date: 2024-01-04 20:16:34
+categories:
+    - 系统架构
+    - 架构之分布式框架
+    - Netty
 tags:
+    - Netty
 ---
 
 # 计算机网络体系结构 
