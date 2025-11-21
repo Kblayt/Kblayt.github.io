@@ -5,7 +5,6 @@ categories:
     - 系统架构
     - 架构之分布式框架
 tags:
-    - 并发编程
-    - JUC
+    - SpringSecurity6+OAuth2+SAS
 ---
 
